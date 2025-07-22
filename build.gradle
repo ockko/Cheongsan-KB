@@ -71,6 +71,8 @@ dependencies {
   testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
   testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
+  testImplementation 'org.assertj:assertj-core:3.25.3'
+
   testImplementation 'javax.servlet:javax.servlet-api:4.0.1'
 
   compileOnly('javax.servlet:javax.servlet-api:4.0.1')
