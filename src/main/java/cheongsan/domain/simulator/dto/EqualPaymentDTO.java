@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @Getter
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class CalculateDTO {
+public class EqualPaymentDTO {
     private BigDecimal totalPayment;
     private BigDecimal monthlyPayment;
 }

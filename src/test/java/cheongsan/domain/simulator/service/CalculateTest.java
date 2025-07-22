@@ -1,6 +1,6 @@
 package cheongsan.domain.simulator.service;
 
-import cheongsan.domain.simulator.dto.CalculateDTO;
+import cheongsan.domain.simulator.dto.EqualPaymentDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +26,7 @@ class CalculateTest {
         BigDecimal loanAmount = new BigDecimal("10000000");
 
         // when
-        CalculateDTO result = calculator.calculateEqualPayment(interestRate, months, loanAmount);
+        EqualPaymentDTO result = calculator.calculateEqualPayment(interestRate, months, loanAmount);
 
         // then
         assertThat(result).isNotNull();
@@ -49,7 +49,7 @@ class CalculateTest {
         BigDecimal loanAmount = new BigDecimal("1200000");
 
         // when
-        CalculateDTO result = calculator.calculateEqualPayment(interestRate, months, loanAmount);
+        EqualPaymentDTO result = calculator.calculateEqualPayment(interestRate, months, loanAmount);
 
         // then
         BigDecimal expectedMonthly = loanAmount.negate().divide(months, MATH_CONTEXT);
