@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cheongsan.domain.debt.repository.DebtRepository">
+
+    <select id="getLoansByUserId" parameterType="long" resultType="cheongsan.domain.debt.dto.DebtInfoDTO">
+        SELECT da.id                AS debtId,
+               da.debt_name         AS debtName,
+               fi.organization_name AS organizationName,
+               da.current_balance   AS currentBalance,
+               da.original_amount   AS originalAmount
+        FROM mountain_db.debt_accounts da
+                 JOIN mountain_db.financial_institutions fi ON da.organization_code = fi.organization_code
+        WHERE da.user_id = #{userId}
+    </select>
+
+
+</mapper>

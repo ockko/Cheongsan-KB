@@ -1,0 +1,15 @@
+package cheongsan.domain.debt.entity;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class FinancialInstitution {
+    private String organizationCode;
+    private String organizationName;
+}
