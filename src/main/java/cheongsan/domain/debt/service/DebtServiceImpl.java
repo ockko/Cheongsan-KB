@@ -1,5 +1,6 @@
 package cheongsan.domain.debt.service;
 
+import cheongsan.domain.debt.dto.DebtDetailDTO;
 import cheongsan.domain.debt.dto.DebtInfoDTO;
 import cheongsan.domain.debt.repository.DebtRepository;
 import org.springframework.stereotype.Service;
@@ -54,5 +55,10 @@ public class DebtServiceImpl implements DebtService {
         }
 
         return debts;
+    }
+
+    @Override
+    public DebtDetailDTO getLoanDetail(Long loanId) {
+        return debtRepository.getLoanDetail(loanId);
     }
 }
