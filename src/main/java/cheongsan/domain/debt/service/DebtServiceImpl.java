@@ -2,7 +2,7 @@ package cheongsan.domain.debt.service;
 
 import cheongsan.domain.debt.dto.DebtDetailDTO;
 import cheongsan.domain.debt.dto.DebtInfoDTO;
-import cheongsan.domain.debt.repository.DebtRepository;
+import cheongsan.domain.debt.repository.DebtMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -10,15 +10,15 @@ import java.util.List;
 
 @Service
 public class DebtServiceImpl implements DebtService {
-    private final DebtRepository debtRepository;
+    private final DebtMapper debtMapper;
 
-    public DebtServiceImpl(DebtRepository debtRepository) {
-        this.debtRepository = debtRepository;
+    public DebtServiceImpl(DebtMapper debtMapper) {
+        this.debtMapper = debtMapper;
     }
 
     @Override
     public List<DebtInfoDTO> getUserDebtList(Long userId, String sort) {
-        List<DebtInfoDTO> debts = debtRepository.getUserDebtList(userId);
+        List<DebtInfoDTO> debts = debtMapper.getUserDebtList(userId);
 
         // 상환율 계산
         for (DebtInfoDTO debt : debts) {
@@ -59,6 +59,6 @@ public class DebtServiceImpl implements DebtService {
 
     @Override
     public DebtDetailDTO getLoanDetail(Long loanId) {
-        return debtRepository.getLoanDetail(loanId);
+        return debtMapper.getLoanDetail(loanId);
     }
 }
