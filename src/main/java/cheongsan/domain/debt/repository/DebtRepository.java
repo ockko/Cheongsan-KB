@@ -1,11 +1,15 @@
 package cheongsan.domain.debt.repository;
 
 import cheongsan.domain.debt.dto.DebtInfoDTO;
+import cheongsan.domain.debt.dto.DebtDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 @Mapper
 public interface DebtRepository {
+
     List<DebtInfoDTO> getLoansByUserId(Long userId);
+
+    List<DebtDTO> findByUserId(Long userId);
 }
