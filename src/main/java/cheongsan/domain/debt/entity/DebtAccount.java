@@ -2,7 +2,7 @@ package cheongsan.domain.debt.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 //debt_accounts 테이블 매핑
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
