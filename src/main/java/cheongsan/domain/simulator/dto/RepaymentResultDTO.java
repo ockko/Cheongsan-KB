@@ -5,11 +5,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class EqualPaymentDTO {
+public class RepaymentResultDTO {
     private BigDecimal totalPayment;
-    private BigDecimal monthlyPayment;
+    private List<MonthlyPaymentDetailDTO> payments;
 }
