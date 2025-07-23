@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/dashboard")
+@RequestMapping("/cheongsan/dashboard")
 public class DebtController {
     private final DebtServiceImpl debtService;
 
@@ -26,11 +26,5 @@ public class DebtController {
     ) {
         return debtService.getDebtByUserId(userId, sort);
     }
-
-//    @GetMapping("/loans")
-//    public List<DebtInfoDTO> getLoansByUserId(@AuthenticationPrincipal CustomUserDetails userDetails) {
-//        Long userId = userDetails.getId();
-//        return debtService.getDebtByUserId(userId);
-//    }
-
+    
 }
