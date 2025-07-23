@@ -33,4 +33,18 @@ class DebtServiceImplTest {
         // then
         log.info("계산된 월 총 상환액: " + totalPayment);
     }
+
+    @Test
+    @DisplayName("부채가 하나도 없을 때, 월 총 상환액은 0을 반환해야 한다")
+    void calculateTotalMonthlyPayment_WithNoDebts() {
+        // given
+        Long userId = 2L;
+
+        // when
+        BigDecimal totalPayment = debtService.calculateTotalMonthlyPayment(userId);
+
+        // then
+        assertEquals(BigDecimal.ZERO, totalPayment, "부채가 없으면 총 상환액은 0이어야 합니다.");
+        log.info("계산된 월 총 상환액: " + totalPayment);
+    }
 }
