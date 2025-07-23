@@ -24,7 +24,7 @@ public class DebtController {
             @RequestParam Long userId,
             @RequestParam(required = false, defaultValue = "createdAtDesc") String sort
     ) {
-        return debtService.getDebtByUserId(userId, sort);
+        return debtService.getLoansByUserId(userId, sort);
     }
-    
+
 }
