@@ -16,8 +16,8 @@ public class DebtServiceImpl implements DebtService {
     }
 
     @Override
-    public List<DebtInfoDTO> getLoansByUserId(Long userId, String sort) {
-        List<DebtInfoDTO> debts = debtRepository.getLoansByUserId(userId);
+    public List<DebtInfoDTO> getUserDebtList(Long userId, String sort) {
+        List<DebtInfoDTO> debts = debtRepository.getUserDebtList(userId);
 
         // 상환율 계산
         for (DebtInfoDTO debt : debts) {

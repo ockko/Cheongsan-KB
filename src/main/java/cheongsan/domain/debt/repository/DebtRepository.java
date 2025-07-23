@@ -7,5 +7,5 @@ import java.util.List;
 
 @Mapper
 public interface DebtRepository {
-    List<DebtInfoDTO> getLoansByUserId(Long userId);
+    List<DebtInfoDTO> getUserDebtList(Long userId);
 }
