@@ -5,4 +5,6 @@ import java.math.BigDecimal;
 public interface TransactionService {
 
     BigDecimal calculateRegularMonthlyTransfer(Long userId, int year, int month);
+
+    BigDecimal calculateMonthlyFixedWithdraw(Long userId, int year, int month);
 }

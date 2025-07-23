@@ -5,13 +5,37 @@
 <mapper namespace="cheongsan.domain.spending.repository.TransactionRepository">
 
     <select id="findTransferTransactionsByMonth" resultType="cheongsan.domain.spending.dto.TransactionDTO">
-        SELECT
-            id, deposit_account_id, user_id, transaction_time, after_balance, amount, type, res_account_desc1, res_account_desc2, res_account_desc3
-        FROM
-            transactions
-        WHERE
-            user_id = #{userId}
+        SELECT id,
+               deposit_account_id,
+               user_id,
+               transaction_time,
+               after_balance,
+               amount,
+               type,
+               res_account_desc1,
+               res_account_desc2,
+               res_account_desc3
+        FROM transactions
+        WHERE user_id = #{userId}
           AND type = 'TRANSFER'
+          AND YEAR(transaction_time) = #{year}
+          AND MONTH(transaction_time) = #{month}
+    </select>
+
+    <select id="findWithdrawTransactionsByMonth" resultType="cheongsan.domain.spending.dto.TransactionDTO">
+        SELECT id,
+               deposit_account_id,
+               user_id,
+               transaction_time,
+               after_balance,
+               amount,
+               type,
+               res_account_desc1,
+               res_account_desc2,
+               res_account_desc3
+        FROM transactions
+        WHERE user_id = #{userId}
+          AND type = 'WITHDRAW'
           AND YEAR(transaction_time) = #{year}
           AND MONTH(transaction_time) = #{month}
     </select>

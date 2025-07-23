@@ -23,6 +23,10 @@ public class TransactionServiceImpl implements TransactionService {
             "급여", "월급", "급료", "상여", "보너스"
     ));
 
+    private static final Set<String> FIXED_WITHDRAW_KEYWORDS = new HashSet<>(Arrays.asList(
+            "자동이체", "지로납부"
+    ));
+
     @Override
     public BigDecimal calculateRegularMonthlyTransfer(Long userId, int year, int month) {
         List<TransactionDTO> transferTransactions = transactionRepository.findTransferTransactionsByMonth(userId, year, month);
@@ -33,12 +37,34 @@ public class TransactionServiceImpl implements TransactionService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    @Override
+    public BigDecimal calculateMonthlyFixedWithdraw(Long userId, int year, int month) {
+        List<TransactionDTO> withdrawTransactions = transactionRepository.findWithdrawTransactionsByMonth(userId, year, month);
+
+        return withdrawTransactions.stream()
+                .filter(this::isFixedWithdraw)
+                .map(TransactionDTO::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
     private boolean isSalary(TransactionDTO transaction) {
         String desc1 = transaction.getResAccountDesc1();
         String desc2 = transaction.getResAccountDesc2();
         String desc3 = transaction.getResAccountDesc3();
 
         return SALARY_KEYWORDS.stream().anyMatch(keyword ->
+                (desc1 != null && desc1.contains(keyword)) ||
+                        (desc2 != null && desc2.contains(keyword)) ||
+                        (desc3 != null && desc3.contains(keyword))
+        );
+    }
+
+    private boolean isFixedWithdraw(TransactionDTO transaction) {
+        String desc1 = transaction.getResAccountDesc1();
+        String desc2 = transaction.getResAccountDesc2();
+        String desc3 = transaction.getResAccountDesc3();
+
+        return FIXED_WITHDRAW_KEYWORDS.stream().anyMatch(keyword ->
                 (desc1 != null && desc1.contains(keyword)) ||
                         (desc2 != null && desc2.contains(keyword)) ||
                         (desc3 != null && desc3.contains(keyword))

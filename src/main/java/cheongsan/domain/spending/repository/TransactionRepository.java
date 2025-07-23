@@ -8,7 +8,14 @@ import java.util.List;
 
 @Mapper
 public interface TransactionRepository {
+
     List<TransactionDTO> findTransferTransactionsByMonth(
+            @Param("userId") Long userId,
+            @Param("year") int year,
+            @Param("month") int month
+    );
+
+    List<TransactionDTO> findWithdrawTransactionsByMonth(
             @Param("userId") Long userId,
             @Param("year") int year,
             @Param("month") int month

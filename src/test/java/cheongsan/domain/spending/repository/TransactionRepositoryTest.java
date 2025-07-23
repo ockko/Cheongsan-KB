@@ -15,7 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = { RootConfig.class })
+@ContextConfiguration(classes = {RootConfig.class})
 @Log4j2
 class TransactionRepositoryTest {
 
@@ -23,7 +23,7 @@ class TransactionRepositoryTest {
     private TransactionRepository repository;
 
     @Test
-    @DisplayName("TransactionRepository의 월 이체 내역 조회")
+    @DisplayName("월 이체 내역 조회")
     void findTransferTransactionsByMonth() {
         // given
         Long userId = 1L;
@@ -32,6 +32,23 @@ class TransactionRepositoryTest {
 
         // when
         List<TransactionDTO> transactions = repository.findTransferTransactionsByMonth(userId, year, month);
+
+        // then
+        for (TransactionDTO transaction : transactions) {
+            log.info("========" + transaction);
+        }
+    }
+
+    @Test
+    @DisplayName("월 인출 내역 조회")
+    void findWithdrawTransactionsByMonth() {
+        // given
+        Long userId = 1L;
+        int year = 2025;
+        int month = 6;
+
+        // when
+        List<TransactionDTO> transactions = repository.findWithdrawTransactionsByMonth(userId, year, month);
 
         // then
         for (TransactionDTO transaction : transactions) {

@@ -52,4 +52,36 @@ class TransactionServiceImplTest {
         assertEquals(BigDecimal.ZERO, result, "정기 소득이 없으면 합계는 0이어야 합니다.");
         log.info("계산된 정기 소득 합계: " + result);
     }
+
+    @Test
+    @DisplayName("고정 지출 키워드가 포함된 거래내역의 합계를 정확히 계산해야 한다")
+    void calculateMonthlyFixedWithdraw_Success() {
+        // given
+        Long userId = 1L;
+        int year = 2025;
+        int month = 6;
+
+        // when
+        BigDecimal result = transactionService.calculateMonthlyFixedWithdraw(userId, year, month);
+
+        // then
+        assertEquals(new BigDecimal("336000.00"), result, "고정 지출 합계가 일치해야 합니다.");
+        log.info("계산된 고정 지출 합계: " + result);
+    }
+
+    @Test
+    @DisplayName("고정 지출 거래내역이 없으면 0을 반환해야 한다")
+    void calculateMonthlyFixedWithdraw_NoFixedWithdraw() {
+        // given
+        Long userId = 1L;
+        int year = 2025;
+        int month = 7;
+
+        // when
+        BigDecimal result = transactionService.calculateMonthlyFixedWithdraw(userId, year, month);
+
+        // then
+        assertEquals(BigDecimal.ZERO, result, "고정 지출이 없으면 합계는 0이어야 합니다.");
+        log.info("계산된 고정 지출 합계: " + result);
+    }
 }
