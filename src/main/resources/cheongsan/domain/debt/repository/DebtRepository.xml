@@ -10,7 +10,9 @@
                da.debt_name         AS debtName,
                fi.organization_name AS organizationName,
                da.current_balance   AS currentBalance,
-               da.original_amount   AS originalAmount
+               da.original_amount   AS originalAmount,
+               da.interest_rate     AS interestRate, -- 추가
+               da.loan_start_date   AS loanStartDate
         FROM mountain_db.debt_accounts da
                  JOIN mountain_db.financial_institutions fi ON da.organization_code = fi.organization_code
         WHERE da.user_id = #{userId}

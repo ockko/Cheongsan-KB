@@ -30,27 +30,27 @@ public class DebtServiceImpl implements DebtService {
         }
 
         switch (sort) {
-            case "amountAsc":
-                debts.sort(Comparator.comparing(DebtInfoDTO::getOriginalAmount));
+            case "interestRateDesc": // 이자율 높은 순
+                debts.sort(Comparator.comparing(DebtInfoDTO::getInterestRate, Comparator.nullsLast(Double::compareTo)).reversed());
                 break;
-            case "amountDesc":
-                debts.sort(Comparator.comparing(DebtInfoDTO::getOriginalAmount).reversed());
+
+            case "repaymentRateDesc": // 상환율 높은 순
+                debts.sort(Comparator.comparing(DebtInfoDTO::getRepaymentRate, Comparator.nullsLast(Double::compareTo)).reversed());
                 break;
-            case "balanceAsc":
-                debts.sort(Comparator.comparing(DebtInfoDTO::getCurrentBalance));
+
+            case "startedAtAsc": // 오래된 순
+                debts.sort(Comparator.comparing(DebtInfoDTO::getLoanStartDate, Comparator.nullsLast(java.util.Date::compareTo)));
                 break;
-            case "balanceDesc":
-                debts.sort(Comparator.comparing(DebtInfoDTO::getCurrentBalance).reversed());
+
+            case "startedAtDesc": // 최신 순
+                debts.sort(Comparator.comparing(DebtInfoDTO::getLoanStartDate, Comparator.nullsLast(java.util.Date::compareTo)).reversed());
                 break;
-            case "repaymentAsc":
-                debts.sort(Comparator.comparing(DebtInfoDTO::getRepaymentRate));
-                break;
-            case "repaymentDesc":
-                debts.sort(Comparator.comparing(DebtInfoDTO::getRepaymentRate).reversed());
-                break;
-            // 필요시 더 추가 가능
+
+//            case "recommended":
+//                // 우리 앱 추천순 - 추후 구현
+//                break;
+
             default:
-                // 아무 정렬도 하지 않음
         }
 
         return debts;
