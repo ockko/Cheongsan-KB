@@ -55,7 +55,12 @@ public class RootConfig {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setConfigLocation(applicationContext.getResource("classpath:/mybatis-config.xml"));
         sqlSessionFactoryBean.setDataSource(dataSource());
-        sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(mapperLocations));
+
+        // 직접 매퍼 위치 지정
+        sqlSessionFactoryBean.setMapperLocations(
+                applicationContext.getResources(mapperLocations)
+        );
+
         return sqlSessionFactoryBean.getObject();
     }
 
