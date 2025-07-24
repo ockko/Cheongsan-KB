@@ -17,7 +17,7 @@ public class DebtDTO {
     private Long id;
     private Long userId;
     private Long organizationCode;
-    private Long resAccount;
+    private String resAccount;
     private String debtName;
     private BigDecimal currentBalance;
     private BigDecimal originalAmount;
