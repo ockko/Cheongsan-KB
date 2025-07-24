@@ -34,6 +34,24 @@
         WHERE da.id = #{loanId}
     </select>
 
+    <select id="findByUserId" resultType="cheongsan.domain.debt.dto.DebtDTO">
+        SELECT id,
+               user_id,
+               organization_code,
+               res_account,
+               debt_name,
+               current_balance,
+               original_amount,
+               interest_rate,
+               loan_start_date,
+               loan_end_date,
+               next_payment_date,
+               grace_period_months,
+               repayment_method
+        FROM debt_accounts
+        WHERE user_id = #{userId}
+    </select>
+
     <insert id="insertDebt" parameterType="cheongsan.domain.debt.entity.DebtAccount">
         INSERT INTO debt_accounts (user_id, organization_code, res_account, debt_name, current_balance,
                                    original_amount, interest_rate, loan_start_date, loan_end_date, next_payment_date,
