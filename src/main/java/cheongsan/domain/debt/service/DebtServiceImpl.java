@@ -1,11 +1,12 @@
 package cheongsan.domain.debt.service;
 
-import cheongsan.domain.debt.dto.request.DebtRegisterDTO;
-import cheongsan.domain.debt.dto.response.DebtDetailDTO;
-import cheongsan.domain.debt.dto.response.DebtInfoDTO;
+import cheongsan.domain.debt.dto.DebtDetailResponseDTO;
+import cheongsan.domain.debt.dto.DebtInfoResponseDTO;
+import cheongsan.domain.debt.dto.DebtRegisterRequestDTO;
 import cheongsan.domain.debt.entity.DebtAccount;
 import cheongsan.domain.debt.mapper.DebtMapper;
 import cheongsan.domain.debt.mapper.FinancialInstitutionMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -14,21 +15,17 @@ import java.util.Comparator;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class DebtServiceImpl implements DebtService {
     private final DebtMapper debtMapper;
     private final FinancialInstitutionMapper financialInstitutionMapper;
 
-    public DebtServiceImpl(DebtMapper debtMapper, FinancialInstitutionMapper financialInstitutionMapper) {
-        this.debtMapper = debtMapper;
-        this.financialInstitutionMapper = financialInstitutionMapper;
-    }
-
     @Override
-    public List<DebtInfoDTO> getUserDebtList(Long userId, String sort) {
-        List<DebtInfoDTO> debts = debtMapper.getUserDebtList(userId);
+    public List<DebtInfoResponseDTO> getUserDebtList(Long userId, String sort) {
+        List<DebtInfoResponseDTO> debts = debtMapper.getUserDebtList(userId);
 
         // 상환율 계산
-        for (DebtInfoDTO debt : debts) {
+        for (DebtInfoResponseDTO debt : debts) {
             if (debt.getOriginalAmount() != null && debt.getOriginalAmount() > 0) {
                 double rate = 1 - ((double) debt.getCurrentBalance() / debt.getOriginalAmount());
                 debt.setRepaymentRate(rate);
@@ -39,19 +36,19 @@ public class DebtServiceImpl implements DebtService {
 
         switch (sort) {
             case "interestRateDesc": // 이자율 높은 순
-                debts.sort(Comparator.comparing(DebtInfoDTO::getInterestRate, Comparator.nullsLast(Double::compareTo)).reversed());
+                debts.sort(Comparator.comparing(DebtInfoResponseDTO::getInterestRate, Comparator.nullsLast(Double::compareTo)).reversed());
                 break;
 
             case "repaymentRateDesc": // 상환율 높은 순
-                debts.sort(Comparator.comparing(DebtInfoDTO::getRepaymentRate, Comparator.nullsLast(Double::compareTo)).reversed());
+                debts.sort(Comparator.comparing(DebtInfoResponseDTO::getRepaymentRate, Comparator.nullsLast(Double::compareTo)).reversed());
                 break;
 
             case "startedAtAsc": // 오래된 순
-                debts.sort(Comparator.comparing(DebtInfoDTO::getLoanStartDate, Comparator.nullsLast(java.util.Date::compareTo)));
+                debts.sort(Comparator.comparing(DebtInfoResponseDTO::getLoanStartDate, Comparator.nullsLast(java.util.Date::compareTo)));
                 break;
 
             case "startedAtDesc": // 최신 순
-                debts.sort(Comparator.comparing(DebtInfoDTO::getLoanStartDate, Comparator.nullsLast(java.util.Date::compareTo)).reversed());
+                debts.sort(Comparator.comparing(DebtInfoResponseDTO::getLoanStartDate, Comparator.nullsLast(java.util.Date::compareTo)).reversed());
                 break;
 
 //            case "recommended":
@@ -65,12 +62,12 @@ public class DebtServiceImpl implements DebtService {
     }
 
     @Override
-    public DebtDetailDTO getLoanDetail(Long loanId) {
+    public DebtDetailResponseDTO getLoanDetail(Long loanId) {
         return debtMapper.getLoanDetail(loanId);
     }
 
     @Override
-    public void registerDebt(DebtRegisterDTO dto, Long userId) {
+    public void registerDebt(DebtRegisterRequestDTO dto, Long userId) {
         // 1. 금융기관 코드 조회 또는 등록
         Long organizationCode = financialInstitutionMapper.findCodeByName(dto.getOrganizationName());
         if (organizationCode == null) {

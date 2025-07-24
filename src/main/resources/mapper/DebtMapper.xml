@@ -6,7 +6,7 @@
 <mapper namespace="cheongsan.domain.debt.mapper.DebtMapper">
 
     <!-- 총 대출 항목 조회-->
-    <select id="getUserDebtList" parameterType="long" resultType="cheongsan.domain.debt.dto.response.DebtInfoDTO">
+    <select id="getUserDebtList" parameterType="long" resultType="cheongsan.domain.debt.dto.DebtInfoResponseDTO">
         SELECT da.id                AS debtId,
                da.debt_name         AS debtName,
                fi.organization_name AS organizationName,
@@ -20,7 +20,7 @@
     </select>
 
     <!-- 대출별 상세 조회-->
-    <select id="getLoanDetail" parameterType="long" resultType="cheongsan.domain.debt.dto.response.DebtDetailDTO">
+    <select id="getLoanDetail" parameterType="long" resultType="cheongsan.domain.debt.dto.DebtDetailResponseDTO">
         SELECT da.debt_name           AS debtName,
                fi.organization_name   AS organizationName,
                da.original_amount     AS originalAmount,

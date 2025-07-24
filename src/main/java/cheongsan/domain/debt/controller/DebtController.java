@@ -1,9 +1,10 @@
 package cheongsan.domain.debt.controller;
 
-import cheongsan.domain.debt.dto.request.DebtRegisterDTO;
-import cheongsan.domain.debt.dto.response.DebtDetailDTO;
-import cheongsan.domain.debt.dto.response.DebtInfoDTO;
-import cheongsan.domain.debt.service.DebtServiceImpl;
+import cheongsan.domain.debt.dto.DebtDetailResponseDTO;
+import cheongsan.domain.debt.dto.DebtInfoResponseDTO;
+import cheongsan.domain.debt.dto.DebtRegisterRequestDTO;
+import cheongsan.domain.debt.service.DebtService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,16 +14,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cheongsan/dashboard")
+@RequiredArgsConstructor
 public class DebtController {
-    private final DebtServiceImpl debtService;
-
-    public DebtController(DebtServiceImpl debtService) {
-        this.debtService = debtService;
-    }
+    private final DebtService debtService;
 
     // 추후, userId 연동 예정
     @GetMapping("/loans")
-    public List<DebtInfoDTO> getUserDebtList(
+    public List<DebtInfoResponseDTO> getUserDebtList(
             @RequestParam Long userId,
             @RequestParam(required = false, defaultValue = "createdAtDesc") String sort
     ) {
@@ -30,12 +28,12 @@ public class DebtController {
     }
 
     @GetMapping("/loans/{loanId}")
-    public DebtDetailDTO getLoanDetail(@PathVariable Long loanId) {
+    public DebtDetailResponseDTO getLoanDetail(@PathVariable Long loanId) {
         return debtService.getLoanDetail(loanId);
     }
 
     @PostMapping(value = "/loans", consumes = "application/json")
-    public ResponseEntity<String> registerDebt(@RequestBody DebtRegisterDTO dto,
+    public ResponseEntity<String> registerDebt(@RequestBody DebtRegisterRequestDTO dto,
                                                @RequestParam Long userId) {
         try {
             debtService.registerDebt(dto, userId);
