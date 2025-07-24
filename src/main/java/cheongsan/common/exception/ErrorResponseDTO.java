@@ -1,11 +1,11 @@
 package cheongsan.common.exception;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
 @AllArgsConstructor
-@Getter
+@Data
 public class ErrorResponseDTO {
 
-    private final String message;
+    private String message;
 }
