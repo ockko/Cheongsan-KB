@@ -1,11 +1,11 @@
 package cheongsan.domain.debt.mapper;
 
-import cheongsan.domain.debt.dto.DebtDetailResponseDTO;
-import cheongsan.domain.debt.dto.DebtInfoResponseDTO;
 import cheongsan.domain.debt.entity.DebtAccount;
+import cheongsan.domain.debt.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Mapper
@@ -20,5 +20,16 @@ public interface DebtMapper {
     // 대출 계좌 존재 여부 확인
     boolean isDebtAccountExists(@Param("userId") Long userId,
                                 @Param("resAccount") String resAccount);
+    // 월별 상환일자 조회
+    List<RepaymentCalendarDTO> getMonthlyRepayments(
+            @Param("userId") Long userId,
+            @Param("year") int year,
+            @Param("month") int month
+    );
 
+    // 특정 날짜의 상환일자 상세 조회
+    List<DailyRepaymentDTO> getDailyRepayments(
+            @Param("userId") Long userId,
+            @Param("date") LocalDate date
+    );
 }

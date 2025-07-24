@@ -14,8 +14,8 @@
                da.original_amount   AS originalAmount,
                da.interest_rate     AS interestRate,
                da.loan_start_date   AS loanStartDate
-        FROM mountain_db.debt_accounts da
-                 JOIN mountain_db.financial_institutions fi ON da.organization_code = fi.organization_code
+        FROM debt_accounts da
+                 JOIN financial_institutions fi ON da.organization_code = fi.organization_code
         WHERE da.user_id = #{userId}
     </select>
 
@@ -29,8 +29,8 @@
                da.current_balance     AS currentBalance,
                da.grace_period_months AS gracePeriodMonths,
                da.repayment_method    AS repaymentMethod
-        FROM mountain_db.debt_accounts da
-                 JOIN mountain_db.financial_institutions fi ON da.organization_code = fi.organization_code
+        FROM debt_accounts da
+                 JOIN financial_institutions fi ON da.organization_code = fi.organization_code
         WHERE da.id = #{loanId}
     </select>
 
@@ -52,6 +52,32 @@
                          AND res_account = #{resAccount})
     </select>
 
+    <select id="getMonthlyRepayments" resultType="cheongsan.domain.debt.dto.RepaymentCalendarDTO">
+        SELECT da.id                AS debtId,
+               da.debt_name         AS debtName,
+               da.next_payment_date AS repaymentDate
+        FROM debt_accounts da
+        WHERE da.user_id = #{userId}
+          AND YEAR(da.next_payment_date) = #{year}
+          AND MONTH(da.next_payment_date) = #{month}
+          AND da.next_payment_date IS NOT NULL
+        ORDER BY da.next_payment_date ASC
+    </select>
+
+    <select id="getDailyRepayments" resultType="cheongsan.domain.debt.dto.DailyRepaymentDTO">
+        SELECT da.id                AS debtId,
+               da.debt_name         AS debtName,
+               fi.organization_name AS organizationName,
+               da.next_payment_date AS repaymentDate,
+               da.current_balance   AS currentBalance,
+               da.interest_rate     AS interestRate,
+               da.repayment_method  AS repaymentMethod
+        FROM debt_accounts da
+                 JOIN financial_institutions fi ON da.organization_code = fi.organization_code
+        WHERE da.user_id = #{userId}
+          AND DATE(da.next_payment_date) = #{date}
+          AND da.next_payment_date IS NOT NULL
+        ORDER BY da.debt_name ASC
+    </select>
+
 </mapper>
-
-
