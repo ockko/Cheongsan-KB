@@ -1,4 +1,4 @@
-package cheongsan.domain.deposit.repository;
+package cheongsan.domain.deposit.mapper;
 
 import cheongsan.domain.deposit.dto.MonthlyTransactionDTO;
 import cheongsan.domain.deposit.entity.Transaction;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Mapper
-public interface DepositRepository {
+public interface DepositMapper {
     List<MonthlyTransactionDTO> getMonthlyTransactions(
             @Param("userId") Long userId,
             @Param("year") int year,

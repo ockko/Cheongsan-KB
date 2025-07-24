@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cheongsan.domain.deposit.repository.DepositRepository">
+<mapper namespace="cheongsan.domain.deposit.mapper.DepositMapper">
 
     <select id="getMonthlyTransactions" resultType="cheongsan.domain.deposit.dto.MonthlyTransactionDTO">
         SELECT DATE(t.transaction_time)                                                 AS transactionDate,

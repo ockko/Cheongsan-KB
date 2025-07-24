@@ -3,7 +3,7 @@ package cheongsan.domain.deposit.service;
 import cheongsan.domain.deposit.dto.DailyTransactionDTO;
 import cheongsan.domain.deposit.dto.MonthlyTransactionDTO;
 import cheongsan.domain.deposit.entity.Transaction;
-import cheongsan.domain.deposit.repository.DepositRepository;
+import cheongsan.domain.deposit.mapper.DepositMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class DepositServiceImpl implements DepositService {
-    private final DepositRepository depositRepository;
+    private final DepositMapper depositRepository;
 
     @Override
     public List<MonthlyTransactionDTO> getMonthlyTransactions(int year, int month) {
