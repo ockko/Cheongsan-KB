@@ -1,0 +1,42 @@
+package cheongsan.domain.deposit.controller;
+
+import cheongsan.domain.deposit.dto.DailyTransactionDTO;
+import cheongsan.domain.deposit.dto.MonthlyTransactionDTO;
+import cheongsan.domain.deposit.service.DepositService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@RestController
+@RequestMapping("/cheongsan/calendar")
+@RequiredArgsConstructor
+@Log4j2
+public class DepositController {
+    private final DepositService depositService;
+
+    @GetMapping("/transactions")
+    public ResponseEntity<List<MonthlyTransactionDTO>> getMonthlyTransactions(
+            @RequestParam int year,
+            @RequestParam int month) {
+
+        log.info("월별 거래 내역 조회 요청 - year: {}, month: {}", year, month);
+
+        List<MonthlyTransactionDTO> transactions = depositService.getMonthlyTransactions(year, month);
+        return ResponseEntity.ok(transactions);
+    }
+
+    @GetMapping("/transactions/{date}")
+    public ResponseEntity<List<DailyTransactionDTO>> getDailyTransactions(
+            @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+
+        log.info("일별 거래 내역 조회 요청 - date: {}", date);
+
+        List<DailyTransactionDTO> transactions = depositService.getDailyTransactions(date);
+        return ResponseEntity.ok(transactions);
+    }
+}

@@ -1,23 +1,27 @@
 package cheongsan.domain.debt.service;
 
-import cheongsan.domain.debt.dto.DebtInfoDTO;
-import cheongsan.domain.debt.repository.DebtRepository;
+import cheongsan.common.util.LoanCalculator;
+import cheongsan.domain.debt.dto.*;
+import cheongsan.domain.debt.mapper.DebtMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 
+@Log4j2
 @Service
+@RequiredArgsConstructor
 public class DebtServiceImpl implements DebtService {
-    private final DebtRepository debtRepository;
-
-    public DebtServiceImpl(DebtRepository debtRepository) {
-        this.debtRepository = debtRepository;
-    }
+    private final DebtMapper debtMapper;
+    private final LoanCalculator loanCalculator;
 
     @Override
-    public List<DebtInfoDTO> getLoansByUserId(Long userId, String sort) {
-        List<DebtInfoDTO> debts = debtRepository.getLoansByUserId(userId);
+    public List<DebtInfoDTO> getUserDebtList(Long userId, String sort) {
+        List<DebtInfoDTO> debts = debtMapper.getUserDebtList(userId);
 
         // 상환율 계산
         for (DebtInfoDTO debt : debts) {
@@ -54,5 +58,42 @@ public class DebtServiceImpl implements DebtService {
         }
 
         return debts;
+    }
+
+    @Override
+    public DebtDetailDTO getLoanDetail(Long loanId) {
+        return debtMapper.getLoanDetail(loanId);
+    }
+
+    @Override
+    public BigDecimal calculateTotalMonthlyPayment(Long userId) {
+        List<DebtDTO> userDebts = debtMapper.findByUserId(userId);
+
+        return userDebts.stream()
+                .map(debt -> loanCalculator.calculateMonthlyPayment(
+                        debt.getRepaymentMethodEnum(), // 상환방식
+                        debt.getOriginalAmount(),      // 총 원금
+                        debt.getCurrentBalance(),      // 현재 잔액
+                        debt.getInterestRate(),        // 연이율
+                        debt.getLoanStartDate(),       // 대출 시작일
+                        debt.getLoanEndDate()          // 대출 만기일
+                ))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    @Override
+    public List<RepaymentCalendarDTO> getMonthlyRepayments(Long userId, int year, int month) {
+        log.info("월별 상환일자 조회 - 사용자 ID: {}, 년도: {}, 월: {}", userId, year, month);
+
+        List<RepaymentCalendarDTO> repayments = debtMapper.getMonthlyRepayments(userId, year, month);
+        return repayments;
+    }
+
+    @Override
+    public List<DailyRepaymentDTO> getDailyRepayments(Long userId, LocalDate date) {
+        log.info("일별 상환일자 조회 - 사용자 ID: {}, 날짜: {}", userId, date);
+
+        List<DailyRepaymentDTO> repayments = debtMapper.getDailyRepayments(userId, date);
+        return repayments;
     }
 }
