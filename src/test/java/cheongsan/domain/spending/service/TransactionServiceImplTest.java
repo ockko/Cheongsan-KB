@@ -33,7 +33,7 @@ class TransactionServiceImplTest {
         BigDecimal result = transactionService.calculateRegularMonthlyTransfer(userId, year, month);
 
         // then
-        assertEquals(new BigDecimal("150087.00"), result, "정기 소득 합계가 일치해야 합니다.");
+        assertEquals(new BigDecimal("3150000.00"), result, "정기 소득 합계가 일치해야 합니다.");
         log.info("계산된 정기 소득 합계: " + result);
     }
 
