@@ -7,7 +7,7 @@
         <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
     <typeAliases>
-        <package name="com.example.demo.domain"/>
+        <package name="cheongsan.domain"/>
     </typeAliases>
 
 </configuration>
