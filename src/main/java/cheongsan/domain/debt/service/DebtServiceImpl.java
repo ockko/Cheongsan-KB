@@ -1,20 +1,24 @@
 package cheongsan.domain.debt.service;
 
 import cheongsan.domain.debt.dto.DebtDetailDTO;
+import cheongsan.common.util.LoanCalculator;
+import cheongsan.domain.debt.dto.DebtDTO;
 import cheongsan.domain.debt.dto.DebtInfoDTO;
 import cheongsan.domain.debt.mapper.DebtMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 
+@Log4j2
 @Service
+@RequiredArgsConstructor
 public class DebtServiceImpl implements DebtService {
     private final DebtMapper debtMapper;
-
-    public DebtServiceImpl(DebtMapper debtMapper) {
-        this.debtMapper = debtMapper;
-    }
+    private final LoanCalculator loanCalculator;
 
     @Override
     public List<DebtInfoDTO> getUserDebtList(Long userId, String sort) {
@@ -60,5 +64,21 @@ public class DebtServiceImpl implements DebtService {
     @Override
     public DebtDetailDTO getLoanDetail(Long loanId) {
         return debtMapper.getLoanDetail(loanId);
+    }
+
+    @Override
+    public BigDecimal calculateTotalMonthlyPayment(Long userId) {
+        List<DebtDTO> userDebts = debtMapper.findByUserId(userId);
+
+        return userDebts.stream()
+                .map(debt -> loanCalculator.calculateMonthlyPayment(
+                        debt.getRepaymentMethodEnum(), // 상환방식
+                        debt.getOriginalAmount(),      // 총 원금
+                        debt.getCurrentBalance(),      // 현재 잔액
+                        debt.getInterestRate(),        // 연이율
+                        debt.getLoanStartDate(),       // 대출 시작일
+                        debt.getLoanEndDate()          // 대출 만기일
+                ))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
