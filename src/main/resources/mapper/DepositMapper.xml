@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cheongsan.domain.deposit.mapper.DepositMapper">
+
+    <select id="getMonthlyTransactions" resultType="cheongsan.domain.deposit.dto.MonthlyTransactionDTO">
+        SELECT DATE(t.transaction_time)                                                 AS transactionDate,
+               COALESCE(SUM(CASE WHEN t.type = 'TRANSFER' THEN t.amount ELSE 0 END), 0) AS totalIncome,
+               COALESCE(SUM(CASE WHEN t.type = 'WITHDRAW' THEN t.amount ELSE 0 END), 0) AS totalExpense,
+               COUNT(*)                                                                 AS transactionCount
+        FROM transactions t
+                 INNER JOIN deposit_accounts da ON t.deposit_account_id = da.id
+        WHERE t.user_id = #{userId}
+          AND YEAR(t.transaction_time) = #{year}
+          AND MONTH(t.transaction_time) = #{month}
+        GROUP BY DATE(t.transaction_time)
+        ORDER BY transactionDate ASC
+    </select>
+
+    <select id="getDailyTransactions" resultType="cheongsan.domain.deposit.entity.Transaction">
+        SELECT t.id,
+               t.deposit_account_id,
+               t.user_id,
+               t.transaction_time,
+               t.after_balance,
+               t.amount,
+               t.type,
+               da.account_number
+        FROM transactions t
+                 INNER JOIN deposit_accounts da ON t.deposit_account_id = da.id
+        WHERE t.user_id = #{userId}
+          AND DATE(t.transaction_time) = #{date}
+        ORDER BY t.transaction_time DESC
+    </select>
+</mapper>
