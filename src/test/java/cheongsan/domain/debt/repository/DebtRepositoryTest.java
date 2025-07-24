@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DebtRepositoryTest {
 
     @Autowired
-    private DebtRepository repository;
+    private DebtMapper mapper;
 
     @Test
     @DisplayName("사용자의 부채 정보 조회")
@@ -29,7 +29,7 @@ class DebtRepositoryTest {
         Long userId = 1L;
 
         // when
-        List<DebtDTO> debts = repository.findByUserId(userId);
+        List<DebtDTO> debts = mapper.findByUserId(userId);
 
         // then
         for (DebtDTO debt : debts) {

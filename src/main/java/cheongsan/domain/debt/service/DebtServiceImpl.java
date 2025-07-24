@@ -1,9 +1,10 @@
 package cheongsan.domain.debt.service;
 
+import cheongsan.domain.debt.dto.DebtDetailDTO;
 import cheongsan.common.util.LoanCalculator;
 import cheongsan.domain.debt.dto.DebtDTO;
 import cheongsan.domain.debt.dto.DebtInfoDTO;
-import cheongsan.domain.debt.repository.DebtRepository;
+import cheongsan.domain.debt.repository.DebtMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -16,13 +17,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class DebtServiceImpl implements DebtService {
-
-    private final DebtRepository debtRepository;
+    private final DebtMapper debtMapper;
     private final LoanCalculator loanCalculator;
 
     @Override
-    public List<DebtInfoDTO> getLoansByUserId(Long userId, String sort) {
-        List<DebtInfoDTO> debts = debtRepository.getLoansByUserId(userId);
+    public List<DebtInfoDTO> getUserDebtList(Long userId, String sort) {
+        List<DebtInfoDTO> debts = debtMapper.getUserDebtList(userId);
 
         // 상환율 계산
         for (DebtInfoDTO debt : debts) {
@@ -62,8 +62,13 @@ public class DebtServiceImpl implements DebtService {
     }
 
     @Override
+    public DebtDetailDTO getLoanDetail(Long loanId) {
+        return debtMapper.getLoanDetail(loanId);
+    }
+
+    @Override
     public BigDecimal calculateTotalMonthlyPayment(Long userId) {
-        List<DebtDTO> userDebts = debtRepository.findByUserId(userId);
+        List<DebtDTO> userDebts = debtMapper.findByUserId(userId);
 
         return userDebts.stream()
                 .map(debt -> loanCalculator.calculateMonthlyPayment(
