@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="cheongsan.domain.debt.repository.DebtMapper">
+<mapper namespace="cheongsan.domain.debt.mapper.DebtMapper">
 
     <!-- 총 대출 항목 조회-->
     <select id="getUserDebtList" parameterType="long" resultType="cheongsan.domain.debt.dto.DebtInfoDTO">
@@ -14,7 +14,7 @@
                da.original_amount   AS originalAmount,
                da.interest_rate     AS interestRate,
                da.loan_start_date   AS loanStartDate
-        FROM mountain_db.debt_accounts da
+        FROM debt_accounts da
                  JOIN mountain_db.financial_institutions fi ON da.organization_code = fi.organization_code
         WHERE da.user_id = #{userId}
     </select>
@@ -29,7 +29,7 @@
                da.current_balance     AS currentBalance,
                da.grace_period_months AS gracePeriodMonths,
                da.repayment_method    AS repaymentMethod
-        FROM mountain_db.debt_accounts da
+        FROM debt_accounts da
                  JOIN mountain_db.financial_institutions fi ON da.organization_code = fi.organization_code
         WHERE da.id = #{loanId}
     </select>
@@ -50,7 +50,7 @@
             grace_period_months,
             repayment_method
         FROM
-            mountain_db.debt_accounts
+            debt_accounts
         WHERE
             user_id = #{userId}
     </select>

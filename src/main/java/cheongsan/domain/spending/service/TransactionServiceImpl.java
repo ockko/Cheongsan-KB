@@ -1,7 +1,7 @@
 package cheongsan.domain.spending.service;
 
 import cheongsan.domain.spending.dto.TransactionDTO;
-import cheongsan.domain.spending.repository.TransactionRepository;
+import cheongsan.domain.spending.mapper.TransactionMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
 
-    private final TransactionRepository transactionRepository;
+    private final TransactionMapper transactionMapper;
 
     private static final Set<String> SALARY_KEYWORDS = new HashSet<>(Arrays.asList(
             "급여", "월급", "급료", "상여", "보너스"
@@ -29,7 +29,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public BigDecimal calculateRegularMonthlyTransfer(Long userId, int year, int month) {
-        List<TransactionDTO> transferTransactions = transactionRepository.findTransferTransactionsByMonth(userId, year, month);
+        List<TransactionDTO> transferTransactions = transactionMapper.findTransferTransactionsByMonth(userId, year, month);
 
         return transferTransactions.stream()
                 .filter(this::isSalary)
@@ -39,7 +39,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public BigDecimal calculateMonthlyFixedWithdraw(Long userId, int year, int month) {
-        List<TransactionDTO> withdrawTransactions = transactionRepository.findWithdrawTransactionsByMonth(userId, year, month);
+        List<TransactionDTO> withdrawTransactions = transactionMapper.findWithdrawTransactionsByMonth(userId, year, month);
 
         return withdrawTransactions.stream()
                 .filter(this::isFixedWithdraw)

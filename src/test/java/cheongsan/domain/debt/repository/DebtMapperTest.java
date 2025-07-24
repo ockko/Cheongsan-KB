@@ -2,6 +2,7 @@ package cheongsan.domain.debt.repository;
 
 import cheongsan.common.config.RootConfig;
 import cheongsan.domain.debt.dto.DebtDTO;
+import cheongsan.domain.debt.mapper.DebtMapper;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,12 +13,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {RootConfig.class})
 @Log4j2
-class DebtRepositoryTest {
+class DebtMapperTest {
 
     @Autowired
     private DebtMapper mapper;

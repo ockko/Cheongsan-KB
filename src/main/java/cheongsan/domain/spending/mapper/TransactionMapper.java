@@ -1,4 +1,4 @@
-package cheongsan.domain.spending.repository;
+package cheongsan.domain.spending.mapper;
 
 import cheongsan.domain.spending.dto.TransactionDTO;
 import org.apache.ibatis.annotations.Mapper;
@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @Mapper
-public interface TransactionRepository {
+public interface TransactionMapper {
 
     List<TransactionDTO> findTransferTransactionsByMonth(
             @Param("userId") Long userId,

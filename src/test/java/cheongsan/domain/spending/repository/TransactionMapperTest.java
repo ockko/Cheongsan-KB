@@ -2,6 +2,7 @@ package cheongsan.domain.spending.repository;
 
 import cheongsan.common.config.RootConfig;
 import cheongsan.domain.spending.dto.TransactionDTO;
+import cheongsan.domain.spending.mapper.TransactionMapper;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,15 +13,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {RootConfig.class})
 @Log4j2
-class TransactionRepositoryTest {
+class TransactionMapperTest {
 
     @Autowired
-    private TransactionRepository repository;
+    private TransactionMapper mapper;
 
     @Test
     @DisplayName("월 이체 내역 조회")
@@ -31,7 +30,7 @@ class TransactionRepositoryTest {
         int month = 6;
 
         // when
-        List<TransactionDTO> transactions = repository.findTransferTransactionsByMonth(userId, year, month);
+        List<TransactionDTO> transactions = mapper.findTransferTransactionsByMonth(userId, year, month);
 
         // then
         for (TransactionDTO transaction : transactions) {
@@ -48,7 +47,7 @@ class TransactionRepositoryTest {
         int month = 6;
 
         // when
-        List<TransactionDTO> transactions = repository.findWithdrawTransactionsByMonth(userId, year, month);
+        List<TransactionDTO> transactions = mapper.findWithdrawTransactionsByMonth(userId, year, month);
 
         // then
         for (TransactionDTO transaction : transactions) {
