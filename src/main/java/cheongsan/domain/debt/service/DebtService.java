@@ -10,9 +10,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface DebtService {
-    public List<DebtInfoDTO> getUserDebtList(Long userId, String sort);
+    List<DebtInfoDTO> getUserDebtList(Long userId, String sort);
 
-    public DebtDetailDTO getLoanDetail(Long loanId);
+    DebtDetailDTO getLoanDetail(Long loanId);
 
     BigDecimal calculateTotalMonthlyPayment(Long userId);
 
