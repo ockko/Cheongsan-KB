@@ -4,7 +4,7 @@ import cheongsan.domain.debt.dto.DebtDetailDTO;
 import cheongsan.common.util.LoanCalculator;
 import cheongsan.domain.debt.dto.DebtDTO;
 import cheongsan.domain.debt.dto.DebtInfoDTO;
-import cheongsan.domain.debt.repository.DebtMapper;
+import cheongsan.domain.debt.mapper.DebtMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
