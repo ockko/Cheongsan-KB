@@ -1,4 +1,4 @@
-package cheongsan.domain.debt.repository;
+package cheongsan.domain.debt.mapper;
 
 import cheongsan.domain.debt.dto.DebtDetailDTO;
 import cheongsan.domain.debt.dto.DebtInfoDTO;

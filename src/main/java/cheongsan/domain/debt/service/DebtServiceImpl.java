@@ -2,7 +2,7 @@ package cheongsan.domain.debt.service;
 
 import cheongsan.domain.debt.dto.DebtDetailDTO;
 import cheongsan.domain.debt.dto.DebtInfoDTO;
-import cheongsan.domain.debt.repository.DebtMapper;
+import cheongsan.domain.debt.mapper.DebtMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
