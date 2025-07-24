@@ -44,21 +44,6 @@ public class DiagnosisController {
         return ResponseEntity.ok(result);
     }
 
-//      JWT 구현 이후
-//    @GetMapping("/result")
-//    public ResponseEntity<DiagnosisDTO> getDiagnosisResult(
-//            // 1. @AuthenticationPrincipal 어노테이션을 사용합니다.
-//            @AuthenticationPrincipal CustomUserDetails userDetails
-//    ) {
-//        // 2. Spring Security가 자동으로 로그인한 사용자의 정보를 넣어줍니다.
-//        Long currentUserId = userDetails.getUserId(); // 예시: userDetails 객체에서 ID를 가져옵니다.
-//
-//        // 3. ID를 BigInteger로 변환합니다.
-//        BigInteger recommendDiagnosisId = userService.getUser(new BigInteger(String.valueOf(currentUserId)));
-//        DiagnosisDTO diagnosisDTO = diagnosisService.getDiagnosis(recommendDiagnosisId);
-//
-//        return ResponseEntity.ok(diagnosisDTO);
-//    }
 
     @GetMapping("/result")
     public ResponseEntity<DiagnosisDTO> getDiagnosisResult() {
