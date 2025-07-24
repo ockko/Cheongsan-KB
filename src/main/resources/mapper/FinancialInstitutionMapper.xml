@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cheongsan.domain.debt.mapper.FinancialInstitutionMapper">
+
+    <select id="findCodeByName" parameterType="string" resultType="long">
+        SELECT organization_code
+        FROM financial_institutions
+        WHERE organization_name = #{organizationName}
+    </select>
+
+    <insert id="insertInstitution">
+        INSERT INTO financial_institutions (organization_name, institution_type, created_at)
+        VALUES (#{organizationName}, '기타', NOW())
+    </insert>
+
+</mapper>
