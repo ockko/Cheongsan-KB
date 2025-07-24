@@ -15,9 +15,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class DebtAccount {
-    private Long id;
     private Long userId;
-    private String organizationCode;
+    private Long organizationCode;
     private String resAccount;             // 계좌번호
     private String debtName;              // 대출명
     private BigDecimal currentBalance;    // 현재 잔액
