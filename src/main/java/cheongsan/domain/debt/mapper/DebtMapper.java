@@ -1,5 +1,6 @@
 package cheongsan.domain.debt.mapper;
 
+import cheongsan.domain.debt.entity.DebtAccount;
 import cheongsan.domain.debt.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -9,12 +10,16 @@ import java.util.List;
 
 @Mapper
 public interface DebtMapper {
-    List<DebtInfoDTO> getUserDebtList(Long userId);
+    List<DebtInfoResponseDTO> getUserDebtList(Long userId);
 
-    DebtDetailDTO getLoanDetail(Long loanId);
+    DebtDetailResponseDTO getLoanDetail(Long loanId);
 
-    List<DebtDTO> findByUserId(Long userId);
+    // 대출 상품 추가
+    void insertDebt(DebtAccount debtAccount);
 
+    // 대출 계좌 존재 여부 확인
+    boolean isDebtAccountExists(@Param("userId") Long userId,
+                                @Param("resAccount") String resAccount);
     // 월별 상환일자 조회
     List<RepaymentCalendarDTO> getMonthlyRepayments(
             @Param("userId") Long userId,

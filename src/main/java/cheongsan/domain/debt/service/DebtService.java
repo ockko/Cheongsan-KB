@@ -1,8 +1,9 @@
 package cheongsan.domain.debt.service;
 
+import cheongsan.domain.debt.dto.DebtDetailResponseDTO;
+import cheongsan.domain.debt.dto.DebtInfoResponseDTO;
+import cheongsan.domain.debt.dto.DebtRegisterRequestDTO;
 import cheongsan.domain.debt.dto.DailyRepaymentDTO;
-import cheongsan.domain.debt.dto.DebtDetailDTO;
-import cheongsan.domain.debt.dto.DebtInfoDTO;
 import cheongsan.domain.debt.dto.RepaymentCalendarDTO;
 
 import java.math.BigDecimal;
@@ -10,9 +11,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface DebtService {
-    List<DebtInfoDTO> getUserDebtList(Long userId, String sort);
+    List<DebtInfoResponseDTO> getUserDebtList(Long userId, String sort);
 
-    DebtDetailDTO getLoanDetail(Long loanId);
+    DebtDetailResponseDTO getLoanDetail(Long loanId);
+
+    void registerDebt(DebtRegisterRequestDTO dto, Long userId);
 
     BigDecimal calculateTotalMonthlyPayment(Long userId);
 
