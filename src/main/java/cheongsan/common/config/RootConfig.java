@@ -19,7 +19,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @PropertySource({"classpath:/application.properties"})
-@MapperScan(basePackages = "cheongsan.domain")
+@MapperScan(basePackages = "cheongsan.domain.**.repository")
 @ComponentScan(basePackages = {"cheongsan"})
 public class RootConfig {
     @Value("${mybatis.mapper-locations}")
