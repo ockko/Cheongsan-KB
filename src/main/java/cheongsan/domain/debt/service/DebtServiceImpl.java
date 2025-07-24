@@ -1,19 +1,26 @@
 package cheongsan.domain.debt.service;
 
-import cheongsan.domain.debt.dto.DebtDetailDTO;
-import cheongsan.domain.debt.dto.DebtInfoDTO;
-import cheongsan.domain.debt.repository.DebtMapper;
+import cheongsan.domain.debt.dto.request.DebtRegisterDTO;
+import cheongsan.domain.debt.dto.response.DebtDetailDTO;
+import cheongsan.domain.debt.dto.response.DebtInfoDTO;
+import cheongsan.domain.debt.entity.DebtAccount;
+import cheongsan.domain.debt.mapper.DebtMapper;
+import cheongsan.domain.debt.mapper.FinancialInstitutionMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
 @Service
 public class DebtServiceImpl implements DebtService {
     private final DebtMapper debtMapper;
+    private final FinancialInstitutionMapper financialInstitutionMapper;
 
-    public DebtServiceImpl(DebtMapper debtMapper) {
+    public DebtServiceImpl(DebtMapper debtMapper, FinancialInstitutionMapper financialInstitutionMapper) {
         this.debtMapper = debtMapper;
+        this.financialInstitutionMapper = financialInstitutionMapper;
     }
 
     @Override
@@ -60,5 +67,47 @@ public class DebtServiceImpl implements DebtService {
     @Override
     public DebtDetailDTO getLoanDetail(Long loanId) {
         return debtMapper.getLoanDetail(loanId);
+    }
+
+    @Override
+    public void registerDebt(DebtRegisterDTO dto, Long userId) {
+        // 1. 금융기관 코드 조회 또는 등록
+        Long organizationCode = financialInstitutionMapper.findCodeByName(dto.getOrganizationName());
+        if (organizationCode == null) {
+            financialInstitutionMapper.insertInstitution(dto.getOrganizationName());
+            organizationCode = financialInstitutionMapper.findCodeByName(dto.getOrganizationName());
+        }
+
+        boolean exists = debtMapper.isDebtAccountExists(userId, dto.getResAccount());
+        if (exists) {
+            throw new RuntimeException("이미 등록된 대출 계좌입니다.");
+        }
+
+        // 2. 만기일 계산
+        LocalDate loanEndDate = dto.getLoanStartDate().plusMonths(dto.getTotalMonths());
+
+        // 3. 다음 상환일 계산 (예: 매달 1일 상환 기준이라면)
+        LocalDate nextPaymentDate = dto.getLoanStartDate().plusMonths(1); // 예시
+
+        // 4. DebtAccount 생성
+        DebtAccount debt = DebtAccount.builder()
+                .userId(userId)
+                .organizationCode(organizationCode)
+                .resAccount(dto.getResAccount())
+                .debtName(dto.getDebtName())
+                .currentBalance(dto.getCurrentBalance())
+                .originalAmount(dto.getOriginalAmount())
+                .interestRate(dto.getInterestRate())
+                .loanStartDate(dto.getLoanStartDate())
+                .loanEndDate(loanEndDate)
+                .nextPaymentDate(nextPaymentDate)
+                .gracePeriodMonths(dto.getGracePeriodMonths())
+                .repaymentMethod(dto.getRepaymentMethod())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        // 5. DB 저장
+        debtMapper.insertDebt(debt);
     }
 }

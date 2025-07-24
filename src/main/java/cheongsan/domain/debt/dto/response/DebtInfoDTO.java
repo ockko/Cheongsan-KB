@@ -1,4 +1,4 @@
-package cheongsan.domain.debt.dto;
+package cheongsan.domain.debt.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

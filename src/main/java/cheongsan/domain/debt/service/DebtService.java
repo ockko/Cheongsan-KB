@@ -1,12 +1,15 @@
 package cheongsan.domain.debt.service;
 
-import cheongsan.domain.debt.dto.DebtDetailDTO;
-import cheongsan.domain.debt.dto.DebtInfoDTO;
+import cheongsan.domain.debt.dto.request.DebtRegisterDTO;
+import cheongsan.domain.debt.dto.response.DebtDetailDTO;
+import cheongsan.domain.debt.dto.response.DebtInfoDTO;
 
 import java.util.List;
 
 public interface DebtService {
-    public List<DebtInfoDTO> getUserDebtList(Long userId, String sort);
+    List<DebtInfoDTO> getUserDebtList(Long userId, String sort);
 
-    public DebtDetailDTO getLoanDetail(Long loanId);
+    DebtDetailDTO getLoanDetail(Long loanId);
+
+    void registerDebt(DebtRegisterDTO dto, Long userId);
 }
