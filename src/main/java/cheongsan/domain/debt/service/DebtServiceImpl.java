@@ -81,38 +81,6 @@ public class DebtServiceImpl implements DebtService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    /**
-     * 특정 대출의 월별 상환액 계산
-     */
-    private BigDecimal calculateMonthlyPaymentForDebt(Long debtId) {
-        try {
-            // 해당 대출 정보를 조회하여 월별 상환액 계산
-            List<DebtDTO> allDebts = debtMapper.findByUserId(null); // 전체 조회 후 필터링
-
-            DebtDTO targetDebt = allDebts.stream()
-                    .filter(debt -> debt.getId().equals(debtId))
-                    .findFirst()
-                    .orElse(null);
-
-            if (targetDebt == null) {
-                log.warn("대출 정보를 찾을 수 없습니다. ID: {}", debtId);
-                return BigDecimal.ZERO;
-            }
-
-            return loanCalculator.calculateMonthlyPayment(
-                    targetDebt.getRepaymentMethodEnum(),
-                    targetDebt.getOriginalAmount(),
-                    targetDebt.getCurrentBalance(),
-                    targetDebt.getInterestRate(),
-                    targetDebt.getLoanStartDate(),
-                    targetDebt.getLoanEndDate()
-            );
-        } catch (Exception e) {
-            log.error("월별 상환액 계산 중 오류 발생. 대출 ID: {}", debtId, e);
-            return BigDecimal.ZERO;
-        }
-    }
-
     @Override
     public List<RepaymentCalendarDTO> getMonthlyRepayments(Long userId, int year, int month) {
         log.info("월별 상환일자 조회 - 사용자 ID: {}, 년도: {}, 월: {}", userId, year, month);

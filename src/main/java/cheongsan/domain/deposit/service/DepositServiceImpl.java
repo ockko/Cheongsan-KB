@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class DepositServiceImpl implements DepositService {
-    private final DepositMapper depositRepository;
+    private final DepositMapper depositMapper;
 
     @Override
     public List<MonthlyTransactionDTO> getMonthlyTransactions(int year, int month) {
@@ -25,7 +25,7 @@ public class DepositServiceImpl implements DepositService {
         // TODO: 현재는 하드코딩된 사용자 ID 사용, 실제로는 SecurityContext에서 가져와야 함
         Long userId = 1L;
 
-        List<MonthlyTransactionDTO> monthlyTransactions = depositRepository.getMonthlyTransactions(userId, year, month);
+        List<MonthlyTransactionDTO> monthlyTransactions = depositMapper.getMonthlyTransactions(userId, year, month);
 
         log.info("조회된 월별 거래 내역 수: {}", monthlyTransactions.size());
         return monthlyTransactions;
@@ -38,7 +38,7 @@ public class DepositServiceImpl implements DepositService {
         // TODO: 현재는 하드코딩된 사용자 ID 사용, 실제로는 SecurityContext에서 가져와야 함
         Long userId = 1L;
 
-        List<Transaction> transactions = depositRepository.getDailyTransactions(userId, date);
+        List<Transaction> transactions = depositMapper.getDailyTransactions(userId, date);
 
         List<DailyTransactionDTO> result = transactions.stream()
                 .map(transaction -> {
