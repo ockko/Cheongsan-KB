@@ -1,6 +1,8 @@
 package cheongsan.domain.spending.service;
 
+import cheongsan.domain.spending.dto.BudgetLimitDTO;
+
 public interface BudgetService {
 
-    int calculateRecommendedDailyLimit(Long userId);
+    BudgetLimitDTO getBudgetLimits(Long userId);
 }

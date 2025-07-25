@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class DebtInfoDTO {
+public class DebtInfoResponseDTO {
     private Long debtId;
     private String debtName;
     private String organizationName;
