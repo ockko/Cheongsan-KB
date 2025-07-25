@@ -3,10 +3,10 @@ package cheongsan.domain.policy.dto;
 import cheongsan.domain.policy.entity.Diagnosis;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
