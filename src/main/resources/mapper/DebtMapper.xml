@@ -98,4 +98,14 @@
         ORDER BY da.debt_name ASC
     </select>
 
+    <select id="getDebtRepaymentInfoByUserId" parameterType="long"
+            resultType="cheongsan.domain.debt.entity.DebtRepaymentRatio">
+        SELECT user_id,
+               original_amount,
+               current_balance
+        FROM debt_accounts
+        WHERE user_id = #{userId}
+    </select>
+
+
 </mapper>
