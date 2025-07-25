@@ -1,8 +1,8 @@
 package cheongsan.domain.simulator.service.strategy;
 
-import cheongsan.domain.simulator.dto.LoanDto;
-import cheongsan.domain.simulator.dto.RepaymentRequestDto;
-import cheongsan.domain.simulator.dto.RepaymentResultDto;
+import cheongsan.domain.simulator.dto.LoanDTO;
+import cheongsan.domain.simulator.dto.RepaymentRequestDTO;
+import cheongsan.domain.simulator.dto.RepaymentResultDTO;
 import cheongsan.domain.simulator.dto.StrategyType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,15 +21,15 @@ import java.util.stream.Collectors;
 public class HighInterestStrategy implements RepaymentStrategy {
 
     @Override
-    public RepaymentResultDto simulate(RepaymentRequestDto request) {
-        List<LoanDto> loans = new ArrayList<>(request.getLoans());
+    public RepaymentResultDTO simulate(RepaymentRequestDTO request) {
+        List<LoanDTO> loans = new ArrayList<>(request.getLoans());
 
         // 이자율 내림차순 정렬
-        loans.sort(Comparator.comparing(LoanDto::getInterestRate).reversed());
+        loans.sort(Comparator.comparing(LoanDTO::getInterestRate).reversed());
 
         // 정렬된 대출명 리스트 추출
         List<String> sortedLoanNames = loans.stream()
-                .map(LoanDto::getLoanName)
+                .map(LoanDTO::getLoanName)
                 .collect(Collectors.toList());
 
         BigDecimal monthlyAvailable = request.getMonthlyAvailableAmount();
@@ -37,14 +37,14 @@ public class HighInterestStrategy implements RepaymentStrategy {
         BigDecimal totalInterestPaid = BigDecimal.ZERO;
 
         Map<Long, BigDecimal> remainingBalances = loans.stream()
-                .collect(Collectors.toMap(LoanDto::getId, LoanDto::getPrincipal));
+                .collect(Collectors.toMap(LoanDTO::getId, LoanDTO::getPrincipal));
 
         int monthsElapsed = 0;
 
         while (remainingBalances.values().stream().anyMatch(b -> b.compareTo(BigDecimal.ZERO) > 0)) {
             BigDecimal available = monthlyAvailable;
 
-            for (LoanDto loan : loans) {
+            for (LoanDTO loan : loans) {
                 Long id = loan.getId();
                 BigDecimal principal = remainingBalances.get(id);
                 if (principal.compareTo(BigDecimal.ZERO) <= 0) continue;
@@ -68,7 +68,7 @@ public class HighInterestStrategy implements RepaymentStrategy {
             monthsElapsed++;
         }
 
-        return RepaymentResultDto.builder()
+        return RepaymentResultDTO.builder()
                 .strategyType(StrategyType.HIGH_INTEREST_FIRST)
                 .debtFreeDate(LocalDate.now().plusMonths(monthsElapsed))
                 .totalMonths(monthsElapsed)
