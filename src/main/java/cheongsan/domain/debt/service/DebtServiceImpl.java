@@ -1,8 +1,9 @@
 package cheongsan.domain.debt.service;
 
-import cheongsan.domain.debt.dto.*;
 import cheongsan.common.util.LoanCalculator;
+import cheongsan.domain.debt.dto.*;
 import cheongsan.domain.debt.entity.DebtAccount;
+import cheongsan.domain.debt.entity.DebtRepaymentRatio;
 import cheongsan.domain.debt.mapper.DebtMapper;
 import cheongsan.domain.debt.mapper.FinancialInstitutionMapper;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -141,5 +143,34 @@ public class DebtServiceImpl implements DebtService {
 
         List<DailyRepaymentDTO> repayments = debtMapper.getDailyRepayments(userId, date);
         return repayments;
+    }
+
+    @Override
+    public RepaymentRatioResponseDTO getRepaymentRatio(Long userId) {
+        // 대출 상환율 계산에 필요한 데이터(DebtRepaymentRatio) 조회
+        List<DebtRepaymentRatio> debts = debtMapper.getDebtRepaymentInfoByUserId(userId);
+
+        // 변수 초기화
+        BigDecimal totalOriginal = BigDecimal.ZERO; // 총 원금
+        BigDecimal totalRepaid = BigDecimal.ZERO; // 총 상환금액
+
+        for (DebtRepaymentRatio debt : debts) {
+            if (debt.getOriginalAmount() != null && debt.getCurrentBalance() != null) {
+                totalOriginal = totalOriginal.add(debt.getOriginalAmount()); // 총 원금 계산
+                totalRepaid = totalRepaid.add(debt.getOriginalAmount().subtract(debt.getCurrentBalance())); // 총 상환액 계산 (상환액 : 원금 - 잔액)
+            }
+        }
+
+        // 총 상환율 계산
+        BigDecimal ratio = BigDecimal.ZERO;
+        if (totalOriginal.compareTo(BigDecimal.ZERO) > 0) {
+            ratio = totalRepaid.divide(totalOriginal, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
+        }
+
+        return RepaymentRatioResponseDTO.builder()
+                .totalOriginalAmount(totalOriginal)
+                .totalRepaidAmount(totalRepaid)
+                .repaymentRatio(ratio)
+                .build();
     }
 }
