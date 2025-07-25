@@ -13,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
 public class RepaymentResultDTO {
 
     private StrategyType strategyType; // 어떤 전략
