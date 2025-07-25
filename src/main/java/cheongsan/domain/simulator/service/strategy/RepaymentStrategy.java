@@ -1,9 +1,12 @@
 package cheongsan.domain.simulator.service.strategy;
 
-import cheongsan.domain.simulator.dto.*;
+import cheongsan.domain.simulator.dto.RepaymentRequestDTO;
+import cheongsan.domain.simulator.dto.RepaymentResultDTO;
+import cheongsan.domain.simulator.dto.StrategyType;
 
 public interface RepaymentStrategy {
 
-    RepaymentResultDto simulate(RepaymentRequestDto request);
+    RepaymentResultDTO simulate(RepaymentRequestDTO request);
+
     StrategyType getStrategyType(); // 전략 식별용
 }
