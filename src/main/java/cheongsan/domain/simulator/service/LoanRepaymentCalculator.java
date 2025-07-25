@@ -13,11 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class Calculator {
+public class LoanRepaymentCalculator {
 
     public static final MathContext MATH_CONTEXT = new MathContext(15, RoundingMode.HALF_UP);
 
     /**
+     * 원리금 균등 상환
+     *
      * @param interestRate       월 이자율 (예: 연 6%면 월 0.005 = 0.5%)
      * @param months             남은 상환 개월 수 (예: 12개월)
      * @param remainingPrincipal 현재 남은 원금
@@ -74,6 +76,8 @@ public class Calculator {
     }
 
     /**
+     * 원금 균등 상환
+     *
      * @param interestRate       월 이자율 (예: 연 6%면 월 0.005)
      * @param months             총 상환 개월 수
      * @param remainingPrincipal 현재 남은 원금
@@ -267,6 +271,16 @@ public class Calculator {
     }
 
 
+    /**
+     * 중도상환 수수료 계산
+     *
+     * @param prepaymentPrincipal 중도상환할 금액
+     * @param feeRate             수수료율 (ex 0.01 = 1%)
+     * @param repaymentDate       중도상환일
+     * @param loanEndDate         대출 만기일
+     * @param loanStartDate       대출 시작일
+     * @return 계산된 중도상환 수수료 (원 단위 반올림)
+     */
     public BigDecimal calculatePrepaymentFee(
             BigDecimal prepaymentPrincipal,
             BigDecimal feeRate,
