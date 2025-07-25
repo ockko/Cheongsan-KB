@@ -291,4 +291,40 @@ public class Calculator {
         return fee.setScale(0, RoundingMode.HALF_UP);
     }
 
+    /**
+     * 만기 일시 상환
+     *
+     * @param principal        대출 원금
+     * @param annualRate       연 이자율 (ex 0.06 == 6%)
+     * @param loanPeriodMonths 대출 기간 (개월)
+     * @param loanStartDate    대출 시작일
+     * @return {@link RepaymentResultDTO} 총 납입금과 각 월별 납입 상세 정보 리스트 포함
+     */
+    public RepaymentResultDTO calculateLumpSumRepayment(BigDecimal principal, BigDecimal annualRate, int loanPeriodMonths, LocalDate loanStartDate) {
+        BigDecimal monthlyRate = annualRate.divide(BigDecimal.valueOf(12), MATH_CONTEXT);
+        List<MonthlyPaymentDetailDTO> payments = new ArrayList<>();
+        BigDecimal totalPayment = BigDecimal.ZERO;
+
+        for (int i = 0; i < loanPeriodMonths; i++) {
+            LocalDate dueDate = loanStartDate.plusMonths(i);
+            BigDecimal interest = principal.multiply(monthlyRate, MATH_CONTEXT);
+            BigDecimal principalPayment = BigDecimal.ZERO;
+            BigDecimal totalMonthlyPayment = interest;
+
+            if (i == loanPeriodMonths - 1) {
+                principalPayment = principal;
+                totalMonthlyPayment = totalMonthlyPayment.add(principal, MATH_CONTEXT);
+            }
+
+            payments.add(new MonthlyPaymentDetailDTO(
+                    i + 1,
+                    principalPayment.setScale(0, RoundingMode.HALF_UP),
+                    interest.setScale(0, RoundingMode.HALF_UP),
+                    totalMonthlyPayment.setScale(0, RoundingMode.HALF_UP)
+            ));
+
+            totalPayment = totalPayment.add(totalMonthlyPayment);
+        }
+        return new RepaymentResultDTO(totalPayment.setScale(0, RoundingMode.HALF_UP), payments);
+    }
 }
