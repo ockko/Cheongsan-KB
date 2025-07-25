@@ -12,4 +12,7 @@ import java.util.List;
 public interface PolicyService {
 
     public List<PolicyDTO> getPolicyList(PolicyRequestDTO policyRequestDTO) throws UnsupportedEncodingException, IOException, Exception;
+
+    public List<PolicyDTO> getPolicyListByTags(List<String> tags, List<PolicyDTO> policyList);
+
 }

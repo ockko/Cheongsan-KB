@@ -31,6 +31,7 @@ public class PolicyServiceImpl implements PolicyService {
     @Value("${policy.service-key}")
     private String SERVICE_KEY;
 
+    @Override
     public List<PolicyDTO> getPolicyList(PolicyRequestDTO policyRequestDTO) throws Exception {
 
         StringBuilder urlBuilder = new StringBuilder(POLICY_API_URL);
@@ -51,10 +52,9 @@ public class PolicyServiceImpl implements PolicyService {
 
         // searchWrd가 null이거나 빈값이면 유저 신용 상태 가져오고 "청년"을 기본값으로
         String searchWrd = policyRequestDTO.getSearchWrd();
-        if (searchWrd == null || searchWrd.trim().isEmpty()) {
+        if (searchWrd == null) {
             //유저 신용 상태 가져오기
             UserDTO userDTO = userService.getUser(2L);
-            searchWrd = "청년";
             // 신용 상태에 따라 "부채","대출","청년"
             Long userDiagnosisResult = userDTO.getRecommendedProgramId();
             log.info("userDianosisResult={}", userDiagnosisResult);
@@ -149,4 +149,24 @@ public class PolicyServiceImpl implements PolicyService {
         }
         return result;
     }
+
+    @Override
+    public List<PolicyDTO> getPolicyListByTags(List<String> tags, List<PolicyDTO> policyList) {
+
+        if (tags == null || tags.isEmpty()) {
+            return policyList;
+        }
+        List<PolicyDTO> filtered = new ArrayList<>();
+        for (PolicyDTO policy : policyList) {
+            List<String> tagList = policy.getTagList();
+            if (tagList != null) {
+                boolean matched = tags.stream().anyMatch(
+                        filterTag -> tagList.stream().anyMatch(tag -> tag.contains(filterTag))
+                );
+                if (matched) filtered.add(policy);
+            }
+        }
+        return filtered;
+    }
+
 }
