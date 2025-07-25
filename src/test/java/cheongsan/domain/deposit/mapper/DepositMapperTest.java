@@ -1,8 +1,7 @@
-package cheongsan.domain.spending.repository;
+package cheongsan.domain.deposit.mapper;
 
 import cheongsan.common.config.RootConfig;
-import cheongsan.domain.spending.dto.TransactionDTO;
-import cheongsan.domain.spending.mapper.TransactionMapper;
+import cheongsan.domain.deposit.entity.Transaction;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,10 +15,10 @@ import java.util.List;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {RootConfig.class})
 @Log4j2
-class TransactionMapperTest {
+class DepositMapperTest {
 
     @Autowired
-    private TransactionMapper mapper;
+    private DepositMapper mapper;
 
     @Test
     @DisplayName("월 이체 내역 조회")
@@ -30,10 +29,10 @@ class TransactionMapperTest {
         int month = 6;
 
         // when
-        List<TransactionDTO> transactions = mapper.findTransferTransactionsByMonth(userId, year, month);
+        List<Transaction> transactions = mapper.findTransferTransactionsByMonth(userId, year, month);
 
         // then
-        for (TransactionDTO transaction : transactions) {
+        for (Transaction transaction : transactions) {
             log.info("========" + transaction);
         }
     }
@@ -47,10 +46,10 @@ class TransactionMapperTest {
         int month = 6;
 
         // when
-        List<TransactionDTO> transactions = mapper.findWithdrawTransactionsByMonth(userId, year, month);
+        List<Transaction> transactions = mapper.findWithdrawTransactionsByMonth(userId, year, month);
 
         // then
-        for (TransactionDTO transaction : transactions) {
+        for (Transaction transaction : transactions) {
             log.info("========" + transaction);
         }
     }
