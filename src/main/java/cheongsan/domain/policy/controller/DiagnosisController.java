@@ -24,8 +24,8 @@ public class DiagnosisController {
      * - 프론트엔드는 UserDiagnosisDTO 구조의 JSON을 POST로 전송
      * - 컨트롤러에서는 해당 DTO를 파싱 후 서비스에 전달
      */
-    @PostMapping("/answer")
-    public ResponseEntity<DiagnosisDTO> submitDiagnosisAnswer(
+    @PostMapping("/submit")
+    public ResponseEntity<DiagnosisDTO> submitDiagnosisSurvey(
             @RequestBody UserDiagnosisDTO userDiagnosisDTO
     ) {
         DiagnosisDTO result = diagnosisService.processDiagnosis(userDiagnosisDTO);
