@@ -306,7 +306,6 @@ public class Calculator {
         BigDecimal totalPayment = BigDecimal.ZERO;
 
         for (int i = 0; i < loanPeriodMonths; i++) {
-            LocalDate dueDate = loanStartDate.plusMonths(i);
             BigDecimal interest = principal.multiply(monthlyRate, MATH_CONTEXT);
             BigDecimal principalPayment = BigDecimal.ZERO;
             BigDecimal totalMonthlyPayment = interest;
