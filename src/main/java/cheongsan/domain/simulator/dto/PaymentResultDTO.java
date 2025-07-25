@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class RepaymentResultDTO {
+public class PaymentResultDTO {
     private BigDecimal totalPayment;
     private List<MonthlyPaymentDetailDTO> payments;
 }
