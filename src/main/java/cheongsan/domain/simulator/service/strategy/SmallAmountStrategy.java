@@ -1,8 +1,8 @@
 package cheongsan.domain.simulator.service.strategy;
 
-import cheongsan.domain.simulator.dto.LoanDto;
-import cheongsan.domain.simulator.dto.RepaymentRequestDto;
-import cheongsan.domain.simulator.dto.RepaymentResultDto;
+import cheongsan.domain.simulator.dto.LoanDTO;
+import cheongsan.domain.simulator.dto.RepaymentRequestDTO;
+import cheongsan.domain.simulator.dto.RepaymentResultDTO;
 import cheongsan.domain.simulator.dto.StrategyType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,12 +21,12 @@ import java.util.stream.Collectors;
 public class SmallAmountStrategy implements RepaymentStrategy {
 
     @Override
-    public RepaymentResultDto simulate(RepaymentRequestDto request) {
-        List<LoanDto> loans = new ArrayList<>(request.getLoans());
-        loans.sort(Comparator.comparing(LoanDto::getPrincipal)); // 잔여 원금 기준 오름차순 정렬
+    public RepaymentResultDTO simulate(RepaymentRequestDTO request) {
+        List<LoanDTO> loans = new ArrayList<>(request.getLoans());
+        loans.sort(Comparator.comparing(LoanDTO::getPrincipal)); // 잔여 원금 기준 오름차순 정렬
 
         List<String> sortedLoanNames = loans.stream()
-                .map(LoanDto::getLoanName)
+                .map(LoanDTO::getLoanName)
                 .collect(Collectors.toList());
 
         BigDecimal monthlyAvailable = request.getMonthlyAvailableAmount();
@@ -34,14 +34,14 @@ public class SmallAmountStrategy implements RepaymentStrategy {
         BigDecimal totalInterestPaid = BigDecimal.ZERO;
 
         Map<Long, BigDecimal> remainingBalances = loans.stream()
-                .collect(Collectors.toMap(LoanDto::getId, LoanDto::getPrincipal)); // Map<대출 ID, 남은 원금>
+                .collect(Collectors.toMap(LoanDTO::getId, LoanDTO::getPrincipal)); // Map<대출 ID, 남은 원금>
 
         int monthsElapsed = 0;
 
         while (remainingBalances.values().stream().anyMatch(b -> b.compareTo(BigDecimal.ZERO) > 0)) {
             BigDecimal available = monthlyAvailable;
 
-            for (LoanDto loan : loans) {
+            for (LoanDTO loan : loans) {
                 Long id = loan.getId();
                 BigDecimal principal = remainingBalances.get(id);
                 if (principal.compareTo(BigDecimal.ZERO) <= 0) continue;
@@ -66,7 +66,7 @@ public class SmallAmountStrategy implements RepaymentStrategy {
             monthsElapsed++;
         }
 
-        return RepaymentResultDto.builder()
+        return RepaymentResultDTO.builder()
                 .strategyType(StrategyType.SMALL_AMOUNT_FIRST)
                 .debtFreeDate(LocalDate.now().plusMonths(monthsElapsed))
                 .totalMonths(monthsElapsed)
