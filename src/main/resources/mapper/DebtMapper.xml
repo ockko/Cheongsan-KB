@@ -15,7 +15,7 @@
                da.interest_rate     AS interestRate,
                da.loan_start_date   AS loanStartDate
         FROM debt_accounts da
-                 JOIN mountain_db.financial_institutions fi ON da.organization_code = fi.organization_code
+                 JOIN financial_institutions fi ON da.organization_code = fi.organization_code
         WHERE da.user_id = #{userId}
     </select>
 
@@ -30,7 +30,7 @@
                da.grace_period_months AS gracePeriodMonths,
                da.repayment_method    AS repaymentMethod
         FROM debt_accounts da
-                 JOIN mountain_db.financial_institutions fi ON da.organization_code = fi.organization_code
+                 JOIN financial_institutions fi ON da.organization_code = fi.organization_code
         WHERE da.id = #{loanId}
     </select>
 

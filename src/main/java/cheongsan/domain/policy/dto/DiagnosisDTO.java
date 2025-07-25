@@ -21,19 +21,6 @@ public class DiagnosisDTO {
     private String cautions;
     private String simpleDescription;
 
-    //
-    public DiagnosisDTO(Diagnosis entity) {
-        this.id = entity.getId();
-        this.programName = entity.getProgramName();
-        this.operatingEntity = entity.getOperatingEntity();
-        this.eligibleDebtors = entity.getEligibleDebtors();
-        this.eligibleDebts = entity.getEligibleDebts();
-        this.debtAmountLimit = entity.getDebtAmountLimit();
-        this.advantages = entity.getAdvantages();
-        this.cautions = entity.getCautions();
-        this.simpleDescription = entity.getSimpleDescription();
-    }
-
     // Diagnosis Entity → DTO 변환 static 메서드 (Builder 활용)
     public static DiagnosisDTO of(Diagnosis entity) {
         return DiagnosisDTO.builder()
