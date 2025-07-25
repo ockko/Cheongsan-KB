@@ -30,7 +30,7 @@ public class DiagnosisServiceImpl implements DiagnosisService {
         // (3) 판단된 상태/조건을 토대로 정책 조회(실제 추천 로직은 정책 조건 매칭 규칙에 따라 달라짐)
         Diagnosis policy = policyMapper.getDiagnosisResult(diagnosisId);
 
-        DiagnosisDTO diagnosisDTO = new DiagnosisDTO(policy);
+        DiagnosisDTO diagnosisDTO = DiagnosisDTO.of(policy);
 
         return diagnosisDTO;
     }
@@ -91,7 +91,7 @@ public class DiagnosisServiceImpl implements DiagnosisService {
     public DiagnosisDTO getDiagnosis(Long diagnosisId) {
         Diagnosis policy = policyMapper.getDiagnosisResult(diagnosisId);
 
-        DiagnosisDTO diagnosisDTO = new DiagnosisDTO(policy);
+        DiagnosisDTO diagnosisDTO = DiagnosisDTO.of(policy);
         return diagnosisDTO;
     }
 

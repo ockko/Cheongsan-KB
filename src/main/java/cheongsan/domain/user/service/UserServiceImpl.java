@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
     public UserDTO getUser(Long userId) {
         User user = userMapper.findById(userId);
-        UserDTO userDTO = new UserDTO(user);
+        UserDTO userDTO = UserDTO.of(user);
         return userDTO;
     }
 }
