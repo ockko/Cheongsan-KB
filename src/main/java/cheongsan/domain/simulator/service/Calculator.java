@@ -1,7 +1,7 @@
 package cheongsan.domain.simulator.service;
 
 import cheongsan.domain.simulator.dto.MonthlyPaymentDetailDTO;
-import cheongsan.domain.simulator.dto.RepaymentResultDTO;
+import cheongsan.domain.simulator.dto.PaymentResultDTO;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -15,15 +15,15 @@ import java.util.List;
 @Component
 public class Calculator {
 
-    private static final MathContext MATH_CONTEXT = new MathContext(15, RoundingMode.HALF_UP);
+    public static final MathContext MATH_CONTEXT = new MathContext(15, RoundingMode.HALF_UP);
 
     /**
      * @param interestRate       월 이자율 (예: 연 6%면 월 0.005 = 0.5%)
      * @param months             남은 상환 개월 수 (예: 12개월)
      * @param remainingPrincipal 현재 남은 원금
-     * @return {@link RepaymentResultDTO} 총 납입금과 각 월별 납입 상세 정보 리스트 포함
+     * @return {@link PaymentResultDTO} 총 납입금과 각 월별 납입 상세 정보 리스트 포함
      */
-    public RepaymentResultDTO calculateEqualPayment(BigDecimal interestRate, BigDecimal months, BigDecimal remainingPrincipal) {
+    public PaymentResultDTO calculateEqualPayment(BigDecimal interestRate, BigDecimal months, BigDecimal remainingPrincipal) {
         // 매달 납입 정보를 담은 리스트 (상환 결과)
         List<MonthlyPaymentDetailDTO> payments = new ArrayList<>();
         // 총 납입금 (원금 + 이자 합계)
@@ -35,7 +35,7 @@ public class Calculator {
                 payments.add(new MonthlyPaymentDetailDTO(i, monthlyPayment, BigDecimal.ZERO, monthlyPayment));
             }
             totalPayment = remainingPrincipal;
-            return new RepaymentResultDTO(totalPayment.setScale(0, RoundingMode.HALF_UP), payments);
+            return new PaymentResultDTO(totalPayment.setScale(0, RoundingMode.HALF_UP), payments);
         }
 
         BigDecimal one = BigDecimal.ONE;
@@ -69,7 +69,7 @@ public class Calculator {
 
             totalPayment = totalPayment.add(monthlyPayment, MATH_CONTEXT);
         }
-        return new RepaymentResultDTO(totalPayment.setScale(0, RoundingMode.HALF_UP), payments);
+        return new PaymentResultDTO(totalPayment.setScale(0, RoundingMode.HALF_UP), payments);
 
     }
 
@@ -77,9 +77,9 @@ public class Calculator {
      * @param interestRate       월 이자율 (예: 연 6%면 월 0.005)
      * @param months             총 상환 개월 수
      * @param remainingPrincipal 현재 남은 원금
-     * @return {@link RepaymentResultDTO} 총 납입금과 각 월별 납입 상세 정보 리스트 포함
+     * @return {@link PaymentResultDTO} 총 납입금과 각 월별 납입 상세 정보 리스트 포함
      */
-    public RepaymentResultDTO calculateEqualPrincipal(BigDecimal interestRate, BigDecimal months, BigDecimal remainingPrincipal) {
+    public PaymentResultDTO calculateEqualPrincipal(BigDecimal interestRate, BigDecimal months, BigDecimal remainingPrincipal) {
         // 매달 갚아야 할 고정 원금 (remainingPrincipal / months)
         BigDecimal monthlyPrincipal = remainingPrincipal.divide(months, MATH_CONTEXT);
         // 전체 납입 총액 (이자 + 원금 합계) 누적용
@@ -101,7 +101,7 @@ public class Calculator {
                     nowInterest.setScale(0, RoundingMode.HALF_UP),
                     monthlyPayment.setScale(0, RoundingMode.HALF_UP)));
         }
-        return new RepaymentResultDTO(totalPayment, payments);
+        return new PaymentResultDTO(totalPayment, payments);
     }
 
     /**
@@ -114,9 +114,9 @@ public class Calculator {
      * @param prepaymentFeeRate  중도상환 수수료율 (ex 0.01 = 1%)
      * @param loanStartDate      대출 시작일
      * @param loanEndDate        대출 종료일
-     * @return {@link RepaymentResultDTO} 총 납입금과 각 월별 납입 상세 정보 리스트 포함
+     * @return {@link PaymentResultDTO} 총 납입금과 각 월별 납입 상세 정보 리스트 포함
      */
-    public RepaymentResultDTO calculateEqualPaymentWithFixedPrepayment(
+    public PaymentResultDTO calculateEqualPaymentWithFixedPrepayment(
             BigDecimal interestRate,
             BigDecimal months,
             BigDecimal remainingPrincipal,
@@ -179,7 +179,7 @@ public class Calculator {
             totalPayment = totalPayment.add(totalMonthlyPayment, MATH_CONTEXT);
         }
 
-        return new RepaymentResultDTO(
+        return new PaymentResultDTO(
                 totalPayment.setScale(0, RoundingMode.HALF_UP),
                 payments
         );
@@ -194,9 +194,9 @@ public class Calculator {
      * @param remainingPrincipal 초기 대출 원금
      * @param monthlyPrepayment  매월 고정 중도상환 금액
      * @param prepaymentFeeRate  중도상환 수수료율 (ex 0.01 = 1%)
-     * @return {@link RepaymentResultDTO} 총 납입금과 각 월별 납입 상세 정보 리스트 포함
+     * @return {@link PaymentResultDTO} 총 납입금과 각 월별 납입 상세 정보 리스트 포함
      */
-    public RepaymentResultDTO calculateEqualPrincipalWithFixedPrepayment(
+    public PaymentResultDTO calculateEqualPrincipalWithFixedPrepayment(
             BigDecimal interestRate,
             BigDecimal months,
             BigDecimal remainingPrincipal,
@@ -260,7 +260,7 @@ public class Calculator {
             totalPayment = totalPayment.add(monthlyPayment, MATH_CONTEXT);
         }
 
-        return new RepaymentResultDTO(
+        return new PaymentResultDTO(
                 totalPayment.setScale(0, RoundingMode.HALF_UP),
                 payments
         );
@@ -298,9 +298,9 @@ public class Calculator {
      * @param annualRate       연 이자율 (ex 0.06 == 6%)
      * @param loanPeriodMonths 대출 기간 (개월)
      * @param loanStartDate    대출 시작일
-     * @return {@link RepaymentResultDTO} 총 납입금과 각 월별 납입 상세 정보 리스트 포함
+     * @return {@link PaymentResultDTO} 총 납입금과 각 월별 납입 상세 정보 리스트 포함
      */
-    public RepaymentResultDTO calculateLumpSumRepayment(BigDecimal principal, BigDecimal annualRate, int loanPeriodMonths, LocalDate loanStartDate) {
+    public PaymentResultDTO calculateLumpSumRepayment(BigDecimal principal, BigDecimal annualRate, int loanPeriodMonths, LocalDate loanStartDate) {
         BigDecimal monthlyRate = annualRate.divide(BigDecimal.valueOf(12), MATH_CONTEXT);
         List<MonthlyPaymentDetailDTO> payments = new ArrayList<>();
         BigDecimal totalPayment = BigDecimal.ZERO;
@@ -324,6 +324,62 @@ public class Calculator {
 
             totalPayment = totalPayment.add(totalMonthlyPayment);
         }
-        return new RepaymentResultDTO(totalPayment.setScale(0, RoundingMode.HALF_UP), payments);
+        return new PaymentResultDTO(totalPayment.setScale(0, RoundingMode.HALF_UP), payments);
+    }
+
+    /**
+     * 만기 일시 상환 + 중도 상환
+     *
+     * @param principal         대출 원금
+     * @param annualRate        연이자율
+     * @param loanPeriodMonths  대출 기간 (개월 수)
+     * @param monthlyPrepayment 매월 중도상환 금액
+     * @return {@link PaymentResultDTO} 총 납입금과 각 월별 납입 상세 정보 리스트 포함
+     */
+    public PaymentResultDTO calculateLumpSumRepaymentWithPrepayment(
+            BigDecimal principal,
+            BigDecimal annualRate,
+            int loanPeriodMonths,
+            BigDecimal monthlyPrepayment) {
+        // 연이율 -> 월이율로 반환 (MATH_CONTEXT : 게산 정밀도 설정)
+        BigDecimal monthlyRate = annualRate.divide(BigDecimal.valueOf(12), MATH_CONTEXT);
+        List<MonthlyPaymentDetailDTO> payments = new ArrayList<>();
+        BigDecimal totalPayment = BigDecimal.ZERO;
+        BigDecimal remainingPrincipal = principal;
+
+        for (int i = 0; i < loanPeriodMonths; i++) {
+            // 남은 원금 기준으로 매월 이자 계산
+            BigDecimal interest = remainingPrincipal.multiply(monthlyRate, MATH_CONTEXT);
+            BigDecimal principalPayment = BigDecimal.ZERO;
+
+            // 중도상환 (조기상환)
+            if (monthlyPrepayment.compareTo(BigDecimal.ZERO) > 0) {
+                if (monthlyPrepayment.compareTo(remainingPrincipal) >= 0) {
+                    principalPayment = remainingPrincipal;
+                    remainingPrincipal = BigDecimal.ZERO;
+                } else {
+                    principalPayment = monthlyPrepayment;
+                    remainingPrincipal = remainingPrincipal.subtract(monthlyPrepayment, MATH_CONTEXT);
+                }
+            }
+            BigDecimal totalMonthlyPayment = interest.add(principalPayment, MATH_CONTEXT);
+
+            // 만기인 경우 남은 원금을 한꺼번에 갚음
+            if (i == loanPeriodMonths - 1 && remainingPrincipal.compareTo(BigDecimal.ZERO) > 0) {
+                totalMonthlyPayment = totalMonthlyPayment.add(remainingPrincipal, MATH_CONTEXT);
+                principalPayment = principalPayment.add(remainingPrincipal, MATH_CONTEXT);
+                remainingPrincipal = BigDecimal.ZERO;
+            }
+
+            payments.add(new MonthlyPaymentDetailDTO(
+                    i + 1,
+                    principalPayment.setScale(0, RoundingMode.HALF_UP),
+                    interest.setScale(0, RoundingMode.HALF_UP),
+                    totalMonthlyPayment.setScale(0, RoundingMode.HALF_UP)
+            ));
+
+            totalPayment = totalPayment.add(totalMonthlyPayment);
+        }
+        return new PaymentResultDTO(totalPayment.setScale(0, RoundingMode.HALF_UP), payments);
     }
 }
