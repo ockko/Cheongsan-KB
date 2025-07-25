@@ -14,4 +14,11 @@
         SET recommended_program_id = #{programId}
         WHERE id = #{userId}
     </update>
+
+    <update id="updateDailyLimit">
+        UPDATE user
+        SET daily_limit      = #{dailyLimit},
+            daily_limit_date = #{dailyLimitDate}
+        WHERE id = #{userId}
+    </update>
 </mapper>

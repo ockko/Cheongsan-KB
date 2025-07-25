@@ -11,4 +11,5 @@ public class BudgetLimitDTO {
 
     private final int recommendedDailyLimit;
     private final int maximumDailyLimit;
+    private final int currentDailyLimit;
 }
