@@ -2,18 +2,18 @@ package cheongsan.domain.simulator.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 
-public class LoanDto {
+public class LoanDTO {
 
     private Long id;
     private String loanName; // 대출명

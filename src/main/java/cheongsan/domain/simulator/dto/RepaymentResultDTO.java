@@ -2,19 +2,19 @@ package cheongsan.domain.simulator.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 
-public class RepaymentResultDto {
+public class RepaymentResultDTO {
 
     private StrategyType strategyType; // 어떤 전략
     private LocalDate debtFreeDate; // 최종 졸업일
