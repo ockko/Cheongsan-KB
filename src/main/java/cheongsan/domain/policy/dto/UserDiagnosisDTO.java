@@ -1,20 +1,18 @@
 package cheongsan.domain.policy.dto;
 
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.List;
 
-@Getter
+@Data
 @NoArgsConstructor
 public class UserDiagnosisDTO {
     private String sessionId;
     private List<Answer> answers;
 
-    @Getter
-    @Setter
+    @Data
     @NoArgsConstructor
     public static class Answer {
         private int questionId;
