@@ -107,5 +107,19 @@
         WHERE user_id = #{userId}
     </select>
 
+    <select id="getDelinquentLoanByUserId" parameterType="long"
+            resultType="cheongsan.domain.debt.entity.DelinquentLoan">
+        SELECT da.debt_name         AS debtName,
+               fi.organization_name AS organizationName,
+               da.next_payment_date AS nextPaymentDate
+        FROM debt_accounts da
+                 JOIN financial_institutions fi ON da.organization_code = fi.organization_code
+        WHERE da.user_id = #{userId}
+          AND da.next_payment_date &lt; CURRENT_DATE
+          AND NOT EXISTS (SELECT 1
+                          FROM debt_transactions dt
+                          WHERE dt.debt_account_id = da.id
+                            AND dt.transaction_date &gt;= da.next_payment_date)
+    </select>
 
 </mapper>

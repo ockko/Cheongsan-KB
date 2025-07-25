@@ -22,4 +22,8 @@ public interface DebtService {
     List<DailyRepaymentDTO> getDailyRepayments(Long userId, LocalDate date);
 
     RepaymentRatioResponseDTO getRepaymentRatio(Long userId);
+
+    // 연체 일수 계싼 및 연체 대출 조회
+    List<DelinquentLoanResponseDTO> getDelinquentLoans(Long userId);
+
 }
