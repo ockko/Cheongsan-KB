@@ -1,6 +1,6 @@
 package cheongsan.domain.policy.dto;
 
-import cheongsan.domain.policy.entity.DiagnosisEntity;
+import cheongsan.domain.policy.entity.Diagnosis;
 import lombok.Getter;
 
 @Getter
@@ -16,7 +16,7 @@ public class DiagnosisDTO {
     private String simpleDescription;
 
     //
-    public DiagnosisDTO(DiagnosisEntity entity) {
+    public DiagnosisDTO(Diagnosis entity) {
         this.id = entity.getId();
         this.programName = entity.getProgramName();
         this.operatingEntity = entity.getOperatingEntity();

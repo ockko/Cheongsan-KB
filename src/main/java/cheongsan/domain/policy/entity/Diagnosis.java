@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class DiagnosisEntity {
+public class Diagnosis {
     private Long id;
     private String programName;
     private String operatingEntity;
