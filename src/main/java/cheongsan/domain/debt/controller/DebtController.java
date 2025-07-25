@@ -3,6 +3,7 @@ package cheongsan.domain.debt.controller;
 import cheongsan.domain.debt.dto.DebtDetailResponseDTO;
 import cheongsan.domain.debt.dto.DebtInfoResponseDTO;
 import cheongsan.domain.debt.dto.DebtRegisterRequestDTO;
+import cheongsan.domain.debt.dto.RepaymentRatioResponseDTO;
 import cheongsan.domain.debt.service.DebtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -53,5 +54,9 @@ public class DebtController {
         }
     }
 
+    @GetMapping("/loans/repaymentRatio")
+    public RepaymentRatioResponseDTO getRepaymentRatio(@RequestParam Long userId) {
+        return debtService.getRepaymentRatio(userId);
+    }
 
 }

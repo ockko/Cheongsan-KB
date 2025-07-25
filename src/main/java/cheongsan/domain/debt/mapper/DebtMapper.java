@@ -2,6 +2,7 @@ package cheongsan.domain.debt.mapper;
 
 import cheongsan.domain.debt.dto.*;
 import cheongsan.domain.debt.entity.DebtAccount;
+import cheongsan.domain.debt.entity.DebtRepaymentRatio;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -35,4 +36,7 @@ public interface DebtMapper {
             @Param("userId") Long userId,
             @Param("date") LocalDate date
     );
+
+    // 상환율 계산할 데이터 조회
+    List<DebtRepaymentRatio> getDebtRepaymentInfoByUserId(@Param("userId") Long userId);
 }

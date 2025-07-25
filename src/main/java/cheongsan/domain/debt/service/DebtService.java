@@ -1,10 +1,6 @@
 package cheongsan.domain.debt.service;
 
-import cheongsan.domain.debt.dto.DebtDetailResponseDTO;
-import cheongsan.domain.debt.dto.DebtInfoResponseDTO;
-import cheongsan.domain.debt.dto.DebtRegisterRequestDTO;
-import cheongsan.domain.debt.dto.DailyRepaymentDTO;
-import cheongsan.domain.debt.dto.RepaymentCalendarDTO;
+import cheongsan.domain.debt.dto.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -24,4 +20,6 @@ public interface DebtService {
 
     // 특정 날짜의 상환일자 상세 조회
     List<DailyRepaymentDTO> getDailyRepayments(Long userId, LocalDate date);
+
+    RepaymentRatioResponseDTO getRepaymentRatio(Long userId);
 }
