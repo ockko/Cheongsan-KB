@@ -4,6 +4,7 @@ import cheongsan.common.util.LoanCalculator;
 import cheongsan.domain.debt.dto.*;
 import cheongsan.domain.debt.entity.DebtAccount;
 import cheongsan.domain.debt.entity.DebtRepaymentRatio;
+import cheongsan.domain.debt.entity.DelinquentLoan;
 import cheongsan.domain.debt.mapper.DebtMapper;
 import cheongsan.domain.debt.mapper.FinancialInstitutionMapper;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +15,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -172,5 +175,22 @@ public class DebtServiceImpl implements DebtService {
                 .totalRepaidAmount(totalRepaid)
                 .repaymentRatio(ratio)
                 .build();
+    }
+
+    @Override
+    public List<DelinquentLoanResponseDTO> getDelinquentLoans(Long userId) {
+        List<DelinquentLoan> entities = debtMapper.getDelinquentLoanByUserId(userId);
+
+        return entities.stream()
+                .map(entity -> {
+                    int overdueDays = Period.between(entity.getNextPaymentDate(), LocalDate.now()).getDays();
+                    return DelinquentLoanResponseDTO.builder()
+                            .debtName(entity.getDebtName())
+                            .organizationName(entity.getOrganizationName())
+                            .overdueDays(overdueDays)
+                            .build();
+                })
+                .sorted(Comparator.comparingInt(DelinquentLoanResponseDTO::getOverdueDays).reversed())
+                .collect(Collectors.toList());
     }
 }
