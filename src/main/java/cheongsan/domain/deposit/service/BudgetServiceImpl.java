@@ -1,7 +1,7 @@
-package cheongsan.domain.spending.service;
+package cheongsan.domain.deposit.service;
 
 import cheongsan.domain.debt.service.DebtService;
-import cheongsan.domain.spending.dto.BudgetLimitDTO;
+import cheongsan.domain.deposit.dto.BudgetLimitDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class BudgetServiceImpl implements BudgetService {
 
-    private final TransactionService transactionService;
+    private final DepositService depositService;
     private final DebtService debtService;
 
     private static final BigDecimal RECOMMENDATION_RATE = new BigDecimal("0.7");
@@ -38,7 +38,7 @@ public class BudgetServiceImpl implements BudgetService {
 
     private BigDecimal calculateAvailableMonthlySpending(Long userId) {
         LocalDate lastMonth = LocalDate.now().minusMonths(1);
-        BigDecimal monthlyTransfer = transactionService.calculateRegularMonthlyTransfer(
+        BigDecimal monthlyTransfer = depositService.calculateRegularMonthlyTransfer(
                 userId,
                 lastMonth.getYear(),
                 lastMonth.getMonthValue()
@@ -49,7 +49,7 @@ public class BudgetServiceImpl implements BudgetService {
         }
 
         BigDecimal totalMonthlyDebtPayment = debtService.calculateTotalMonthlyPayment(userId);
-        BigDecimal monthlyFixedWithdraw = transactionService.calculateMonthlyFixedWithdraw(
+        BigDecimal monthlyFixedWithdraw = depositService.calculateMonthlyFixedWithdraw(
                 userId,
                 lastMonth.getYear(),
                 lastMonth.getMonthValue()

@@ -1,4 +1,4 @@
-package cheongsan.domain.spending.service;
+package cheongsan.domain.deposit.service;
 
 import cheongsan.common.config.RootConfig;
 import lombok.extern.log4j.Log4j2;
@@ -16,10 +16,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {RootConfig.class})
 @Log4j2
-class TransactionServiceImplTest {
+class DepositServiceImplTest {
 
     @Autowired
-    private TransactionServiceImpl transactionService;
+    private DepositServiceImpl depositService;
 
     @Test
     @DisplayName("정기 소득 키워드가 포함된 거래내역의 합계를 정확히 계산해야 한다")
@@ -30,7 +30,7 @@ class TransactionServiceImplTest {
         int month = 6;
 
         // when
-        BigDecimal result = transactionService.calculateRegularMonthlyTransfer(userId, year, month);
+        BigDecimal result = depositService.calculateRegularMonthlyTransfer(userId, year, month);
 
         // then
         assertEquals(new BigDecimal("3150000.00"), result, "정기 소득 합계가 일치해야 합니다.");
@@ -46,7 +46,7 @@ class TransactionServiceImplTest {
         int month = 7;
 
         // when
-        BigDecimal result = transactionService.calculateRegularMonthlyTransfer(userId, year, month);
+        BigDecimal result = depositService.calculateRegularMonthlyTransfer(userId, year, month);
 
         // then
         assertEquals(BigDecimal.ZERO, result, "정기 소득이 없으면 합계는 0이어야 합니다.");
@@ -62,7 +62,7 @@ class TransactionServiceImplTest {
         int month = 6;
 
         // when
-        BigDecimal result = transactionService.calculateMonthlyFixedWithdraw(userId, year, month);
+        BigDecimal result = depositService.calculateMonthlyFixedWithdraw(userId, year, month);
 
         // then
         assertEquals(new BigDecimal("336000.00"), result, "고정 지출 합계가 일치해야 합니다.");
@@ -78,7 +78,7 @@ class TransactionServiceImplTest {
         int month = 7;
 
         // when
-        BigDecimal result = transactionService.calculateMonthlyFixedWithdraw(userId, year, month);
+        BigDecimal result = depositService.calculateMonthlyFixedWithdraw(userId, year, month);
 
         // then
         assertEquals(BigDecimal.ZERO, result, "고정 지출이 없으면 합계는 0이어야 합니다.");
