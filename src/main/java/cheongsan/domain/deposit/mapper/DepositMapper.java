@@ -20,4 +20,16 @@ public interface DepositMapper {
             @Param("userId") Long userId,
             @Param("date") LocalDate date
     );
+
+    List<Transaction> findTransferTransactionsByMonth(
+            @Param("userId") Long userId,
+            @Param("year") int year,
+            @Param("month") int month
+    );
+
+    List<Transaction> findWithdrawTransactionsByMonth(
+            @Param("userId") Long userId,
+            @Param("year") int year,
+            @Param("month") int month
+    );
 }

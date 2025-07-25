@@ -1,7 +1,7 @@
-package cheongsan.domain.spending.controller;
+package cheongsan.domain.deposit.controller;
 
-import cheongsan.domain.spending.dto.BudgetLimitDTO;
-import cheongsan.domain.spending.service.BudgetService;
+import cheongsan.domain.deposit.dto.BudgetLimitDTO;
+import cheongsan.domain.deposit.service.BudgetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,8 +1,7 @@
-package cheongsan.domain.debt.repository;
+package cheongsan.domain.debt.mapper;
 
 import cheongsan.common.config.RootConfig;
 import cheongsan.domain.debt.dto.DebtDTO;
-import cheongsan.domain.debt.mapper.DebtMapper;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

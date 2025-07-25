@@ -1,14 +1,12 @@
 package cheongsan.domain.deposit.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

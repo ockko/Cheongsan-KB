@@ -1,7 +1,7 @@
-package cheongsan.domain.spending.service;
+package cheongsan.domain.deposit.service;
 
 import cheongsan.common.config.RootConfig;
-import cheongsan.domain.spending.dto.BudgetLimitDTO;
+import cheongsan.domain.deposit.dto.BudgetLimitDTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
