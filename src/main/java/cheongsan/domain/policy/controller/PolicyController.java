@@ -1,6 +1,7 @@
 package cheongsan.domain.policy.controller;
 
 import cheongsan.domain.policy.dto.PolicyDTO;
+import cheongsan.domain.policy.dto.PolicyDetailDTO;
 import cheongsan.domain.policy.dto.PolicyRequestDTO;
 import cheongsan.domain.policy.service.PolicyService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class PolicyController {
     private final PolicyService policyService;
 
 
-    @GetMapping("list")
+    @GetMapping("/list")
     public ResponseEntity<List<PolicyDTO>> getPolicyList(
     ) throws Exception {
         PolicyRequestDTO policyRequestDTO = new PolicyRequestDTO();
@@ -30,7 +31,7 @@ public class PolicyController {
         return ResponseEntity.ok(policyList);
     }
 
-    @GetMapping("search")
+    @GetMapping("/search")
     public ResponseEntity<List<PolicyDTO>> searchPolicyList(
             @RequestParam(required = false) String searchWrd,
             @RequestParam(required = false) List<String> tags
@@ -44,6 +45,16 @@ public class PolicyController {
 
 
         return ResponseEntity.ok(tagFilteredPolicyList);
+    }
+
+    @GetMapping("/detail")
+    public ResponseEntity<PolicyDetailDTO> getPolicyDetail(
+            @RequestParam(required = false) String policyName) throws Exception {
+        PolicyRequestDTO policyRequestDTO = new PolicyRequestDTO();
+        policyRequestDTO.setSearchWrd(policyName);
+        PolicyDetailDTO policyDetailDTO = policyService.getPolicyDetail(policyRequestDTO);
+
+        return ResponseEntity.ok(policyDetailDTO);
     }
 
 
