@@ -7,7 +7,11 @@
 
     <select id="findRecommendedLoans" resultType="cheongsan.domain.simulator.dto.LoanProductDTO">
     <![CDATA[
-        SELECT hdlInst, finPrdNm, irt, lnLmt, rltSite
+        SELECT finPrdNm AS productName,
+               hdlInst  AS institutionName,
+               irt      AS interestRate,
+               lnLmt    AS loanLimit,
+               rltSite  AS siteUrl
         FROM low_income_financial_products
         WHERE dsrCheck = 'N'
           AND CAST(lnLmt AS DECIMAL) >= #{principal}
