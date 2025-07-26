@@ -1,10 +1,12 @@
 package cheongsan.domain.deposit.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
 
 @AllArgsConstructor
-@Data
+@Getter
+@ToString
 public class DailySpendingDTO {
 
     private final int dailyLimit;
