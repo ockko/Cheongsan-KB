@@ -6,7 +6,7 @@
 <mapper namespace="cheongsan.domain.policy.mapper.PolicyMapper">
 
     <select id="getDiagnosisResult" parameterType="java.lang.Long"
-            resultType="cheongsan.domain.policy.entity.DiagnosisEntity">
+            resultType="cheongsan.domain.policy.entity.Diagnosis">
         SELECT *
         FROM debt_relief_programs
         WHERE id = #{id}

@@ -3,6 +3,7 @@ package cheongsan.domain.debt.mapper;
 import cheongsan.domain.debt.dto.*;
 import cheongsan.domain.debt.entity.DebtAccount;
 import cheongsan.domain.debt.entity.DebtRepaymentRatio;
+import cheongsan.domain.debt.entity.DelinquentLoan;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -39,4 +40,7 @@ public interface DebtMapper {
 
     // 상환율 계산할 데이터 조회
     List<DebtRepaymentRatio> getDebtRepaymentInfoByUserId(@Param("userId") Long userId);
+
+    // 연체된 대출 조회
+    List<DelinquentLoan> getDelinquentLoanByUserId(Long userId);
 }
