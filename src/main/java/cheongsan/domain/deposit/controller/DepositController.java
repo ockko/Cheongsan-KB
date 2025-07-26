@@ -1,11 +1,13 @@
 package cheongsan.domain.deposit.controller;
 
+import cheongsan.domain.deposit.dto.DailySpendingDTO;
 import cheongsan.domain.deposit.dto.DailyTransactionDTO;
 import cheongsan.domain.deposit.dto.MonthlyTransactionDTO;
 import cheongsan.domain.deposit.service.DepositService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,13 +15,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cheongsan/calendar")
+@RequestMapping("/cheongsan")
 @RequiredArgsConstructor
 @Log4j2
 public class DepositController {
     private final DepositService depositService;
 
-    @GetMapping("/transactions")
+    @GetMapping("/calendar/transactions")
     public ResponseEntity<List<MonthlyTransactionDTO>> getMonthlyTransactions(
             @RequestParam int year,
             @RequestParam int month) {
@@ -30,7 +32,7 @@ public class DepositController {
         return ResponseEntity.ok(transactions);
     }
 
-    @GetMapping("/transactions/{date}")
+    @GetMapping("/calendar/transactions/{date}")
     public ResponseEntity<List<DailyTransactionDTO>> getDailyTransactions(
             @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
 
@@ -38,5 +40,14 @@ public class DepositController {
 
         List<DailyTransactionDTO> transactions = depositService.getDailyTransactions(date);
         return ResponseEntity.ok(transactions);
+    }
+
+    @GetMapping("/dashboard/daily-spending")
+    public ResponseEntity<DailySpendingDTO> getDailySpendingStatus() {
+        Long userId = 1L;
+
+        DailySpendingDTO result = depositService.getDailySpendingStatus(userId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
