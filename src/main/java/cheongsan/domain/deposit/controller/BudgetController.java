@@ -3,6 +3,7 @@ package cheongsan.domain.deposit.controller;
 import cheongsan.common.constant.ResponseMessage;
 import cheongsan.common.exception.ResponseDTO;
 import cheongsan.domain.deposit.dto.BudgetLimitDTO;
+import cheongsan.domain.deposit.dto.BudgetSettingStatusDTO;
 import cheongsan.domain.deposit.dto.DailyLimitRequestDTO;
 import cheongsan.domain.deposit.service.BudgetService;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +35,14 @@ public class BudgetController {
         ResponseDTO response = new ResponseDTO(ResponseMessage.BUDGET_LIMIT_SAVED.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<BudgetSettingStatusDTO> getBudgetSettingStatus() {
+        Long userId = 1L;
+
+        BudgetSettingStatusDTO result = budgetService.getBudgetSettingStatus(userId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

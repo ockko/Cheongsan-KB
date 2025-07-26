@@ -3,6 +3,7 @@ package cheongsan.domain.deposit.service;
 import cheongsan.common.constant.ResponseMessage;
 import cheongsan.domain.debt.service.DebtService;
 import cheongsan.domain.deposit.dto.BudgetLimitDTO;
+import cheongsan.domain.deposit.dto.BudgetSettingStatusDTO;
 import cheongsan.domain.user.entity.User;
 import cheongsan.domain.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -70,6 +71,16 @@ public class BudgetServiceImpl implements BudgetService {
         }
 
         userMapper.updateDailyLimit(userId, new BigDecimal(finalDailyLimit), LocalDateTime.now());
+    }
+
+    @Override
+    public BudgetSettingStatusDTO getBudgetSettingStatus(Long userId) {
+        User user = userMapper.findById(userId);
+        if (user == null) {
+            throw new IllegalArgumentException(ResponseMessage.USER_NOT_FOUND.getMessage());
+        }
+
+        return new BudgetSettingStatusDTO(user.getDailyLimitDate());
     }
 
     private BigDecimal calculateAvailableMonthlySpending(Long userId) {
