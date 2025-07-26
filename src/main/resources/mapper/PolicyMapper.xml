@@ -11,4 +11,12 @@
         FROM debt_relief_programs
         WHERE id = #{id}
     </select>
+
+    <select id="getSimpleDiagnosisResult" parameterType="java.lang.Long"
+            resultType="cheongsan.domain.policy.entity.SimpleDiagnosis">
+        SELECT id, program_name, operating_entity, simple_description
+        FROM debt_relief_programs
+        WHERE id = #{id}
+    </select>
+
 </mapper>
