@@ -29,6 +29,10 @@ dependencies {
     implementation "org.springframework:spring-webmvc:${springVersion}"
     implementation 'javax.inject:javax.inject:1'
 
+    // WebSocket 의존성 추가
+    implementation 'org.springframework:spring-websocket:5.3.37'
+    implementation 'org.springframework:spring-messaging:5.3.37'
+
     // AOP
     implementation 'org.aspectj:aspectjrt:1.9.20'
     implementation 'org.aspectj:aspectjweaver:1.9.20'
