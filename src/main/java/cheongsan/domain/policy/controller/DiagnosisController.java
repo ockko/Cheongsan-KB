@@ -2,6 +2,7 @@ package cheongsan.domain.policy.controller;
 
 
 import cheongsan.domain.policy.dto.DiagnosisDTO;
+import cheongsan.domain.policy.dto.SimpleDiagnosisDTO;
 import cheongsan.domain.policy.dto.UserDiagnosisDTO;
 import cheongsan.domain.policy.service.DiagnosisService;
 import cheongsan.domain.user.dto.UserDTO;
@@ -24,8 +25,8 @@ public class DiagnosisController {
      * - 프론트엔드는 UserDiagnosisDTO 구조의 JSON을 POST로 전송
      * - 컨트롤러에서는 해당 DTO를 파싱 후 서비스에 전달
      */
-    @PostMapping("/answer")
-    public ResponseEntity<DiagnosisDTO> submitDiagnosisAnswer(
+    @PostMapping("/submit")
+    public ResponseEntity<DiagnosisDTO> submitDiagnosisSurvey(
             @RequestBody UserDiagnosisDTO userDiagnosisDTO
     ) {
         DiagnosisDTO result = diagnosisService.processDiagnosis(userDiagnosisDTO);
@@ -40,7 +41,7 @@ public class DiagnosisController {
 
 
     @GetMapping("/result")
-    public ResponseEntity<DiagnosisDTO> getDiagnosisResult() {
+    public ResponseEntity<SimpleDiagnosisDTO> getDiagnosisResult() {
         Long currentUserId = 1L;
 
         UserDTO userDTO = userService.getUser(currentUserId);
@@ -50,16 +51,17 @@ public class DiagnosisController {
         log.info("recommendDiagnosisId={}", recommendedDiagnosisId);
         if (recommendedDiagnosisId == null) {
             log.info("사용자(ID: {})가 추천받은 진단 결과가 없습니다. 진단을 먼저 진행하도록 안내합니다.", currentUserId);
+            // 진단페이지를 띄워놔야한다.
             return ResponseEntity.noContent().build();
         }
-        DiagnosisDTO diagnosisDTO = diagnosisService.getDiagnosis(recommendedDiagnosisId);
+        SimpleDiagnosisDTO simpleDiagnosisDTO = diagnosisService.getSimpleDiagnosis(recommendedDiagnosisId);
+        log.info("simpleDiagnosisDTO={}", simpleDiagnosisDTO.toString());
 
-
-        return ResponseEntity.ok(diagnosisDTO);
+        return ResponseEntity.ok(simpleDiagnosisDTO);
     }
 
     @GetMapping("/result/{diagnosisId}")
-    public ResponseEntity<DiagnosisDTO> getDebtProgramDetail(
+    public ResponseEntity<DiagnosisDTO> getDiagnosisProgramDetail(
             @PathVariable("diagnosisId") Long diagnosisId) {
         DiagnosisDTO diagnosisDTO = diagnosisService.getDiagnosis(diagnosisId);
 
