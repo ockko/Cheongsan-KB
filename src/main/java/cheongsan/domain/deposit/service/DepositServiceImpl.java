@@ -101,7 +101,7 @@ public class DepositServiceImpl implements DepositService {
 
         BigDecimal todaySpent = depositMapper.sumTodaySpendingByUserId(userId);
 
-        return new DailySpendingDTO(dailyLimit, todaySpent.intValue());
+        return DailySpendingDTO.getDailySpending(dailyLimit, todaySpent.intValue());
     }
 
     private boolean isSalary(Transaction transaction) {

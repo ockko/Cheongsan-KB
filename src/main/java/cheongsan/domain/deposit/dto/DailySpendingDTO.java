@@ -1,7 +1,9 @@
 package cheongsan.domain.deposit.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
+@AllArgsConstructor
 @Data
 public class DailySpendingDTO {
 
@@ -9,9 +11,8 @@ public class DailySpendingDTO {
     private final int spent;
     private final int remaining;
 
-    public DailySpendingDTO(int dailyLimit, int spent) {
-        this.dailyLimit = dailyLimit;
-        this.spent = spent;
-        this.remaining = dailyLimit - spent;
+    public static DailySpendingDTO getDailySpending(int dailyLimit, int spent) {
+        int remaining = dailyLimit - spent;
+        return new DailySpendingDTO(dailyLimit, spent, remaining);
     }
 }
