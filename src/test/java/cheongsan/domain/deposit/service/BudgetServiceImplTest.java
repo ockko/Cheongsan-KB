@@ -2,6 +2,7 @@ package cheongsan.domain.deposit.service;
 
 import cheongsan.common.config.RootConfig;
 import cheongsan.domain.deposit.dto.BudgetLimitDTO;
+import cheongsan.domain.deposit.dto.BudgetSettingStatusDTO;
 import cheongsan.domain.user.entity.User;
 import cheongsan.domain.user.mapper.UserMapper;
 import lombok.extern.log4j.Log4j2;
@@ -13,6 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -119,5 +121,51 @@ class BudgetServiceImplTest {
             budgetService.saveFinalDailyLimit(userId, newLimit);
         });
         assertEquals("소비 한도는 주 1회만 수정할 수 있습니다.", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("마지막 수정일이 있는 경우, 해당 날짜를 정확히 반환해야 한다")
+    void getBudgetSettingStatus_WhenDateExists() {
+        // given
+        Long userId = 1L;
+        LocalDateTime expectedTimestamp = LocalDateTime.of(2025, 7, 26, 10, 30, 25);
+
+        // when
+        BudgetSettingStatusDTO result = budgetService.getBudgetSettingStatus(userId);
+
+        // then
+        assertNotNull(result);
+        assertEquals(expectedTimestamp, result.getDailyLimitDate());
+        log.info("조회된 마지막 수정일: " + result.getDailyLimitDate());
+    }
+
+    @Test
+    @DisplayName("마지막 수정일이 없는 경우, null을 반환해야 한다")
+    void getBudgetSettingStatus_WhenDateIsNull() {
+        // given
+        Long userId = 2L;
+
+        // when
+        BudgetSettingStatusDTO result = budgetService.getBudgetSettingStatus(userId);
+
+        // then
+        assertNotNull(result);
+        assertNull(result.getDailyLimitDate());
+        log.info("수정일이 없는 경우, null이 정상적으로 반환됨");
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 사용자의 경우 예외가 발생해야 한다")
+    void getBudgetSettingStatus_UserNotFound_ShouldThrowException() {
+        // given
+        Long nonExistentUserId = 999L;
+
+        // when & then
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            budgetService.getBudgetSettingStatus(nonExistentUserId);
+        });
+
+        assertEquals("일치하는 회원 정보가 없습니다.", exception.getMessage());
+        log.info("사용자 없음 예외 처리 성공: " + exception.getMessage());
     }
 }
