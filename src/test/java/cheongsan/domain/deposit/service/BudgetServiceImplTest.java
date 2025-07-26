@@ -2,6 +2,8 @@ package cheongsan.domain.deposit.service;
 
 import cheongsan.common.config.RootConfig;
 import cheongsan.domain.deposit.dto.BudgetLimitDTO;
+import cheongsan.domain.user.entity.User;
+import cheongsan.domain.user.mapper.UserMapper;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,6 +23,9 @@ class BudgetServiceImplTest {
 
     @Autowired
     private BudgetServiceImpl budgetService;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Test
     @DisplayName("추천 한도와 최대 한도를 DTO에 담아 정확히 반환해야 한다")
@@ -65,5 +72,52 @@ class BudgetServiceImplTest {
         assertEquals(0, result.getRecommendedDailyLimit(), "추천 한도는 0이어야 합니다.");
         assertEquals(0, result.getMaximumDailyLimit(), "최대 한도는 0이어야 합니다.");
         log.info("고정 지출 초과 사용자의 추천 한도: " + result);
+    }
+
+    @Test
+    @DisplayName("유효한 한도 금액을 성공적으로 저장해야 한다")
+    void saveFinalDailyLimit() {
+        // given
+        Long userId = 1L;
+        int newLimit = 50000;
+
+        // when
+        assertDoesNotThrow(() -> {
+            budgetService.saveFinalDailyLimit(userId, newLimit);
+        });
+
+        // then
+        User updatedUser = userMapper.findById(userId);
+        assertNotNull(updatedUser);
+        assertEquals(0, new BigDecimal(newLimit).compareTo(updatedUser.getDailyLimit()));
+        assertNotNull(updatedUser.getDailyLimitDate());
+        log.info("한도 저장 성공 후 사용자 정보: " + updatedUser);
+    }
+
+    @Test
+    @DisplayName("최대 한도를 초과하는 금액은 예외가 발생해야 한다")
+    void saveFinalDailyLimit_ExceedsMax_ShouldThrowException() {
+        // given
+        Long userId = 1L;
+        int invalidLimit = 999999;
+
+        // when & then
+        assertThrows(IllegalArgumentException.class, () -> {
+            budgetService.saveFinalDailyLimit(userId, invalidLimit);
+        });
+    }
+
+    @Test
+    @DisplayName("주 1회 수정 규칙을 위반하면 예외가 발생해야 한다")
+    void saveFinalDailyLimit_UpdateRuleViolated_ShouldThrowException() {
+        // given
+        Long userId = 1L;
+        int newLimit = 10000;
+
+        // when & then
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            budgetService.saveFinalDailyLimit(userId, newLimit);
+        });
+        assertEquals("소비 한도는 주 1회만 수정할 수 있습니다.", exception.getMessage());
     }
 }

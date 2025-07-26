@@ -1,5 +1,6 @@
 package cheongsan.common.exception;
 
+import cheongsan.common.constant.ResponseMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,14 +10,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalException {
 
     @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<ErrorResponseDTO> handleIllegalStateException(IllegalStateException e) {
-        ErrorResponseDTO errorResponse = new ErrorResponseDTO(e.getMessage());
+    public ResponseEntity<ResponseDTO> handleIllegalStateException(IllegalStateException e) {
+        ResponseDTO errorResponse = new ResponseDTO(e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ResponseDTO> handleIllegalArgumentException(IllegalArgumentException e) {
+        ResponseDTO errorResponse = new ResponseDTO(e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDTO> handleException(Exception e) {
-        ErrorResponseDTO errorResponse = new ErrorResponseDTO("서버 내부 오류가 발생했습니다.");
+    public ResponseEntity<ResponseDTO> handleException(Exception e) {
+        ResponseDTO errorResponse = new ResponseDTO(ResponseMessage.INTERNAL_SERVER_ERROR.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
