@@ -18,7 +18,7 @@ public class SimpleDiagnosisDTO {
     private String simpleDescription;
 
     // Diagnosis Entity → DTO 변환 static 메서드 (Builder 활용)
-    static SimpleDiagnosisDTO of(SimpleDiagnosis simpleDiagnosis) {
+    public static SimpleDiagnosisDTO of(SimpleDiagnosis simpleDiagnosis) {
         return SimpleDiagnosisDTO.builder()
                 .id(simpleDiagnosis.getId())
                 .programName(simpleDiagnosis.getProgramName())
