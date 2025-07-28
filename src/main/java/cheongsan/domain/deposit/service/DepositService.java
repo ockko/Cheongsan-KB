@@ -1,5 +1,6 @@
 package cheongsan.domain.deposit.service;
 
+import cheongsan.domain.deposit.dto.DailySpendingDTO;
 import cheongsan.domain.deposit.dto.DailyTransactionDTO;
 import cheongsan.domain.deposit.dto.MonthlyTransactionDTO;
 
@@ -15,4 +16,6 @@ public interface DepositService {
     BigDecimal calculateRegularMonthlyTransfer(Long userId, int year, int month);
 
     BigDecimal calculateMonthlyFixedWithdraw(Long userId, int year, int month);
+
+    DailySpendingDTO getDailySpendingStatus(Long userId);
 }

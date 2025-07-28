@@ -70,4 +70,12 @@
           AND MONTH(transaction_time) = #{month}
     </select>
 
+    <select id="sumTodaySpendingByUserId" resultType="java.math.BigDecimal">
+        SELECT COALESCE(SUM(amount), 0)
+        FROM transactions
+        WHERE user_id = #{userId}
+          AND type = 'WITHDRAW'
+          AND DATE(transaction_time) = CURDATE()
+    </select>
+
 </mapper>

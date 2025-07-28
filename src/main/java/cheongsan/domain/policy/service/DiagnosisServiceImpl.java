@@ -1,10 +1,13 @@
 package cheongsan.domain.policy.service;
 
 import cheongsan.domain.policy.dto.DiagnosisDTO;
+import cheongsan.domain.policy.dto.SimpleDiagnosisDTO;
 import cheongsan.domain.policy.dto.UserDiagnosisDTO;
 import cheongsan.domain.policy.entity.Diagnosis;
+import cheongsan.domain.policy.entity.SimpleDiagnosis;
 import cheongsan.domain.policy.mapper.PolicyMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -13,6 +16,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DiagnosisServiceImpl implements DiagnosisService {
     private final PolicyMapper policyMapper;
 
@@ -88,11 +92,21 @@ public class DiagnosisServiceImpl implements DiagnosisService {
         }
     }
 
+    // 정책의 모든 내용 가져옴
     public DiagnosisDTO getDiagnosis(Long diagnosisId) {
         Diagnosis policy = policyMapper.getDiagnosisResult(diagnosisId);
 
         DiagnosisDTO diagnosisDTO = DiagnosisDTO.of(policy);
         return diagnosisDTO;
+    }
+
+    //정책 간략화하여 가져옴
+    public SimpleDiagnosisDTO getSimpleDiagnosis(Long diagnosisId) {
+        SimpleDiagnosis simpleDiagnosis = policyMapper.getSimpleDiagnosisResult(diagnosisId);
+        SimpleDiagnosisDTO simpleDiagnosisDTO = SimpleDiagnosisDTO.of(simpleDiagnosis);
+        log.info(simpleDiagnosis.toString());
+
+        return simpleDiagnosisDTO;
     }
 
 
