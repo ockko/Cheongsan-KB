@@ -8,19 +8,24 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class User {
     private Long id;
     private Long recommendedProgramId;
+    private String connectedId;
     private String nickname;
+    private String userId;
+    private String password;
     private String email;
+    private LocalDateTime createdAt;
     private BigDecimal dailyLimit;
     private LocalDateTime dailyLimitDate;
     private String status;
+    private String role;
 
 }
