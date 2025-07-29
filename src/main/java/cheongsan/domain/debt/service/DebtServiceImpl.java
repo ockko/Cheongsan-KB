@@ -124,9 +124,13 @@ public class DebtServiceImpl implements DebtService {
 
     @Override
     public BigDecimal calculateTotalMonthlyPayment(Long userId) {
-        List<DebtDTO> userDebts = debtMapper.findByUserId(userId);
+        List<DebtAccount> userDebtsAsEntity = debtMapper.findByUserId(userId);
 
-        return userDebts.stream()
+        List<DebtDTO> userDebtsAsDto = userDebtsAsEntity.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+
+        return userDebtsAsDto.stream()
                 .map(debt -> loanCalculator.calculateMonthlyPayment(
                         debt.getRepaymentMethodEnum(), // 상환방식
                         debt.getOriginalAmount(),      // 총 원금
@@ -198,5 +202,25 @@ public class DebtServiceImpl implements DebtService {
                 })
                 .sorted(Comparator.comparingInt(DelinquentLoanResponseDTO::getOverdueDays).reversed())
                 .collect(Collectors.toList());
+    }
+
+    private DebtDTO toDto(DebtAccount entity) {
+        return new DebtDTO(
+                entity.getId(),
+                entity.getUserId(),
+                entity.getOrganizationCode(),
+                entity.getResAccount(),
+                entity.getDebtName(),
+                entity.getCurrentBalance(),
+                entity.getOriginalAmount(),
+                entity.getInterestRate(),
+                entity.getLoanStartDate(),
+                entity.getLoanEndDate(),
+                entity.getNextPaymentDate(),
+                entity.getGracePeriodMonths(),
+                entity.getRepaymentMethod(),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
+        );
     }
 }

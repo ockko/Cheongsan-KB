@@ -25,7 +25,7 @@ public class DebtDTO {
     private LocalDate loanStartDate;
     private LocalDate loanEndDate;
     private LocalDate nextPaymentDate;
-    private Integer gracePeriodMonths;
+    private Long gracePeriodMonths;
     private String repaymentMethod;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
