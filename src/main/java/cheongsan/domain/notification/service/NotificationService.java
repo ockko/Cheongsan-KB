@@ -1,12 +1,12 @@
 package cheongsan.domain.notification.service;
 
-import cheongsan.domain.notification.dto.NotificationDto;
+import cheongsan.domain.notification.dto.NotificationDTO;
 
 import java.util.List;
 
 public interface NotificationService {
     // 사용자의 알림 목록 조회
-    List<NotificationDto> getNotifications(Long userId);
+    List<NotificationDTO> getNotifications(Long userId);
 
     // 사용자의 안읽은 알림 개수 조회
     int getUnreadCount(Long userId);

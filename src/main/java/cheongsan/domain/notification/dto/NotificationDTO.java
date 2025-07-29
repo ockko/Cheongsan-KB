@@ -1,6 +1,6 @@
 package cheongsan.domain.notification.dto;
 
-import cheongsan.domain.notification.entity.NotificationEntity;
+import cheongsan.domain.notification.entity.Notification;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class NotificationDto {
+public class NotificationDTO {
     private Long id;
     private String contents;        // type, title 제거하고 message만 사용
     private String type;
@@ -22,8 +22,8 @@ public class NotificationDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
 
-    public static NotificationDto of(NotificationEntity entity) {
-        return NotificationDto.builder()
+    public static NotificationDTO of(Notification entity) {
+        return NotificationDTO.builder()
                 .id(entity.getId())
                 .contents(entity.getContents())
                 .type(entity.getType())

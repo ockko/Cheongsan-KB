@@ -1,8 +1,8 @@
 package cheongsan.domain.notification.service;
 
 import cheongsan.domain.notification.controller.NotificationWebSocketHandler;
-import cheongsan.domain.notification.dto.NotificationDto;
-import cheongsan.domain.notification.entity.NotificationEntity;
+import cheongsan.domain.notification.dto.NotificationDTO;
+import cheongsan.domain.notification.entity.Notification;
 import cheongsan.domain.notification.mapper.NotificationMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +24,12 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationWebSocketHandler webSocketHandler;
 
     @Override
-    public List<NotificationDto> getNotifications(Long userId) {
+    public List<NotificationDTO> getNotifications(Long userId) {
         log.debug("알림 목록 조회 시작: userId={}", userId);
 
-        List<NotificationEntity> notifications = notificationMapper.findNotificationByUserId(userId);
-        List<NotificationDto> result = notifications.stream()
-                .map(NotificationDto::of)
+        List<Notification> notifications = notificationMapper.findNotificationByUserId(userId);
+        List<NotificationDTO> result = notifications.stream()
+                .map(NotificationDTO::of)
                 .collect(Collectors.toList());
 
         log.info("알림 목록 조회 완료: userId={}, count={}", userId, result.size());

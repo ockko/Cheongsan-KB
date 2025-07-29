@@ -1,6 +1,6 @@
 package cheongsan.domain.notification.controller;
 
-import cheongsan.domain.notification.dto.NotificationDto;
+import cheongsan.domain.notification.dto.NotificationDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ public class NotificationWebSocketHandler extends TextWebSocketHandler {
             log.info("✅ WebSocket 연결 성공: userId={}, sessionId={}", userId, session.getId());
 
             // 연결 성공 메시지 전송 - 현재 NotificationDto 구조에 맞춤
-            NotificationDto welcomeMessage = NotificationDto.builder()
+            NotificationDTO welcomeMessage = NotificationDTO.builder()
                     .id(null)
                     .contents("🔗 실시간 알림 연결이 완료되었습니다!")
                     .type("general")

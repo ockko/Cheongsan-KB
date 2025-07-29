@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class NotificationEntity {
+public class Notification {
     private Long id;
     private Long userId;
     private String contents;

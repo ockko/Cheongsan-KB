@@ -1,6 +1,6 @@
 package cheongsan.domain.notification.controller;
 
-import cheongsan.domain.notification.dto.NotificationDto;
+import cheongsan.domain.notification.dto.NotificationDTO;
 import cheongsan.domain.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -23,13 +23,13 @@ public class NotificationController {
      * 사용자의 알림 목록 조회
      */
     @GetMapping
-    public ResponseEntity<List<NotificationDto>> getNotifications(
+    public ResponseEntity<List<NotificationDTO>> getNotifications(
             @RequestParam(required = false, defaultValue = "1") Long userId) {
 
         log.info("알림 목록 조회 요청 - userId: {}", userId);
 
         try {
-            List<NotificationDto> notifications = notificationService.getNotifications(userId);
+            List<NotificationDTO> notifications = notificationService.getNotifications(userId);
             return ResponseEntity.ok(notifications);
         } catch (Exception e) {
             log.error("알림 목록 조회 실패", e);
