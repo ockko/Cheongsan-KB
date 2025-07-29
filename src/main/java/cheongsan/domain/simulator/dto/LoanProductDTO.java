@@ -13,4 +13,5 @@ public class LoanProductDTO {
     private BigDecimal interestRate;  // 상품 금리
     private BigDecimal loanLimit;     // 최대 한도
     private String siteUrl;           // 사이트 URL
+    private String dsrCheck;          // DSR 적용 여부('Y' or 'N')
 }
