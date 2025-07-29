@@ -11,6 +11,12 @@
         WHERE organization_name = #{organizationName}
     </select>
 
+    <select id="findNameByCode" parameterType="long" resultType="string">
+        SELECT organization_name
+        FROM financial_institutions
+        WHERE organization_code = #{organizationCode}
+    </select>
+
     <insert id="insertInstitution">
         INSERT INTO financial_institutions (organization_name, institution_type, created_at)
         VALUES (#{organizationName}, '기타', NOW())
