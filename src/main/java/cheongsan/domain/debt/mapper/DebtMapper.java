@@ -1,7 +1,6 @@
 package cheongsan.domain.debt.mapper;
 
 import cheongsan.domain.debt.dto.DailyRepaymentDTO;
-import cheongsan.domain.debt.dto.DebtDTO;
 import cheongsan.domain.debt.dto.DebtInfoResponseDTO;
 import cheongsan.domain.debt.dto.RepaymentCalendarDTO;
 import cheongsan.domain.debt.entity.DebtAccount;
