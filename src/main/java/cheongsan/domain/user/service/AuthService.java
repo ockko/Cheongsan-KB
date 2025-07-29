@@ -12,4 +12,6 @@ public interface AuthService {
     void changePassword(ChangePasswordRequestDTO changePasswordRequestDTO);
 
     LogInResponseDTO login(LogInRequestDTO logInRequestDTO);
+
+    NicknameResponseDTO submitNickname(NicknameRequestDTO nicknameRequestDTO);
 }
