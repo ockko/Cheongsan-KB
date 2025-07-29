@@ -76,10 +76,48 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
                 withNewLoanInterest.setScale(0, RoundingMode.HALF_UP),
                 increaseRate.multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP)
         );
-
-
     }
 
+    @Override
+    public DebtRatioComparisonResultDTO compareDebtRatioWithNewLoan(List<LoanDTO> existingLoans, LoanDTO newLoan, BigDecimal assetTotalAmount) {
+        if (newLoan == null) {
+            throw new IllegalArgumentException("새 대출 정보(newLoan)는 null일 수 없습니다.");
+        }
+        if (assetTotalAmount == null || assetTotalAmount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("총 자산(assetTotalAmount)은 0보다 커야 합니다.");
+        }
+
+        // 기존 부채 합계 (원금 합계)
+        BigDecimal existingDebtTotal = existingLoans.stream()
+                .map(LoanDTO::getPrincipal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // 신규 대출 포함 부채 합계
+        BigDecimal newDebtTotal = existingDebtTotal.add(newLoan.getPrincipal());
+
+        // 부채비율 계산 = 부채총액 / 자산총액 * 100
+        BigDecimal existingDebtRatio = existingDebtTotal.multiply(BigDecimal.valueOf(100))
+                .divide(assetTotalAmount, 2, RoundingMode.HALF_UP);
+        BigDecimal newDebtRatio = newDebtTotal.multiply(BigDecimal.valueOf(100))
+                .divide(assetTotalAmount, 2, RoundingMode.HALF_UP);
+
+        // 부채비율 증가량 (new - existing)
+        BigDecimal increaseAmount = newDebtRatio.subtract(existingDebtRatio);
+
+        // 부채비율 증가율 (증가량 / 기존 비율 * 100), 0일 때 처리
+        BigDecimal increaseRate = existingDebtRatio.compareTo(BigDecimal.ZERO) == 0 ?
+                BigDecimal.ZERO :
+                increaseAmount.multiply(BigDecimal.valueOf(100))
+                        .divide(existingDebtRatio, 2, RoundingMode.HALF_UP);
+
+
+        return new DebtRatioComparisonResultDTO(
+                existingDebtRatio.setScale(2, RoundingMode.HALF_UP),
+                newDebtRatio.setScale(2, RoundingMode.HALF_UP),
+                increaseAmount.setScale(2, RoundingMode.HALF_UP),
+                increaseRate.setScale(2, RoundingMode.HALF_UP)
+        );
+    }
 
     private BigDecimal calculateTotalRepayment(List<LoanDTO> loans) {
         BigDecimal totalRepayment = BigDecimal.ZERO;
