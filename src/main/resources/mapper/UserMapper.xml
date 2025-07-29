@@ -54,4 +54,17 @@
         )
     </insert>
 
+    <select id="findByUserIdAndEmail" parameterType="String" resultType="cheongsan.domain.user.entity.User">
+        SELECT *
+        FROM user
+        WHERE user_id = #{userId}
+          AND email = #{email}
+    </select>
+
+    <update id="updatePassword" parameterType="map">
+        UPDATE user
+        SET password = #{newPassword}
+        WHERE id = #{id}
+    </update>
+
 </mapper>

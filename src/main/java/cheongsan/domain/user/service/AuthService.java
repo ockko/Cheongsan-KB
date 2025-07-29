@@ -1,13 +1,12 @@
 package cheongsan.domain.user.service;
 
-import cheongsan.domain.user.dto.FindUserIdRequestDTO;
-import cheongsan.domain.user.dto.FindUserIdResponseDTO;
-import cheongsan.domain.user.dto.SignUpRequestDTO;
-import cheongsan.domain.user.dto.SignUpResponseDTO;
+import cheongsan.domain.user.dto.*;
 
 public interface AuthService {
     SignUpResponseDTO signUp(SignUpRequestDTO signUpRequestDTO);
 
     FindUserIdResponseDTO findUserIdByEmail(FindUserIdRequestDTO findUserIdRequestDTO);
+
+    FindUserPasswordResponseDTO findUserPassword(FindUserPasswordRequestDTO findUserPasswordRequestDTO);
 
 }

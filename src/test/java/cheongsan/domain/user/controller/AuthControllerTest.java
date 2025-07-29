@@ -1,9 +1,6 @@
 package cheongsan.domain.user.controller;
 
-import cheongsan.domain.user.dto.FindUserIdRequestDTO;
-import cheongsan.domain.user.dto.FindUserIdResponseDTO;
-import cheongsan.domain.user.dto.SignUpRequestDTO;
-import cheongsan.domain.user.dto.SignUpResponseDTO;
+import cheongsan.domain.user.dto.*;
 import cheongsan.domain.user.service.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +33,11 @@ class AuthControllerTest {
 
         @Override
         public FindUserIdResponseDTO findUserIdByEmail(FindUserIdRequestDTO findUserIdRequestDTO) {
+            return null;
+        }
+
+        @Override
+        public FindUserPasswordResponseDTO findUserPassword(FindUserPasswordRequestDTO findUserPasswordRequestDTO) {
             return null;
         }
     }

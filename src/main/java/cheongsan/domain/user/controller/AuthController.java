@@ -1,10 +1,7 @@
 package cheongsan.domain.user.controller;
 
 import cheongsan.common.exception.ResponseDTO;
-import cheongsan.domain.user.dto.FindUserIdRequestDTO;
-import cheongsan.domain.user.dto.FindUserIdResponseDTO;
-import cheongsan.domain.user.dto.SignUpRequestDTO;
-import cheongsan.domain.user.dto.SignUpResponseDTO;
+import cheongsan.domain.user.dto.*;
 import cheongsan.domain.user.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -58,5 +55,16 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/resetPassword")
+    public ResponseEntity<?> requestPasswordReset(@RequestBody FindUserPasswordRequestDTO request) {
+        try {
+            FindUserPasswordResponseDTO response = authService.findUserPassword(request);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
+        }
+    }
 
 }

@@ -1,6 +1,5 @@
 package cheongsan.domain.user.mapper;
 
-import cheongsan.domain.user.dto.SignUpRequestDTO;
 import cheongsan.domain.user.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -21,7 +20,14 @@ public interface UserMapper {
                           @Param("dailyLimitDate") LocalDateTime dailyLimitDate);
 
     void save(@RequestBody User user);
-    User findByUserId(String userId);
-    User findByEmail(String email);
 
+    User findByUserId(@Param("userId") String userId);
+
+    User findByEmail(@Param("email") String email);
+
+    User findByUserIdAndEmail(@Param("userId") String userId,
+                              @Param("email") String email);
+
+    void updatePassword(@Param("id") Long id,
+                        @Param("newPassword") String password);
 }
