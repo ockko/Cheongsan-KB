@@ -16,7 +16,7 @@ public interface DebtMapper {
 
     DebtDetailResponseDTO getLoanDetail(Long loanId);
 
-    List<DebtDTO> findByUserId(Long userId);
+    List<DebtAccount> findByUserId(Long userId);
 
     // 대출 상품 추가
     void insertDebt(DebtAccount debtAccount);
