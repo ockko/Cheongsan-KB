@@ -55,6 +55,8 @@ class AuthControllerTest {
         public NicknameResponseDTO submitNickname(NicknameRequestDTO nicknameRequestDTO) {
             return null;
         }
+
+
     }
 
     @BeforeEach
