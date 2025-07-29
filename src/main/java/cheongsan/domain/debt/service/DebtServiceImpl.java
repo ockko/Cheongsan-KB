@@ -127,7 +127,7 @@ public class DebtServiceImpl implements DebtService {
         List<DebtAccount> userDebtsAsEntity = debtMapper.findByUserId(userId);
 
         List<DebtDTO> userDebtsAsDto = userDebtsAsEntity.stream()
-                .map(this::toDto)
+                .map(DebtDTO::fromEntity)
                 .collect(Collectors.toList());
 
         return userDebtsAsDto.stream()
@@ -202,25 +202,5 @@ public class DebtServiceImpl implements DebtService {
                 })
                 .sorted(Comparator.comparingInt(DelinquentLoanResponseDTO::getOverdueDays).reversed())
                 .collect(Collectors.toList());
-    }
-
-    private DebtDTO toDto(DebtAccount entity) {
-        return new DebtDTO(
-                entity.getId(),
-                entity.getUserId(),
-                entity.getOrganizationCode(),
-                entity.getResAccount(),
-                entity.getDebtName(),
-                entity.getCurrentBalance(),
-                entity.getOriginalAmount(),
-                entity.getInterestRate(),
-                entity.getLoanStartDate(),
-                entity.getLoanEndDate(),
-                entity.getNextPaymentDate(),
-                entity.getGracePeriodMonths(),
-                entity.getRepaymentMethod(),
-                entity.getCreatedAt(),
-                entity.getUpdatedAt()
-        );
     }
 }
