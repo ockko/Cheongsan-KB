@@ -27,27 +27,6 @@ public class NotificationScheduler {
     @Scheduled(cron = "0 0 9 * * *")
     public void sendDelinquentLoanNotifications() {
         log.info("연체 대출 알림 스케줄러 실행");
-
-//        for (Long userId : TEST_USER_IDS) {
-//            try {
-//                List<DelinquentLoanResponseDTO> delinquentLoans = debtService.getDelinquentLoans(userId);
-//
-//                if (!delinquentLoans.isEmpty()) {
-//                    for (DelinquentLoanResponseDTO loan : delinquentLoans) {
-//                        String message = String.format(
-//                                "⚠️ [연체 알림] %s(%s) 대출이 %d일 연체되었습니다. 신속한 상환 부탁드립니다.",
-//                                loan.getDebtName(),
-//                                loan.getOrganizationName(),
-//                                loan.getOverdueDays()
-//                        );
-//
-//                        notificationService.createAndSendNotification(userId, message);
-//                    }
-//                }
-//            } catch (Exception e) {
-//                log.error("사용자 {}의 연체 대출 알림 전송 실패", userId, e);
-//            }
-//        }
     }
 
     /**
