@@ -24,7 +24,7 @@ public interface DebtMapper {
     // 대출 상세 조회 (2)
     FinancialInstitution getFinancialInstitutionByCode(Long organizationCode);
 
-    List<DebtDTO> findByUserId(Long userId);
+    List<DebtAccount> findByUserId(Long userId);
 
     // 대출 상품 추가
     void insertDebt(DebtAccount debtAccount);

@@ -38,7 +38,7 @@ class DebtServiceImplTest {
     @DisplayName("부채가 하나도 없을 때, 월 총 상환액은 0을 반환해야 한다")
     void calculateTotalMonthlyPayment_WithNoDebts() {
         // given
-        Long userId = 2L;
+        Long userId = 3L;
 
         // when
         BigDecimal totalPayment = debtService.calculateTotalMonthlyPayment(userId);
