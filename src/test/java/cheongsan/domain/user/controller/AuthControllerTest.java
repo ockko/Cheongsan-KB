@@ -40,6 +40,21 @@ class AuthControllerTest {
         public FindUserPasswordResponseDTO findUserPassword(FindUserPasswordRequestDTO findUserPasswordRequestDTO) {
             return null;
         }
+
+        @Override
+        public void changePassword(ChangePasswordRequestDTO changePasswordRequestDTO) {
+
+        }
+
+        @Override
+        public LogInResponseDTO login(LogInRequestDTO logInRequestDTO) {
+            return null;
+        }
+
+        @Override
+        public NicknameResponseDTO submitNickname(NicknameRequestDTO nicknameRequestDTO) {
+            return null;
+        }
     }
 
     @BeforeEach
