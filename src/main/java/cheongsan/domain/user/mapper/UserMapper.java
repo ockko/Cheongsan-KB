@@ -45,4 +45,7 @@ public interface UserMapper {
     void updateProfile(@Param("userId") String userId,
                        @Param("nickname") String nickname,
                        @Param("email") String email);
+
+    void deleteById(@Param("userId") String userId);
+
 }
