@@ -40,5 +40,9 @@ public interface UserMapper {
 
 
     void submitNickname(@Param("userId") String userId,
-                        @Param("nickname") String nickname);
+                        String nickname);
+
+    void updateProfile(@Param("userId") String userId,
+                       @Param("nickname") String nickname,
+                       @Param("email") String email);
 }
