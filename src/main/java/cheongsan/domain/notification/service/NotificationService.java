@@ -8,12 +8,9 @@ public interface NotificationService {
     // 사용자의 알림 목록 조회
     List<NotificationDto> getNotifications(Long userId);
 
-    // 알림 생성 및 실시간 전송
-    void createAndSendNotification(Long userId, String contents);
-
     // 사용자의 안읽은 알림 개수 조회
     int getUnreadCount(Long userId);
 
     // 알림 읽음 처리
-    void markAsRead(Long notificationId);
+    void markAsRead(Long userId);
 }

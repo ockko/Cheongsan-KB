@@ -4,13 +4,15 @@ import cheongsan.domain.notification.controller.NotificationWebSocketHandler;
 import cheongsan.domain.notification.dto.NotificationDto;
 import cheongsan.domain.notification.entity.NotificationEntity;
 import cheongsan.domain.notification.mapper.NotificationMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,36 +37,6 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    @Transactional
-    public void createAndSendNotification(Long userId, String contents) {
-        log.debug("알림 생성 시작: userId={}, contents={}", userId, contents);
-
-        try {
-            // 1. DB에 알림 저장
-            NotificationEntity notification = NotificationEntity.builder()
-                    .userId(userId)
-                    .contents(contents)
-                    .isRead(false)
-                    .createdAt(LocalDateTime.now())
-                    .build();
-
-            notificationMapper.insertNotification(notification);
-            log.debug("알림 DB 저장 완료: id={}, userId={}", notification.getId(), userId);
-
-            // 2. 실시간 알림 전송
-            NotificationDto dto = NotificationDto.of(notification);
-            webSocketHandler.sendNotificationToUser(userId, dto);
-
-            log.info("알림 생성 및 전송 완료: id={}, userId={}, contents={}",
-                    notification.getId(), userId, contents);
-
-        } catch (Exception e) {
-            log.error("알림 생성 실패: userId={}, message={}", userId, contents, e);
-            throw new RuntimeException("알림 생성에 실패했습니다.", e);
-        }
-    }
-
-    @Override
     public int getUnreadCount(Long userId) {
         log.debug("안읽은 알림 개수 조회: userId={}", userId);
 
@@ -76,15 +48,29 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    public void markAsRead(Long notificationId) {
-        log.debug("알림 읽음 처리 시작: id={}", notificationId);
+    public void markAsRead(Long userId) {
+        log.debug("알림 읽음 처리 시작: id={}", userId);
 
         try {
-            notificationMapper.markNotificationAsRead(notificationId);
-            log.info("알림 읽음 처리 완료: id={}", notificationId);
+            // 1. 알림을 읽음 처리
+            notificationMapper.markNotificationAsRead(userId);
+            log.info("알림 읽음 처리 완료: id={}", userId);
+
+            // 2. 읽지 않은 알림 개수 다시 계산
+            int unreadCount = notificationMapper.countUnreadNotificationByUserId(userId);
+
+            // 3. WebSocket으로 읽지 않은 알림 수 전송
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("type", "unreadCount");
+            payload.put("unreadCount", unreadCount);
+
+            String json = new ObjectMapper().writeValueAsString(payload);
+            webSocketHandler.sendRawMessageToUser(userId, json);
+
+            log.info("WebSocket으로 unreadCount 전송 완료: userId={}, count={}", userId, unreadCount);
 
         } catch (Exception e) {
-            log.error("알림 읽음 처리 실패: id={}", notificationId, e);
+            log.error("알림 읽음 처리 실패: id={}", userId, e);
             throw new RuntimeException("알림 읽음 처리에 실패했습니다.", e);
         }
     }

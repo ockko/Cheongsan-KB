@@ -15,6 +15,7 @@ public class NotificationEntity {
     private Long id;
     private Long userId;
     private String contents;
+    private String type;
     private Boolean isRead;
     private LocalDateTime createdAt;
 }
