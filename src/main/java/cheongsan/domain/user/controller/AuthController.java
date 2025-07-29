@@ -29,15 +29,12 @@ public class AuthController {
             SignUpResponseDTO response = authService.signUp(signUpRequestDTO);
             log.info(response.toString());
 
-            // 회원가입 성공: 200 OK + id, userId 반환(JSON)
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
-            // 중복 아이디/이메일 등 검증 실패: 400 Bad Request + 에러 메시지 반환(JSON)
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(new ResponseDTO(e.getMessage()));
         } catch (RuntimeException e) {
-            // 기타 예기치 못한 에러: 500 ERROR
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
