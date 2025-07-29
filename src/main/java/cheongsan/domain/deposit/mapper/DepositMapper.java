@@ -35,4 +35,10 @@ public interface DepositMapper {
     );
 
     BigDecimal sumTodaySpendingByUserId(Long userId);
+
+    List<Transaction> findWithdrawTransactionsByPeriod(
+            @Param("userId") Long userId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
 }
