@@ -11,4 +11,10 @@
         ORDER BY created_at DESC
     </select>
 
+    <delete id="deleteUserById" parameterType="long">
+        DELETE
+        FROM user
+        WHERE id = #{userId}
+    </delete>
+    
 </mapper>

@@ -23,4 +23,9 @@ public class AdminServiceImpl implements AdminService {
                 .map(AdminUserListDTO::fromEntity)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteUser(Long userId) {
+        adminMapper.deleteUserById(userId);
+    }
 }

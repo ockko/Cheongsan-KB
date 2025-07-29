@@ -8,4 +8,6 @@ import java.util.List;
 @Mapper
 public interface AdminMapper {
     List<AdminUser> getAllUsers();
+
+    void deleteUserById(Long userId);
 }
