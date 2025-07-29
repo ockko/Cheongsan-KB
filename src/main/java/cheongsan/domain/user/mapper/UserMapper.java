@@ -31,8 +31,6 @@ public interface UserMapper {
     void updatePassword(@Param("id") Long id,
                         @Param("newPassword") String password);
 
-    void submitNickname(@Param("userId") String userId,
-                        String nickname);
 
     void updateProfile(@Param("userId") String userId,
                        @Param("nickname") String nickname,
@@ -40,4 +38,7 @@ public interface UserMapper {
 
     void deleteById(@Param("userId") String userId);
 
+
+    void submitNickname(@Param("userId") String userId,
+                        @Param("nickname") String nickname);
 }
