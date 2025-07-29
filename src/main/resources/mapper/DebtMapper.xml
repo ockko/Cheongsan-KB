@@ -19,22 +19,29 @@
         WHERE da.user_id = #{userId}
     </select>
 
-    <!-- 대출별 상세 조회-->
-    <select id="getLoanDetail" parameterType="long" resultType="cheongsan.domain.debt.dto.DebtDetailResponseDTO">
-        SELECT da.debt_name           AS debtName,
-               fi.organization_name   AS organizationName,
-               da.original_amount     AS originalAmount,
-               da.interest_rate       AS interestRate,
-               da.loan_start_date     AS loanStartDate,
-               da.current_balance     AS currentBalance,
-               da.grace_period_months AS gracePeriodMonths,
-               da.repayment_method    AS repaymentMethod
-        FROM debt_accounts da
-                 JOIN financial_institutions fi ON da.organization_code = fi.organization_code
-        WHERE da.id = #{loanId}
+    <select id="getDebtAccountById" parameterType="long" resultType="cheongsan.domain.debt.entity.DebtAccount">
+        SELECT id AS debtAccountId,
+               debt_name,
+               original_amount,
+               current_balance,
+               interest_rate,
+               loan_start_date,
+               grace_period_months,
+               repayment_method,
+               organization_code
+        FROM debt_accounts
+        WHERE id = #{loanId}
     </select>
 
-    <select id="findByUserId" resultType="cheongsan.domain.debt.dto.DebtDTO">
+    <select id="getFinancialInstitutionByCode" parameterType="string"
+            resultType="cheongsan.domain.debt.entity.FinancialInstitution">
+        SELECT organization_code AS organizationCode,
+               organization_name AS organizationName
+        FROM financial_institutions
+        WHERE organization_code = #{organizationCode}
+    </select>
+
+    <select id="findByUserId" resultType="cheongsan.domain.debt.entity.DebtAccount">
         SELECT id,
                user_id,
                organization_code,

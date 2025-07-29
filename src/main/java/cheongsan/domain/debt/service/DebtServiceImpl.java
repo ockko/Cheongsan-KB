@@ -5,6 +5,7 @@ import cheongsan.domain.debt.dto.*;
 import cheongsan.domain.debt.entity.DebtAccount;
 import cheongsan.domain.debt.entity.DebtRepaymentRatio;
 import cheongsan.domain.debt.entity.DelinquentLoan;
+import cheongsan.domain.debt.entity.FinancialInstitution;
 import cheongsan.domain.debt.mapper.DebtMapper;
 import cheongsan.domain.debt.mapper.FinancialInstitutionMapper;
 import lombok.RequiredArgsConstructor;
@@ -71,7 +72,12 @@ public class DebtServiceImpl implements DebtService {
 
     @Override
     public DebtDetailResponseDTO getLoanDetail(Long loanId) {
-        return debtMapper.getLoanDetail(loanId);
+        DebtAccount debtAccount = debtMapper.getDebtAccountById(loanId);
+
+        FinancialInstitution fi = debtMapper.getFinancialInstitutionByCode(debtAccount.getOrganizationCode());
+
+        // DTO 변환 및 반환
+        return DebtDetailResponseDTO.fromEntity(debtAccount, fi);
     }
 
     @Override
@@ -118,9 +124,13 @@ public class DebtServiceImpl implements DebtService {
 
     @Override
     public BigDecimal calculateTotalMonthlyPayment(Long userId) {
-        List<DebtDTO> userDebts = debtMapper.findByUserId(userId);
+        List<DebtAccount> userDebtsAsEntity = debtMapper.findByUserId(userId);
 
-        return userDebts.stream()
+        List<DebtDTO> userDebtsAsDto = userDebtsAsEntity.stream()
+                .map(DebtDTO::fromEntity)
+                .collect(Collectors.toList());
+
+        return userDebtsAsDto.stream()
                 .map(debt -> loanCalculator.calculateMonthlyPayment(
                         debt.getRepaymentMethodEnum(), // 상환방식
                         debt.getOriginalAmount(),      // 총 원금
