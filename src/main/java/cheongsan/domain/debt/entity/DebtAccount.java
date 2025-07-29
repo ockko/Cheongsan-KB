@@ -1,9 +1,6 @@
 package cheongsan.domain.debt.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -11,10 +8,13 @@ import java.time.LocalDateTime;
 
 //debt_accounts 테이블 매핑
 @Getter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class DebtAccount {
+
+    private Long id;
     private Long userId;
     private Long organizationCode;
     private String resAccount;             // 계좌번호
