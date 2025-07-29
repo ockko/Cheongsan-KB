@@ -34,7 +34,7 @@
         WHERE da.id = #{loanId}
     </select>
 
-    <select id="findByUserId" resultType="cheongsan.domain.debt.dto.DebtDTO">
+    <select id="findByUserId" resultType="cheongsan.domain.debt.entity.DebtAccount">
         SELECT id,
                user_id,
                organization_code,
