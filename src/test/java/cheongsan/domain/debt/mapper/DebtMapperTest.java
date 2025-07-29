@@ -1,7 +1,7 @@
 package cheongsan.domain.debt.mapper;
 
 import cheongsan.common.config.RootConfig;
-import cheongsan.domain.debt.dto.DebtDTO;
+import cheongsan.domain.debt.entity.DebtAccount;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,10 +27,10 @@ class DebtMapperTest {
         Long userId = 1L;
 
         // when
-        List<DebtDTO> debts = mapper.findByUserId(userId);
+        List<DebtAccount> debts = mapper.findByUserId(userId);
 
         // then
-        for (DebtDTO debt : debts) {
+        for (DebtAccount debt : debts) {
             log.info("========" + debt);
         }
     }
