@@ -1,6 +1,7 @@
 package cheongsan.domain.debt.dto;
 
 import cheongsan.common.util.LoanCalculator;
+import cheongsan.domain.debt.entity.DebtAccount;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,26 @@ public class DebtDTO {
     private String repaymentMethod;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    public static DebtDTO fromEntity(DebtAccount entity) {
+        return new DebtDTO(
+                entity.getId(),
+                entity.getUserId(),
+                entity.getOrganizationCode(),
+                entity.getResAccount(),
+                entity.getDebtName(),
+                entity.getCurrentBalance(),
+                entity.getOriginalAmount(),
+                entity.getInterestRate(),
+                entity.getLoanStartDate(),
+                entity.getLoanEndDate(),
+                entity.getNextPaymentDate(),
+                entity.getGracePeriodMonths(),
+                entity.getRepaymentMethod(),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
+        );
+    }
 
     public LoanCalculator.RepaymentMethod getRepaymentMethodEnum() {
         if ("원리금균등상환".equals(this.repaymentMethod)) {
