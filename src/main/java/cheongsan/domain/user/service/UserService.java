@@ -1,10 +1,7 @@
 package cheongsan.domain.user.service;
 
 
-import cheongsan.domain.user.dto.MyInfoResponseDTO;
-import cheongsan.domain.user.dto.UpdateMyProfileRequestDTO;
-import cheongsan.domain.user.dto.UpdateMyProfileResponseDTO;
-import cheongsan.domain.user.dto.UserDTO;
+import cheongsan.domain.user.dto.*;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,5 +14,5 @@ public interface UserService {
 
     UpdateMyProfileResponseDTO updateMyProfile(String userId, UpdateMyProfileRequestDTO updateMyProfileRequestDTO);
 
-
+    void deleteAccount(String userId, DeleteAccountRequestDTO dto);
 }

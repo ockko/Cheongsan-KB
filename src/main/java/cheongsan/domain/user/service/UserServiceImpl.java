@@ -1,13 +1,11 @@
 package cheongsan.domain.user.service;
 
-import cheongsan.domain.user.dto.MyInfoResponseDTO;
-import cheongsan.domain.user.dto.UpdateMyProfileRequestDTO;
-import cheongsan.domain.user.dto.UpdateMyProfileResponseDTO;
-import cheongsan.domain.user.dto.UserDTO;
+import cheongsan.domain.user.dto.*;
 import cheongsan.domain.user.entity.User;
 import cheongsan.domain.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
     public void submitDiagnosisAnswerToUser(Long userId, Long workoutId) {
@@ -57,6 +56,19 @@ public class UserServiceImpl implements UserService {
                 .nickname(updateMyProfileRequestDTO.getNickname())
                 .email(updateMyProfileRequestDTO.getEmail())
                 .build();
+    }
+
+    public void deleteAccount(String userId, DeleteAccountRequestDTO dto) {
+        User user = userMapper.findByUserId(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
+        }
+        // 비밀번호 일치 확인
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
+        }
+        // 회원 탈퇴(삭제)
+        userMapper.deleteById(user.getUserId());
     }
 
 }

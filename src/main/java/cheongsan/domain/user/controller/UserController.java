@@ -1,6 +1,7 @@
 package cheongsan.domain.user.controller;
 
 import cheongsan.common.exception.ResponseDTO;
+import cheongsan.domain.user.dto.DeleteAccountRequestDTO;
 import cheongsan.domain.user.dto.MyInfoResponseDTO;
 import cheongsan.domain.user.dto.UpdateMyProfileRequestDTO;
 import cheongsan.domain.user.dto.UpdateMyProfileResponseDTO;
@@ -47,5 +48,23 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
         }
     }
+
+    @DeleteMapping("/profile")
+    public ResponseEntity<?> deleteMyAccount(
+            @RequestBody DeleteAccountRequestDTO request
+    ) {
+        try {
+            String userId = "testuser55";
+
+            userService.deleteAccount(userId, request);
+            return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
+        }
+
+    }
+
 
 }

@@ -96,7 +96,7 @@ public class AuthServiceImpl implements AuthService {
         log.info("sendTempPasswordMail to: {}", to);
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
-        message.setSubject("[티모청] 임시 비밀번호 발송 안내");
+        message.setSubject("[티끌 모아 청산] 임시 비밀번호 발송 안내");
         message.setText("임시 비밀번호: " + tempPw + "\n로그인 후 반드시 새 비밀번호로 변경해 주세요.");
         mailSender.send(message);
         log.info("sendTempPasswordMail to: {}", message);
