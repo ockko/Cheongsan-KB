@@ -10,4 +10,6 @@ public interface AuthService {
     FindUserPasswordResponseDTO findUserPassword(FindUserPasswordRequestDTO findUserPasswordRequestDTO);
 
     void changePassword(ChangePasswordRequestDTO changePasswordRequestDTO);
+
+    LogInResponseDTO login(LogInRequestDTO logInRequestDTO);
 }
