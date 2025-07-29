@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/cheongsan/dashboard/reports/weekly/latest")
+@RequestMapping("/cheongsan/dashboard/reports/weekly")
 public class ReportController {
 
     private final ReportService reportService;
