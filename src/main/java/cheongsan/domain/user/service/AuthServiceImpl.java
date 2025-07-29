@@ -31,10 +31,9 @@ public class AuthServiceImpl implements AuthService {
         if (userMapper.findByEmail(signUpRequestDTO.getEmail()) != null) {
             throw new IllegalArgumentException("중복된 이메일입니다.");
         }
-        String encodedPw = passwordEncoder.encode(signUpRequestDTO.getPassword());
         User user = User.builder()
                 .userId(signUpRequestDTO.getUserId())
-                .password(encodedPw)
+                .password(passwordEncoder.encode(signUpRequestDTO.getPassword()))
                 .email(signUpRequestDTO.getEmail())
                 .connectedId(genereateConnectId(signUpRequestDTO.getUserId(), signUpRequestDTO.getPassword()))
                 .build();
