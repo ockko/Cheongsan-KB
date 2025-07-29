@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 public class AuthController {
     private final AuthService authService;
-    
+
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody SignUpRequestDTO signUpRequestDTO) {
         try {
@@ -63,6 +63,19 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
+        }
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequestDTO request) {
+        try {
+            authService.changePassword(request);
+            return ResponseEntity.ok(new ChangePasswordResponseDTO("비밀번호가 성공적으로 변경되었습니다."));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
         }
     }
 

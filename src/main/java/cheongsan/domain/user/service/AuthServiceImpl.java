@@ -101,4 +101,25 @@ public class AuthServiceImpl implements AuthService {
         mailSender.send(message);
         log.info("sendTempPasswordMail to: {}", message);
     }
+
+    @Override
+    public void changePassword(ChangePasswordRequestDTO changePasswordRequestDTO) {
+        User user = userMapper.findByUserId(changePasswordRequestDTO.getUserId());
+        if (user == null) {
+            log.info("존재하지 않는 사용자입니다.");
+            throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
+        }
+
+        // 2. 기존 비번 일치 확인
+        if (!passwordEncoder.matches(changePasswordRequestDTO.getOldPassword(), user.getPassword())) {
+            log.info("기존 비밀번호가 올바르지 않습니다.");
+            throw new IllegalArgumentException("기존 비밀번호가 올바르지 않습니다.");
+        }
+
+        // 3. 새 비밀번호 암호화 후 저장
+        String encodedNewPw = passwordEncoder.encode(changePasswordRequestDTO.getNewPassword());
+        userMapper.updatePassword(user.getId(), encodedNewPw);
+    }
+
+
 }
