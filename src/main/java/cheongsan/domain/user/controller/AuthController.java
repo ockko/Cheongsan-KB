@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 public class AuthController {
     private final AuthService authService;
-
-
+    
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody SignUpRequestDTO signUpRequestDTO) {
         try {

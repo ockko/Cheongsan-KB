@@ -61,6 +61,10 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.4'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.4'
 
+    //email
+    implementation 'org.springframework:spring-context-support:5.3.9'
+    implementation 'javax.mail:mail:1.4.7'
+
 
     // 데이터베이스
     implementation 'com.mysql:mysql-connector-j:8.1.0'

@@ -6,6 +6,8 @@ import cheongsan.domain.user.entity.User;
 import cheongsan.domain.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,8 @@ import java.util.UUID;
 @Slf4j
 public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
+    private final JavaMailSender mailSender;
+
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 
@@ -63,6 +67,13 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("아이디/이메일이 일치하는 사용자가 없습니다.");
         }
         String tempPw = generateTempPassword();
+        log.info("findUserPassword request: {}", tempPw);
+        try {
+            sendTempPasswordMail(user.getEmail(), tempPw);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         String encoded = passwordEncoder.encode(tempPw);
         userMapper.updatePassword(user.getId(), encoded); // 비밀번호 DB에 암호화하여 저장
 
@@ -79,5 +90,15 @@ public class AuthServiceImpl implements AuthService {
             sb.append(chars.charAt(rnd.nextInt(chars.length())));
         }
         return sb.toString();
+    }
+
+    private void sendTempPasswordMail(String to, String tempPw) {
+        log.info("sendTempPasswordMail to: {}", to);
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject("[티모청] 임시 비밀번호 발송 안내");
+        message.setText("임시 비밀번호: " + tempPw + "\n로그인 후 반드시 새 비밀번호로 변경해 주세요.");
+        mailSender.send(message);
+        log.info("sendTempPasswordMail to: {}", message);
     }
 }
