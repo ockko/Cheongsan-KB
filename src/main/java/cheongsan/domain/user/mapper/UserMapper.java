@@ -30,4 +30,7 @@ public interface UserMapper {
 
     void updatePassword(@Param("id") Long id,
                         @Param("newPassword") String password);
+
+    void submitNickname(@Param("userId") String userId,
+                        @Param("nickname") String nickname);
 }

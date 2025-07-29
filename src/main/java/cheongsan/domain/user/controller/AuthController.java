@@ -92,5 +92,21 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/nickname")
+    public ResponseEntity<?> submitNickname(@RequestBody NicknameRequestDTO request) {
+        try {
+
+            String userId = "testuser44";
+            request.setUserId(userId);
+
+            NicknameResponseDTO response = authService.submitNickname(request);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
+        }
+    }
+
 
 }
