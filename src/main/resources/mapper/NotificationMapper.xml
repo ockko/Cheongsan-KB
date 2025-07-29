@@ -19,6 +19,19 @@
           AND is_read = 0
     </select>
 
+    <select id="countTodayNotificationsByType" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM notifications
+        WHERE user_id = #{userId}
+          AND type = #{type}
+          AND DATE(created_at) = CURDATE()
+    </select>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO notifications (user_id, contents, type, is_read, created_at)
+        VALUES (#{userId}, #{contents}, #{type}, #{isRead}, #{createdAt})
+    </insert>
+
     <update id="markNotificationAsRead">
         UPDATE notifications
         SET is_read = 1
