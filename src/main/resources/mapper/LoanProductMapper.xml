@@ -12,12 +12,10 @@
                irt      AS interestRate,
                lnLmt    AS loanLimit,
                rltSite  AS siteUrl
+            dsrCheck
         FROM low_income_financial_products
-        WHERE dsrCheck = 'N'
-          AND CAST(lnLmt AS DECIMAL) >= #{principal}
-          AND #{userDsr} <= #{dsrLimit}
-        ORDER BY CAST(irt AS DECIMAL) ASC LIMIT 10
+        WHERE CAST(lnLmt AS DECIMAL) >= #{principal}
+        ORDER BY CAST(irt AS DECIMAL) DESC LIMIT 10
         ]]>
 </select>
-
 </mapper>
