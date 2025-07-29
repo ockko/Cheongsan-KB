@@ -17,6 +17,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,44 +31,73 @@ public class DebtServiceImpl implements DebtService {
     private final FinancialInstitutionMapper financialInstitutionMapper;
 
     @Override
-    public List<DebtInfoResponseDTO> getUserDebtList(Long userId, String sort) {
-        List<DebtInfoResponseDTO> debts = debtMapper.getUserDebtList(userId);
+    public List<DebtInfoResponseDTO> getUserDebtList(Long userId) {
+        List<DebtAccount> debts = debtMapper.getUserDebtList(userId);
 
-        // 상환율 계산
-        for (DebtInfoResponseDTO debt : debts) {
-            if (debt.getOriginalAmount() != null && debt.getOriginalAmount() > 0) {
-                double rate = 1 - ((double) debt.getCurrentBalance() / debt.getOriginalAmount());
-                debt.setRepaymentRate(rate);
-            } else {
-                debt.setRepaymentRate(0.0);
-            }
+        return debts.stream()
+                .map(debt -> {
+                    BigDecimal repaymentRate = BigDecimal.ZERO;
+                    if (debt.getOriginalAmount() != null
+                            && debt.getOriginalAmount().compareTo(BigDecimal.ZERO) > 0
+                            && debt.getCurrentBalance() != null) {
+                        repaymentRate = BigDecimal.ONE.subtract(
+                                debt.getCurrentBalance().divide(debt.getOriginalAmount(), 6, RoundingMode.HALF_UP)
+                        );
+                    }
+
+                    String organizationName = financialInstitutionMapper.findNameByCode(debt.getOrganizationCode());
+                    return DebtInfoResponseDTO.builder()
+                            .debtId(debt.getUserId()) // 필요 시 수정
+                            .debtName(debt.getDebtName())
+                            .organizationName(organizationName)
+                            .originalAmount(debt.getOriginalAmount())
+                            .currentBalance(debt.getCurrentBalance())
+                            .interestRate(debt.getInterestRate())
+                            .loanStartDate(debt.getLoanStartDate())
+                            .loanEndDate(debt.getLoanEndDate())
+                            .repaymentRate(repaymentRate)
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<DebtInfoResponseDTO> sortDebtInfoList(List<DebtInfoResponseDTO> list, String sort) {
+        if (list == null || list.isEmpty() || sort == null) {
+            return list;
         }
+
+        List<DebtInfoResponseDTO> sortedList = new ArrayList<>(list); // 원본 불변
 
         switch (sort) {
-            case "interestRateDesc": // 이자율 높은 순
-                debts.sort(Comparator.comparing(DebtInfoResponseDTO::getInterestRate, Comparator.nullsLast(Double::compareTo)).reversed());
+            case "interestRateDesc":
+                sortedList.sort(Comparator.comparing(
+                        DebtInfoResponseDTO::getInterestRate, Comparator.nullsLast(BigDecimal::compareTo)
+                ).reversed());
                 break;
 
-            case "repaymentRateDesc": // 상환율 높은 순
-                debts.sort(Comparator.comparing(DebtInfoResponseDTO::getRepaymentRate, Comparator.nullsLast(Double::compareTo)).reversed());
+            case "repaymentRateDesc":
+                sortedList.sort(Comparator.comparing(
+                        DebtInfoResponseDTO::getRepaymentRate, Comparator.nullsLast(BigDecimal::compareTo)
+                ).reversed());
                 break;
 
-            case "startedAtAsc": // 오래된 순
-                debts.sort(Comparator.comparing(DebtInfoResponseDTO::getLoanStartDate, Comparator.nullsLast(java.util.Date::compareTo)));
+            case "startedAtAsc":
+                sortedList.sort(Comparator.comparing(
+                        DebtInfoResponseDTO::getLoanStartDate, Comparator.nullsLast(LocalDate::compareTo)
+                ));
                 break;
 
-            case "startedAtDesc": // 최신 순
-                debts.sort(Comparator.comparing(DebtInfoResponseDTO::getLoanStartDate, Comparator.nullsLast(java.util.Date::compareTo)).reversed());
+            case "startedAtDesc":
+                sortedList.sort(Comparator.comparing(
+                        DebtInfoResponseDTO::getLoanStartDate, Comparator.nullsLast(LocalDate::compareTo)
+                ).reversed());
                 break;
-
-//            case "recommended":
-//                // 우리 앱 추천순 - 추후 구현
-//                break;
 
             default:
+                break;
         }
 
-        return debts;
+        return sortedList;
     }
 
     @Override
