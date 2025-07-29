@@ -1,17 +1,15 @@
 package cheongsan.domain.user.service;
 
 
+import cheongsan.domain.user.dto.FindUserIdRequestDTO;
+import cheongsan.domain.user.dto.FindUserIdResponseDTO;
 import cheongsan.domain.user.dto.SignUpRequestDTO;
 import cheongsan.domain.user.dto.SignUpResponseDTO;
 import cheongsan.domain.user.entity.User;
 import cheongsan.domain.user.mapper.UserMapper;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +20,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public SignUpResponseDTO signUp(SignUpRequestDTO signUpRequestDTO) {
 
-        if(userMapper.findByUserId(signUpRequestDTO.getUserId()) != null) {
+        if (userMapper.findByUserId(signUpRequestDTO.getUserId()) != null) {
             throw new IllegalArgumentException("중복된 아이디입니다.");
         }
-        if(userMapper.findByEmail(signUpRequestDTO.getEmail()) != null) {
+        if (userMapper.findByEmail(signUpRequestDTO.getEmail()) != null) {
             throw new IllegalArgumentException("중복된 이메일입니다.");
         }
 
@@ -33,7 +31,7 @@ public class AuthServiceImpl implements AuthService {
                 .userId(signUpRequestDTO.getUserId())
                 .password(signUpRequestDTO.getPassword())
                 .email(signUpRequestDTO.getEmail())
-                .connectedId(genereateConnectId(signUpRequestDTO.getUserId(),signUpRequestDTO.getPassword()))
+                .connectedId(genereateConnectId(signUpRequestDTO.getUserId(), signUpRequestDTO.getPassword()))
                 .build();
         log.info("signUp request: {}", user);
         userMapper.save(user);
@@ -41,8 +39,17 @@ public class AuthServiceImpl implements AuthService {
         return new SignUpResponseDTO(user.getId(), user.getUserId());
     }
 
-    public String genereateConnectId(String userId,String password) {
+    public String genereateConnectId(String userId, String password) {
 
         return "connectedID";
+    }
+
+    @Override
+    public FindUserIdResponseDTO findUserIdByEmail(FindUserIdRequestDTO findUserIdRequestDTO) {
+        User user = userMapper.findByEmail(findUserIdRequestDTO.getEmail());
+        if (user == null) {
+            throw new IllegalArgumentException("등록된 이메일이 없습니다.");
+        }
+        return new FindUserIdResponseDTO(user.getUserId());
     }
 }

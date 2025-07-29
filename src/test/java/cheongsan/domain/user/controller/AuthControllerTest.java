@@ -1,5 +1,7 @@
 package cheongsan.domain.user.controller;
 
+import cheongsan.domain.user.dto.FindUserIdRequestDTO;
+import cheongsan.domain.user.dto.FindUserIdResponseDTO;
 import cheongsan.domain.user.dto.SignUpRequestDTO;
 import cheongsan.domain.user.dto.SignUpResponseDTO;
 import cheongsan.domain.user.service.AuthService;
@@ -12,7 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class AuthControllerTest {
 
@@ -29,6 +32,11 @@ class AuthControllerTest {
                 throw new RuntimeException("강제 에러!");
             }
             return new SignUpResponseDTO(101L, request.getUserId());
+        }
+
+        @Override
+        public FindUserIdResponseDTO findUserIdByEmail(FindUserIdRequestDTO findUserIdRequestDTO) {
+            return null;
         }
     }
 
