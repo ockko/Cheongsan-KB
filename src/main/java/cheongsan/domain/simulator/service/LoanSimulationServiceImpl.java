@@ -1,5 +1,6 @@
 package cheongsan.domain.simulator.service;
 
+import cheongsan.domain.debt.dto.DebtInfoResponseDTO;
 import cheongsan.domain.debt.service.DebtService;
 import cheongsan.domain.simulator.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,54 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
 
     @Override
     public LoanAnalyzeResponseDTO analyze(LoanAnalyzeRequestDTO request) {
-        return null;
+        Long userId = 1L;
+        if (request == null) {
+            throw new IllegalArgumentException("분석 요청(request)은 null일 수 없습니다.");
+        }
+        if (userId == null) {
+            throw new IllegalArgumentException("사용자 ID(userId)는 필수입니다.");
+        }
+        if (request.getAnnualIncome() == null || request.getAnnualIncome().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("총 자산(assetTotalAmount)은 0보다 커야 합니다.");
+        }
+
+        // 1. 새 대출 DTO 생성
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = startDate.plusMonths(request.getLoanPeriod());
+
+        System.out.println("startDate: " + startDate);
+        System.out.println("endDate: " + endDate);
+        LoanDTO newLoan = LoanDTO.builder()
+                .principal(request.getLoanAmount())
+                .interestRate(request.getInterestRate())
+                .startDate(startDate)
+                .endDate(endDate)
+                .repaymentType(request.getRepaymentType())
+                .build();
+
+        // 2. 기존 대출 리스트 조회 및 변환 (DebtInfoResponseDTO -> LoanDTO)
+        List<DebtInfoResponseDTO> existings = debtService.getUserDebtList(userId);
+        List<LoanDTO> existingLoans = existings.stream()
+                .map(debt -> LoanDTO.builder()
+                        .principal(debt.getCurrentBalance())
+                        .interestRate(debt.getInterestRate())
+                        .startDate(debt.getLoanStartDate())
+                        .endDate(debt.getLoanEndDate())
+                        .repaymentType(debt.getRepaymentType()) // 기본값, 필요 시 매핑 추가
+                        .build())
+                .toList();
+
+        // 3. 기존 메서드 호출해서 결과 얻기
+        TotalComparisonResultDTO totalComparison = compareTotalRepaymentWithNewLoan(existingLoans, newLoan);
+        InterestComparisonResultDTO interestComparison = compareInterestWithNewLoan(existingLoans, newLoan);
+        DebtRatioComparisonResultDTO debtRatioComparison = compareDebtRatioWithNewLoan(existingLoans, newLoan, request.getAnnualIncome());
+
+        // 4. 응답 DTO에 담아 반환
+        return new LoanAnalyzeResponseDTO(
+                totalComparison,
+                interestComparison,
+                debtRatioComparison
+        );
     }
 
 
