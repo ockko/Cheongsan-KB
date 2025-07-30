@@ -26,7 +26,7 @@ public interface UserMapper {
     User findByEmail(@Param("email") String email);
 
     User findByUserIdAndEmail(@Param("userId") String userId,
-                              String email);
+                              @Param("email") String email);
 
     void updatePassword(@Param("id") Long id,
                         @Param("newPassword") String password);
@@ -42,10 +42,6 @@ public interface UserMapper {
     void submitNickname(@Param("userId") String userId,
                         String nickname);
 
-    void updateProfile(@Param("userId") String userId,
-                       @Param("nickname") String nickname,
-                       @Param("email") String email);
 
-    void deleteById(@Param("userId") String userId);
 
 }
