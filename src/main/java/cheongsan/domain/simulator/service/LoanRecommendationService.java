@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class LoanRecommendationService {
 
     private static final BigDecimal DSR_LIMIT = new BigDecimal("0.4"); // 40%
-    private final LoanProductMapper loanProductRepository;
+    private final LoanProductMapper loanProductMapper;
 
     public List<LoanProductDTO> recommendLoans(LoanRecommendationRequestDTO request) {
         validateRequest(request);
@@ -30,18 +30,18 @@ public class LoanRecommendationService {
         System.out.println("=== 디버깅 정보 ===");
         System.out.println("계산된 DSR: " + dsr.multiply(BigDecimal.valueOf(100)) + "%");
 
-        return loanProductRepository.findRecommendedLoans(request.getPrincipal())
+        return loanProductMapper.findRecommendedLoans(request.getPrincipal())
                 .stream()
                 .filter(entity -> {
                     // 1. 한도 체크 (문자열 파싱)
-                    BigDecimal loanLimit = parseLoanLimit(entity.getLnLmt());
+                    BigDecimal loanLimit = parseLoanLimit(entity.getLoanLimit());
                     boolean limitOk = loanLimit == null || loanLimit.compareTo(request.getPrincipal()) >= 0;
 
                     // 2. DSR 체크
                     boolean dsrOk = "N".equals(entity.getDsrCheck()) || dsr.compareTo(DSR_LIMIT) <= 0;
 
-                    System.out.println("상품: " + entity.getFinPrdNm() +
-                            ", 원본한도: " + entity.getLnLmt() +
+                    System.out.println("상품: " + entity.getProductName() +
+                            ", 원본한도: " + entity.getLoanLimit() +
                             ", 파싱한도: " + loanLimit +
                             ", 한도OK: " + limitOk +
                             ", DSR_OK: " + dsrOk);
@@ -54,12 +54,12 @@ public class LoanRecommendationService {
 
     private LoanProductDTO convertToDTO(Simulator entity) {
         return new LoanProductDTO(
-                entity.getFinPrdNm(),      // productName
-                entity.getHdlInst(),       // institutionName
-                entity.getIrt(),           // interestRate
-                entity.getLnLmt(),         // loanLimit
-                entity.getRltSite(),       // siteUrl
-                entity.getDsrCheck()       // dsrCheck
+                entity.getProductName(),
+                entity.getInstitutionName(),
+                entity.getInterestRate(),
+                entity.getLoanLimit(),
+                entity.getSiteUrl(),
+                entity.getDsrCheck()
         );
     }
 

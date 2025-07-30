@@ -7,12 +7,12 @@
 
     <select id="findRecommendedLoans" resultType="cheongsan.domain.simulator.entity.Simulator">
         <![CDATA[
-        SELECT finPrdNm,
-               hdlInst,
-               irt,
-               lnLmt,
-               rltSite,
-               dsrCheck
+        SELECT finPrdNm As productName,
+               hdlInst  As institutionName,
+               irt      As interestRate,
+               lnLmt    As loanLimit,
+               rltSite  As siteUrl,
+               dsrCheck As dsrCheck
         FROM low_income_financial_products
         WHERE finPrdNm IS NOT NULL
           AND irt IS NOT NULL
