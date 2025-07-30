@@ -1,5 +1,9 @@
 package cheongsan.common.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
@@ -88,5 +92,28 @@ public class RootConfig {
         mailSender.setJavaMailProperties(props);
 
         return mailSender;
+    }
+
+    /**
+     * Jackson ObjectMapper 빈 등록
+     * JSON 직렬화/역직렬화를 위한 설정
+     */
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+
+        // Java 8 시간 타입 지원
+        mapper.registerModule(new JavaTimeModule());
+
+        // 타임스탬프를 ISO-8601 형식으로 출력 (배열 형식 비활성화)
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+        // 스네이크 케이스 네이밍 전략 (API 응답에서 자주 사용)
+        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+
+        // 알려지지 않은 프로퍼티 무시 (API 응답에서 예상치 못한 필드가 있어도 에러 안남)
+        mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        return mapper;
     }
 }
