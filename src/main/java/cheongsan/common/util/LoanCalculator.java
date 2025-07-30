@@ -1,5 +1,6 @@
 package cheongsan.common.util;
 
+import cheongsan.common.constant.ResponseMessage;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -38,7 +39,7 @@ public class LoanCalculator {
             case BULLET_REPAYMENT:
                 return calculateBulletRepayment(originalAmount, interestRate);
             default:
-                throw new IllegalArgumentException("지원하지 않는 상환방식입니다.");
+                throw new IllegalArgumentException(ResponseMessage.UNSUPPORTED_REPAYMENT_METHOD.getMessage());
         }
     }
 

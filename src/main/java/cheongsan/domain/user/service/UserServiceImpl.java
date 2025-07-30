@@ -24,4 +24,6 @@ public class UserServiceImpl implements UserService {
         UserDTO userDTO = UserDTO.of(user);
         return userDTO;
     }
+
+
 }

@@ -1,8 +1,12 @@
 package cheongsan.domain.debt.mapper;
 
-import cheongsan.domain.debt.dto.*;
+import cheongsan.domain.debt.dto.DailyRepaymentDTO;
+import cheongsan.domain.debt.dto.DebtInfoResponseDTO;
+import cheongsan.domain.debt.dto.RepaymentCalendarDTO;
 import cheongsan.domain.debt.entity.DebtAccount;
 import cheongsan.domain.debt.entity.DebtRepaymentRatio;
+import cheongsan.domain.debt.entity.DelinquentLoan;
+import cheongsan.domain.debt.entity.FinancialInstitution;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -13,9 +17,13 @@ import java.util.List;
 public interface DebtMapper {
     List<DebtInfoResponseDTO> getUserDebtList(Long userId);
 
-    DebtDetailResponseDTO getLoanDetail(Long loanId);
+    // 대출 상세 조회 (1)
+    DebtAccount getDebtAccountById(Long loanId);
 
-    List<DebtDTO> findByUserId(Long userId);
+    // 대출 상세 조회 (2)
+    FinancialInstitution getFinancialInstitutionByCode(Long organizationCode);
+
+    List<DebtAccount> findByUserId(Long userId);
 
     // 대출 상품 추가
     void insertDebt(DebtAccount debtAccount);
@@ -39,4 +47,7 @@ public interface DebtMapper {
 
     // 상환율 계산할 데이터 조회
     List<DebtRepaymentRatio> getDebtRepaymentInfoByUserId(@Param("userId") Long userId);
+
+    // 연체된 대출 조회
+    List<DelinquentLoan> getDelinquentLoanByUserId(Long userId);
 }

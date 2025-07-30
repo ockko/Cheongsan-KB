@@ -4,6 +4,8 @@ import cheongsan.common.util.LoanCalculator;
 import cheongsan.domain.debt.dto.*;
 import cheongsan.domain.debt.entity.DebtAccount;
 import cheongsan.domain.debt.entity.DebtRepaymentRatio;
+import cheongsan.domain.debt.entity.DelinquentLoan;
+import cheongsan.domain.debt.entity.FinancialInstitution;
 import cheongsan.domain.debt.mapper.DebtMapper;
 import cheongsan.domain.debt.mapper.FinancialInstitutionMapper;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +16,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -68,7 +72,12 @@ public class DebtServiceImpl implements DebtService {
 
     @Override
     public DebtDetailResponseDTO getLoanDetail(Long loanId) {
-        return debtMapper.getLoanDetail(loanId);
+        DebtAccount debtAccount = debtMapper.getDebtAccountById(loanId);
+
+        FinancialInstitution fi = debtMapper.getFinancialInstitutionByCode(debtAccount.getOrganizationCode());
+
+        // DTO 변환 및 반환
+        return DebtDetailResponseDTO.fromEntity(debtAccount, fi);
     }
 
     @Override
@@ -115,9 +124,13 @@ public class DebtServiceImpl implements DebtService {
 
     @Override
     public BigDecimal calculateTotalMonthlyPayment(Long userId) {
-        List<DebtDTO> userDebts = debtMapper.findByUserId(userId);
+        List<DebtAccount> userDebtsAsEntity = debtMapper.findByUserId(userId);
 
-        return userDebts.stream()
+        List<DebtDTO> userDebtsAsDto = userDebtsAsEntity.stream()
+                .map(DebtDTO::fromEntity)
+                .collect(Collectors.toList());
+
+        return userDebtsAsDto.stream()
                 .map(debt -> loanCalculator.calculateMonthlyPayment(
                         debt.getRepaymentMethodEnum(), // 상환방식
                         debt.getOriginalAmount(),      // 총 원금
@@ -172,5 +185,22 @@ public class DebtServiceImpl implements DebtService {
                 .totalRepaidAmount(totalRepaid)
                 .repaymentRatio(ratio)
                 .build();
+    }
+
+    @Override
+    public List<DelinquentLoanResponseDTO> getDelinquentLoans(Long userId) {
+        List<DelinquentLoan> entities = debtMapper.getDelinquentLoanByUserId(userId);
+
+        return entities.stream()
+                .map(entity -> {
+                    int overdueDays = Period.between(entity.getNextPaymentDate(), LocalDate.now()).getDays();
+                    return DelinquentLoanResponseDTO.builder()
+                            .debtName(entity.getDebtName())
+                            .organizationName(entity.getOrganizationName())
+                            .overdueDays(overdueDays)
+                            .build();
+                })
+                .sorted(Comparator.comparingInt(DelinquentLoanResponseDTO::getOverdueDays).reversed())
+                .collect(Collectors.toList());
     }
 }

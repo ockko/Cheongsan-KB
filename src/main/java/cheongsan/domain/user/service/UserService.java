@@ -9,4 +9,5 @@ public interface UserService {
     public void submitDiagnosisAnswerToUser(Long userId, Long workoutId);
 
     public UserDTO getUser(Long userId);
+
 }

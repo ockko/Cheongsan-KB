@@ -1,6 +1,7 @@
 package cheongsan.domain.deposit.service;
 
 import cheongsan.common.config.RootConfig;
+import cheongsan.domain.deposit.dto.DailySpendingDTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -83,5 +84,54 @@ class DepositServiceImplTest {
         // then
         assertEquals(BigDecimal.ZERO, result, "고정 지출이 없으면 합계는 0이어야 합니다.");
         log.info("계산된 고정 지출 합계: " + result);
+    }
+
+    @Test
+    @DisplayName("오늘의 지출 현황을 정확히 계산해야 한다")
+    void getDailySpendingStatus() {
+        // given
+        Long userId = 1L;
+
+        // when
+        DailySpendingDTO result = depositService.getDailySpendingStatus(userId);
+
+        // then
+        assertNotNull(result);
+        assertEquals(50000, result.getDailyLimit(), "한도가 나와야 합니다.");
+        assertEquals(16800, result.getSpent(), "오늘 지출액 합계가 나와야 합니다.");
+        assertEquals(33200, result.getRemaining(), "남은 금액이 정확해야 합니다.");
+        log.info("오늘의 지출 현황 결과: " + result);
+    }
+
+    @Test
+    @DisplayName("오늘 지출이 없는 경우, 지출액은 0이어야 한다")
+    void getDailySpendingStatus_WithNoSpendingToday() {
+        // given
+        Long userId = 1L;
+
+        // when
+        DailySpendingDTO result = depositService.getDailySpendingStatus(userId);
+
+        // then
+        assertNotNull(result);
+        assertEquals(50000, result.getDailyLimit());
+        assertEquals(0, result.getSpent(), "오늘 지출이 없으므로 0이 나와야 합니다.");
+        assertEquals(50000, result.getRemaining());
+        log.info("오늘 지출 없는 사용자 결과: " + result);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 사용자의 경우 예외가 발생해야 한다")
+    void getDailySpendingStatus_UserNotFound_ShouldThrowException() {
+        // given
+        Long nonExistentUserId = 999L;
+
+        // when & then
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            depositService.getDailySpendingStatus(nonExistentUserId);
+        });
+
+        assertEquals("일치하는 회원 정보가 없습니다.", exception.getMessage());
+        log.info("사용자 없음 예외 처리 성공: " + exception.getMessage());
     }
 }

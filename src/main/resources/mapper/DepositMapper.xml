@@ -5,16 +5,14 @@
 <mapper namespace="cheongsan.domain.deposit.mapper.DepositMapper">
 
     <select id="getMonthlyTransactions" resultType="cheongsan.domain.deposit.dto.MonthlyTransactionDTO">
-        SELECT DATE(t.transaction_time)                                                 AS transactionDate,
-               COALESCE(SUM(CASE WHEN t.type = 'TRANSFER' THEN t.amount ELSE 0 END), 0) AS totalIncome,
-               COALESCE(SUM(CASE WHEN t.type = 'WITHDRAW' THEN t.amount ELSE 0 END), 0) AS totalExpense,
-               COUNT(*)                                                                 AS transactionCount
+        SELECT DATE (t.transaction_time) AS transactionDate, COALESCE (SUM (CASE WHEN t.type = 'TRANSFER' THEN t.amount ELSE 0 END), 0) AS totalIncome, COALESCE (SUM (CASE WHEN t.type = 'WITHDRAW' THEN t.amount ELSE 0 END), 0) AS totalExpense, COUNT (*) AS transactionCount
         FROM transactions t
-                 INNER JOIN deposit_accounts da ON t.deposit_account_id = da.id
+            INNER JOIN deposit_accounts da
+        ON t.deposit_account_id = da.id
         WHERE t.user_id = #{userId}
-          AND YEAR(t.transaction_time) = #{year}
-          AND MONTH(t.transaction_time) = #{month}
-        GROUP BY DATE(t.transaction_time)
+          AND YEAR (t.transaction_time) = #{year}
+          AND MONTH (t.transaction_time) = #{month}
+        GROUP BY DATE (t.transaction_time)
         ORDER BY transactionDate ASC
     </select>
 
@@ -30,7 +28,7 @@
         FROM transactions t
                  INNER JOIN deposit_accounts da ON t.deposit_account_id = da.id
         WHERE t.user_id = #{userId}
-          AND DATE(t.transaction_time) = #{date}
+          AND DATE (t.transaction_time) = #{date}
         ORDER BY t.transaction_time DESC
     </select>
 
@@ -47,9 +45,10 @@
                res_account_desc3
         FROM transactions
         WHERE user_id = #{userId}
-          AND type = 'TRANSFER'
-          AND YEAR(transaction_time) = #{year}
-          AND MONTH(transaction_time) = #{month}
+            AND type = 'TRANSFER'
+            AND YEAR (
+            transaction_time) = #{year}
+          AND MONTH (transaction_time) = #{month}
     </select>
 
     <select id="findWithdrawTransactionsByMonth" resultType="cheongsan.domain.deposit.entity.Transaction">
@@ -65,9 +64,27 @@
                res_account_desc3
         FROM transactions
         WHERE user_id = #{userId}
+            AND type = 'WITHDRAW'
+            AND YEAR (
+            transaction_time) = #{year}
+          AND MONTH (transaction_time) = #{month}
+    </select>
+
+    <select id="sumTodaySpendingByUserId" resultType="java.math.BigDecimal">
+        SELECT COALESCE(SUM(amount), 0)
+        FROM transactions
+        WHERE user_id = #{userId}
           AND type = 'WITHDRAW'
-          AND YEAR(transaction_time) = #{year}
-          AND MONTH(transaction_time) = #{month}
+          AND DATE (transaction_time) = CURDATE()
+    </select>
+
+    <select id="findWithdrawTransactionsByPeriod" resultType="cheongsan.domain.deposit.entity.Transaction">
+        SELECT *
+        FROM transactions
+        WHERE user_id = #{userId}
+          AND type = 'WITHDRAW'
+          AND DATE (transaction_time) BETWEEN #{startDate}
+          AND #{endDate}
     </select>
 
 </mapper>

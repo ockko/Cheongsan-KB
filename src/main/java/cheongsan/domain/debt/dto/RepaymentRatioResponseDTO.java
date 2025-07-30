@@ -1,13 +1,11 @@
 package cheongsan.domain.debt.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
-@Getter
-@AllArgsConstructor
+@Data
 @Builder
 public class RepaymentRatioResponseDTO {
     private BigDecimal totalOriginalAmount;

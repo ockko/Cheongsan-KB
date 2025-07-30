@@ -5,6 +5,7 @@ import cheongsan.domain.deposit.entity.Transaction;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -31,5 +32,13 @@ public interface DepositMapper {
             @Param("userId") Long userId,
             @Param("year") int year,
             @Param("month") int month
+    );
+
+    BigDecimal sumTodaySpendingByUserId(Long userId);
+
+    List<Transaction> findWithdrawTransactionsByPeriod(
+            @Param("userId") Long userId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
     );
 }

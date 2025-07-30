@@ -6,12 +6,65 @@
     <select id="findById" parameterType="java.lang.Long" resultType="cheongsan.domain.user.entity.User">
         SELECT *
         FROM user
-        WHERE id = #{userId}
+        WHERE id = #{id}
     </select>
 
     <update id="saveDiagnosis" parameterType="java.lang.Long">
         UPDATE user
         SET recommended_program_id = #{programId}
-        WHERE id = #{userId}
+        WHERE id = #{id}
     </update>
+
+    <update id="updateDailyLimit">
+        UPDATE user
+        SET daily_limit      = #{dailyLimit},
+            daily_limit_date = #{dailyLimitDate}
+        WHERE id = #{id}
+    </update>
+
+    <select id="findByUserId" parameterType="String" resultType="cheongsan.domain.user.entity.User">
+        SELECT *
+        FROM user
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 이메일로 유저 조회 -->
+    <select id="findByEmail" parameterType="String" resultType="cheongsan.domain.user.entity.User">
+        SELECT *
+        FROM user
+        WHERE email = #{email}
+    </select>
+
+    <!-- 유저 저장 -->
+    <insert id="save" parameterType="cheongsan.domain.user.entity.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user
+        (
+        connected_id,
+        user_id,
+        password,
+        email<!-- 필요한 경우: nickname, recommended_program_id, connected_id 등 추가 -->
+        )
+        VALUES
+        (
+        #{connectedId},
+        #{userId},
+        #{password},
+        #{email}
+        <!-- 필요한 경우: #{nickname}, #{recommendedProgramId}, #{connectedId} 등 추가 -->
+        )
+    </insert>
+
+    <select id="findByUserIdAndEmail" parameterType="String" resultType="cheongsan.domain.user.entity.User">
+        SELECT *
+        FROM user
+        WHERE user_id = #{userId}
+          AND email = #{email}
+    </select>
+
+    <update id="updatePassword" parameterType="map">
+        UPDATE user
+        SET password = #{newPassword}
+        WHERE id = #{id}
+    </update>
+
 </mapper>

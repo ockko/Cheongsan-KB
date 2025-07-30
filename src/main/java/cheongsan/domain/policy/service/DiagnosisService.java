@@ -1,6 +1,7 @@
 package cheongsan.domain.policy.service;
 
 import cheongsan.domain.policy.dto.DiagnosisDTO;
+import cheongsan.domain.policy.dto.SimpleDiagnosisDTO;
 import cheongsan.domain.policy.dto.UserDiagnosisDTO;
 
 public interface DiagnosisService {
@@ -11,4 +12,5 @@ public interface DiagnosisService {
 
     DiagnosisDTO getDiagnosis(Long diagnosisId);
 
+    public SimpleDiagnosisDTO getSimpleDiagnosis(Long diagnosisId);
 }
