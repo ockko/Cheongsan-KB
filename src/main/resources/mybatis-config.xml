@@ -9,8 +9,4 @@
     <typeAliases>
         <package name="cheongsan.domain"/>
     </typeAliases>
-    <mappers>
-        <mapper resource="mapper/LoanProductMapper.xml"/>
-    </mappers>
-
 </configuration>
