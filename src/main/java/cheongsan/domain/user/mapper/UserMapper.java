@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
@@ -27,6 +28,8 @@ public interface UserMapper {
 
     User findByUserIdAndEmail(@Param("userId") String userId,
                               @Param("email") String email);
+
+    List<User> findAllUsers();
 
     void updatePassword(@Param("id") Long id,
                         @Param("newPassword") String password);
