@@ -1,5 +1,6 @@
 package cheongsan.domain.notification.service;
 
+import cheongsan.domain.deposit.dto.WeeklyReportDTO;
 import cheongsan.domain.notification.controller.NotificationWebSocketHandler;
 import cheongsan.domain.notification.dto.NotificationDTO;
 import cheongsan.domain.notification.entity.Notification;
@@ -85,7 +86,6 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Async
     @Override
-    @Transactional
     public void sendDailyLimitExceededEmail(User user, int dailyLimit, int totalSpent) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -108,6 +108,38 @@ public class NotificationServiceImpl implements NotificationService {
             log.info(user.getEmail() + "님에게 한도 초과 이메일 발송 성공");
         } catch (MessagingException e) {
             log.error(user.getEmail() + "님에게 이메일 발송 실패", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Async
+    @Override
+    public void sendWeeklyReportEmail(User user, WeeklyReportDTO report) {
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+
+            helper.setTo(user.getEmail());
+            helper.setSubject(String.format("[티끌모아 청산] %s님, 지난주 지출 리포트가 도착했어요!", user.getNickname()));
+
+            String htmlContent = String.format(
+                    "<h1>%s님, 지난주 지출 리포트입니다.</h1>" +
+                            "<p><strong>기간:</strong> %s ~ %s</p>" +
+                            "<p><strong>목표 달성률:</strong> %.2f%%</p>" +
+                            "<p><strong>일일 평균 지출:</strong> %,d원</p>" +
+                            "<p>자세한 내용은 '티끌모아 청산'에서 확인해보세요!</p>",
+                    user.getNickname(),
+                    report.getStartDate(),
+                    report.getEndDate(),
+                    report.getAchievementRate(),
+                    report.getAverageDailySpending()
+            );
+            helper.setText(htmlContent, true);
+
+            mailSender.send(mimeMessage);
+            log.info(user.getEmail() + "님에게 주간 리포트 이메일 발송 성공");
+        } catch (MessagingException e) {
+            log.error(user.getEmail() + "님에게 주간 리포트 이메일 발송 실패", e);
             throw new RuntimeException(e);
         }
     }
