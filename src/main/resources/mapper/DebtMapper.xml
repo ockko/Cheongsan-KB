@@ -50,6 +50,27 @@
         WHERE organization_code = #{organizationCode}
     </select>
 
+    <select id="findByUserIdAndAccount" resultType="cheongsan.domain.debt.entity.DebtAccount">
+        SELECT id,
+               user_id,
+               organization_code,
+               res_account,
+               debt_name,
+               current_balance,
+               original_amount,
+               interest_rate,
+               loan_start_date,
+               loan_end_date,
+               next_payment_date,
+               grace_period_months,
+               repayment_method,
+               created_at,
+               updated_at
+        FROM debt_accounts
+        WHERE user_id = #{userId}
+          AND res_account = #{resAccount}
+    </select>
+
     <select id="findByUserId" resultType="cheongsan.domain.debt.entity.DebtAccount">
         SELECT id,
                user_id,
