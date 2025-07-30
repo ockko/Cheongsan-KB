@@ -57,7 +57,7 @@ public class TcsStrategy implements RepaymentStrategy {
 
                 BigDecimal monthlyPayment = loan.getMonthlyPayment();
                 BigDecimal payment = monthlyPayment.min(principal);
-                BigDecimal monthlyRate = BigDecimal.valueOf(loan.getInterestRate())
+                BigDecimal monthlyRate = loan.getInterestRate()
                         .divide(BigDecimal.valueOf(12 * 100), 10, RoundingMode.HALF_UP);
 
                 BigDecimal interestPaid = principal.multiply(monthlyRate);

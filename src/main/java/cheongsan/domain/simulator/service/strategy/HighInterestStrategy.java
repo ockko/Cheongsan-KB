@@ -49,7 +49,7 @@ public class HighInterestStrategy implements RepaymentStrategy {
                 BigDecimal principal = remainingBalances.get(id);
                 if (principal.compareTo(BigDecimal.ZERO) <= 0) continue;
 
-                BigDecimal monthlyRate = BigDecimal.valueOf(loan.getInterestRate())
+                BigDecimal monthlyRate = loan.getInterestRate()
                         .divide(BigDecimal.valueOf(12 * 100), 10, RoundingMode.HALF_UP);
                 BigDecimal interestPaid = principal.multiply(monthlyRate);
 

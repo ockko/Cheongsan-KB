@@ -1,7 +1,6 @@
 package cheongsan.domain.debt.mapper;
 
 import cheongsan.domain.debt.dto.DailyRepaymentDTO;
-import cheongsan.domain.debt.dto.DebtInfoResponseDTO;
 import cheongsan.domain.debt.dto.RepaymentCalendarDTO;
 import cheongsan.domain.debt.entity.DebtAccount;
 import cheongsan.domain.debt.entity.DebtRepaymentRatio;
@@ -15,7 +14,7 @@ import java.util.List;
 
 @Mapper
 public interface DebtMapper {
-    List<DebtInfoResponseDTO> getUserDebtList(Long userId);
+    List<DebtAccount> getUserDebtList(Long userId);
 
     // 대출 상세 조회 (1)
     DebtAccount getDebtAccountById(Long loanId);
