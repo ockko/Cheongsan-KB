@@ -47,7 +47,7 @@ public class SmallAmountStrategy implements RepaymentStrategy {
                 if (principal.compareTo(BigDecimal.ZERO) <= 0) continue;
 
                 // 간단 이자 계산
-                BigDecimal monthlyRate = BigDecimal.valueOf(loan.getInterestRate())
+                BigDecimal monthlyRate = loan.getInterestRate()
                         .divide(BigDecimal.valueOf(12 * 100), 10, RoundingMode.HALF_UP);
                 BigDecimal interestPaid = principal.multiply(monthlyRate);
 
