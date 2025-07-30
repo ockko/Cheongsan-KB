@@ -1,12 +1,14 @@
 package cheongsan.common.util;
 
 import cheongsan.domain.simulator.dto.LoanDTO;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.List;
 
+@Component
 public class DsrCalculator {
 
     // 기존 대출 포함 DSR 계산
