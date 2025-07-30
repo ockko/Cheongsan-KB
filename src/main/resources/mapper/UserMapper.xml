@@ -67,4 +67,29 @@
         WHERE id = #{id}
     </update>
 
+    <update id="submitNickname" parameterType="map">
+        UPDATE user
+        SET nickname = #{nickname}
+        WHERE user_id = #{userId}
+    </update>
+
+    <update id="updateProfile" parameterType="map">
+        UPDATE user
+        <set>
+            <if test="nickname != null">
+                nickname = #{nickname},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+        DELETE
+        FROM user
+        WHERE user_id = #{userId}
+    </delete>
+
 </mapper>

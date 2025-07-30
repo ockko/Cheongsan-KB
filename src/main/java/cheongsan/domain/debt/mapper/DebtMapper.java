@@ -49,4 +49,12 @@ public interface DebtMapper {
 
     // 연체된 대출 조회
     List<DelinquentLoan> getDelinquentLoanByUserId(Long userId);
+
+    // 수정된 대출 계좌 update
+    void updateDebt(@Param("gracePeriodMonths") Long gracePeriodMonths,
+                    @Param("repaymentMethod") String repaymentMethod,
+                    @Param("nextPaymentDate") LocalDate nextPaymentDate,
+                    @Param("debtAccountId") Long debtAccountId);
+
+
 }

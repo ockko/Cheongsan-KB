@@ -1,13 +1,22 @@
 package cheongsan.domain.user.service;
 
 
-import cheongsan.domain.user.dto.UserDTO;
+import cheongsan.domain.user.dto.*;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public interface UserService {
-    public void submitDiagnosisAnswerToUser(Long userId, Long workoutId);
+    void submitDiagnosisAnswerToUser(Long userId, Long workoutId);
 
-    public UserDTO getUser(Long userId);
+    UserDTO getUser(Long id);
 
+    MyInfoResponseDTO getMyInfo(String userId);
+
+    UpdateMyProfileResponseDTO updateMyProfile(String userId, UpdateMyProfileRequestDTO updateMyProfileRequestDTO);
+
+    void deleteAccount(String userId, DeleteAccountRequestDTO dto);
+
+    List<UserDebtAccountResponseDTO> getUserDebtAccounts(Long userId);
 }
