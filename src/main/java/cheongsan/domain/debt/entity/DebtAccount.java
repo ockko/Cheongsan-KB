@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 //debt_accounts 테이블 매핑
 @Getter
 @ToString
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

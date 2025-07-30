@@ -1,6 +1,7 @@
 package cheongsan.domain.user.controller;
 
 import cheongsan.common.exception.ResponseDTO;
+import cheongsan.domain.debt.service.DebtService;
 import cheongsan.domain.user.dto.*;
 import cheongsan.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.List;
 @Log4j2
 public class UserController {
     private final UserService userService;
+    private final DebtService debtService;
 
     @GetMapping("/profile")
     public ResponseEntity<?> getMyProfile() {
@@ -66,7 +68,7 @@ public class UserController {
     }
 
     @GetMapping("/debt-accounts")
-    public ResponseEntity<?> getUserDebtAccounts() {
+    public ResponseEntity<?> getMyDebt() {
         try {
             Long userId = 1L;
             List<UserDebtAccountResponseDTO> accounts = userService.getUserDebtAccounts(userId);
@@ -84,5 +86,22 @@ public class UserController {
         }
     }
 
+    @PatchMapping("/debt-accounts/{debtAccountId}")
+    public ResponseEntity<?> updateDebtAccount(
+            @RequestBody DebtUpdateRequestDTO requestDTO,
+            @PathVariable Long debtAccountId) {
+        try {
+            DebtUpdateResponseDTO responseDTO = debtService.updateDebtAccount(debtAccountId, requestDTO);
+            return ResponseEntity.ok(responseDTO);
+        } catch (IllegalArgumentException e) {
+            // 잘못된 id나 파라미터
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            // 의도하지 않은 서버 에러
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("서버 내부 오류가 발생했습니다.");
 
+        }
+    }
 }

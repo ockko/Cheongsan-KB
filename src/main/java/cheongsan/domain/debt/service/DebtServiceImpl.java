@@ -8,6 +8,8 @@ import cheongsan.domain.debt.entity.DelinquentLoan;
 import cheongsan.domain.debt.entity.FinancialInstitution;
 import cheongsan.domain.debt.mapper.DebtMapper;
 import cheongsan.domain.debt.mapper.FinancialInstitutionMapper;
+import cheongsan.domain.user.dto.DebtUpdateRequestDTO;
+import cheongsan.domain.user.dto.DebtUpdateResponseDTO;
 import cheongsan.domain.simulator.dto.RepaymentType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -18,7 +20,6 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -234,5 +235,26 @@ public class DebtServiceImpl implements DebtService {
                 })
                 .sorted(Comparator.comparingInt(DelinquentLoanResponseDTO::getOverdueDays).reversed())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public DebtUpdateResponseDTO updateDebtAccount(Long debtAccountId, DebtUpdateRequestDTO dto) {
+        DebtAccount account = debtMapper.getDebtAccountById(debtAccountId);
+        log.info(account);
+
+        if (account == null) {
+            throw new IllegalArgumentException("존재하지 않는 부채 계좌입니다.");
+        }
+
+        debtMapper.updateDebt(dto.getGracePeriodMonths(), dto.getRepaymentMethod(), dto.getNextPaymentDate(), debtAccountId);
+
+        return DebtUpdateResponseDTO.builder()
+                .debtId(debtAccountId)
+                .organizationCode(account.getOrganizationCode())
+                .debtName(account.getDebtName())
+                .currentBalance(account.getCurrentBalance())
+                .gracePeriodMonths(account.getGracePeriodMonths())
+                .repaymentMethod(account.getRepaymentMethod())
+                .build();
     }
 }
