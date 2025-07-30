@@ -48,13 +48,13 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    public void markAsRead(Long userId) {
-        log.debug("알림 읽음 처리 시작: id={}", userId);
+    public void markAllAsRead(Long userId) {
+        log.debug("알림 읽음 처리 시작: userId={}", userId);
 
         try {
-            // 1. 알림을 읽음 처리
+            // 1. 모든 알림 읽음 처리
             notificationMapper.markNotificationAsRead(userId);
-            log.info("알림 읽음 처리 완료: id={}", userId);
+            log.info("알림 일괄 읽음 처리 완료: userId={}", userId);
 
             // 2. 읽지 않은 알림 개수 다시 계산
             int unreadCount = notificationMapper.countUnreadNotificationByUserId(userId);
@@ -69,6 +69,30 @@ public class NotificationServiceImpl implements NotificationService {
 
             log.info("WebSocket으로 unreadCount 전송 완료: userId={}, count={}", userId, unreadCount);
 
+        } catch (Exception e) {
+            log.error("알림 읽음 처리 실패: id={}", userId, e);
+            throw new RuntimeException("알림 읽음 처리에 실패했습니다.", e);
+        }
+    }
+
+    @Transactional
+    public void createNotification(Long userId, String contents, String type) {
+        notificationMapper.insertNotification(userId, contents, type);
+        log.info("알림 저장 완료 - userId={}, type={}, contents={}", userId, type, contents);
+
+        try {
+            // 읽지 않은 알림 개수 다시 계산
+            int unreadCount = notificationMapper.countUnreadNotificationByUserId(userId);
+
+            // WebSocket으로 읽지 않은 알림 수 전송
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("type", "unreadCount");
+            payload.put("unreadCount", unreadCount);
+
+            String json = new ObjectMapper().writeValueAsString(payload);
+            webSocketHandler.sendRawMessageToUser(userId, json);
+
+            log.info("WebSocket으로 unreadCount 전송 완료: userId={}, count={}", userId, unreadCount);
         } catch (Exception e) {
             log.error("알림 읽음 처리 실패: id={}", userId, e);
             throw new RuntimeException("알림 읽음 처리에 실패했습니다.", e);

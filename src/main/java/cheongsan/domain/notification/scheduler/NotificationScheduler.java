@@ -1,7 +1,10 @@
 package cheongsan.domain.notification.scheduler;
 
+import cheongsan.domain.debt.dto.DelinquentLoanResponseDTO;
 import cheongsan.domain.debt.service.DebtService;
+import cheongsan.domain.deposit.service.ReportService;
 import cheongsan.domain.notification.service.NotificationService;
+import cheongsan.domain.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,16 +20,45 @@ import java.util.List;
 public class NotificationScheduler {
     private final NotificationService notificationService;
     private final DebtService debtService;
+    private final UserMapper userMapper;
+    private final ReportService reportService;
 
     // 테스트를 위해 임시로 사용할 사용자 ID 목록
     private static final List<Long> TEST_USER_IDS = Arrays.asList(1L, 2L);
 
     /**
-     * 매일 오전 9시에 연체 대출 알림 전송
+     * 연체 대출 알림 전송 ) 매일 오전 8시
      */
-    @Scheduled(cron = "0 0 9 * * *")
-    public void sendDelinquentLoanNotifications() {
+    @Scheduled(cron = "0 0 8 * * *")
+    public void checkDelinquentLoansAndNotify() {
         log.info("연체 대출 알림 스케줄러 실행");
+        notifyDelinquentLoansForAllUsers();
+    }
+
+    public void notifyDelinquentLoansForAllUsers() {
+        try {
+            List<Long> userIdList = userMapper.getAllUserIds();
+            for (Long userId : userIdList) {
+                List<DelinquentLoanResponseDTO> delinquentLoans = debtService.getDelinquentLoans(userId);
+                log.info("userId: " + userId + " -> 연체대출 " + delinquentLoans.size() + "개 존재");
+
+                if (!delinquentLoans.isEmpty()) {
+                    for (DelinquentLoanResponseDTO loan : delinquentLoans) {
+                        String contents = String.format("%s/%s 이(가) %d일 연체 중입니다.",
+                                loan.getOrganizationName(),
+                                loan.getDebtName(),
+                                loan.getOverdueDays());
+
+                        String type = "DELINQUENT_LOAN";
+
+                        notificationService.createNotification(userId, contents, type);
+                    }
+                }
+            }
+            log.info("연체 대출 알림 완료");
+        } catch (Exception e) {
+            log.error("연체 대출 알림 중 예외 발생", e);
+        }
     }
 
     /**

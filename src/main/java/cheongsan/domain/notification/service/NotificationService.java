@@ -12,5 +12,8 @@ public interface NotificationService {
     int getUnreadCount(Long userId);
 
     // 알림 읽음 처리
-    void markAsRead(Long userId);
+    void markAllAsRead(Long userId);
+
+    public void createNotification(Long userId, String contents, String type);
+
 }

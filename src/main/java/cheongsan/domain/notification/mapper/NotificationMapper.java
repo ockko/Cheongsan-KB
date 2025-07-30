@@ -8,9 +8,14 @@ import java.util.List;
 
 @Mapper
 public interface NotificationMapper {
+
     List<Notification> findNotificationByUserId(@Param("userId") Long userId);
 
     int countUnreadNotificationByUserId(@Param("userId") Long userId);
 
     void markNotificationAsRead(@Param("userId") Long id);
+
+    void insertNotification(@Param("userId") Long userId,
+                            @Param("contents") String contents,
+                            @Param("type") String type);
 }
