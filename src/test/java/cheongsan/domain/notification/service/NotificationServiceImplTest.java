@@ -1,6 +1,7 @@
 package cheongsan.domain.notification.service;
 
 import cheongsan.common.config.RootConfig;
+import cheongsan.common.config.ThymeleafConfig;
 import cheongsan.domain.deposit.dto.WeeklyReportDTO;
 import cheongsan.domain.user.entity.User;
 import cheongsan.domain.user.mapper.UserMapper;
@@ -11,13 +12,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {RootConfig.class})
+@ContextConfiguration(classes = {RootConfig.class, ThymeleafConfig.class})
+@WebAppConfiguration
 @Log4j2
 class NotificationServiceImplTest {
 

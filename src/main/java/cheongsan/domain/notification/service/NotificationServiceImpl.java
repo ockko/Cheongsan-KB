@@ -14,6 +14,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -31,6 +33,7 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationWebSocketHandler webSocketHandler;
 
     private final JavaMailSender mailSender;
+    private final SpringTemplateEngine templateEngine;
 
     @Override
     public List<NotificationDTO> getNotifications(Long userId) {
@@ -94,15 +97,13 @@ public class NotificationServiceImpl implements NotificationService {
             helper.setTo(user.getEmail());
             helper.setSubject("[티끌모아 청산] 일일 소비 한도 초과 알림");
 
-            String htmlContent = String.format(
-                    "<h1>안녕하세요, %s님.</h1>" +
-                            "<p>오늘의 지출액이 설정하신 일일 한도를 초과하여 알려드립니다.</p>" +
-                            "<p><strong>일일 한도:</strong> %,d원</p>" +
-                            "<p><strong>오늘 지출액:</strong> %,d원</p>" +
-                            "<p>과도한 지출은 상환 목표 달성을 늦출 수 있습니다. 소비 습관을 다시 한번 점검해주세요.</p>",
-                    user.getNickname(), dailyLimit, totalSpent
-            );
-            helper.setText(htmlContent, true);
+            Context context = new Context();
+            context.setVariable("userNickname", user.getNickname());
+            context.setVariable("dailyLimit", dailyLimit);
+            context.setVariable("totalSpent", totalSpent);
+
+            String html = templateEngine.process("mail/limitExceeded", context);
+            helper.setText(html, true);
 
             mailSender.send(mimeMessage);
             log.info(user.getEmail() + "님에게 한도 초과 이메일 발송 성공");
@@ -122,19 +123,12 @@ public class NotificationServiceImpl implements NotificationService {
             helper.setTo(user.getEmail());
             helper.setSubject(String.format("[티끌모아 청산] %s님, 지난주 지출 리포트가 도착했어요!", user.getNickname()));
 
-            String htmlContent = String.format(
-                    "<h1>%s님, 지난주 지출 리포트입니다.</h1>" +
-                            "<p><strong>기간:</strong> %s ~ %s</p>" +
-                            "<p><strong>목표 달성률:</strong> %.2f%%</p>" +
-                            "<p><strong>일일 평균 지출:</strong> %,d원</p>" +
-                            "<p>자세한 내용은 '티끌모아 청산'에서 확인해보세요!</p>",
-                    user.getNickname(),
-                    report.getStartDate(),
-                    report.getEndDate(),
-                    report.getAchievementRate(),
-                    report.getAverageDailySpending()
-            );
-            helper.setText(htmlContent, true);
+            Context context = new Context();
+            context.setVariable("userNickname", user.getNickname());
+            context.setVariable("report", report);
+
+            String html = templateEngine.process("mail/weeklyReport", context);
+            helper.setText(html, true);
 
             mailSender.send(mimeMessage);
             log.info(user.getEmail() + "님에게 주간 리포트 이메일 발송 성공");
