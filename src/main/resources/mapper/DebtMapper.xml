@@ -42,7 +42,7 @@
         WHERE id = #{loanId}
     </select>
 
-    <select id="getFinancialInstitutionByCode" parameterType="string"
+    <select id="getFinancialInstitutionByCode" parameterType="Long"
             resultType="cheongsan.domain.debt.entity.FinancialInstitution">
         SELECT organization_code AS organizationCode,
                organization_name AS organizationName
@@ -137,5 +137,22 @@
                           WHERE dt.debt_account_id = da.id
                             AND dt.transaction_date &gt;= da.next_payment_date)
     </select>
+
+    <update id="updateDebt" parameterType="map">
+        UPDATE debt_accounts
+        <set>
+            <if test="gracePeriodMonths != null">
+                grace_period_months = #{gracePeriodMonths},
+            </if>
+            <if test="repaymentMethod != null">
+                repayment_method = #{repaymentMethod},
+            </if>
+            <if test="nextPaymentDate != null">
+                next_payment_date = #{nextPaymentDate},
+            </if>
+            <!-- 기존 필드(account_name, amount, interest_rate 등도 비슷하게 추가 가능) -->
+        </set>
+        WHERE id = #{debtAccountId}
+    </update>
 
 </mapper>
