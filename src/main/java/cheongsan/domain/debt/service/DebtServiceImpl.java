@@ -8,6 +8,7 @@ import cheongsan.domain.debt.entity.DelinquentLoan;
 import cheongsan.domain.debt.entity.FinancialInstitution;
 import cheongsan.domain.debt.mapper.DebtMapper;
 import cheongsan.domain.debt.mapper.FinancialInstitutionMapper;
+import cheongsan.domain.simulator.dto.RepaymentType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,7 @@ public class DebtServiceImpl implements DebtService {
                             .originalAmount(debt.getOriginalAmount())
                             .currentBalance(debt.getCurrentBalance())
                             .interestRate(debt.getInterestRate())
+                            .repaymentType(RepaymentType.fromRepaymentMethod(debt.getRepaymentMethod()))
                             .loanStartDate(debt.getLoanStartDate())
                             .loanEndDate(debt.getLoanEndDate())
                             .repaymentRate(repaymentRate)

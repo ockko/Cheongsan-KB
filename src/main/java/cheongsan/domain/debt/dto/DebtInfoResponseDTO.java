@@ -1,5 +1,6 @@
 package cheongsan.domain.debt.dto;
 
+import cheongsan.domain.simulator.dto.RepaymentType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class DebtInfoResponseDTO {
 
     private BigDecimal interestRate;
 
+    private RepaymentType repaymentType;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate loanStartDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
