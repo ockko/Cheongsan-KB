@@ -4,6 +4,8 @@ package cheongsan.domain.user.service;
 import cheongsan.domain.user.dto.*;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface UserService {
     void submitDiagnosisAnswerToUser(Long userId, Long workoutId);
@@ -15,4 +17,6 @@ public interface UserService {
     UpdateMyProfileResponseDTO updateMyProfile(String userId, UpdateMyProfileRequestDTO updateMyProfileRequestDTO);
 
     void deleteAccount(String userId, DeleteAccountRequestDTO dto);
+
+    List<UserDebtAccountResponseDTO> getUserDebtAccounts(Long userId);
 }

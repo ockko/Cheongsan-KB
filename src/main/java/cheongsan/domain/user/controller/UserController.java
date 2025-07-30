@@ -1,16 +1,15 @@
 package cheongsan.domain.user.controller;
 
 import cheongsan.common.exception.ResponseDTO;
-import cheongsan.domain.user.dto.DeleteAccountRequestDTO;
-import cheongsan.domain.user.dto.MyInfoResponseDTO;
-import cheongsan.domain.user.dto.UpdateMyProfileRequestDTO;
-import cheongsan.domain.user.dto.UpdateMyProfileResponseDTO;
+import cheongsan.domain.user.dto.*;
 import cheongsan.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/cheongsan/user")
@@ -64,6 +63,25 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
         }
 
+    }
+
+    @GetMapping("/debt-accounts")
+    public ResponseEntity<?> getUserDebtAccounts() {
+        try {
+            Long userId = 1L;
+            List<UserDebtAccountResponseDTO> accounts = userService.getUserDebtAccounts(userId);
+            if (accounts == null || accounts.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                        .body("해당 유저의 부채 계좌를 찾을 수 없습니다.");
+            }
+            return ResponseEntity.ok(accounts);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("서버 에러가 발생했습니다.");
+        }
     }
 
 

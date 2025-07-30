@@ -1,5 +1,7 @@
 package cheongsan.domain.user.service;
 
+import cheongsan.domain.debt.entity.DebtAccount;
+import cheongsan.domain.debt.mapper.DebtMapper;
 import cheongsan.domain.user.dto.*;
 import cheongsan.domain.user.entity.User;
 import cheongsan.domain.user.mapper.UserMapper;
@@ -9,12 +11,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Log4j2
 public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final DebtMapper debtMapper;
 
     @Transactional
     public void submitDiagnosisAnswerToUser(Long userId, Long workoutId) {
@@ -69,6 +75,27 @@ public class UserServiceImpl implements UserService {
         }
         // 회원 탈퇴(삭제)
         userMapper.deleteById(user.getUserId());
+    }
+
+    public List<UserDebtAccountResponseDTO> getUserDebtAccounts(Long userId) {
+        List<DebtAccount> debtAccountList = debtMapper.findByUserId(userId);
+        log.info(debtAccountList.toString());
+        List<UserDebtAccountResponseDTO> userDebtAccountResponseDTOList = new ArrayList<>();
+
+        for (DebtAccount debtAccount : debtAccountList) {
+            String debtInstitution = debtMapper.getFinancialInstitutionByCode(debtAccount.getOrganizationCode()).getOrganizationName();
+
+            userDebtAccountResponseDTOList.add(UserDebtAccountResponseDTO.builder()
+                    .debtId(debtAccount.getId())
+                    .debt_name(debtAccount.getDebtName())
+                    .organization_code(debtAccount.getOrganizationCode())
+                    .organization_name(debtInstitution)
+                    .build());
+        }
+        log.info(userDebtAccountResponseDTOList.toString());
+        return userDebtAccountResponseDTOList;
+
+
     }
 
 }

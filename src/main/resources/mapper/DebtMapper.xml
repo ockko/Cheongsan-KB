@@ -42,7 +42,7 @@
         WHERE id = #{loanId}
     </select>
 
-    <select id="getFinancialInstitutionByCode" parameterType="string"
+    <select id="getFinancialInstitutionByCode" parameterType="Long"
             resultType="cheongsan.domain.debt.entity.FinancialInstitution">
         SELECT organization_code AS organizationCode,
                organization_name AS organizationName
