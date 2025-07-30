@@ -25,15 +25,15 @@ public class LoanRepaymentCalculator {
      * @param remainingPrincipal 현재 남은 원금
      * @return {@link PaymentResultDTO} 총 납입금과 각 월별 납입 상세 정보 리스트 포함
      */
-    public PaymentResultDTO calculateEqualPayment(BigDecimal interestRate, BigDecimal months, BigDecimal remainingPrincipal) {
+    public PaymentResultDTO calculateEqualPayment(BigDecimal interestRate, long months, BigDecimal remainingPrincipal) {
         // 매달 납입 정보를 담은 리스트 (상환 결과)
         List<MonthlyPaymentDetailDTO> payments = new ArrayList<>();
         // 총 납입금 (원금 + 이자 합계)
         BigDecimal totalPayment = BigDecimal.ZERO;
 
         if (interestRate.compareTo(BigDecimal.ZERO) == 0) {
-            BigDecimal monthlyPayment = remainingPrincipal.divide(months, MATH_CONTEXT);
-            for (int i = 1; i <= months.intValueExact(); i++) {
+            BigDecimal monthlyPayment = remainingPrincipal.divide(BigDecimal.valueOf(months), MATH_CONTEXT);
+            for (int i = 1; i <= months; i++) {
                 payments.add(new MonthlyPaymentDetailDTO(i, monthlyPayment, BigDecimal.ZERO, monthlyPayment));
             }
             totalPayment = remainingPrincipal;
@@ -41,7 +41,7 @@ public class LoanRepaymentCalculator {
         }
 
         BigDecimal one = BigDecimal.ONE;
-        BigDecimal pow = (one.add(interestRate)).pow(months.intValueExact(), MATH_CONTEXT);
+        BigDecimal pow = (one.add(interestRate)).pow((int) months, MATH_CONTEXT);
         // 매달 고정으로 내야 할 금액 (원리금 합계)
         BigDecimal monthlyPayment = remainingPrincipal.multiply(
                 interestRate.multiply(pow),
@@ -51,7 +51,7 @@ public class LoanRepaymentCalculator {
                 MATH_CONTEXT
         );
 
-        for (int i = 1; i <= months.intValueExact(); i++) {
+        for (int i = 1; i <= months; i++) {
             // 이번 달 이자 (남은 원금 * 이자율)
             BigDecimal nowInterest = remainingPrincipal.multiply(interestRate, MATH_CONTEXT);
             // 이번 달 원금 상환분 (monthlyPayment - nowInterest)
@@ -83,9 +83,9 @@ public class LoanRepaymentCalculator {
      * @param remainingPrincipal 현재 남은 원금
      * @return {@link PaymentResultDTO} 총 납입금과 각 월별 납입 상세 정보 리스트 포함
      */
-    public PaymentResultDTO calculateEqualPrincipal(BigDecimal interestRate, BigDecimal months, BigDecimal remainingPrincipal) {
+    public PaymentResultDTO calculateEqualPrincipal(BigDecimal interestRate, long months, BigDecimal remainingPrincipal) {
         // 매달 갚아야 할 고정 원금 (remainingPrincipal / months)
-        BigDecimal monthlyPrincipal = remainingPrincipal.divide(months, MATH_CONTEXT);
+        BigDecimal monthlyPrincipal = remainingPrincipal.divide(BigDecimal.valueOf(months), MATH_CONTEXT);
         // 전체 납입 총액 (이자 + 원금 합계) 누적용
         BigDecimal totalPayment = BigDecimal.ZERO;
         // 상환 전 잔액
@@ -94,7 +94,7 @@ public class LoanRepaymentCalculator {
         BigDecimal nowInterest;
         // 매달 납입 내역을 저장할 리스트
         List<MonthlyPaymentDetailDTO> payments = new ArrayList<>();
-        for (int i = 1; i <= months.intValueExact(); i++) {
+        for (int i = 1; i <= months; i++) {
             principalBeforePayment = remainingPrincipal.subtract(monthlyPrincipal.multiply(BigDecimal.valueOf(i - 1), MATH_CONTEXT));
             nowInterest = principalBeforePayment.multiply(interestRate);
             // 해당 월의 총 납입금 (고정 원금 + 이자)
@@ -122,7 +122,7 @@ public class LoanRepaymentCalculator {
      */
     public PaymentResultDTO calculateEqualPaymentWithFixedPrepayment(
             BigDecimal interestRate,
-            BigDecimal months,
+            long months,
             BigDecimal remainingPrincipal,
             BigDecimal monthlyPrepayment,
             BigDecimal prepaymentFeeRate,
@@ -132,17 +132,16 @@ public class LoanRepaymentCalculator {
         List<MonthlyPaymentDetailDTO> payments = new ArrayList<>();
         BigDecimal totalPayment = BigDecimal.ZERO;
         BigDecimal one = BigDecimal.ONE;
-        int totalMonths = months.intValueExact();
 
         // 고정 상환금 계산 (초기 고정값)
-        BigDecimal pow = (one.add(interestRate)).pow(totalMonths, MATH_CONTEXT);
+        BigDecimal pow = (one.add(interestRate)).pow((int) months, MATH_CONTEXT);
         BigDecimal monthlyPayment = remainingPrincipal.multiply(
                 interestRate.multiply(pow), MATH_CONTEXT
         ).divide(
                 pow.subtract(one, MATH_CONTEXT), MATH_CONTEXT
         );
 
-        for (int i = 0; i < totalMonths; i++) {
+        for (int i = 0; i < months; i++) {
             if (remainingPrincipal.compareTo(BigDecimal.ZERO) <= 0) break;
 
             BigDecimal nowInterest = remainingPrincipal.multiply(interestRate, MATH_CONTEXT);
@@ -202,7 +201,7 @@ public class LoanRepaymentCalculator {
      */
     public PaymentResultDTO calculateEqualPrincipalWithFixedPrepayment(
             BigDecimal interestRate,
-            BigDecimal months,
+            long months,
             BigDecimal remainingPrincipal,
             BigDecimal monthlyPrepayment,
             BigDecimal prepaymentFeeRate,
@@ -211,12 +210,12 @@ public class LoanRepaymentCalculator {
     ) {
         List<MonthlyPaymentDetailDTO> payments = new ArrayList<>();
         BigDecimal totalPayment = BigDecimal.ZERO;
-        int totalMonths = months.intValueExact();
+
 
         // 고정 원금 상환액
-        BigDecimal fixedMonthlyPrincipal = remainingPrincipal.divide(months, MATH_CONTEXT);
+        BigDecimal fixedMonthlyPrincipal = remainingPrincipal.divide(BigDecimal.valueOf(months), MATH_CONTEXT);
 
-        for (int i = 0; i < totalMonths; i++) {
+        for (int i = 0; i < months; i++) {
             if (remainingPrincipal.compareTo(BigDecimal.ZERO) == 0) {
                 break; // 원금 전액 상환 완료
             }
@@ -314,7 +313,7 @@ public class LoanRepaymentCalculator {
      * @param loanStartDate    대출 시작일
      * @return {@link PaymentResultDTO} 총 납입금과 각 월별 납입 상세 정보 리스트 포함
      */
-    public PaymentResultDTO calculateLumpSumRepayment(BigDecimal principal, BigDecimal annualRate, int loanPeriodMonths, LocalDate loanStartDate) {
+    public PaymentResultDTO calculateLumpSumRepayment(BigDecimal principal, BigDecimal annualRate, long loanPeriodMonths, LocalDate loanStartDate) {
         BigDecimal monthlyRate = annualRate.divide(BigDecimal.valueOf(12), MATH_CONTEXT);
         List<MonthlyPaymentDetailDTO> payments = new ArrayList<>();
         BigDecimal totalPayment = BigDecimal.ZERO;
@@ -353,7 +352,7 @@ public class LoanRepaymentCalculator {
     public PaymentResultDTO calculateLumpSumRepaymentWithPrepayment(
             BigDecimal principal,
             BigDecimal annualRate,
-            int loanPeriodMonths,
+            long loanPeriodMonths,
             BigDecimal monthlyPrepayment) {
         // 연이율 -> 월이율로 반환 (MATH_CONTEXT : 게산 정밀도 설정)
         BigDecimal monthlyRate = annualRate.divide(BigDecimal.valueOf(12), MATH_CONTEXT);
