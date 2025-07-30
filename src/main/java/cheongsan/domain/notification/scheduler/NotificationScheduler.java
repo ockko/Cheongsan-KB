@@ -62,6 +62,36 @@ public class NotificationScheduler {
     }
 
     /**
+     * 주간 리포트 알림 - 매주 월요일 오전 9시
+     */
+    @Scheduled(cron = "0 0 9 * * Mon")
+    public void sendWeeklyReportNotification() {
+        log.info("주간 리포트 알림 스케줄러 실행");
+        try {
+            List<Long> userIdList = userMapper.getAllUserIds();
+
+            for (Long userId : userIdList) {
+                // 1. 주간 리포트 생성
+                reportService.getLatestWeeklyReport(userId);
+
+                // 2. 이메일 발송
+                notificationService.sendWeeklyReportEmail(userId);
+
+                // 3. 알림 메시지 DB에 저장
+                String contents = "주간 리포트가 도착했습니다. 지난 주 소비 흐름을 확인해보세요!";
+                String type = "WEEKLY_REPORT";
+
+                notificationService.createNotification(userId, contents, type);
+            }
+
+            log.info("주간 리포트 알림 스케줄러 완료");
+
+        } catch (Exception e) {
+            log.error("주간 리포트 알림 스케줄러 실행 중 예외 발생\n", e);
+        }
+    }
+
+    /**
      * 매일 오후 6시에 일일 소비 한도 초과 알림 체크
      * (실제로는 거래 발생 시 실시간으로 체크해야 함)
      */
@@ -71,13 +101,5 @@ public class NotificationScheduler {
 
         // TODO: 실제 구현 시 트랜잭션 이벤트와 연동
         // 현재는 스케줄러 구조만 제공
-    }
-
-    /**
-     * 매주 월요일 오전 10시에 주간 리포트 알림
-     */
-    @Scheduled(cron = "0 0 10 * * MON")
-    public void sendWeeklyReportNotification() {
-        log.info("주간 리포트 알림 스케줄러 실행");
     }
 }
