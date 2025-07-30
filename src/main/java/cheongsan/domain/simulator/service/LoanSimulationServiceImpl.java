@@ -1,11 +1,13 @@
 package cheongsan.domain.simulator.service;
 
+import cheongsan.domain.debt.service.DebtService;
 import cheongsan.domain.simulator.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +17,13 @@ import java.util.List;
 public class LoanSimulationServiceImpl implements LoanSimulationService {
 
     private final LoanRepaymentCalculator calculator;
+    private final DebtService debtService;
 
     @Override
     public LoanAnalyzeResponseDTO analyze(LoanAnalyzeRequestDTO request) {
         return null;
     }
+
 
     @Override
     public TotalComparisonResultDTO compareTotalRepaymentWithNewLoan(List<LoanDTO> existingLoans, LoanDTO newLoan) {
@@ -67,10 +71,6 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
         BigDecimal increaseRate = existingInterest.compareTo(BigDecimal.ZERO) == 0 ?
                 BigDecimal.ZERO : increaseAmount.divide(existingInterest, 4, RoundingMode.HALF_UP);
 
-        System.out.println("existingTotalRepayment = " + existingTotalRepayment);
-        System.out.println("existingPrincipalSum = " + existingPrincipalSum);
-        System.out.println("withNewLoanTotalRepayment = " + withNewLoanTotalRepayment);
-        System.out.println("withNewLoanPrincipalSum = " + withNewLoanPrincipalSum);
         return new InterestComparisonResultDTO(
                 existingInterest.setScale(0, RoundingMode.HALF_UP),
                 withNewLoanInterest.setScale(0, RoundingMode.HALF_UP),
@@ -121,13 +121,14 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
 
     private BigDecimal calculateTotalRepayment(List<LoanDTO> loans) {
         BigDecimal totalRepayment = BigDecimal.ZERO;
+        LocalDate now = LocalDate.now();
 
         for (LoanDTO loan : loans) {
-            int months = (int) ChronoUnit.MONTHS.between(loan.getStartDate().withDayOfMonth(1), loan.getEndDate().withDayOfMonth(1)) + 1;
+            LocalDate effectiveStart = loan.getStartDate().isAfter(now) ? loan.getStartDate() : now;
+            long months = ChronoUnit.MONTHS.between(effectiveStart.withDayOfMonth(1), loan.getEndDate().withDayOfMonth(1));
             PaymentResultDTO result;
-            BigDecimal annualRate = BigDecimal.valueOf(loan.getInterestRate());
+            BigDecimal annualRate = loan.getInterestRate();
             BigDecimal monthlyRate = annualRate.divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP);
-
             switch (loan.getRepaymentType()) {
                 case EQUAL_PAYMENT:
                     result = calculator.calculateEqualPayment(
