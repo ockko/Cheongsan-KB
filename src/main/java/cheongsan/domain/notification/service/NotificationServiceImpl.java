@@ -4,12 +4,18 @@ import cheongsan.domain.notification.controller.NotificationWebSocketHandler;
 import cheongsan.domain.notification.dto.NotificationDTO;
 import cheongsan.domain.notification.entity.Notification;
 import cheongsan.domain.notification.mapper.NotificationMapper;
+import cheongsan.domain.user.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +28,8 @@ import java.util.stream.Collectors;
 public class NotificationServiceImpl implements NotificationService {
     private final NotificationMapper notificationMapper;
     private final NotificationWebSocketHandler webSocketHandler;
+
+    private final JavaMailSender mailSender;
 
     @Override
     public List<NotificationDTO> getNotifications(Long userId) {
@@ -72,6 +80,35 @@ public class NotificationServiceImpl implements NotificationService {
         } catch (Exception e) {
             log.error("알림 읽음 처리 실패: id={}", userId, e);
             throw new RuntimeException("알림 읽음 처리에 실패했습니다.", e);
+        }
+    }
+
+    @Async
+    @Override
+    @Transactional
+    public void sendDailyLimitExceededEmail(User user, int dailyLimit, int totalSpent) {
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+
+            helper.setTo(user.getEmail());
+            helper.setSubject("[티끌모아 청산] 일일 소비 한도 초과 알림");
+
+            String htmlContent = String.format(
+                    "<h1>안녕하세요, %s님.</h1>" +
+                            "<p>오늘의 지출액이 설정하신 일일 한도를 초과하여 알려드립니다.</p>" +
+                            "<p><strong>일일 한도:</strong> %,d원</p>" +
+                            "<p><strong>오늘 지출액:</strong> %,d원</p>" +
+                            "<p>과도한 지출은 상환 목표 달성을 늦출 수 있습니다. 소비 습관을 다시 한번 점검해주세요.</p>",
+                    user.getNickname(), dailyLimit, totalSpent
+            );
+            helper.setText(htmlContent, true);
+
+            mailSender.send(mimeMessage);
+            log.info(user.getEmail() + "님에게 한도 초과 이메일 발송 성공");
+        } catch (MessagingException e) {
+            log.error(user.getEmail() + "님에게 이메일 발송 실패", e);
+            throw new RuntimeException(e);
         }
     }
 }

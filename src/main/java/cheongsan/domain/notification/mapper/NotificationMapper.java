@@ -12,5 +12,9 @@ public interface NotificationMapper {
 
     int countUnreadNotificationByUserId(@Param("userId") Long userId);
 
+    int countTodayNotificationsByType(@Param("userId") Long userId, @Param("type") String type);
+
+    void save(Notification notification);
+
     void markNotificationAsRead(@Param("userId") Long id);
 }
