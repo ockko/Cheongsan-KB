@@ -1,6 +1,7 @@
 package cheongsan.domain.notification.service;
 
 import cheongsan.domain.notification.dto.NotificationDTO;
+import cheongsan.domain.user.entity.User;
 
 import java.util.List;
 
@@ -16,4 +17,7 @@ public interface NotificationService {
 
     public void createNotification(Long userId, String contents, String type);
 
+    void markAsRead(Long userId);
+
+    void sendDailyLimitExceededEmail(User user, int dailyLimit, int totalSpent);
 }

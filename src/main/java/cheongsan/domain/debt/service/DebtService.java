@@ -1,13 +1,15 @@
 package cheongsan.domain.debt.service;
 
 import cheongsan.domain.debt.dto.*;
+import cheongsan.domain.user.dto.DebtUpdateRequestDTO;
+import cheongsan.domain.user.dto.DebtUpdateResponseDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 public interface DebtService {
-    List<DebtInfoResponseDTO> getUserDebtList(Long userId, String sort);
+    List<DebtInfoResponseDTO> getUserDebtList(Long userId);
 
     DebtDetailResponseDTO getLoanDetail(Long loanId);
 
@@ -26,4 +28,5 @@ public interface DebtService {
     // 연체 일수 계산 및 연체 대출 조회
     List<DelinquentLoanResponseDTO> getDelinquentLoans(Long userId);
 
+    DebtUpdateResponseDTO updateDebtAccount(Long debtAccountId, DebtUpdateRequestDTO dto);
 }

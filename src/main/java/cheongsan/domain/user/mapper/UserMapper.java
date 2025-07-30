@@ -32,5 +32,18 @@ public interface UserMapper {
     void updatePassword(@Param("id") Long id,
                         @Param("newPassword") String password);
 
+
+    void updateProfile(@Param("userId") String userId,
+                       @Param("nickname") String nickname,
+                       @Param("email") String email);
+
+    void deleteById(@Param("userId") String userId);
+
+
+    void submitNickname(@Param("userId") String userId,
+                        @Param("nickname") String nickname);
+
+
+
     List<Long> getAllUserIds();
 }

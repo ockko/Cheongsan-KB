@@ -8,6 +8,8 @@ public interface FinancialInstitutionMapper {
     // 금융 기관명으로 금융 기관 코드 조회
     Long findCodeByName(@Param("organizationName") String organizationName);
 
+    String findNameByCode(@Param("organizationCode") long organizationCode);
+
     // 금융 기관 데이터 적재
     void insertInstitution(@Param("organizationName") String organizationName);
 }

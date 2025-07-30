@@ -6,18 +6,27 @@
 <mapper namespace="cheongsan.domain.debt.mapper.DebtMapper">
 
     <!-- 총 대출 항목 조회-->
-    <select id="getUserDebtList" parameterType="long" resultType="cheongsan.domain.debt.dto.DebtInfoResponseDTO">
-        SELECT da.id                AS debtId,
-               da.debt_name         AS debtName,
-               fi.organization_name AS organizationName,
-               da.current_balance   AS currentBalance,
-               da.original_amount   AS originalAmount,
-               da.interest_rate     AS interestRate,
-               da.loan_start_date   AS loanStartDate
+    <select id="getUserDebtList" parameterType="long" resultType="cheongsan.domain.debt.entity.DebtAccount">
+        SELECT da.id,
+               da.user_id,
+               da.organization_code,
+               da.res_account,
+               da.debt_name,
+               da.current_balance,
+               da.original_amount,
+               da.interest_rate,
+               da.loan_start_date,
+               da.loan_end_date,
+               da.next_payment_date,
+               da.grace_period_months,
+               da.repayment_method,
+               da.created_at,
+               da.updated_at
         FROM debt_accounts da
                  JOIN financial_institutions fi ON da.organization_code = fi.organization_code
         WHERE da.user_id = #{userId}
     </select>
+
 
     <select id="getDebtAccountById" parameterType="long" resultType="cheongsan.domain.debt.entity.DebtAccount">
         SELECT id AS debtAccountId,
@@ -33,7 +42,7 @@
         WHERE id = #{loanId}
     </select>
 
-    <select id="getFinancialInstitutionByCode" parameterType="string"
+    <select id="getFinancialInstitutionByCode" parameterType="Long"
             resultType="cheongsan.domain.debt.entity.FinancialInstitution">
         SELECT organization_code AS organizationCode,
                organization_name AS organizationName
@@ -128,5 +137,22 @@
                           WHERE dt.debt_account_id = da.id
                             AND dt.transaction_date &gt;= da.next_payment_date)
     </select>
+
+    <update id="updateDebt" parameterType="map">
+        UPDATE debt_accounts
+        <set>
+            <if test="gracePeriodMonths != null">
+                grace_period_months = #{gracePeriodMonths},
+            </if>
+            <if test="repaymentMethod != null">
+                repayment_method = #{repaymentMethod},
+            </if>
+            <if test="nextPaymentDate != null">
+                next_payment_date = #{nextPaymentDate},
+            </if>
+            <!-- 기존 필드(account_name, amount, interest_rate 등도 비슷하게 추가 가능) -->
+        </set>
+        WHERE id = #{debtAccountId}
+    </update>
 
 </mapper>

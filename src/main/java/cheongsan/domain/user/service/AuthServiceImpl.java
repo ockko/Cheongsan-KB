@@ -96,7 +96,7 @@ public class AuthServiceImpl implements AuthService {
         log.info("sendTempPasswordMail to: {}", to);
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
-        message.setSubject("[티모청] 임시 비밀번호 발송 안내");
+        message.setSubject("[티끌 모아 청산] 임시 비밀번호 발송 안내");
         message.setText("임시 비밀번호: " + tempPw + "\n로그인 후 반드시 새 비밀번호로 변경해 주세요.");
         mailSender.send(message);
         log.info("sendTempPasswordMail to: {}", message);
@@ -119,6 +119,31 @@ public class AuthServiceImpl implements AuthService {
         // 3. 새 비밀번호 암호화 후 저장
         String encodedNewPw = passwordEncoder.encode(changePasswordRequestDTO.getNewPassword());
         userMapper.updatePassword(user.getId(), encodedNewPw);
+    }
+
+    @Override
+    public LogInResponseDTO login(LogInRequestDTO logInRequestDTO) {
+        User user = userMapper.findByUserId(logInRequestDTO.getUserId());
+        if (user == null) {
+            throw new IllegalArgumentException("존재하지 않는 아이디입니다.");
+        }
+        if (!passwordEncoder.matches(logInRequestDTO.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
+        }
+        // JWT 사용 시 여기서 토큰을 발급해 응답에 포함하면 됨
+        return new LogInResponseDTO("accessToken", "refreshToken");
+    }
+
+    @Override
+    public NicknameResponseDTO submitNickname(NicknameRequestDTO nicknameRequestDTO) {
+        // 1. 유저 존재 확인
+        User user = userMapper.findByUserId(nicknameRequestDTO.getUserId());
+        if (user == null) {
+            throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
+        }
+        // 2. 닉네임 삽입
+        userMapper.submitNickname(user.getUserId(), nicknameRequestDTO.getNickname());
+        return new NicknameResponseDTO("닉네임이 성공적으로 반영되었습니다.", nicknameRequestDTO.getNickname());
     }
 
 

@@ -1,7 +1,6 @@
 package cheongsan.domain.debt.mapper;
 
 import cheongsan.domain.debt.dto.DailyRepaymentDTO;
-import cheongsan.domain.debt.dto.DebtInfoResponseDTO;
 import cheongsan.domain.debt.dto.RepaymentCalendarDTO;
 import cheongsan.domain.debt.entity.DebtAccount;
 import cheongsan.domain.debt.entity.DebtRepaymentRatio;
@@ -15,7 +14,7 @@ import java.util.List;
 
 @Mapper
 public interface DebtMapper {
-    List<DebtInfoResponseDTO> getUserDebtList(Long userId);
+    List<DebtAccount> getUserDebtList(Long userId);
 
     // 대출 상세 조회 (1)
     DebtAccount getDebtAccountById(Long loanId);
@@ -50,4 +49,12 @@ public interface DebtMapper {
 
     // 연체된 대출 조회
     List<DelinquentLoan> getDelinquentLoanByUserId(Long userId);
+
+    // 수정된 대출 계좌 update
+    void updateDebt(@Param("gracePeriodMonths") Long gracePeriodMonths,
+                    @Param("repaymentMethod") String repaymentMethod,
+                    @Param("nextPaymentDate") LocalDate nextPaymentDate,
+                    @Param("debtAccountId") Long debtAccountId);
+
+
 }

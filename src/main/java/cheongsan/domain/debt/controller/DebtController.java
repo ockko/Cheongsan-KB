@@ -22,7 +22,7 @@ public class DebtController {
             @RequestParam Long userId,
             @RequestParam(required = false, defaultValue = "createdAtDesc") String sort
     ) {
-        return debtService.getUserDebtList(userId, sort);
+        return debtService.getUserDebtList(userId);
     }
 
     @GetMapping("/loans/{loanId}")

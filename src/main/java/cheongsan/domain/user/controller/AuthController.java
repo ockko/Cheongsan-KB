@@ -62,6 +62,7 @@ public class AuthController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
         } catch (Exception e) {
+            log.info(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
         }
     }
@@ -78,5 +79,36 @@ public class AuthController {
                     .body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
         }
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LogInRequestDTO request) {
+        try {
+            LogInResponseDTO response = authService.login(request);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
+        }
+    }
+
+    @PostMapping("/nickname")
+    public ResponseEntity<?> submitNickname(@RequestBody NicknameRequestDTO request) {
+        try {
+
+            String userId = "antehyun4880";
+            request.setUserId(userId);
+
+            NicknameResponseDTO response = authService.submitNickname(request);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
+        }
+    }
+
 
 }
