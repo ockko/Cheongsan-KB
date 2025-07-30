@@ -254,8 +254,8 @@ public class DebtServiceImpl implements DebtService {
                 .organizationCode(account.getOrganizationCode())
                 .debtName(account.getDebtName())
                 .currentBalance(account.getCurrentBalance())
-                .gracePeriodMonths(account.getGracePeriodMonths())
-                .repaymentMethod(account.getRepaymentMethod())
+                .gracePeriodMonths(dto.getGracePeriodMonths())
+                .repaymentMethod(dto.getRepaymentMethod())
                 .build();
     }
 }

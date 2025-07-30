@@ -40,8 +40,7 @@ public interface UserMapper {
 
 
     void submitNickname(@Param("userId") String userId,
-                        String nickname);
-
+                        @Param("nickname") String nickname);
 
 
 }

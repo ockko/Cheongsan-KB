@@ -62,6 +62,7 @@ public class AuthController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
         } catch (Exception e) {
+            log.info(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
         }
     }
@@ -96,7 +97,7 @@ public class AuthController {
     public ResponseEntity<?> submitNickname(@RequestBody NicknameRequestDTO request) {
         try {
 
-            String userId = "testuser44";
+            String userId = "antehyun4880";
             request.setUserId(userId);
 
             NicknameResponseDTO response = authService.submitNickname(request);
@@ -104,6 +105,7 @@ public class AuthController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
         } catch (Exception e) {
+            log.info(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
         }
     }

@@ -55,7 +55,7 @@ public class UserController {
             @RequestBody DeleteAccountRequestDTO request
     ) {
         try {
-            String userId = "testuser55";
+            String userId = "testuser66";
 
             userService.deleteAccount(userId, request);
             return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
