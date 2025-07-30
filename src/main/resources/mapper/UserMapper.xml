@@ -61,11 +61,6 @@
           AND email = #{email}
     </select>
 
-    <select id="findAllUsers" resultType="cheongsan.domain.user.entity.User">
-        SELECT id, nickname, email
-        FROM user
-    </select>
-
     <update id="updatePassword" parameterType="map">
         UPDATE user
         SET password = #{newPassword}

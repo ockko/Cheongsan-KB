@@ -12,7 +12,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,18 +22,6 @@ class UserMapperTest {
 
     @Autowired
     private UserMapper userMapper;
-
-    @Test
-    @DisplayName("모든 사용자 목록을 조회해야 한다")
-    void findAllUsers() {
-        // when
-        List<User> users = userMapper.findAllUsers();
-
-        // then
-        assertNotNull(users);
-        assertEquals(4, users.size(), "사용자는 4명이어야 합니다.");
-        log.info("조회된 사용자 수: " + users.size());
-    }
 
     @Test
     @DisplayName("사용자의 일일 소비 한도와 마지막 수정 시각을 정확히 업데이트해야 한다")
