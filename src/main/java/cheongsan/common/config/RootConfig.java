@@ -1,5 +1,6 @@
 package cheongsan.common.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
@@ -88,5 +89,10 @@ public class RootConfig {
         mailSender.setJavaMailProperties(props);
 
         return mailSender;
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 }

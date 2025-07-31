@@ -64,13 +64,19 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
     // Jackson - Json 처리
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.4'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.4'
+    def jacksonVersion = "2.13.5" // 안정적인 최신 버전으로 지정
+    implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
 
     //email
     implementation 'org.springframework:spring-context-support:5.3.9'
     implementation 'javax.mail:mail:1.4.7'
 
+    // Thymeleaf
+    implementation 'org.thymeleaf:thymeleaf:3.1.2.RELEASE'
+    implementation 'org.thymeleaf:thymeleaf-spring5:3.1.2.RELEASE'
 
     // 데이터베이스
     implementation 'com.mysql:mysql-connector-j:8.1.0'
