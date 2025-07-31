@@ -146,7 +146,9 @@ public class ReportServiceImpl implements ReportService {
 
         for (Transaction withdraw : withdraws) {
             DayOfWeek day = withdraw.getTransactionTime().getDayOfWeek();
-            spendingByDay.compute(day, (k, currentAmount) -> currentAmount + withdraw.getAmount().intValue());
+            spendingByDay.compute(day, (k, currentAmount) ->
+                    (currentAmount == null ? 0 : currentAmount) + withdraw.getAmount().intValue()
+            );
         }
         return spendingByDay;
     }
