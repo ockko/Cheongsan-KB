@@ -1,8 +1,15 @@
 package cheongsan.domain.deposit.service;
 
 import cheongsan.domain.deposit.dto.WeeklyReportDTO;
+import cheongsan.domain.deposit.dto.WeeklyReportHistoryDTO;
+
+import java.time.LocalDate;
+import java.util.List;
 
 public interface ReportService {
 
-    WeeklyReportDTO getLatestWeeklyReport(Long userId);
+    WeeklyReportDTO createAndSaveLatestWeeklyReport(Long userId);
+    WeeklyReportDTO getLatestReportFromHistory(Long userId);
+    WeeklyReportDTO getReportByDate(Long userId, LocalDate date);
+    List<WeeklyReportHistoryDTO> getReportHistoryList(Long userId);
 }
