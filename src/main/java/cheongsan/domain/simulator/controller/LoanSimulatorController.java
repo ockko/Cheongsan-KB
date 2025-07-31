@@ -1,6 +1,5 @@
 package cheongsan.domain.simulator.controller;
 
-import cheongsan.common.util.LoanCalculator;
 import cheongsan.domain.simulator.dto.*;
 import cheongsan.domain.simulator.service.LoanRecommendationService;
 import cheongsan.domain.simulator.service.LoanSimulationService;
@@ -16,12 +15,11 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/cheongsan/simulator")
+@RequestMapping("/cheongsan/simulation")
 public class LoanSimulatorController {
 
     private final LoanSimulationService loanSimulationService;
     private final LoanRecommendationService loanRecommendationService;
-    private final LoanCalculator loanCalculator;
 
     @PostMapping("/loan")
     public ResponseEntity<LoanResultDTO> analyzeAndRecommend(@RequestBody LoanAnalyzeRequestDTO request) {
