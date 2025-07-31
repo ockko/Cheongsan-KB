@@ -89,7 +89,7 @@ public class ReportServiceImpl implements ReportService {
         WeeklyReport latestReportEntity = reportMapper.findLatestByUserId(userId);
         if (latestReportEntity == null)
             throw new IllegalStateException(ResponseMessage.WEEKLY_REPORT_NOT_FOUND.getMessage());
-        return convertToDto(latestReportEntity);
+        return convertToDTO(latestReportEntity);
     }
 
     @Override
@@ -97,18 +97,18 @@ public class ReportServiceImpl implements ReportService {
         WeeklyReport reportEntity = reportMapper.findByDate(userId, date);
         if (reportEntity == null)
             throw new IllegalStateException(ResponseMessage.WEEKLY_REPORT_NOT_FOUND_FOR_DATE.getMessage());
-        return convertToDto(reportEntity);
+        return convertToDTO(reportEntity);
     }
 
     @Override
     public List<WeeklyReportHistoryDTO> getReportHistoryList(Long userId) {
         List<WeeklyReport> reportEntities = reportMapper.findAllByUserId(userId);
         return reportEntities.stream()
-                .map(this::toHistoryDto)
+                .map(this::toHistoryDTO)
                 .collect(Collectors.toList());
     }
 
-    private WeeklyReportHistoryDTO toHistoryDto(WeeklyReport entity) {
+    private WeeklyReportHistoryDTO toHistoryDTO(WeeklyReport entity) {
         LocalDate startDate = entity.getStartDate();
         int weekOfMonth = DateUtils.getWeekOfMonth(startDate);
         return new WeeklyReportHistoryDTO(
@@ -121,7 +121,7 @@ public class ReportServiceImpl implements ReportService {
         );
     }
 
-    private WeeklyReportDTO convertToDto(WeeklyReport entity) {
+    private WeeklyReportDTO convertToDTO(WeeklyReport entity) {
         try {
             Map<String, Integer> spendingMap = objectMapper.readValue(entity.getSpendingByDay(), new TypeReference<Map<String, Integer>>() {
             });
