@@ -30,14 +30,4 @@ public interface CodefService {
      * 대출 거래내역 조회
      */
     LoanTransactionResponseDTO getLoanTransactionList(String connectedId, String organizationCode, String accountNumber, String startDate, String endDate);
-
-    /**
-     * 사용자 계좌 정보 전체 동기화
-     */
-    void syncUserAccountData(Long userId);
-
-    /**
-     * 사용자별 연결된 ID 조회
-     */
-    String getConnectedIdByUserId(Long userId);
 }

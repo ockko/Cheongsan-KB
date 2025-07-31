@@ -92,4 +92,22 @@
         WHERE user_id = #{userId}
     </delete>
 
+    <update id="updateConnectedId">
+        UPDATE user
+        SET connected_id = #{connectedId}
+        WHERE id = #{userId}
+    </update>
+    <select id="findUsersWithConnectedId" resultType="cheongsan.domain.user.entity.User">
+        SELECT *
+        FROM user
+        WHERE connected_id IS NOT NULL
+          AND connected_id != ''
+    </select>
+
+    <select id="findByConnectedId" resultType="cheongsan.domain.user.entity.User">
+        SELECT *
+        FROM user
+        WHERE connected_id = #{connectedId}
+    </select>
+
 </mapper>

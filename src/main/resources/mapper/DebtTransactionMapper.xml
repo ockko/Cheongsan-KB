@@ -4,11 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cheongsan.domain.debt.mapper.DebtTransactionMapper">
 
-    <insert id="insertDebtTransaction" parameterType="cheongsan.domain.debt.entity.DebtTransaction">
-        INSERT INTO debt_transactions (debt_account_id, transaction_date, principal_amount,
-                                       interest_amount, remaining_balance, created_at)
-        VALUES (#{debtAccountId}, #{transactionDate}, #{principalAmount},
-                #{interestAmount}, #{remainingBalance}, #{createdAt})
+    <insert id="insertDebtTransaction" parameterType="cheongsan.domain.debt.entity.DebtTransaction"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO debt_transactions
+        (debt_account_id, transaction_date, principal_amount, interest_amount, remaining_balance, created_at)
+        VALUES (#{debtAccountId}, #{transactionDate}, #{principalAmount}, #{interestAmount}, #{remainingBalance},
+                #{createdAt})
     </insert>
 
     <select id="findByDebtAccountId" parameterType="long" resultType="cheongsan.domain.debt.entity.DebtTransaction">
@@ -19,10 +20,10 @@
     </select>
 
     <select id="isDebtTransactionExists" resultType="java.lang.Boolean">
-        SELECT EXISTS (SELECT 1
-                       FROM debt_transactions
-                       WHERE debt_account_id = #{debtAccountId}
-                         AND transaction_date = #{transactionDate})
+        SELECT COUNT(*) > 0
+        FROM debt_transactions
+        WHERE debt_account_id = #{debtAccountId}
+          AND transaction_date = #{transactionDate}
     </select>
 
     <select id="findByDebtAccountIdAndDateRange" resultType="cheongsan.domain.debt.entity.DebtTransaction">

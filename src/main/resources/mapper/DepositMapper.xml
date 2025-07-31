@@ -97,12 +97,12 @@
     </insert>
 
     <select id="isTransactionExists" resultType="java.lang.Boolean">
-        SELECT EXISTS (SELECT 1
-                       FROM transactions
-                       WHERE user_id = #{userId}
-                         AND transaction_time = #{transactionTime}
-                         AND amount = #{amount}
-                         AND type = #{type})
+        SELECT COUNT(*) > 0
+        FROM transactions
+        WHERE user_id = #{userId}
+          AND transaction_time = #{transactionTime}
+          AND amount = #{amount}
+          AND type = #{type}
     </select>
 
     <select id="findRecentTransactionsByAccount" resultType="cheongsan.domain.deposit.entity.Transaction">

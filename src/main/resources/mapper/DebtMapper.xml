@@ -101,10 +101,10 @@
 
     <!-- 추가할 대출 계좌 중복 확인 -->
     <select id="isDebtAccountExists" resultType="boolean" parameterType="map">
-        SELECT EXISTS (SELECT 1
-                       FROM debt_accounts
-                       WHERE user_id = #{userId}
-                         AND res_account = #{resAccount})
+        SELECT COUNT(*) > 0
+        FROM debt_accounts
+        WHERE user_id = #{userId}
+          AND res_account = #{resAccount}
     </select>
 
     <select id="getMonthlyRepayments" resultType="cheongsan.domain.debt.dto.RepaymentCalendarDTO">
