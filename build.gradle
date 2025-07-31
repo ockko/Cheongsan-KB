@@ -29,6 +29,10 @@ dependencies {
     implementation "org.springframework:spring-webmvc:${springVersion}"
     implementation 'javax.inject:javax.inject:1'
 
+    //  HTTP 요청 및 JSON 파싱
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    
     // WebSocket 의존성 추가
     implementation 'org.springframework:spring-websocket:5.3.37'
     implementation 'org.springframework:spring-messaging:5.3.37'
