@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>주간 리포트</title>
+</head>
+<body>
+<h1 th:text="|${userNickname}님, 지난주 지출 리포트가 도착했어요!|"></h1>
+<p>
+    <strong>기간:</strong> <span th:text="${report.startDate}"></span> ~ <span th:text="${report.endDate}"></span>
+</p>
+<p>
+    <strong>목표 달성률:</strong> <span th:text="${#numbers.formatDecimal(report.achievementRate, 1, 2)}"></span>%
+</p>
+<p>
+    <strong>일일 평균 지출:</strong> <span
+        th:text="${#numbers.formatInteger(report.averageDailySpending, 0, 'COMMA')}"></span>원
+</p>
+<hr/>
+<p>자세한 내용은 '티끌모아 청산' 에서 확인해보세요!</p>
+</body>
+</html>

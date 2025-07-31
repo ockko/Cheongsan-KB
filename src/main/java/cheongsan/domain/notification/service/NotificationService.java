@@ -1,5 +1,6 @@
 package cheongsan.domain.notification.service;
 
+import cheongsan.domain.deposit.dto.WeeklyReportDTO;
 import cheongsan.domain.notification.dto.NotificationDTO;
 import cheongsan.domain.user.entity.User;
 
@@ -16,4 +17,6 @@ public interface NotificationService {
     void markAsRead(Long userId);
 
     void sendDailyLimitExceededEmail(User user, int dailyLimit, int totalSpent);
+
+    void sendWeeklyReportEmail(User user, WeeklyReportDTO report);
 }
