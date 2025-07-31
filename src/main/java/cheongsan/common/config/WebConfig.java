@@ -1,5 +1,6 @@
 package cheongsan.common.config;
 
+import cheongsan.common.security.SecurityConfig;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -7,7 +8,7 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
     // 루트 어플리케이션 설정 (서비스, DAO, DB 등)
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[]{RootConfig.class};
+        return new Class[]{RootConfig.class, SecurityConfig.class};
     }
 
     // 서블릿 어플리케이션 설정 (Controller, ViewResolver 등)
