@@ -1,10 +1,13 @@
 package cheongsan.domain.notification.service;
 
-import cheongsan.domain.notification.controller.NotificationWebSocketHandler;
+import cheongsan.domain.deposit.mapper.DepositMapper;
+import cheongsan.domain.notification.dto.CreateNotificationDTO;
 import cheongsan.domain.notification.dto.NotificationDTO;
 import cheongsan.domain.notification.entity.Notification;
 import cheongsan.domain.notification.mapper.NotificationMapper;
+import cheongsan.domain.notification.websocket.WebSocketManager;
 import cheongsan.domain.user.entity.User;
+import cheongsan.domain.user.mapper.UserMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,8 +30,11 @@ import java.util.stream.Collectors;
 @Log4j2
 @Transactional(readOnly = true)
 public class NotificationServiceImpl implements NotificationService {
+    private final SpendingLimitService spendingLimitService;
     private final NotificationMapper notificationMapper;
-    private final NotificationWebSocketHandler webSocketHandler;
+    private final WebSocketManager webSocketManager;
+    private final UserMapper userMapper;
+    private final DepositMapper depositMapper;
 
     private final JavaMailSender mailSender;
 
@@ -73,7 +80,7 @@ public class NotificationServiceImpl implements NotificationService {
             payload.put("unreadCount", unreadCount);
 
             String json = new ObjectMapper().writeValueAsString(payload);
-            webSocketHandler.sendRawMessageToUser(userId, json);
+            webSocketManager.sendRawMessageToUser(userId, json);
 
             log.info("WebSocket으로 unreadCount 전송 완료: userId={}, count={}", userId, unreadCount);
 
@@ -84,26 +91,90 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Transactional
-    public void createNotification(Long userId, String contents, String type) {
-        notificationMapper.insertNotification(userId, contents, type);
-        log.info("알림 저장 완료 - userId={}, type={}, contents={}", userId, type, contents);
+    public void createNotification(CreateNotificationDTO dto) {
+        // 알림 DB에 저장
+        notificationMapper.insertNotification(dto.getUserId(), dto.getContents(), dto.getType());
+        log.info("알림 저장 완료 - userId={}, type={}, contents={}", dto.getUserId(), dto.getContents(), dto.getType());
 
         try {
-            // 읽지 않은 알림 개수 다시 계산
-            int unreadCount = notificationMapper.countUnreadNotificationByUserId(userId);
+            // 읽지 않은 알림 개수 조회
+            int unreadCount = notificationMapper.countUnreadNotificationByUserId(dto.getUserId());
 
-            // WebSocket으로 읽지 않은 알림 수 전송
+            // WebSocket 알림 준비
             Map<String, Object> payload = new HashMap<>();
-            payload.put("type", "unreadCount");
+            payload.put("type", "notification");
+            payload.put("notificationType", dto.getType());
+            payload.put("contents", dto.getContents());
             payload.put("unreadCount", unreadCount);
 
             String json = new ObjectMapper().writeValueAsString(payload);
-            webSocketHandler.sendRawMessageToUser(userId, json);
 
-            log.info("WebSocket으로 unreadCount 전송 완료: userId={}, count={}", userId, unreadCount);
+            // Websocket 메시지 전송
+            webSocketManager.sendRawMessageToUser(dto.getUserId(), json);
+
+            log.info("WebSocket으로 알림 전송 완료");
         } catch (Exception e) {
-            log.error("알림 읽음 처리 실패: id={}", userId, e);
-            throw new RuntimeException("알림 읽음 처리에 실패했습니다.", e);
+            log.error("알림 WebSocket 전송 실패: ", e);
+        }
+    }
+
+
+    //    @Override
+//    @Transactional
+//    public void checkAndNotifyIfOverLimit(Long userId) {
+//        User user = userMapper.findById(userId);
+//        if (user == null) {
+//            log.warn("사용자(ID: {}) 정보가 없어 검사를 건너뜁니다.", userId);
+//            return;
+//        }
+//
+//        int dailyLimit = user.getDailyLimit().intValue();
+//        BigDecimal todaySpent = depositMapper.sumTodaySpendingByUserId(userId);
+//
+//        log.info("dailyLimit: " + dailyLimit + ", todaySpent: " + todaySpent);
+//        if (todaySpent.intValue() > dailyLimit) {
+//            // 메시지 생성
+//            String message = String.format("오늘 소비 한도 %d원을 초과했습니다. 현재 지출: %d원", dailyLimit, todaySpent.intValue());
+//
+//            // 1) 알림 DB 저장
+//            notificationMapper.insertNotification(userId, message, "DAILY_LIMIT_EXCEEDED");
+//
+//            // 2) 읽지 않은 알림 개수 조회
+//            int unreadCount = notificationMapper.countUnreadNotificationByUserId(userId);
+//
+//            // 3) 웹소켓 메시지 준비
+//            Map<String, Object> payload = new HashMap<>();
+//            payload.put("type", "notification");
+//            payload.put("notificationType", "DAILY_LIMIT_EXCEEDED");
+//            payload.put("contents", message);
+//            payload.put("unreadCount", unreadCount);
+//
+//            String json;
+//            try {
+//                json = new ObjectMapper().writeValueAsString(payload);
+//                // 4) 웹소켓 메시지 전송
+//                webSocketManager.sendRawMessageToUser(userId, json);
+//            } catch (Exception e) {
+//                // 로그 처리
+//            }
+//        }
+//    }
+    @Override
+    @Transactional
+    public void checkAndNotifyIfOverLimit(Long userId) {
+        User user = userMapper.findById(userId);
+        if (user == null) {
+            log.warn("사용자(ID: {}) 정보가 없어 검사를 건너뜁니다.", userId);
+            return;
+        }
+
+        int dailyLimit = user.getDailyLimit().intValue();
+        BigDecimal todaySpent = depositMapper.sumTodaySpendingByUserId(userId);
+
+        log.info("dailyLimit: {}, todaySpent: {}", dailyLimit, todaySpent);
+
+        if (todaySpent.intValue() > dailyLimit) {
+            spendingLimitService.sendDailyLimitExceededNotification(userId, dailyLimit, todaySpent);
         }
     }
 

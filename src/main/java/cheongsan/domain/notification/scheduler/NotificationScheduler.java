@@ -3,6 +3,7 @@ package cheongsan.domain.notification.scheduler;
 import cheongsan.domain.debt.dto.DelinquentLoanResponseDTO;
 import cheongsan.domain.debt.service.DebtService;
 import cheongsan.domain.deposit.service.ReportService;
+import cheongsan.domain.notification.dto.CreateNotificationDTO;
 import cheongsan.domain.notification.service.NotificationService;
 import cheongsan.domain.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +52,12 @@ public class NotificationScheduler {
 
                         String type = "DELINQUENT_LOAN";
 
-                        notificationService.createNotification(userId, contents, type);
+                        CreateNotificationDTO request = CreateNotificationDTO.builder()
+                                .userId(userId)
+                                .contents(contents)
+                                .type(type)
+                                .build();
+                        notificationService.createNotification(request);
                     }
                 }
             }
@@ -72,16 +78,22 @@ public class NotificationScheduler {
 
             for (Long userId : userIdList) {
                 // 1. 주간 리포트 생성
-                reportService.getLatestWeeklyReport(userId);
+//                reportService.createAndSaveLatestWeeklyReport(userId);
 
                 // 2. 이메일 발송
-                notificationService.sendWeeklyReportEmail(userId);
+//                notificationService.sendWeeklyReportEmail(userId);
 
                 // 3. 알림 메시지 DB에 저장
                 String contents = "주간 리포트가 도착했습니다. 지난 주 소비 흐름을 확인해보세요!";
                 String type = "WEEKLY_REPORT";
 
-                notificationService.createNotification(userId, contents, type);
+                CreateNotificationDTO request = CreateNotificationDTO.builder()
+                        .userId(userId)
+                        .contents(contents)
+                        .type(type)
+                        .build();
+
+                notificationService.createNotification(request);
             }
 
             log.info("주간 리포트 알림 스케줄러 완료");
@@ -89,17 +101,5 @@ public class NotificationScheduler {
         } catch (Exception e) {
             log.error("주간 리포트 알림 스케줄러 실행 중 예외 발생\n", e);
         }
-    }
-
-    /**
-     * 매일 오후 6시에 일일 소비 한도 초과 알림 체크
-     * (실제로는 거래 발생 시 실시간으로 체크해야 함)
-     */
-    @Scheduled(cron = "0 0 18 * * *")
-    public void checkDailyLimitExceeded() {
-        log.info("일일 소비 한도 체크 스케줄러 실행");
-
-        // TODO: 실제 구현 시 트랜잭션 이벤트와 연동
-        // 현재는 스케줄러 구조만 제공
     }
 }

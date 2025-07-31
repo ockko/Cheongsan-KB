@@ -44,4 +44,11 @@
         VALUES (#{userId}, #{contents}, #{type}, false, CURRENT_TIMESTAMP)
     </insert>
 
+    <select id="findByUserId" parameterType="long" resultType="cheongsan.domain.notification.entity.Notification">
+        SELECT *
+        FROM notifications
+        WHERE user_id = #{userId}
+        ORDER BY created_at DESC
+    </select>
+
 </mapper>

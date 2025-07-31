@@ -22,4 +22,7 @@ public interface NotificationMapper {
     void insertNotification(@Param("userId") Long userId,
                             @Param("contents") String contents,
                             @Param("type") String type);
+
+    // 테스트용
+    List<Notification> findByUserId(Long userId);
 }

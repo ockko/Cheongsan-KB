@@ -1,6 +1,10 @@
 package cheongsan.domain.notification.service;
 
 import cheongsan.common.config.RootConfig;
+import cheongsan.domain.notification.dto.CreateNotificationDTO;
+import cheongsan.domain.notification.entity.Notification;
+import cheongsan.domain.notification.mapper.NotificationMapper;
+import cheongsan.domain.notification.websocket.WebSocketManager;
 import cheongsan.domain.user.entity.User;
 import cheongsan.domain.user.mapper.UserMapper;
 import lombok.extern.log4j.Log4j2;
@@ -11,15 +15,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = { RootConfig.class })
+@ContextConfiguration(classes = {RootConfig.class})
 @Log4j2
 class NotificationServiceImplTest {
 
     @Autowired
     private NotificationServiceImpl notificationService;
+
+    @Autowired
+    private NotificationMapper notificationMapper;
+
+    @Autowired
+    private WebSocketManager webSocketManager;
 
     @Autowired
     private UserMapper userMapper;
@@ -42,5 +54,19 @@ class NotificationServiceImplTest {
         });
 
         log.info("이메일 발송 요청이 성공적으로 완료되었습니다. 메일함을 확인해주세요.");
+    }
+
+    @Test
+    public void testCreateNotification() throws Exception {
+        CreateNotificationDTO dto = CreateNotificationDTO.builder()
+                .userId(1L)
+                .type("LIMIT_EXCEEDED")
+                .contents("소비 한도를 초과했습니다!")
+                .build();
+
+        notificationService.createNotification(dto);
+
+        List<Notification> notis = notificationMapper.findByUserId(1L);
+        System.out.println(notis.size());
     }
 }
