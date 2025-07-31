@@ -3,16 +3,18 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cheongsan.domain.deposit.mapper.DepositMapper">
-
     <select id="getMonthlyTransactions" resultType="cheongsan.domain.deposit.dto.MonthlyTransactionDTO">
-        SELECT DATE (t.transaction_time) AS transactionDate, COALESCE (SUM (CASE WHEN t.type = 'TRANSFER' THEN t.amount ELSE 0 END), 0) AS totalIncome, COALESCE (SUM (CASE WHEN t.type = 'WITHDRAW' THEN t.amount ELSE 0 END), 0) AS totalExpense, COUNT (*) AS transactionCount
+        SELECT DATE(t.transaction_time)                                                 AS transactionDate,
+               COALESCE(SUM(CASE WHEN t.type = 'TRANSFER' THEN t.amount ELSE 0 END), 0) AS totalIncome,
+               COALESCE(SUM(CASE WHEN t.type = 'WITHDRAW' THEN t.amount ELSE 0 END), 0) AS totalExpense,
+               COUNT(*)                                                                 AS transactionCount
         FROM transactions t
-            INNER JOIN deposit_accounts da
-        ON t.deposit_account_id = da.id
+                 INNER JOIN deposit_accounts da
+                            ON t.deposit_account_id = da.id
         WHERE t.user_id = #{userId}
-          AND YEAR (t.transaction_time) = #{year}
-          AND MONTH (t.transaction_time) = #{month}
-        GROUP BY DATE (t.transaction_time)
+          AND YEAR(t.transaction_time) = #{year}
+          AND MONTH(t.transaction_time) = #{month}
+        GROUP BY DATE(t.transaction_time)
         ORDER BY transactionDate ASC
     </select>
 
@@ -28,7 +30,7 @@
         FROM transactions t
                  INNER JOIN deposit_accounts da ON t.deposit_account_id = da.id
         WHERE t.user_id = #{userId}
-          AND DATE (t.transaction_time) = #{date}
+          AND DATE(t.transaction_time) = #{date}
         ORDER BY t.transaction_time DESC
     </select>
 
@@ -45,10 +47,10 @@
                res_account_desc3
         FROM transactions
         WHERE user_id = #{userId}
-            AND type = 'TRANSFER'
-            AND YEAR (
-            transaction_time) = #{year}
-          AND MONTH (transaction_time) = #{month}
+          AND type = 'TRANSFER'
+          AND YEAR(
+                      transaction_time) = #{year}
+          AND MONTH(transaction_time) = #{month}
     </select>
 
     <select id="findWithdrawTransactionsByMonth" resultType="cheongsan.domain.deposit.entity.Transaction">
@@ -64,10 +66,10 @@
                res_account_desc3
         FROM transactions
         WHERE user_id = #{userId}
-            AND type = 'WITHDRAW'
-            AND YEAR (
-            transaction_time) = #{year}
-          AND MONTH (transaction_time) = #{month}
+          AND type = 'WITHDRAW'
+          AND YEAR(
+                      transaction_time) = #{year}
+          AND MONTH(transaction_time) = #{month}
     </select>
 
     <select id="sumTodaySpendingByUserId" resultType="java.math.BigDecimal">
@@ -75,7 +77,7 @@
         FROM transactions
         WHERE user_id = #{userId}
           AND type = 'WITHDRAW'
-          AND DATE (transaction_time) = CURDATE()
+          AND DATE(transaction_time) = CURDATE()
     </select>
 
     <select id="findWithdrawTransactionsByPeriod" resultType="cheongsan.domain.deposit.entity.Transaction">
@@ -83,8 +85,32 @@
         FROM transactions
         WHERE user_id = #{userId}
           AND type = 'WITHDRAW'
-          AND DATE (transaction_time) BETWEEN #{startDate}
-          AND #{endDate}
+          AND DATE(transaction_time) BETWEEN #{startDate}
+            AND #{endDate}
     </select>
 
+    <insert id="insertTransaction" parameterType="cheongsan.domain.deposit.entity.Transaction">
+        INSERT INTO transactions (deposit_account_id, user_id, transaction_time, after_balance,
+                                  amount, type, res_account_desc1, res_account_desc2, res_account_desc3)
+        VALUES (#{depositAccountId}, #{userId}, #{transactionTime}, #{afterBalance},
+                #{amount}, #{type}, #{resAccountDesc1}, #{resAccountDesc2}, #{resAccountDesc3})
+    </insert>
+
+    <select id="isTransactionExists" resultType="java.lang.Boolean">
+        SELECT COUNT(*) > 0
+        FROM transactions
+        WHERE user_id = #{userId}
+          AND transaction_time = #{transactionTime}
+          AND amount = #{amount}
+          AND type = #{type}
+    </select>
+
+    <select id="findRecentTransactionsByAccount" resultType="cheongsan.domain.deposit.entity.Transaction">
+        SELECT *
+        FROM transactions
+        WHERE user_id = #{userId}
+          AND deposit_account_id = #{depositAccountId}
+        ORDER BY transaction_time DESC
+        LIMIT #{limit}
+    </select>
 </mapper>

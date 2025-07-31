@@ -22,6 +22,12 @@ public interface DebtMapper {
     // 대출 상세 조회 (2)
     FinancialInstitution getFinancialInstitutionByCode(Long organizationCode);
 
+    /**
+     * 사용자 ID와 계좌번호로 대출계좌 조회
+     */
+    DebtAccount findByUserIdAndAccount(@Param("userId") Long userId,
+                                       @Param("resAccount") String resAccount);
+
     List<DebtAccount> findByUserId(Long userId);
 
     // 대출 상품 추가
