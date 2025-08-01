@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>실시간 알림 테스트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+        }
+
+        #status {
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        #notifications {
+            border: 1px solid #ccc;
+            padding: 1rem;
+            min-height: 100px;
+        }
+
+        .message {
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📢 실시간 알림 테스트 페이지</h1>
+
+<button id="connectBtn">🔌 연결하기</button>
+
+<div id="status">서버 연결 상태: <span id="connectionStatus">연결되지 않음</span></div>
+
+<div id="notifications">
+    <strong>알림 메시지:</strong>
+    <div id="messageList"></div>
+</div>
+
+
+<script>
+    let socket = null;
+
+    const connectBtn = document.getElementById("connectBtn");
+    const connectionStatus = document.getElementById("connectionStatus");
+    const messageList = document.getElementById("messageList");
+
+    connectBtn.addEventListener("click", () => {
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            alert("이미 연결되어 있습니다.");
+            return;
+        }
+
+        socket = new WebSocket("ws://localhost:8080/ws/notifications?userId=1");
+
+        connectionStatus.textContent = "연결 시도 중...";
+        connectionStatus.style.color = "gray";
+
+        socket.onopen = function () {
+            connectionStatus.textContent = "✅ 연결됨";
+            connectionStatus.style.color = "green";
+            console.log("WebSocket 연결 성공");
+        };
+
+        socket.onmessage = function (event) {
+            const msg = event.data;
+            console.log("📨 받은 메시지:", msg);
+
+            const div = document.createElement("div");
+            div.className = "message";
+            div.textContent = msg;
+
+            messageList.prepend(div);
+        };
+
+        socket.onclose = function () {
+            connectionStatus.textContent = "❌ 연결 종료됨";
+            connectionStatus.style.color = "red";
+            console.warn("WebSocket 연결 종료");
+        };
+
+        socket.onerror = function (error) {
+            connectionStatus.textContent = "⚠️ 오류 발생";
+            connectionStatus.style.color = "orange";
+            console.error("WebSocket 오류:", error);
+        };
+    });
+</script>
+
+</body>
+</html>

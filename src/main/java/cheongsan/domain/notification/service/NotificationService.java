@@ -2,6 +2,7 @@ package cheongsan.domain.notification.service;
 
 import cheongsan.domain.notification.dto.CreateNotificationDTO;
 import cheongsan.domain.notification.dto.NotificationDTO;
+import cheongsan.domain.notification.entity.Notification;
 import cheongsan.domain.user.entity.User;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public interface NotificationService {
     void markAllAsRead(Long userId);
 
     // 알림 데이터 저장
-    void createNotification(CreateNotificationDTO dto);
+    Notification createNotification(CreateNotificationDTO dto);
 
     // 소비 한도 초과 알림
     void checkAndNotifyIfOverLimit(Long userId);

@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +29,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Log4j2
-@Transactional(readOnly = true)
+@Transactional
 public class NotificationServiceImpl implements NotificationService {
-    private final SpendingLimitService spendingLimitService;
     private final NotificationMapper notificationMapper;
     private final WebSocketManager webSocketManager;
     private final UserMapper userMapper;
@@ -90,11 +90,22 @@ public class NotificationServiceImpl implements NotificationService {
         }
     }
 
+    @Override
     @Transactional
-    public void createNotification(CreateNotificationDTO dto) {
+    public Notification createNotification(CreateNotificationDTO dto) {
+        log.info("[4-6] 알림 생성 시작 - dto: {}", dto);
+
+        Notification notification = Notification.builder()
+                .userId(dto.getUserId())
+                .type(dto.getType())
+                .contents(dto.getContents())
+                .isRead(false)
+                .createdAt(LocalDateTime.now())
+                .build();
+
         // 알림 DB에 저장
-        notificationMapper.insertNotification(dto.getUserId(), dto.getContents(), dto.getType());
-        log.info("알림 저장 완료 - userId={}, type={}, contents={}", dto.getUserId(), dto.getContents(), dto.getType());
+        notificationMapper.insertNotification(notification);
+        log.info("알림 저장 완료 - {}", notification);
 
         try {
             // 읽지 않은 알림 개수 조회
@@ -116,65 +127,36 @@ public class NotificationServiceImpl implements NotificationService {
         } catch (Exception e) {
             log.error("알림 WebSocket 전송 실패: ", e);
         }
+
+        return notification;
     }
 
-
-    //    @Override
-//    @Transactional
-//    public void checkAndNotifyIfOverLimit(Long userId) {
-//        User user = userMapper.findById(userId);
-//        if (user == null) {
-//            log.warn("사용자(ID: {}) 정보가 없어 검사를 건너뜁니다.", userId);
-//            return;
-//        }
-//
-//        int dailyLimit = user.getDailyLimit().intValue();
-//        BigDecimal todaySpent = depositMapper.sumTodaySpendingByUserId(userId);
-//
-//        log.info("dailyLimit: " + dailyLimit + ", todaySpent: " + todaySpent);
-//        if (todaySpent.intValue() > dailyLimit) {
-//            // 메시지 생성
-//            String message = String.format("오늘 소비 한도 %d원을 초과했습니다. 현재 지출: %d원", dailyLimit, todaySpent.intValue());
-//
-//            // 1) 알림 DB 저장
-//            notificationMapper.insertNotification(userId, message, "DAILY_LIMIT_EXCEEDED");
-//
-//            // 2) 읽지 않은 알림 개수 조회
-//            int unreadCount = notificationMapper.countUnreadNotificationByUserId(userId);
-//
-//            // 3) 웹소켓 메시지 준비
-//            Map<String, Object> payload = new HashMap<>();
-//            payload.put("type", "notification");
-//            payload.put("notificationType", "DAILY_LIMIT_EXCEEDED");
-//            payload.put("contents", message);
-//            payload.put("unreadCount", unreadCount);
-//
-//            String json;
-//            try {
-//                json = new ObjectMapper().writeValueAsString(payload);
-//                // 4) 웹소켓 메시지 전송
-//                webSocketManager.sendRawMessageToUser(userId, json);
-//            } catch (Exception e) {
-//                // 로그 처리
-//            }
-//        }
-//    }
+    // 소비 한도 초과여부 확인 & 알림 메시지 DB 저장
     @Override
     @Transactional
     public void checkAndNotifyIfOverLimit(Long userId) {
         User user = userMapper.findById(userId);
         if (user == null) {
-            log.warn("사용자(ID: {}) 정보가 없어 검사를 건너뜁니다.", userId);
+            log.warn("사용자 식별 불가");
             return;
         }
 
         int dailyLimit = user.getDailyLimit().intValue();
         BigDecimal todaySpent = depositMapper.sumTodaySpendingByUserId(userId);
+        log.info("일일 소비 한도: {}, 오늘 지출 합계: {}", dailyLimit, todaySpent);
 
-        log.info("dailyLimit: {}, todaySpent: {}", dailyLimit, todaySpent);
+        if (todaySpent != null && todaySpent.intValue() > dailyLimit) {
+            String message = "오늘의 지출이 설정한 소비 한도(" + dailyLimit + "원)를 초과했습니다.";
+            // + "(오늘의 지출 합계: " + todaySpent.intValue() + "원)";
+            log.info("소비 한도 초과. 알림 메시지 생성: {}", message);
 
-        if (todaySpent.intValue() > dailyLimit) {
-            spendingLimitService.sendDailyLimitExceededNotification(userId, dailyLimit, todaySpent);
+            CreateNotificationDTO dto = CreateNotificationDTO.builder()
+                    .userId(userId)
+                    .contents(message)
+                    .type("DAILY_LIMIT_EXCEEDED")
+                    .build();
+
+            createNotification(dto);
         }
     }
 
