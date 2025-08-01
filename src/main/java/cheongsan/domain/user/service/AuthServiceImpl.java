@@ -152,7 +152,7 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
         }
         // JWT 사용 시 여기서 토큰을 발급해 응답에 포함하면 됨
-        return new LogInResponseDTO("accessToken", "refreshToken");
+        return new LogInResponseDTO(1L, "accessToken", "refreshToken");
     }
 
     @Override

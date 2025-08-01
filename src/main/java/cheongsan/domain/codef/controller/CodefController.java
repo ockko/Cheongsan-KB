@@ -70,22 +70,5 @@ public class CodefController {
     /**
      * 전체 사용자 배치 동기화 (관리자용)
      */
-    @PostMapping("/sync/batch/all")
-    public ResponseEntity<?> batchSyncAllUsers() {
-        try {
-            log.info("전체 사용자 배치 동기화 요청");
 
-            codefSyncService.batchSyncAllUsers();
-
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "전체 사용자 배치 동기화가 완료되었습니다.");
-
-            return ResponseEntity.ok(response);
-
-        } catch (Exception e) {
-            log.error("전체 사용자 배치 동기화 실패", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseDTO("전체 사용자 배치 동기화에 실패했습니다: " + e.getMessage()));
-        }
-    }
 }
