@@ -22,7 +22,6 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -118,35 +117,6 @@ public class NotificationServiceImpl implements NotificationService {
         }
 
         return notification;
-    }
-
-    // 소비 한도 초과여부 확인 & 알림 메시지 DB 저장
-    @Override
-    @Transactional
-    public void checkAndNotifyIfOverLimit(Long userId) {
-        User user = userMapper.findById(userId);
-        if (user == null) {
-            log.warn("사용자 식별 불가");
-            return;
-        }
-
-        int dailyLimit = user.getDailyLimit().intValue();
-        BigDecimal todaySpent = depositMapper.sumTodaySpendingByUserId(userId);
-        log.info("일일 소비 한도: {}, 오늘 지출 합계: {}", dailyLimit, todaySpent);
-
-        if (todaySpent != null && todaySpent.intValue() > dailyLimit) {
-            String message = "오늘의 지출이 설정한 소비 한도(" + dailyLimit + "원)를 초과했습니다.";
-            // + "(오늘의 지출 합계: " + todaySpent.intValue() + "원)";
-            log.info("소비 한도 초과. 알림 메시지 생성: {}", message);
-
-            CreateNotificationDTO dto = CreateNotificationDTO.builder()
-                    .userId(userId)
-                    .contents(message)
-                    .type("DAILY_LIMIT_EXCEEDED")
-                    .build();
-
-            createNotification(dto);
-        }
     }
 
     @Async

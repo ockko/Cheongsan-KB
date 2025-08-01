@@ -21,9 +21,6 @@ public interface NotificationService {
     // 알림 데이터 저장
     void createNotification(CreateNotificationDTO notificationDTO);
 
-    // 소비 한도 초과 알림
-    void checkAndNotifyIfOverLimit(Long userId);
-
     // 소비 한도 초과 이메일
     void sendDailyLimitExceededEmail(User user, int dailyLimit, int totalSpent);
 

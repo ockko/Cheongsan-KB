@@ -2,9 +2,11 @@ package cheongsan.domain.notification.scheduler;
 
 import cheongsan.domain.debt.dto.DelinquentLoanResponseDTO;
 import cheongsan.domain.debt.service.DebtService;
+import cheongsan.domain.deposit.dto.WeeklyReportDTO;
 import cheongsan.domain.deposit.service.ReportService;
 import cheongsan.domain.notification.dto.CreateNotificationDTO;
 import cheongsan.domain.notification.service.NotificationService;
+import cheongsan.domain.user.entity.User;
 import cheongsan.domain.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -78,10 +80,11 @@ public class NotificationScheduler {
 
             for (Long userId : userIdList) {
                 // 1. 주간 리포트 생성
-//                reportService.createAndSaveLatestWeeklyReport(userId);
+                WeeklyReportDTO report = reportService.createAndSaveLatestWeeklyReport(userId);
 
+                User user = userMapper.findById(userId);
                 // 2. 이메일 발송
-//                notificationService.sendWeeklyReportEmail(userId);
+                notificationService.sendWeeklyReportEmail(user, report);
 
                 // 3. 알림 메시지 DB에 저장
                 String contents = "주간 리포트가 도착했습니다. 지난 주 소비 흐름을 확인해보세요!";
