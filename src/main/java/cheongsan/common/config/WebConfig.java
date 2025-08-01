@@ -14,7 +14,7 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
     // 서블릿 어플리케이션 설정 (Controller, ViewResolver 등)
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{ServletConfig.class};
+        return new Class[]{ServletConfig.class, WebSocketConfig.class};
     }
 
     // DispatcherServlet의 URL 매핑

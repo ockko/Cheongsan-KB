@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <title>WebSocket 알림 테스트</title>
+</head>
+<body>
+<h1>알림 시스템</h1>
+<p id="status">WebSocket 상태: 연결되지 않음</p>
+<p>읽지 않은 알림 수: <span id="unread-count">0</span></p>
+<button onclick="connectWebSocket()">WebSocket 연결</button>
+<ul id="messages"></ul>
+
+<script>
+    let ws;
+    const userId = 1; // 예제 사용자 ID
+
+    function connectWebSocket() {
+        ws = new WebSocket("ws://localhost:8080/ws/notifications?userId=1");
+
+        ws.onopen = () => {
+            document.getElementById('status').innerText =
+                'WebSocket 상태: 연결됨';
+            console.log('WebSocket 연결 성공');
+            fetchUnreadCount(); // 연결되자마자 알림 개수 조회
+        };
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            console.log('WebSocket 수신:', data);
+
+            if (data.type === 'notification') {
+                // 새 알림 표시
+                displayNotification(data.contents || data.message || '알림 내용 없음');
+                fetchUnreadCount();
+            } else if (data.type === 'unreadCount') {
+                updateUnreadCount(data.unreadCount);
+            }
+        };
+
+        ws.onerror = (error) => {
+            console.error('WebSocket 오류:', error);
+        };
+
+        ws.onclose = () => {
+            document.getElementById('status').innerText =
+                'WebSocket 상태: 연결 종료됨';
+            console.log('WebSocket 연결 종료');
+        };
+    }
+
+    function displayNotification(message) {
+        const msgList = document.getElementById('messages');
+        const newMsg = document.createElement('li');
+        newMsg.textContent = message;
+        msgList.appendChild(newMsg);
+    }
+
+    function updateUnreadCount(count) {
+        document.getElementById('unread-count').innerText = count;
+    }
+
+    function fetchUnreadCount() {
+        fetch(
+            `http://localhost:8080/cheongsan/notifications/unread?userId=${userId}`
+        )
+            .then((res) => res.json())
+            .then((data) => {
+                updateUnreadCount(data.unreadCount);
+            })
+            .catch((err) => console.error('읽지 않은 알림 수 조회 실패:', err));
+    }
+
+    function markAsRead(userId) {
+        fetch(`http://localhost:8080/cheongsan/notifications/readAll/?userId=${userId}`, {
+            method: 'PATCH',
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log('알림 읽음 처리 완료:', data.message);
+                fetchUnreadCount(); // 읽음 처리 후 개수 갱신
+            })
+            .catch((err) => console.error('알림 읽음 처리 실패:', err));
+    }
+</script>
+</body>
+</html>
