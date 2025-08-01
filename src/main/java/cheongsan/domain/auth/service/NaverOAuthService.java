@@ -3,6 +3,8 @@ package cheongsan.domain.auth.service;
 import cheongsan.domain.auth.dto.NaverUserInfo;
 import cheongsan.domain.auth.dto.NaverUserInfoAdapter;
 import cheongsan.domain.auth.dto.SocialUserInfo;
+import cheongsan.domain.user.dto.LogInResponseDTO;
+import cheongsan.domain.user.dto.NaverLoginRequestDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +40,7 @@ public class NaverOAuthService {
     /**
      * 인증 코드로 네이버 액세스 토큰 요청
      */
-    public String getAccessToken(String authCode) {
+    public NaverLoginRequestDTO getAccessToken(String authCode) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -54,7 +56,10 @@ public class NaverOAuthService {
         try {
             ResponseEntity<Map> response = restTemplate.postForEntity(tokenUrl, request, Map.class);
             Map<String, Object> responseBody = response.getBody();
-            return (String) responseBody.get("access_token");
+            return NaverLoginRequestDTO.builder()
+                    .code((String) responseBody.get("access_token"))
+                    .build();
+
         } catch (Exception e) {
             log.error("네이버 액세스 토큰 요청 실패", e);
             throw new RuntimeException("네이버 인증에 실패했습니다.");
@@ -84,8 +89,19 @@ public class NaverOAuthService {
      * 인증 코드 → 사용자 정보 (원스톱 메서드)
      */
     public SocialUserInfo getSocialUserInfo(String authCode) {
-        String accessToken = getAccessToken(authCode);
+        String accessToken = getAccessToken(authCode).getCode();
         NaverUserInfo naverUserInfo = getUserInfo(accessToken);
         return new NaverUserInfoAdapter(naverUserInfo);
     }
+
+    public LogInResponseDTO socialLogin(SocialUserInfo socialUserInfo) {
+        // 1. 해당 socialId로 기존 회원이 있는지 조회
+        // 2. 없으면 회원가입 처리
+        // 3. JWT 토큰 생성
+
+        String accessToken = "accessToken";
+        String refreshToken = "refreshToken";
+        return new LogInResponseDTO(3L, accessToken, refreshToken);
+    }
+
 }
