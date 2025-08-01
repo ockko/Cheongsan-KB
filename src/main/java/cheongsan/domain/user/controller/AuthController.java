@@ -1,6 +1,8 @@
 package cheongsan.domain.user.controller;
 
 import cheongsan.common.exception.ResponseDTO;
+import cheongsan.domain.auth.dto.SocialUserInfo;
+import cheongsan.domain.auth.service.NaverOAuthService;
 import cheongsan.domain.user.dto.*;
 import cheongsan.domain.user.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 public class AuthController {
     private final AuthService authService;
+    private final NaverOAuthService naverOAuthService;
 
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody SignUpRequestDTO signUpRequestDTO) {
@@ -67,18 +70,6 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/changePassword")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequestDTO request) {
-        try {
-            authService.changePassword(request);
-            return ResponseEntity.ok(new ChangePasswordResponseDTO("비밀번호가 성공적으로 변경되었습니다."));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
-        }
-    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LogInRequestDTO request) {
@@ -93,20 +84,28 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/nickname")
-    public ResponseEntity<?> submitNickname(@RequestBody NicknameRequestDTO request) {
+    @PostMapping("/naver/login")
+    public ResponseEntity<?> naverLogin(@RequestBody NaverLoginRequestDTO request) {
         try {
+            log.info("네이버 소셜 로그인 요청 - 인증 코드 수신");
 
-            String userId = "antehyun4880";
-            request.setUserId(userId);
+            // 1. 인증 코드로 네이버 사용자 정보 획득
+            SocialUserInfo socialUserInfo = naverOAuthService.getSocialUserInfo(request.getCode());
 
-            NicknameResponseDTO response = authService.submitNickname(request);
+            // 2. 사용자 정보로 로그인/회원가입 처리 후 JWT 반환
+            LogInResponseDTO response = naverOAuthService.socialLogin(socialUserInfo);
+
+            log.info("네이버 소셜 로그인 성공");
             return ResponseEntity.ok(response);
+
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
+            log.warn("네이버 소셜 로그인 실패: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ResponseDTO(e.getMessage()));
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
+            log.error("네이버 소셜 로그인 중 서버 오류", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO("소셜 로그인 중 오류가 발생했습니다."));
         }
     }
 
