@@ -1,6 +1,8 @@
 package cheongsan.domain.user.service;
 
 
+import cheongsan.domain.codef.dto.ConnectedIdRequestDTO;
+import cheongsan.domain.codef.service.CodefService;
 import cheongsan.domain.user.dto.*;
 import cheongsan.domain.user.entity.User;
 import cheongsan.domain.user.mapper.UserMapper;
@@ -11,8 +13,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Random;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +22,7 @@ import java.util.UUID;
 public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
     private final JavaMailSender mailSender;
+    private final CodefService codefService;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -47,7 +50,25 @@ public class AuthServiceImpl implements AuthService {
 
     public String genereateConnectId(String userId, String password) {
         // connectedId 랜덤 생성.
-        return UUID.randomUUID().toString();
+        ConnectedIdRequestDTO.AccountInfo accountInfo = ConnectedIdRequestDTO.AccountInfo.builder()
+                .countryCode("KR")
+                .businessType("BK")
+                .organization("0081") // 하나은행 (필요시 파라미터로 받을 수 있음)
+                .clientType("P")
+                .loginType("1")
+                .id(userId)        // DB의 user_id 사용
+                .password(password) // DB의 password 사용 (평문)
+                .build();
+
+        ConnectedIdRequestDTO requestDTO = ConnectedIdRequestDTO.builder()
+                .accountList(Arrays.asList(accountInfo))
+                .build();
+
+        log.info("DB에서 조회한 계정 정보로 Connected ID 생성: user_id={}", userId);
+
+        // Connected ID 생성
+        String connectedId = codefService.createConnectedId(requestDTO);
+        return connectedId;
     }
 
 
@@ -131,7 +152,7 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
         }
         // JWT 사용 시 여기서 토큰을 발급해 응답에 포함하면 됨
-        return new LogInResponseDTO("accessToken", "refreshToken");
+        return new LogInResponseDTO(1L, "accessToken", "refreshToken");
     }
 
     @Override

@@ -1,8 +1,10 @@
 package cheongsan.common.util;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.WeekFields;
 
 public class DateUtils {
     public static BigDecimal getRemainingMonths(LocalDate loanStartDate, LocalDate loanEndDate, LocalDate lastRepaymentDate) {
@@ -18,5 +20,10 @@ public class DateUtils {
         }
 
         return BigDecimal.valueOf(remainingMonths);
+    }
+
+    public static int getWeekOfMonth(LocalDate date) {
+        WeekFields weekFields = WeekFields.of(DayOfWeek.MONDAY, 1);
+        return date.get(weekFields.weekOfMonth());
     }
 }

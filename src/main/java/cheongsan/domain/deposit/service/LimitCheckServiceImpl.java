@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Log4j2
 @Service
@@ -59,6 +60,75 @@ public class LimitCheckServiceImpl implements LimitCheckService {
 
             // 발송 사실을 DB에 저장
             notificationMapper.save(newNotification);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void checkAllUsersDailyLimitExceeded() {
+        try {
+            // Connected ID가 있는 모든 사용자 조회 (활성 사용자만)
+            List<User> activeUsers = userMapper.findUsersWithConnectedId();
+
+            log.info("전체 사용자 일일 한도 체크 시작: {}명", activeUsers.size());
+
+            int checkedCount = 0;
+            int exceededCount = 0;
+            int alreadyNotifiedCount = 0;
+
+            for (User user : activeUsers) {
+                try {
+                    // 이미 오늘 알림을 받았는지 확인
+                    int sentCount = notificationMapper.countTodayNotificationsByType(user.getId(), NOTIFICATION_TYPE_LIMIT_EXCEEDED);
+                    if (sentCount > 0) {
+                        log.debug("사용자(ID: {})는 오늘 이미 한도 초과 알림을 받았습니다.", user.getId());
+                        alreadyNotifiedCount++;
+                        continue;
+                    }
+
+                    // 일일 한도 설정이 있는지 확인
+                    if (user.getDailyLimit() == null || user.getDailyLimit().compareTo(BigDecimal.ZERO) == 0) {
+                        log.debug("사용자(ID: {})는 일일 한도가 설정되지 않았습니다.", user.getId());
+                        continue;
+                    }
+
+                    int dailyLimit = user.getDailyLimit().intValue();
+                    BigDecimal todaySpent = depositMapper.sumTodaySpendingByUserId(user.getId());
+
+                    checkedCount++;
+
+                    if (todaySpent.intValue() > dailyLimit) {
+                        log.info("사용자(ID: {})의 한도 초과 감지: 한도={}원, 지출={}원",
+                                user.getId(), dailyLimit, todaySpent.intValue());
+
+                        // 이메일 발송 (비동기 처리)
+                        notificationService.sendDailyLimitExceededEmail(user, dailyLimit, todaySpent.intValue());
+
+                        // 알림 저장
+                        Notification newNotification = Notification.builder()
+                                .userId(user.getId())
+                                .contents(String.format("일일 한도(%d원)를 초과했습니다. (오늘 지출:%d원)", dailyLimit, todaySpent.intValue()))
+                                .type(NOTIFICATION_TYPE_LIMIT_EXCEEDED)
+                                .isRead(false)
+                                .createdAt(LocalDateTime.now())
+                                .build();
+
+                        notificationMapper.save(newNotification);
+                        exceededCount++;
+                    }
+
+                } catch (Exception e) {
+                    log.error("사용자(ID: {})의 일일 한도 체크 실패", user.getId(), e);
+                    // 개별 사용자 실패해도 계속 진행
+                }
+            }
+
+            log.info("전체 사용자 일일 한도 체크 완료: 체크={}명, 초과={}명, 이미알림={}명",
+                    checkedCount, exceededCount, alreadyNotifiedCount);
+
+        } catch (Exception e) {
+            log.error("전체 사용자 일일 한도 체크 실패", e);
+            throw new RuntimeException("일일 한도 체크 실패", e);
         }
     }
 }
