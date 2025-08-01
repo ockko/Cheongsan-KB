@@ -23,7 +23,6 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,36 +95,22 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    public Notification createNotification(CreateNotificationDTO dto) {
-        log.info("[4-6] 알림 생성 시작 - dto: {}", dto);
-
-        Notification notification = Notification.builder()
-                .userId(dto.getUserId())
-                .type(dto.getType())
-                .contents(dto.getContents())
-                .isRead(false)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        // 알림 DB에 저장
-        notificationMapper.insertNotification(notification);
-        log.info("알림 저장 완료 - {}", notification);
-
+    public Notification sendAlarm(Notification notification) {
         try {
             // 읽지 않은 알림 개수 조회
-            int unreadCount = notificationMapper.countUnreadNotificationByUserId(dto.getUserId());
+            int unreadCount = notificationMapper.countUnreadNotificationByUserId(notification.getUserId());
 
             // WebSocket 알림 준비
             Map<String, Object> payload = new HashMap<>();
             payload.put("type", "notification");
-            payload.put("notificationType", dto.getType());
-            payload.put("contents", dto.getContents());
+            payload.put("notificationType", notification.getType());
+            payload.put("contents", notification.getContents());
             payload.put("unreadCount", unreadCount);
 
             String json = new ObjectMapper().writeValueAsString(payload);
 
             // Websocket 메시지 전송
-            webSocketManager.sendRawMessageToUser(dto.getUserId(), json);
+            webSocketManager.sendRawMessageToUser(notification.getUserId(), json);
 
             log.info("WebSocket으로 알림 전송 완료");
         } catch (Exception e) {
@@ -213,5 +198,12 @@ public class NotificationServiceImpl implements NotificationService {
             log.error(user.getEmail() + "님에게 주간 리포트 이메일 발송 실패", e);
             throw new RuntimeException(e);
         }
+    }
+
+    @Async
+    @Override
+    public void createNotification(CreateNotificationDTO dto) {
+        Notification notification = dto.toEntity();
+        notificationMapper.save(notification);
     }
 }

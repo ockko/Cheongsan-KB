@@ -21,6 +21,4 @@ public interface NotificationMapper {
 
     void insertNotification(Notification notification);
 
-    // 테스트용
-    List<Notification> findByUserId(Long userId);
 }

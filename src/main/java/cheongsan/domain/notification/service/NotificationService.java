@@ -19,7 +19,7 @@ public interface NotificationService {
     void markAllAsRead(Long userId);
 
     // 알림 데이터 저장
-    Notification createNotification(CreateNotificationDTO dto);
+    void createNotification(CreateNotificationDTO notificationDTO);
 
     // 소비 한도 초과 알림
     void checkAndNotifyIfOverLimit(Long userId);
@@ -28,4 +28,7 @@ public interface NotificationService {
     void sendDailyLimitExceededEmail(User user, int dailyLimit, int totalSpent);
 
     void sendWeeklyReportEmail(User user, WeeklyReportDTO report);
+
+    // 알림 소켓 전송
+    Notification sendAlarm(Notification notification);
 }

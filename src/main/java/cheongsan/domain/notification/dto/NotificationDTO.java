@@ -31,4 +31,15 @@ public class NotificationDTO {
                 .createdAt(entity.getCreatedAt())
                 .build();
     }
+
+    public Notification toEntity(Long userId) {
+        return Notification.builder()
+                .id(this.id)
+                .userId(userId)
+                .contents(this.contents)
+                .type(this.type)
+                .isRead(this.isRead != null ? this.isRead : false)
+                .createdAt(this.createdAt != null ? this.createdAt : LocalDateTime.now())
+                .build();
+    }
 }

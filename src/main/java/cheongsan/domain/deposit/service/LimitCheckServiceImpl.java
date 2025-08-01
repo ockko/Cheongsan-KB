@@ -60,6 +60,9 @@ public class LimitCheckServiceImpl implements LimitCheckService {
 
             // 발송 사실을 DB에 저장
             notificationMapper.save(newNotification);
+
+            // 웹소켓 알림 전송
+            notificationService.sendAlarm(newNotification);
         }
     }
 
