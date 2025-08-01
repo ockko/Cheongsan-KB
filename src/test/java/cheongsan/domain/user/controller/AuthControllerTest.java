@@ -60,8 +60,8 @@ class AuthControllerTest {
     @BeforeEach
     void setUp() {
         AuthService stubService = new StubAuthService();
-        AuthController authController = new AuthController(stubService);
-        mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
+//        AuthController authController = new AuthController(stubService);
+//        mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
         objectMapper = new ObjectMapper();
     }
 
