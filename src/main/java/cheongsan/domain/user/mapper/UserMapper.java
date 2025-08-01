@@ -53,4 +53,6 @@ public interface UserMapper {
 
     // Connected ID로 사용자 조회
     User findByConnectedId(@Param("connectedId") String connectedId);
+
+    List<Long> getAllUserIds();
 }

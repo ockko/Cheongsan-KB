@@ -1,11 +1,14 @@
 package cheongsan.domain.notification.service;
 
 import cheongsan.domain.deposit.dto.WeeklyReportDTO;
-import cheongsan.domain.notification.controller.NotificationWebSocketHandler;
+import cheongsan.domain.deposit.mapper.DepositMapper;
+import cheongsan.domain.notification.dto.CreateNotificationDTO;
 import cheongsan.domain.notification.dto.NotificationDTO;
 import cheongsan.domain.notification.entity.Notification;
 import cheongsan.domain.notification.mapper.NotificationMapper;
+import cheongsan.domain.notification.websocket.WebSocketManager;
 import cheongsan.domain.user.entity.User;
+import cheongsan.domain.user.mapper.UserMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -27,10 +30,12 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Log4j2
-@Transactional(readOnly = true)
+@Transactional
 public class NotificationServiceImpl implements NotificationService {
     private final NotificationMapper notificationMapper;
-    private final NotificationWebSocketHandler webSocketHandler;
+    private final WebSocketManager webSocketManager;
+    private final UserMapper userMapper;
+    private final DepositMapper depositMapper;
 
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
@@ -60,13 +65,13 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    public void markAsRead(Long userId) {
-        log.debug("알림 읽음 처리 시작: id={}", userId);
+    public void markAllAsRead(Long userId) {
+        log.debug("알림 읽음 처리 시작: userId={}", userId);
 
         try {
-            // 1. 알림을 읽음 처리
+            // 1. 모든 알림 읽음 처리
             notificationMapper.markNotificationAsRead(userId);
-            log.info("알림 읽음 처리 완료: id={}", userId);
+            log.info("알림 일괄 읽음 처리 완료: userId={}", userId);
 
             // 2. 읽지 않은 알림 개수 다시 계산
             int unreadCount = notificationMapper.countUnreadNotificationByUserId(userId);
@@ -77,7 +82,7 @@ public class NotificationServiceImpl implements NotificationService {
             payload.put("unreadCount", unreadCount);
 
             String json = new ObjectMapper().writeValueAsString(payload);
-            webSocketHandler.sendRawMessageToUser(userId, json);
+            webSocketManager.sendRawMessageToUser(userId, json);
 
             log.info("WebSocket으로 unreadCount 전송 완료: userId={}, count={}", userId, unreadCount);
 
@@ -85,6 +90,33 @@ public class NotificationServiceImpl implements NotificationService {
             log.error("알림 읽음 처리 실패: id={}", userId, e);
             throw new RuntimeException("알림 읽음 처리에 실패했습니다.", e);
         }
+    }
+
+    @Override
+    @Transactional
+    public Notification sendAlarm(Notification notification) {
+        try {
+            // 읽지 않은 알림 개수 조회
+            int unreadCount = notificationMapper.countUnreadNotificationByUserId(notification.getUserId());
+
+            // WebSocket 알림 준비
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("type", "notification");
+            payload.put("notificationType", notification.getType());
+            payload.put("contents", notification.getContents());
+            payload.put("unreadCount", unreadCount);
+
+            String json = new ObjectMapper().writeValueAsString(payload);
+
+            // Websocket 메시지 전송
+            webSocketManager.sendRawMessageToUser(notification.getUserId(), json);
+
+            log.info("WebSocket으로 알림 전송 완료");
+        } catch (Exception e) {
+            log.error("알림 WebSocket 전송 실패: ", e);
+        }
+
+        return notification;
     }
 
     @Async
@@ -136,5 +168,12 @@ public class NotificationServiceImpl implements NotificationService {
             log.error(user.getEmail() + "님에게 주간 리포트 이메일 발송 실패", e);
             throw new RuntimeException(e);
         }
+    }
+
+    @Async
+    @Override
+    public void createNotification(CreateNotificationDTO dto) {
+        Notification notification = dto.toEntity();
+        notificationMapper.save(notification);
     }
 }

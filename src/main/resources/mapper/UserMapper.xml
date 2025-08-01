@@ -67,6 +67,10 @@
         WHERE id = #{id}
     </update>
 
+    <select id="getAllUserIds" resultType="long">
+        SELECT id
+        FROM user
+    </select>
     <update id="submitNickname" parameterType="map">
         UPDATE user
         SET nickname = #{nickname}

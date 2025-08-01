@@ -36,5 +36,20 @@
         UPDATE notifications
         SET is_read = 1
         WHERE user_id = #{userId}
+          AND is_read = 0
     </update>
+    
+    <insert id="insertNotification" parameterType="cheongsan.domain.notification.entity.Notification">
+        INSERT INTO notifications (user_id, contents, type, is_read, created_at)
+        VALUES (#{userId}, #{contents}, #{type}, #{isRead}, #{createdAt})
+    </insert>
+
+
+    <select id="findByUserId" parameterType="long" resultType="cheongsan.domain.notification.entity.Notification">
+        SELECT *
+        FROM notifications
+        WHERE user_id = #{userId}
+        ORDER BY created_at DESC
+    </select>
+
 </mapper>

@@ -27,6 +27,10 @@ public class ServletConfig implements WebMvcConfigurer {
         registry
                 .addResourceHandler("/resources/**") // 요청 URL 경로
                 .addResourceLocations("/resources/"); // 실제 리소스 위치
+        registry
+                .addResourceHandler("/**")
+                .addResourceLocations("classpath:/static/");  // src/main/resources/static 위치
+
         registry.addResourceHandler("/favicon.ico")
                 .addResourceLocations("/resources/favicon.ico");
     }
