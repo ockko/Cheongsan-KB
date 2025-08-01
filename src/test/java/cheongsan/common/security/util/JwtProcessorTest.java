@@ -1,6 +1,7 @@
-package cheongsan.common.security;
+package cheongsan.common.security.util;
 
 import cheongsan.common.config.RootConfig;
+import cheongsan.common.security.config.SecurityConfig;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,9 +23,12 @@ class JwtProcessorTest {
     @Test
     void generateToken() {
         String username = "user0";
-        String token = jwtProcessor.generateToken(username);
-        log.info(token);
-        assertNotNull(token);
+        String accessToken = jwtProcessor.generateAccessToken(username);
+        String refreshToken = jwtProcessor.generateRefreshToken(username);
+        log.info(accessToken);
+        log.info(refreshToken);
+        assertNotNull(accessToken);
+        assertNotNull(refreshToken);
     }
 
     @Test

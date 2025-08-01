@@ -1,4 +1,4 @@
-package cheongsan.common.security;
+package cheongsan.common.security.config;
 
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 

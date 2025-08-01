@@ -144,7 +144,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LogInResponseDTO login(LogInRequestDTO logInRequestDTO) {
-        User user = userMapper.findByUserId(logInRequestDTO.getUserId());
+        User user = userMapper.findByUserId(logInRequestDTO.getUsername());
         if (user == null) {
             throw new IllegalArgumentException("존재하지 않는 아이디입니다.");
         }

@@ -1,6 +1,6 @@
 package cheongsan.common.config;
 
-import cheongsan.common.security.SecurityConfig;
+import cheongsan.common.security.config.SecurityConfig;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitializer {

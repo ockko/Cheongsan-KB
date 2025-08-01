@@ -1,4 +1,4 @@
-package cheongsan.common.security;
+package cheongsan.common.security.config;
 
 import cheongsan.common.config.RootConfig;
 import lombok.extern.log4j.Log4j2;
@@ -9,8 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
