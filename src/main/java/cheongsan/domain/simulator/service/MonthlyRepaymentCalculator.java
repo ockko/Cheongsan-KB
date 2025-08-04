@@ -371,7 +371,6 @@ public class MonthlyRepaymentCalculator {
 
 
     public BigDecimal calculatePrepaymentFee(BigDecimal prepaymentPrincipal, LocalDate repaymentDate, LoanDTO loan) {
-        final BigDecimal ONE_PERCENT = new BigDecimal("0.01");
         final long THREE_YEARS_IN_DAYS = 365 * 3;
 
         LocalDate startDate = loan.getStartDate();
@@ -382,41 +381,24 @@ public class MonthlyRepaymentCalculator {
         long usedDays = ChronoUnit.DAYS.between(startDate, repaymentDate);
         long remainingDays = ChronoUnit.DAYS.between(repaymentDate, endDate);
 
-        // ① 3년(1095일) 초과 시 면제
+        // ① 3년 이상 사용한 경우 수수료 면제
         if (usedDays >= THREE_YEARS_IN_DAYS || totalLoanDays <= 0) {
             return BigDecimal.ZERO;
         }
 
-        // ② 대출일로부터 30일 미만 → 30일로 간주
-        if (usedDays < 30) {
-            usedDays = 30;
+        // ② 최소 대출일수 보정 (30일 미만 → 30일로 간주)
+        if (totalLoanDays < 30) {
             totalLoanDays = 30;
-            remainingDays = totalLoanDays - usedDays;
-            if (remainingDays < 0) remainingDays = 0;
+        }
+        if (remainingDays < 0) {
+            remainingDays = 0;
         }
 
-        // ③ 대출 1년 이상인지 여부
-        boolean isLongTerm = totalLoanDays >= 365;
-
-        BigDecimal fee;
-
-        if (isLongTerm) {
-            // 만기 1년 이상
-            BigDecimal variableRate = prepaymentFeeRate.subtract(ONE_PERCENT);
-            BigDecimal fixedFee = prepaymentPrincipal.multiply(ONE_PERCENT, MATH_CONTEXT);
-            BigDecimal variableFee = prepaymentPrincipal
-                    .multiply(variableRate, MATH_CONTEXT)
-                    .multiply(new BigDecimal(remainingDays), MATH_CONTEXT)
-                    .divide(new BigDecimal(totalLoanDays - 30), MATH_CONTEXT);
-
-            fee = fixedFee.add(variableFee);
-        } else {
-            // 만기 1년 미만
-            fee = prepaymentPrincipal
-                    .multiply(prepaymentFeeRate, MATH_CONTEXT)
-                    .multiply(new BigDecimal(remainingDays), MATH_CONTEXT)
-                    .divide(new BigDecimal(totalLoanDays - 30), MATH_CONTEXT);
-        }
+        // ③ 수수료 = 상환원금 × 수수료율 × (잔존기간 / 대출기간)
+        BigDecimal fee = prepaymentPrincipal
+                .multiply(prepaymentFeeRate, MATH_CONTEXT)
+                .multiply(new BigDecimal(remainingDays), MATH_CONTEXT)
+                .divide(new BigDecimal(totalLoanDays), MATH_CONTEXT);
 
         return fee.setScale(0, RoundingMode.HALF_UP);
     }
