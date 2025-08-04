@@ -17,9 +17,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,18 +26,9 @@ public class CodefServiceImpl implements CodefService {
     private final CodefRSAUtil codefRSAUtil;
     private final ObjectMapper codefObjectMapper;
 
-    @Value("${codef.client-id}")
-    private String clientId;
+    @Value("${codef.access-token}")
+    private String accessToken;
 
-    @Value("${codef.client-secret}")
-    private String clientSecret;
-
-    // 토큰 캐싱을 위한 필드들
-    private String cachedAccessToken;
-    private LocalDateTime tokenExpiryTime;
-    private static final int TOKEN_BUFFER_MINUTES = 5; // 만료 5분 전에 갱신
-
-    private static final String TOKEN_URL = "https://oauth.codef.io/oauth/token";
     private static final String CREATE_ACCOUNT_URL = "https://development.codef.io/v1/account/create";
     private static final String ACCOUNT_LIST_URL = "https://development.codef.io/v1/kr/bank/p/account/account-list";
     private static final String TRANSACTION_LIST_URL = "https://development.codef.io/v1/kr/bank/p/account/transaction-list";
@@ -56,101 +44,9 @@ public class CodefServiceImpl implements CodefService {
         this.codefObjectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-    // 캐싱된 토큰 반환 (유효하면 기존 토큰, 만료되면 새 토큰)
-    @Override
-    public String getAccessToken() {
-        // 토큰이 유효한지 확인
-        if (isTokenValid()) {
-            log.info("기존 토큰 사용: 만료시간={}", tokenExpiryTime);
-            return cachedAccessToken;
-        }
-
-        // 토큰이 없거나 만료된 경우 새로 발급
-        return renewAccessToken();
-    }
-
-    // 토큰 유효성 검사
-    private boolean isTokenValid() {
-        if (cachedAccessToken == null || tokenExpiryTime == null) {
-            log.info("캐싱된 토큰이 없음");
-            return false;
-        }
-
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime bufferTime = tokenExpiryTime.minus(TOKEN_BUFFER_MINUTES, ChronoUnit.MINUTES);
-
-        boolean isValid = now.isBefore(bufferTime);
-        log.info("토큰 유효성 검사: 현재시간={}, 만료시간={}, 유효={}", now, tokenExpiryTime, isValid);
-
-        return isValid;
-    }
-
-    // 새로운 토큰 발급 및 캐싱
-    private synchronized String renewAccessToken() {
-        // 다중 쓰레드 환경에서 중복 발급 방지를 위한 재검사
-        if (isTokenValid()) {
-            log.info("다른 쓰레드에서 이미 토큰 갱신됨");
-            return cachedAccessToken;
-        }
-
-        try {
-            log.info("새로운 CODEF 토큰 발급 시작");
-
-            URL url = new URL(TOKEN_URL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-
-            // Basic Auth 설정
-            String auth = clientId + ":" + clientSecret;
-            String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
-            conn.setRequestProperty("Authorization", "Basic " + encodedAuth);
-            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
-            // Body 작성
-            String body = "grant_type=client_credentials&scope=read";
-            try (OutputStream os = conn.getOutputStream()) {
-                os.write(body.getBytes(StandardCharsets.UTF_8));
-            }
-
-            // 응답 읽기
-            StringBuilder response = new StringBuilder();
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    response.append(line);
-                }
-            }
-
-            TokenResponseDTO tokenResponse = codefObjectMapper.readValue(response.toString(), TokenResponseDTO.class);
-
-            // 토큰 및 만료시간 캐싱
-            cachedAccessToken = tokenResponse.getAccess_token();
-
-            // expires_in은 초 단위이므로 현재 시간에서 초를 더함
-            int expiresInSeconds = tokenResponse.getExpires_in();
-            tokenExpiryTime = LocalDateTime.now().plus(expiresInSeconds, ChronoUnit.SECONDS);
-
-            log.info("새로운 토큰 발급 및 캐싱 완료: 만료시간={}, 유효기간={}초", tokenExpiryTime, expiresInSeconds);
-
-            return cachedAccessToken;
-
-        } catch (Exception e) {
-            log.error("토큰 발급 실패", e);
-
-            // 실패 시 캐시 클리어
-            cachedAccessToken = null;
-            tokenExpiryTime = null;
-
-            throw new RuntimeException("CODEF 토큰 발급 실패", e);
-        }
-    }
-
     @Override
     public String createConnectedId(ConnectedIdRequestDTO requestDTO) {
         try {
-            String accessToken = getAccessToken();
-
             URL url = new URL(CREATE_ACCOUNT_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
@@ -244,8 +140,6 @@ public class CodefServiceImpl implements CodefService {
     @Override
     public AccountListResponseDTO getAccountList(String connectedId, String organizationCode) {
         try {
-            String accessToken = getAccessToken();
-
             URL url = new URL(ACCOUNT_LIST_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
@@ -310,8 +204,6 @@ public class CodefServiceImpl implements CodefService {
     @Override
     public TransactionListResponseDTO getTransactionListWithDates(String connectedId, String organizationCode, String accountNumber, String startDate, String endDate) {
         try {
-            String accessToken = getAccessToken();
-
             URL url = new URL(TRANSACTION_LIST_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
@@ -388,8 +280,6 @@ public class CodefServiceImpl implements CodefService {
     @Override
     public LoanTransactionResponseDTO getLoanTransactionList(String connectedId, String organizationCode, String accountNumber, String startDate, String endDate) {
         try {
-            String accessToken = getAccessToken();
-
             URL url = new URL(LOAN_TRANSACTION_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
