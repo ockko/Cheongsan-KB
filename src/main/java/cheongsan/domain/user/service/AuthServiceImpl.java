@@ -26,6 +26,11 @@ public class AuthServiceImpl implements AuthService {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    @Override
+    public boolean checkDuplicate(String userId) {
+        User user = userMapper.findByUserId(userId);
+        return user != null;
+    }
 
     @Override
     public SignUpResponseDTO signUp(SignUpRequestDTO signUpRequestDTO) {

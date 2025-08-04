@@ -22,6 +22,11 @@ class AuthControllerTest {
     // 더미 테스트용 AuthService 구현 (내부 클래스)
     private static class StubAuthService implements AuthService {
         @Override
+        public boolean checkDuplicate(String userId) {
+            return false;
+        }
+
+        @Override
         public SignUpResponseDTO signUp(SignUpRequestDTO request) {
             if ("dupeid".equals(request.getUserId())) {
                 throw new IllegalArgumentException("중복된 아이디입니다.");
