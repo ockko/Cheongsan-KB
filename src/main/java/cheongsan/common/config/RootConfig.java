@@ -95,4 +95,5 @@ public class RootConfig {
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
     }
+
 }
