@@ -13,6 +13,7 @@ public enum ResponseMessage {
     CREDENTIALS_MISSING("username 또는 password가 없습니다."),
     INVALID_CREDENTIALS("사용자 ID 또는 비밀번호가 일치하지 않습니다."),
     EXPIRED_JWT_TOKEN("토큰의 유효시간이 지났습니다."),
+    INSUFFICIENT_AUTHORITY("권한이 부족합니다."),
     USER_NOT_FOUND("일치하는 회원 정보가 없습니다."),
     UNSUPPORTED_REPAYMENT_METHOD("지원하지 않는 상환방식입니다."),
     BUDGET_LIMIT_EXCEEDED("설정된 한도는 시스템 추천 한도를 초과할 수 없습니다."),
