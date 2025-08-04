@@ -7,11 +7,6 @@ import cheongsan.domain.codef.dto.TransactionListResponseDTO;
 
 public interface CodefService {
     /**
-     * CODEF 토큰 발급
-     */
-    String getAccessToken();
-
-    /**
      * Connected ID 생성
      */
     String createConnectedId(ConnectedIdRequestDTO requestDTO);
