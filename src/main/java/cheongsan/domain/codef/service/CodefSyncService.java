@@ -103,8 +103,9 @@ public class CodefSyncService {
                                      List<AccountListResponseDTO.DepositAccount> depositAccounts, String connectedId) {
         for (AccountListResponseDTO.DepositAccount account : depositAccounts) {
             try {
-                // 해당 사용자만 체크하도록 강화
-                if (depositAccountMapper.isDepositAccountExists(userId, account.getResAccount())) {
+                boolean isExistingAccount = depositAccountMapper.isDepositAccountExists(userId, account.getResAccount());
+
+                if (isExistingAccount) {
                     log.info("사용자 {}의 이미 존재하는 예금계좌: {}", userId, account.getResAccount());
 
                     // 잔액만 업데이트 (해당 사용자의 계좌만)
@@ -114,22 +115,26 @@ public class CodefSyncService {
                         depositAccountMapper.updateBalance(existingAccount.getId(), newBalance);
                         log.info("사용자 {}의 계좌 {} 잔액 업데이트: {}", userId, account.getResAccount(), newBalance);
                     }
-                    continue;
+
+                    // 기존 계좌도 거래내역 동기화 수행
+                    syncTransactionHistoryForUser(userId, connectedId, organizationCode, account.getResAccount());
+
+                } else {
+                    // 새로운 예금계좌 저장 (사용자 ID 명시)
+                    DepositAccount depositAccount = DepositAccount.builder()
+                            .userId(userId)  // 명시적으로 사용자 ID 설정
+                            .organizationCode(organizationCode)
+                            .accountNumber(account.getResAccount())
+                            .currentBalance(new BigDecimal(account.getResAccountBalance() != null ?
+                                    account.getResAccountBalance() : "0"))
+                            .build();
+
+                    depositAccountMapper.insertDepositAccount(depositAccount);
+                    log.info("사용자 {}의 새로운 예금계좌 저장: {}", userId, account.getResAccount());
+
+                    // 새로운 계좌의 거래내역 동기화
+                    syncTransactionHistoryForUser(userId, connectedId, organizationCode, account.getResAccount());
                 }
-
-                // 새로운 예금계좌 저장 (사용자 ID 명시)
-                DepositAccount depositAccount = DepositAccount.builder()
-                        .userId(userId)  // 명시적으로 사용자 ID 설정
-                        .organizationCode(organizationCode)
-                        .accountNumber(account.getResAccount())
-                        .currentBalance(new BigDecimal(account.getResAccountBalance() != null ? account.getResAccountBalance() : "0"))
-                        .build();
-
-                depositAccountMapper.insertDepositAccount(depositAccount);
-                log.info("사용자 {}의 새로운 예금계좌 저장: {}", userId, account.getResAccount());
-
-                // 해당 사용자의 거래내역만 동기화
-                syncTransactionHistoryForUser(userId, connectedId, organizationCode, account.getResAccount());
 
             } catch (Exception e) {
                 log.error("사용자 {}의 예금계좌 동기화 실패: account={}", userId, account.getResAccount(), e);
@@ -234,20 +239,23 @@ public class CodefSyncService {
         for (AccountListResponseDTO.LoanAccount account : loanAccounts) {
             try {
                 Long orgCodeLong = getOrCreateFinancialInstitution(organizationCode);
+                boolean isExistingAccount = debtMapper.isDebtAccountExists(userId, account.getResAccount());
 
-                // 해당 사용자만 체크하도록 강화
-                if (debtMapper.isDebtAccountExists(userId, account.getResAccount())) {
+                if (isExistingAccount) {
                     log.info("사용자 {}의 이미 존재하는 대출계좌: {}", userId, account.getResAccount());
-                    continue;
+
+                    // 대출계좌는 잔액 업데이트 로직이 없으므로 바로 거래내역 동기화
+                    syncLoanTransactionHistoryForUser(userId, connectedId, organizationCode, account.getResAccount());
+
+                } else {
+                    // 새로운 대출계좌 저장 (사용자 ID 명시)
+                    DebtAccount debtAccount = convertToDebtAccount(userId, orgCodeLong, account);
+                    debtMapper.insertDebt(debtAccount);
+                    log.info("사용자 {}의 새로운 대출계좌 저장: {}", userId, account.getResAccount());
+
+                    // 새로운 대출계좌의 거래내역 동기화
+                    syncLoanTransactionHistoryForUser(userId, connectedId, organizationCode, account.getResAccount());
                 }
-
-                // 대출계좌 정보 저장 (사용자 ID 명시)
-                DebtAccount debtAccount = convertToDebtAccount(userId, orgCodeLong, account);
-                debtMapper.insertDebt(debtAccount);
-                log.info("사용자 {}의 새로운 대출계좌 저장: {}", userId, account.getResAccount());
-
-                // 해당 사용자의 대출 거래내역만 동기화
-                syncLoanTransactionHistoryForUser(userId, connectedId, organizationCode, account.getResAccount());
 
             } catch (Exception e) {
                 log.error("사용자 {}의 대출계좌 동기화 실패: account={}", userId, account.getResAccount(), e);
