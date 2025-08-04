@@ -41,7 +41,6 @@ public class LoanRepaymentCalculator {
                 remainingPrincipal = remainingPrincipal.subtract(monthlyPayment);
 
                 payments.add(new MonthlyPaymentDetailDTO(
-                        i,
                         monthlyPayment,
                         BigDecimal.ZERO,
                         BigDecimal.ZERO,
@@ -85,7 +84,6 @@ public class LoanRepaymentCalculator {
             }
             totalInterest = totalInterest.add(nowInterest, MATH_CONTEXT);
             payments.add(new MonthlyPaymentDetailDTO(
-                    i,
                     nowPrincipal.setScale(0, RoundingMode.HALF_UP),
                     nowInterest.setScale(0, RoundingMode.HALF_UP),
                     BigDecimal.ZERO,
@@ -134,7 +132,7 @@ public class LoanRepaymentCalculator {
             totalPayment = totalPayment.add(monthlyPrincipal.add(nowInterest, MATH_CONTEXT));
 
             totalInterest = totalInterest.add(nowInterest, MATH_CONTEXT);
-            payments.add(new MonthlyPaymentDetailDTO(i,
+            payments.add(new MonthlyPaymentDetailDTO(
                     monthlyPrincipal.setScale(0, RoundingMode.HALF_UP),
                     nowInterest.setScale(0, RoundingMode.HALF_UP),
                     BigDecimal.ZERO,
@@ -210,7 +208,6 @@ public class LoanRepaymentCalculator {
             totalInterest = totalInterest.add(nowInterest, MATH_CONTEXT);
             totalPrepaymentFee = totalPrepaymentFee.add(fee, MATH_CONTEXT);
             payments.add(new MonthlyPaymentDetailDTO(
-                    i + 1,
                     actualMonthlyPrincipal.setScale(0, RoundingMode.HALF_UP),
                     nowInterest.setScale(0, RoundingMode.HALF_UP),
                     actualPrepayment.setScale(0, RoundingMode.HALF_UP),
@@ -290,7 +287,6 @@ public class LoanRepaymentCalculator {
             }
             // 결과 추가
             payments.add(new MonthlyPaymentDetailDTO(
-                    i + 1,
                     actualMonthlyPrincipal.setScale(0, RoundingMode.HALF_UP),
                     nowInterest.setScale(0, RoundingMode.HALF_UP),
                     actualPrepayment.setScale(0, RoundingMode.HALF_UP),
@@ -340,7 +336,6 @@ public class LoanRepaymentCalculator {
 
             totalInterest = totalInterest.add(interest, MATH_CONTEXT);
             payments.add(new MonthlyPaymentDetailDTO(
-                    i + 1,
                     principalPayment.setScale(0, RoundingMode.HALF_UP),
                     interest.setScale(0, RoundingMode.HALF_UP),
                     BigDecimal.ZERO,
@@ -414,7 +409,6 @@ public class LoanRepaymentCalculator {
 
 
             payments.add(new MonthlyPaymentDetailDTO(
-                    i + 1,
                     principalPayment.setScale(0, RoundingMode.HALF_UP),
                     nowInterest.setScale(0, RoundingMode.HALF_UP),
                     monthlyPrepayment.setScale(0, RoundingMode.HALF_UP),

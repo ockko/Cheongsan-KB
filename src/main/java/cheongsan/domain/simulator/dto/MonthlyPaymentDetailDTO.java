@@ -9,7 +9,6 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 public class MonthlyPaymentDetailDTO {
-    private long month; // 몇 번째 상환월인지 (1 ~ 상환 개월 수)
     private BigDecimal principal; // 해당 월에 상환한 원금
     private BigDecimal interest; //  해당 월에 발생한 이자
     private BigDecimal prepayment; // 중도상환 금액

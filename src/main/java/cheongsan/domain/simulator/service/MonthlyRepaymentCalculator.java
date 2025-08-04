@@ -27,7 +27,7 @@ public class MonthlyRepaymentCalculator {
 
         long remainingMonths = loan.getRemainingMonths(date);
         if (remainingMonths <= 0 || remainingPrincipal.compareTo(BigDecimal.ZERO) <= 0) {
-            return new MonthlyPaymentDetailDTO(0,
+            return new MonthlyPaymentDetailDTO(
                     BigDecimal.ZERO, BigDecimal.ZERO,
                     BigDecimal.ZERO, BigDecimal.ZERO,
                     BigDecimal.ZERO, date, BigDecimal.ZERO);
@@ -70,7 +70,6 @@ public class MonthlyRepaymentCalculator {
 
 
         return new MonthlyPaymentDetailDTO(
-                1, // 단일 월 계산이므로 항상 1
                 principal.setScale(0, RoundingMode.HALF_UP),
                 interest.setScale(0, RoundingMode.HALF_UP),
                 actualExtraPayment.setScale(0, RoundingMode.HALF_UP),
@@ -95,7 +94,7 @@ public class MonthlyRepaymentCalculator {
         // 남은 상환 개월 수 계산 (date 기준)
         long remainingMonths = loan.getRemainingMonths(date);
         if (remainingMonths <= 0 || remainingPrincipal.compareTo(BigDecimal.ZERO) <= 0) {
-            return new MonthlyPaymentDetailDTO(0, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, date, BigDecimal.ZERO);
+            return new MonthlyPaymentDetailDTO(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, date, BigDecimal.ZERO);
         }
 
         // 이번 달 상환 월 번호 계산 (예: 1부터 시작)
@@ -122,7 +121,6 @@ public class MonthlyRepaymentCalculator {
         BigDecimal updatedRemaining = remainingPrincipal.subtract(monthlyPrincipal.add(actualExtraPayment)).max(BigDecimal.ZERO);
 
         return new MonthlyPaymentDetailDTO(
-                monthNumber,
                 monthlyPrincipal.setScale(0, RoundingMode.HALF_UP),
                 interest.setScale(0, RoundingMode.HALF_UP),
                 actualExtraPayment.setScale(0, RoundingMode.HALF_UP),
@@ -146,7 +144,6 @@ public class MonthlyRepaymentCalculator {
 
         if (remainingPrincipal.compareTo(BigDecimal.ZERO) <= 0 || remainingMonths <= 0) {
             return new MonthlyPaymentDetailDTO(
-                    1,
                     BigDecimal.ZERO,
                     BigDecimal.ZERO,
                     BigDecimal.ZERO,
@@ -190,7 +187,6 @@ public class MonthlyRepaymentCalculator {
                 .max(BigDecimal.ZERO);
 
         return new MonthlyPaymentDetailDTO(
-                1,
                 actualMonthlyPrincipal.setScale(0, RoundingMode.HALF_UP),
                 nowInterest.setScale(0, RoundingMode.HALF_UP),
                 actualPrepayment.setScale(0, RoundingMode.HALF_UP),
@@ -213,7 +209,6 @@ public class MonthlyRepaymentCalculator {
         if (remainingPrincipal.compareTo(BigDecimal.ZERO) == 0 || remainingMonths <= 0) {
             // 상환 완료된 경우, 모두 0으로 반환
             return new MonthlyPaymentDetailDTO(
-                    0,
                     BigDecimal.ZERO,
                     BigDecimal.ZERO,
                     BigDecimal.ZERO,
@@ -256,7 +251,6 @@ public class MonthlyRepaymentCalculator {
                 .max(BigDecimal.ZERO);
 
         return new MonthlyPaymentDetailDTO(
-                1, // 월 번호 (필요 시 동적으로 조정)
                 actualMonthlyPrincipal.setScale(0, RoundingMode.HALF_UP),
                 interest.setScale(0, RoundingMode.HALF_UP),
                 actualPrepayment.setScale(0, RoundingMode.HALF_UP),
@@ -275,7 +269,6 @@ public class MonthlyRepaymentCalculator {
         if (remainingMonths <= 0) {
             // 이미 상환 완료된 경우, 모두 0 반환
             return new MonthlyPaymentDetailDTO(
-                    0,
                     BigDecimal.ZERO,
                     BigDecimal.ZERO,
                     BigDecimal.ZERO,
@@ -297,7 +290,6 @@ public class MonthlyRepaymentCalculator {
         }
 
         return new MonthlyPaymentDetailDTO(
-                1, // 월 번호 (필요 시 동적 조절 가능)
                 principalPayment.setScale(0, RoundingMode.HALF_UP),
                 interest.setScale(0, RoundingMode.HALF_UP),
                 BigDecimal.ZERO, // prepayment 없음
@@ -318,7 +310,6 @@ public class MonthlyRepaymentCalculator {
         if (remainingMonths <= 0) {
             // 상환 완료된 경우
             return new MonthlyPaymentDetailDTO(
-                    0,
                     BigDecimal.ZERO,
                     BigDecimal.ZERO,
                     BigDecimal.ZERO,
@@ -358,7 +349,6 @@ public class MonthlyRepaymentCalculator {
         BigDecimal totalMonthlyPayment = interest.add(principalPayment, MATH_CONTEXT).add(prepaymentFee, MATH_CONTEXT);
 
         return new MonthlyPaymentDetailDTO(
-                1, // 월 번호 (필요 시 조절)
                 principalPayment.setScale(0, RoundingMode.HALF_UP),
                 interest.setScale(0, RoundingMode.HALF_UP),
                 actualPrepayment.setScale(0, RoundingMode.HALF_UP),
