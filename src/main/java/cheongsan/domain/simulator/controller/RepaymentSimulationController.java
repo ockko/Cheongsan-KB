@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/cheongsan/simulation")
-public class RepaymentController {
+public class RepaymentSimulationController {
 
     private final SimulationService simulationService;
 
