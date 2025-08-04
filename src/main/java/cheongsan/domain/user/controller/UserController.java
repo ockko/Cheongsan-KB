@@ -52,7 +52,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/changePassword")
+    @PatchMapping("/changePassword")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequestDTO request) {
         try {
             userService.changePassword(request);
