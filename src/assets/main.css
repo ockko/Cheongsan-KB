@@ -1,3 +1,7 @@
+/* CSS 변수 및 타이포그래피 임포트 */
+@import './styles/typography.css';
+@import './styles/variables.css';
+
 /* 모든 여백 제거 */
 body,
 h1,
@@ -19,4 +23,123 @@ ol {
 /* 박스 크기 초기화 */
 * {
   box-sizing: border-box;
+}
+
+/* PWA 기본 설정 - 375px 기준 */
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* 기본 body 색상 설정 */
+body {
+  color: var(--color-main);
+  max-width: 375px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* 앱 컨테이너 */
+#app {
+  width: 100%;
+  max-width: 375px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background-color: var(--color-gray3);
+}
+
+/* 유틸리티 클래스들 */
+.color-main {
+  color: var(--color-main);
+}
+.color-secondary {
+  color: var(--color-secondary);
+}
+.color-third {
+  color: var(--color-third);
+}
+.color-light1 {
+  color: var(--color-light1);
+}
+.color-light2 {
+  color: var(--color-light2);
+}
+.color-accent {
+  color: var(--color-accent);
+}
+.color-gray0 {
+  color: var(--color-gray0);
+}
+.color-gray1 {
+  color: var(--color-gray1);
+}
+.color-gray2 {
+  color: var(--color-gray2);
+}
+.color-gray3 {
+  color: var(--color-gray3);
+}
+.color-naver {
+  color: var(--color-naver);
+}
+.color-red {
+  color: var(--color-red);
+}
+.color-white {
+  color: white;
+}
+
+.bg-main {
+  background-color: var(--color-main);
+}
+.bg-secondary {
+  background-color: var(--color-secondary);
+}
+.bg-third {
+  background-color: var(--color-third);
+}
+.bg-light1 {
+  background-color: var(--color-light1);
+}
+.bg-light2 {
+  background-color: var(--color-light2);
+}
+.bg-accent {
+  background-color: var(--color-accent);
+}
+.bg-gray0 {
+  background-color: var(--color-gray0);
+}
+.bg-gray1 {
+  background-color: var(--color-gray1);
+}
+.bg-gray2 {
+  background-color: var(--color-gray2);
+}
+.bg-gray3 {
+  background-color: var(--color-gray3);
+}
+.bg-naver {
+  background-color: var(--color-naver);
+}
+.bg-red {
+  background-color: var(--color-red);
+}
+
+/* 반응형 처리 - 작은 화면에서의 조정 */
+@media (max-width: 374px) {
+  body,
+  #app {
+    max-width: 100vw;
+  }
+}
+
+/* 큰 화면에서의 중앙 정렬 유지 */
+@media (min-width: 376px) {
+  body {
+    border-left: 1px solid var(--color-gray1);
+    border-right: 1px solid var(--color-gray1);
+  }
 }

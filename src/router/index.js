@@ -1,38 +1,43 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomePage from '@/pages/HomePage.vue';
+
+import Home from '@/pages/Home.vue';
+import Policy from '@/pages/Policy.vue';
+import Calendar from '@/pages/Calendar.vue';
+import Simulation from '@/pages/Simulation.vue';
+import Study from '@/pages/Study.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomePage,
+      redirect: '/home', // 기본 경로를 홈으로 리다이렉트 했지만, 이 부분은 나중에 로그인 페이지가 생성되면 그 때 바꿀 예정입니다.
     },
-    // ...authRoutes, 이런 느낌으로 각 도메인별로 라우터를 커스터 마이징 해주면 됩니다.
-    //예: src/router/auth.js :
-    // export default [
-    //   {
-    //     path: '/auth/login',
-    //     name: 'login',
-    //     component: () => import('../pages/auth/LoginPage.vue'),
-    //   },
-    //   {
-    //     path: '/auth/join',
-    //     name: 'join',
-    //     component: () => import('../pages/auth/JoinPage.vue'),
-    //   },
-    //   {
-    //     path: '/auth/profile',
-    //     name: 'profile',
-    //     component: () => import('../pages/auth/ProfilePage.vue'),
-    //   },
-    //   {
-    //     path: '/auth/changepassword',
-    //     name: 'changepassword',
-    //     component: () => import('../pages/auth/ChangePasswordPage.vue'),
-    //   },
-    // ];
+    {
+      path: '/home',
+      name: 'Home',
+      component: Home,
+    },
+    {
+      path: '/policy',
+      name: 'Policy',
+      component: Policy,
+    },
+    {
+      path: '/calendar',
+      name: 'Calendar',
+      component: Calendar,
+    },
+    {
+      path: '/simulation',
+      name: 'Simulation',
+      component: Simulation,
+    },
+    {
+      path: '/study',
+      name: 'Study',
+      component: Study,
+    },
   ],
 });
 
