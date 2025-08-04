@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +18,7 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
 
     private final LoanRepaymentCalculator calculator;
     private final DebtService debtService;
+    private final LoanRepaymentCalculatorFacade loanFacade;
 
     @Override
     public LoanAnalyzeResponseDTO analyze(LoanAnalyzeRequestDTO request) {
@@ -37,8 +37,6 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate.plusMonths(request.getLoanPeriod());
 
-        System.out.println("startDate: " + startDate);
-        System.out.println("endDate: " + endDate);
         LoanDTO newLoan = LoanDTO.builder()
                 .principal(request.getLoanAmount())
                 .interestRate(request.getInterestRate())
@@ -169,41 +167,8 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
 
     private BigDecimal calculateTotalRepayment(List<LoanDTO> loans) {
         BigDecimal totalRepayment = BigDecimal.ZERO;
-        LocalDate now = LocalDate.now();
-
         for (LoanDTO loan : loans) {
-            LocalDate effectiveStart = loan.getStartDate().isAfter(now) ? loan.getStartDate() : now;
-            long months = ChronoUnit.MONTHS.between(effectiveStart.withDayOfMonth(1), loan.getEndDate().withDayOfMonth(1));
-            PaymentResultDTO result;
-            BigDecimal annualRate = loan.getInterestRate();
-            BigDecimal monthlyRate = annualRate.divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP);
-            switch (loan.getRepaymentType()) {
-                case EQUAL_PAYMENT:
-                    result = calculator.calculateEqualPayment(
-                            monthlyRate,
-                            months,
-                            loan.getPrincipal()
-                    );
-                    break;
-                case EQUAL_PRINCIPAL:
-                    result = calculator.calculateEqualPrincipal(
-                            monthlyRate,
-                            months,
-                            loan.getPrincipal()
-                    );
-                    break;
-                case LUMP_SUM:
-                    result = calculator.calculateLumpSumRepayment(
-                            loan.getPrincipal(),
-                            annualRate,
-                            months,
-                            loan.getStartDate()
-                    );
-                    break;
-
-                default:
-                    throw new IllegalStateException("Unexpected value: " + loan.getRepaymentType());
-            }
+            PaymentResultDTO result = loanFacade.calculateByType(Scenario.NO_PREPAYMENT, loan, BigDecimal.ZERO);
             totalRepayment = totalRepayment.add(result.getTotalPayment());
         }
         return totalRepayment;
