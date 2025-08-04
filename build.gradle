@@ -32,7 +32,7 @@ dependencies {
     //  HTTP 요청 및 JSON 파싱
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
-    
+
     // WebSocket 의존성 추가
     implementation 'org.springframework:spring-websocket:5.3.37'
     implementation 'org.springframework:spring-messaging:5.3.37'
@@ -94,7 +94,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.36'
 
     // Spring Data Redis (Spring 4.x와 호환)
-    implementation 'org.springframework.data:spring-data-redis:1.8.23.RELEASE'
+    implementation 'org.springframework.data:spring-data-redis:2.6.2'
     // Jedis 클라이언트
     implementation 'redis.clients:jedis:2.10.2'
     implementation 'io.lettuce:lettuce-core:6.3.1.RELEASE'
