@@ -148,7 +148,6 @@ public class PolicyServiceImpl implements PolicyService {
             });
         }
         List<PolicyDTO> policyList = fetchPoliciesFromApi(policyRequestDTO);
-        log.info("레디스 안쓰는데? : ", policyList.size());
         String json = objectMapper.writeValueAsString(policyList);
         redisTemplate.opsForValue().set(redisKey, json, 1, TimeUnit.HOURS);
 

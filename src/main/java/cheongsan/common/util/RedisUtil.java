@@ -20,11 +20,6 @@ public class RedisUtil {
         return redisTemplate.opsForValue().get(key);
     }
 
-//    public boolean delete(String key) {
-//        redisTemplate.delete(key);
-//        return Boolean.TRUE.equals(redisTemplate.delete(key));
-//    }
-
     public void deleteValues(String key) {
         redisTemplate.delete(key);
     }
@@ -60,11 +55,4 @@ public class RedisUtil {
         return count;
     }
 
-//    // prefix 기반 키 삭제
-//    public void deleteByPrefix(String prefix) {
-//        var keys = redisTemplate.keys(prefix + "*");
-//        if (keys != null && !keys.isEmpty()) {
-//            redisTemplate.delete(keys);
-//        }
-//    }
 }
