@@ -40,7 +40,7 @@ public class NotificationController {
     /**
      * 읽지 않은 알림 개수 조회
      */
-    @GetMapping("/unread/count")
+    @GetMapping("/unread")
     public ResponseEntity<Map<String, Integer>> getUnreadCount(
             @RequestParam(required = false, defaultValue = "1") Long userId) {
 
@@ -60,16 +60,16 @@ public class NotificationController {
     /**
      * 알림 읽음 처리
      */
-    @PatchMapping("/{notificationId}/read")
-    public ResponseEntity<Map<String, String>> markAsRead(
+    @PatchMapping("/readAll")
+    public ResponseEntity<Map<String, String>> markAllAsRead(
             @RequestParam(required = false, defaultValue = "1") Long userId) {
 
-        log.info("알림 읽음 처리 요청 - userId: {}", userId);
+        log.info("알림 일괄 읽음 처리 요청 - userId: {}", userId);
 
         try {
-            notificationService.markAsRead(userId);
+            notificationService.markAllAsRead(userId);
             Map<String, String> response = new HashMap<>();
-            response.put("message", "알림이 읽음 처리되었습니다.");
+            response.put("message", "알림이 모두 읽음 처리되었습니다.");
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             log.error("알림 읽음 처리 실패", e);

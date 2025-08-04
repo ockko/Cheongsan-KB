@@ -3,6 +3,7 @@ package cheongsan.domain.user.controller;
 import cheongsan.common.exception.ResponseDTO;
 import cheongsan.domain.debt.service.DebtService;
 import cheongsan.domain.user.dto.*;
+import cheongsan.domain.user.service.AuthService;
 import cheongsan.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,6 +20,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final DebtService debtService;
+    private final AuthService authService;
 
     @GetMapping("/profile")
     public ResponseEntity<?> getMyProfile() {
@@ -49,6 +51,20 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
         }
     }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequestDTO request) {
+        try {
+            authService.changePassword(request);
+            return ResponseEntity.ok(new ChangePasswordResponseDTO("비밀번호가 성공적으로 변경되었습니다."));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
+        }
+    }
+
 
     @DeleteMapping("/profile")
     public ResponseEntity<?> deleteMyAccount(
@@ -103,5 +119,30 @@ public class UserController {
                     .body("서버 내부 오류가 발생했습니다.");
 
         }
+    }
+
+    @PostMapping("/nickname")
+    public ResponseEntity<?> submitNickname(@RequestBody NicknameRequestDTO request) {
+        try {
+
+            String userId = "antehyun4880";
+            request.setUserId(userId);
+
+            NicknameResponseDTO response = authService.submitNickname(request);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
+        }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
+        // 실제로는 토큰을 블랙리스트(DB 또는 Redis)에 저장해서 무효화하는 과정이 필요함
+        // 고객의 토큰을 받아서 서버단에서 처리
+        // 예시: 블랙리스트에 추가하는 코드 (생략)
+        return ResponseEntity.ok().body("로그아웃 완료");
     }
 }

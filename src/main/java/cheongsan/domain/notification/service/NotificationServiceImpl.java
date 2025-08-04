@@ -1,10 +1,14 @@
 package cheongsan.domain.notification.service;
 
-import cheongsan.domain.notification.controller.NotificationWebSocketHandler;
+import cheongsan.domain.deposit.dto.WeeklyReportDTO;
+import cheongsan.domain.deposit.mapper.DepositMapper;
+import cheongsan.domain.notification.dto.CreateNotificationDTO;
 import cheongsan.domain.notification.dto.NotificationDTO;
 import cheongsan.domain.notification.entity.Notification;
 import cheongsan.domain.notification.mapper.NotificationMapper;
+import cheongsan.domain.notification.websocket.WebSocketManager;
 import cheongsan.domain.user.entity.User;
+import cheongsan.domain.user.mapper.UserMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -13,6 +17,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -24,12 +30,15 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Log4j2
-@Transactional(readOnly = true)
+@Transactional
 public class NotificationServiceImpl implements NotificationService {
     private final NotificationMapper notificationMapper;
-    private final NotificationWebSocketHandler webSocketHandler;
+    private final WebSocketManager webSocketManager;
+    private final UserMapper userMapper;
+    private final DepositMapper depositMapper;
 
     private final JavaMailSender mailSender;
+    private final SpringTemplateEngine templateEngine;
 
     @Override
     public List<NotificationDTO> getNotifications(Long userId) {
@@ -56,13 +65,13 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    public void markAsRead(Long userId) {
-        log.debug("알림 읽음 처리 시작: id={}", userId);
+    public void markAllAsRead(Long userId) {
+        log.debug("알림 읽음 처리 시작: userId={}", userId);
 
         try {
-            // 1. 알림을 읽음 처리
+            // 1. 모든 알림 읽음 처리
             notificationMapper.markNotificationAsRead(userId);
-            log.info("알림 읽음 처리 완료: id={}", userId);
+            log.info("알림 일괄 읽음 처리 완료: userId={}", userId);
 
             // 2. 읽지 않은 알림 개수 다시 계산
             int unreadCount = notificationMapper.countUnreadNotificationByUserId(userId);
@@ -73,7 +82,7 @@ public class NotificationServiceImpl implements NotificationService {
             payload.put("unreadCount", unreadCount);
 
             String json = new ObjectMapper().writeValueAsString(payload);
-            webSocketHandler.sendRawMessageToUser(userId, json);
+            webSocketManager.sendRawMessageToUser(userId, json);
 
             log.info("WebSocket으로 unreadCount 전송 완료: userId={}, count={}", userId, unreadCount);
 
@@ -83,9 +92,35 @@ public class NotificationServiceImpl implements NotificationService {
         }
     }
 
-    @Async
     @Override
     @Transactional
+    public Notification sendAlarm(Notification notification) {
+        try {
+            // 읽지 않은 알림 개수 조회
+            int unreadCount = notificationMapper.countUnreadNotificationByUserId(notification.getUserId());
+
+            // WebSocket 알림 준비
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("type", "notification");
+            payload.put("notificationType", notification.getType());
+            payload.put("contents", notification.getContents());
+            payload.put("unreadCount", unreadCount);
+
+            String json = new ObjectMapper().writeValueAsString(payload);
+
+            // Websocket 메시지 전송
+            webSocketManager.sendRawMessageToUser(notification.getUserId(), json);
+
+            log.info("WebSocket으로 알림 전송 완료");
+        } catch (Exception e) {
+            log.error("알림 WebSocket 전송 실패: ", e);
+        }
+
+        return notification;
+    }
+
+    @Async
+    @Override
     public void sendDailyLimitExceededEmail(User user, int dailyLimit, int totalSpent) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -94,15 +129,13 @@ public class NotificationServiceImpl implements NotificationService {
             helper.setTo(user.getEmail());
             helper.setSubject("[티끌모아 청산] 일일 소비 한도 초과 알림");
 
-            String htmlContent = String.format(
-                    "<h1>안녕하세요, %s님.</h1>" +
-                            "<p>오늘의 지출액이 설정하신 일일 한도를 초과하여 알려드립니다.</p>" +
-                            "<p><strong>일일 한도:</strong> %,d원</p>" +
-                            "<p><strong>오늘 지출액:</strong> %,d원</p>" +
-                            "<p>과도한 지출은 상환 목표 달성을 늦출 수 있습니다. 소비 습관을 다시 한번 점검해주세요.</p>",
-                    user.getNickname(), dailyLimit, totalSpent
-            );
-            helper.setText(htmlContent, true);
+            Context context = new Context();
+            context.setVariable("userNickname", user.getNickname());
+            context.setVariable("dailyLimit", dailyLimit);
+            context.setVariable("totalSpent", totalSpent);
+
+            String html = templateEngine.process("mail/limitExceeded", context);
+            helper.setText(html, true);
 
             mailSender.send(mimeMessage);
             log.info(user.getEmail() + "님에게 한도 초과 이메일 발송 성공");
@@ -110,5 +143,37 @@ public class NotificationServiceImpl implements NotificationService {
             log.error(user.getEmail() + "님에게 이메일 발송 실패", e);
             throw new RuntimeException(e);
         }
+    }
+
+    @Async
+    @Override
+    public void sendWeeklyReportEmail(User user, WeeklyReportDTO report) {
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+
+            helper.setTo(user.getEmail());
+            helper.setSubject(String.format("[티끌모아 청산] %s님, 지난주 지출 리포트가 도착했어요!", user.getNickname()));
+
+            Context context = new Context();
+            context.setVariable("userNickname", user.getNickname());
+            context.setVariable("report", report);
+
+            String html = templateEngine.process("mail/weeklyReport", context);
+            helper.setText(html, true);
+
+            mailSender.send(mimeMessage);
+            log.info(user.getEmail() + "님에게 주간 리포트 이메일 발송 성공");
+        } catch (MessagingException e) {
+            log.error(user.getEmail() + "님에게 주간 리포트 이메일 발송 실패", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Async
+    @Override
+    public void createNotification(CreateNotificationDTO dto) {
+        Notification notification = dto.toEntity();
+        notificationMapper.save(notification);
     }
 }

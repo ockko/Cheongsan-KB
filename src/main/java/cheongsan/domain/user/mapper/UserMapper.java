@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
@@ -43,4 +44,15 @@ public interface UserMapper {
                         @Param("nickname") String nickname);
 
 
+    // Connected ID 업데이트
+    void updateConnectedId(@Param("userId") Long userId,
+                           @Param("connectedId") String connectedId);
+
+    // Connected ID가 있는 모든 사용자 조회
+    List<User> findUsersWithConnectedId();
+
+    // Connected ID로 사용자 조회
+    User findByConnectedId(@Param("connectedId") String connectedId);
+
+    List<Long> getAllUserIds();
 }
