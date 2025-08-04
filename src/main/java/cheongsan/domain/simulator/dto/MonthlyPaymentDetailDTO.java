@@ -1,12 +1,12 @@
 package cheongsan.domain.simulator.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Getter
+@Data
 @AllArgsConstructor
 public class MonthlyPaymentDetailDTO {
     private long month; // 몇 번째 상환월인지 (1 ~ 상환 개월 수)
