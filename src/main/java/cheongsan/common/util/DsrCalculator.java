@@ -15,11 +15,18 @@ public class DsrCalculator {
     public static BigDecimal calculateDsr(
             List<LoanDTO> existingLoans,
             BigDecimal newMonthlyRepayment,
-            BigDecimal annualIncome
+            BigDecimal annualIncome,
+            LoanCalculator calculator
     ) {
         BigDecimal existingTotalMonthly = existingLoans.stream()
-                .map(LoanDTO::getMonthlyPayment)
-                .filter(payment -> payment != null)
+                .map(loan -> calculator.calculateMonthlyPayment(
+                        LoanCalculator.RepaymentMethod.valueOf(loan.getRepaymentType().name()),
+                        loan.getPrincipal(),
+                        loan.getPrincipal(),
+                        loan.getInterestRate(),
+                        loan.getStartDate(),
+                        loan.getEndDate()
+                ))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal totalMonthlyRepayment = existingTotalMonthly.add(newMonthlyRepayment);
@@ -31,8 +38,9 @@ public class DsrCalculator {
     // 기존 대출 없을 때 DSR 계산
     public static BigDecimal calculateDsr(
             BigDecimal monthlyRepayment,
-            BigDecimal annualIncome
+            BigDecimal annualIncome,
+            LoanCalculator calculator
     ) {
-        return calculateDsr(Collections.emptyList(), monthlyRepayment, annualIncome);
+        return calculateDsr(Collections.emptyList(), monthlyRepayment, annualIncome, calculator);
     }
 }
