@@ -1,96 +1,164 @@
 package cheongsan.domain.simulator.service.strategy;
 
-import cheongsan.domain.simulator.dto.LoanDTO;
-import cheongsan.domain.simulator.dto.RepaymentRequestDTO;
-import cheongsan.domain.simulator.dto.RepaymentResultDTO;
-import cheongsan.domain.simulator.dto.StrategyType;
+import cheongsan.domain.simulator.dto.*;
+import cheongsan.domain.simulator.service.LoanRepaymentCalculatorFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class TcsStrategy implements RepaymentStrategy {
 
-    private final List<String> priorityOrder = Arrays.asList("금융2", "기타", "금융1");
-
-    private int getInstitutionPriority(String type) {
-        return priorityOrder.indexOf(type);
-    }
+    private final LoanRepaymentCalculatorFacade calculatorFacade;
 
     @Override
-    public RepaymentResultDTO simulate(RepaymentRequestDTO request) {
-        List<LoanDTO> loans = new ArrayList<>(request.getLoans());
+    public RepaymentResponseDTO simulate(RepaymentRequestDTO request, List<LoanDTO> originalLoans) {
+        List<LoanDTO> sortedLoans = originalLoans.stream()
+                .sorted(
+                        Comparator.comparing((LoanDTO loan) -> !isPrivateLoan(loan))  // 사금융 우선
+                                .thenComparing(LoanDTO::getInterestRate, Comparator.reverseOrder()) // 고금리 우선
+                )
+                .collect(Collectors.toList());
 
-        // 우선순위 정렬
-        loans.sort(
-                Comparator.comparing((LoanDTO l) -> getInstitutionPriority(l.getInstitutionType()))
-                        .thenComparing(LoanDTO::getInterestRate, Comparator.reverseOrder())
-                        .thenComparing(LoanDTO::getPrincipal)
-                        .thenComparing(LoanDTO::getStartDate)
-        );
 
-        List<String> sortedLoanNames = loans.stream()
+        List<String> sortedLoanNames = sortedLoans.stream()
                 .map(LoanDTO::getLoanName)
                 .collect(Collectors.toList());
 
-        Map<Long, BigDecimal> remainingBalances = loans.stream()
-                .collect(Collectors.toMap(LoanDTO::getId, LoanDTO::getPrincipal));
+        originalLoans.forEach(loan -> System.out.println(" - " + loan.getLoanName()));
 
-        BigDecimal totalInterestPaid = BigDecimal.ZERO;
-        LocalDate currentMonth = LocalDate.now();
-        int monthsElapsed = 0;
+        BigDecimal monthlyAvailable = request.getMonthlyAvailableAmount();
+        BigDecimal totalPayment = BigDecimal.ZERO;
+        BigDecimal originalTotalPayment = BigDecimal.ZERO;
+        BigDecimal penaltyLoss = BigDecimal.ZERO;
 
-        while (remainingBalances.values().stream().anyMatch(b -> b.compareTo(BigDecimal.ZERO) > 0)) {
-            BigDecimal extra = Optional.ofNullable(request.getExtraPaymentAmount()).orElse(BigDecimal.ZERO);
+        List<PaymentResultDTO> paymentResults = sortedLoans.stream()
+                .map(calculatorFacade::calculateWithoutPrepayment)
+                .collect(Collectors.toList());
 
-            // 기본 monthlyPayment만큼 각 대출에서 차감
-            for (LoanDTO loan : loans) {
-                Long id = loan.getId();
-                BigDecimal principal = remainingBalances.get(id);
-                if (principal.compareTo(BigDecimal.ZERO) <= 0) continue;
+        originalTotalPayment = paymentResults.stream()
+                .map(PaymentResultDTO::getTotalPayment)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-                BigDecimal monthlyPayment = loan.getMonthlyPayment();
-                BigDecimal payment = monthlyPayment.min(principal);
-                BigDecimal monthlyRate = loan.getInterestRate()
-                        .divide(BigDecimal.valueOf(12 * 100), 10, RoundingMode.HALF_UP);
+        List<SimulatedLoanDTO> activeLoans = sortedLoans.stream()
+                .map(loan -> {
+                    LocalDate startDate = calculateNextPaymentDate(loan.getPaymentDate().getDayOfMonth(), LocalDate.now());
+                    return SimulatedLoanDTO.from(loan, startDate);
+                })
+                .collect(Collectors.toList());
 
-                BigDecimal interestPaid = principal.multiply(monthlyRate);
-                totalInterestPaid = totalInterestPaid.add(interestPaid);
 
-                remainingBalances.put(id, principal.subtract(payment));
-            }
+        int monthCount = 0;
+        int prepayIndex = 0;
 
-            // 추가 상환액이 있다면 가장 우선 대출 1건에 몰빵
-            if (extra.compareTo(BigDecimal.ZERO) > 0) {
-                for (LoanDTO loan : loans) {
-                    Long id = loan.getId();
-                    BigDecimal principal = remainingBalances.get(id);
-                    if (principal.compareTo(BigDecimal.ZERO) <= 0) continue;
+        while (activeLoans.stream().anyMatch(l -> !l.isFinished())) {
+            monthCount++;
+            BigDecimal available = monthlyAvailable;
 
-                    BigDecimal extraPayment = extra.min(principal);
-                    remainingBalances.put(id, principal.subtract(extraPayment));
-                    break; // 한 건에만 몰빵
+            for (int i = 0; i < activeLoans.size(); i++) {
+                SimulatedLoanDTO loan = activeLoans.get(i);
+
+                if (loan.isFinished()) continue;
+
+                boolean isPrepayTarget = (i == prepayIndex);
+
+                BigDecimal extraRepayment = BigDecimal.ZERO;
+                Scenario scenario = Scenario.NO_PREPAYMENT;
+
+                if (isPrepayTarget && available.compareTo(BigDecimal.ZERO) > 0) {
+                    extraRepayment = available.min(loan.getRemainingPrincipal());
+                    scenario = Scenario.WITH_PREPAYMENT;
+                }
+
+                LoanDTO loanForThisMonth = LoanDTO.builder()
+                        .id(loan.getBaseLoan().getId())
+                        .loanName(loan.getBaseLoan().getLoanName())
+                        .principal(loan.getRemainingPrincipal())  // 잔여 원금 반영
+                        .interestRate(loan.getBaseLoan().getInterestRate())
+                        .startDate(loan.getBaseLoan().getStartDate())
+                        .endDate(loan.getBaseLoan().getEndDate())
+                        .institutionType(loan.getBaseLoan().getInstitutionType())
+                        .repaymentType(loan.getBaseLoan().getRepaymentType())
+                        .prepaymentFeeRate(loan.getBaseLoan().getPrepaymentFeeRate())
+                        .paymentDate(loan.getBaseLoan().getPaymentDate())
+                        .build();
+
+
+                MonthlyPaymentDetailDTO payment = calculatorFacade.simulateMonthly(
+                        loanForThisMonth,
+                        loan.getCurrentDate(),
+                        extraRepayment,
+                        scenario
+                );
+                loan.applyMonthlyPayment(payment);
+                loan.incrementMonth();
+
+                if (isPrepayTarget) {
+                    available = available.subtract(extraRepayment);
+                    penaltyLoss = penaltyLoss.add(payment.getPrepaymentFee());
+                }
+                totalPayment = totalPayment.add(payment.getTotalPayment());
+
+                if (loan.isFinished()) {
+                    loan.setDebtFreeDate(payment.getPaymentDate());
+                    if (isPrepayTarget && prepayIndex + 1 < activeLoans.size()) {
+                        prepayIndex++;
+                    }
                 }
             }
-
-            currentMonth = currentMonth.plusMonths(1);
-            monthsElapsed++;
         }
 
-        return RepaymentResultDTO.builder()
+        Map<String, LocalDate> debtFreeDates = activeLoans.stream()
+                .collect(Collectors.toMap(
+                        loan -> loan.getBaseLoan().getLoanName(),
+                        SimulatedLoanDTO::getDebtFreeDate
+                ));
+
+
+        Map<String, List<MonthlyPaymentDetailDTO>> repaymentHistory = activeLoans.stream()
+                .collect(Collectors.toMap(
+                        l -> l.getBaseLoan().getLoanName(),
+                        SimulatedLoanDTO::getPaymentHistory
+                ));
+
+        return RepaymentResponseDTO.builder()
                 .strategyType(StrategyType.TCS_RECOMMEND)
-                .debtFreeDate(LocalDate.now().plusMonths(monthsElapsed))
-                .totalMonths(monthsElapsed)
-                .interestSaved(BigDecimal.ZERO)
+                .debtFreeDates(debtFreeDates)
+                .totalMonths(monthCount)
+                .totalPayment(totalPayment)
+                .originalPayment(originalTotalPayment)
+                .interestSaved(originalTotalPayment.subtract(totalPayment))
+                .totalPrepaymentFee(penaltyLoss)
                 .sortedLoanNames(sortedLoanNames)
+                .repaymentHistory(repaymentHistory)
                 .build();
     }
+
+    private boolean isPrivateLoan(LoanDTO loan) {
+        String type = loan.getInstitutionType();
+        return List.of("사금융", "카드론", "대부업", "P2P").stream()
+                .anyMatch(type::contains);  // 부분 문자열 검사
+    }
+
+    private LocalDate calculateNextPaymentDate(int paymentDay, LocalDate today) {
+        // 이번 달 상환일
+        LocalDate scheduledThisMonth = today.withDayOfMonth(Math.min(paymentDay, today.lengthOfMonth()));
+
+        // 오늘이 상환일을 지났으면 다음 달로
+        if (!today.isBefore(scheduledThisMonth)) {
+            LocalDate nextMonth = today.plusMonths(1);
+            return nextMonth.withDayOfMonth(Math.min(paymentDay, nextMonth.lengthOfMonth()));
+        }
+        return scheduledThisMonth;
+    }
+
 
     @Override
     public StrategyType getStrategyType() {
