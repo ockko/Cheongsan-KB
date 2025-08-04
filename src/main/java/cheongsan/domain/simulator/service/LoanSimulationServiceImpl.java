@@ -1,5 +1,7 @@
 package cheongsan.domain.simulator.service;
 
+import cheongsan.common.util.DsrCalculator;
+import cheongsan.common.util.LoanCalculator;
 import cheongsan.domain.debt.dto.DebtInfoResponseDTO;
 import cheongsan.domain.debt.service.DebtService;
 import cheongsan.domain.simulator.dto.*;
@@ -19,6 +21,9 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
     private final LoanRepaymentCalculator calculator;
     private final DebtService debtService;
     private final LoanRepaymentCalculatorFacade loanFacade;
+    private final LoanCalculator loanCalculator;
+
+    private static final BigDecimal DSR_LIMIT = new BigDecimal("0.4");
 
     @Override
     public LoanAnalyzeResponseDTO analyze(LoanAnalyzeRequestDTO request) {
@@ -43,9 +48,30 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
                 .startDate(startDate)
                 .endDate(endDate)
                 .repaymentType(request.getRepaymentType())
+                .paymentDate(startDate)
                 .build();
 
         // 2. 기존 대출 리스트 조회 및 변환 (DebtInfoResponseDTO -> LoanDTO)
+        BigDecimal monthlyRepayment = loanCalculator.calculateMonthlyPayment(
+                LoanCalculator.RepaymentMethod.EQUAL_PRINCIPAL_INTEREST,
+                request.getLoanAmount(),
+                request.getLoanAmount(),
+                request.getInterestRate(),
+                LocalDate.now(),
+                LocalDate.now().plusMonths(request.getLoanPeriod())
+        );
+
+
+        // 3. DSR 계산
+        BigDecimal dsr = DsrCalculator.calculateDsr(monthlyRepayment, request.getAnnualIncome(), loanCalculator);
+
+        // 4. DSR 한도 초과 시 예외
+        if (dsr.compareTo(DSR_LIMIT) > 0) {
+            throw new IllegalArgumentException("DSR" + dsr.multiply(BigDecimal.valueOf(100)).setScale(1, RoundingMode.HALF_UP)
+                    + "%가  허용 한도 40%를 초과합니다.");
+        }
+
+        // 5. 기존 대출 리스트 조회 및 반환
         List<DebtInfoResponseDTO> existings = debtService.getUserDebtList(userId);
         List<LoanDTO> existingLoans = existings.stream()
                 .map(debt -> LoanDTO.builder()
@@ -53,16 +79,17 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
                         .interestRate(debt.getInterestRate())
                         .startDate(debt.getLoanStartDate())
                         .endDate(debt.getLoanEndDate())
-                        .repaymentType(debt.getRepaymentType()) // 기본값, 필요 시 매핑 추가
+                        .repaymentType(debt.getRepaymentType())
+                        .paymentDate(debt.getLoanStartDate())
                         .build())
                 .toList();
 
-        // 3. 기존 메서드 호출해서 결과 얻기
+        // 6. 기존 메서드 호출해서 결과 얻기
         TotalComparisonResultDTO totalComparison = compareTotalRepaymentWithNewLoan(existingLoans, newLoan);
         InterestComparisonResultDTO interestComparison = compareInterestWithNewLoan(existingLoans, newLoan);
         DebtRatioComparisonResultDTO debtRatioComparison = compareDebtRatioWithNewLoan(existingLoans, newLoan, request.getAnnualIncome());
 
-        // 4. 응답 DTO에 담아 반환
+        // 7. 응답 DTO에 담아 반환
         return new LoanAnalyzeResponseDTO(
                 totalComparison,
                 interestComparison,
@@ -70,14 +97,12 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
         );
     }
 
-
     @Override
     public TotalComparisonResultDTO compareTotalRepaymentWithNewLoan(List<LoanDTO> existingLoans, LoanDTO newLoan) {
         if (newLoan == null) {
             throw new IllegalArgumentException("새 대출 정보(newLoan)는 null일 수 없습니다.");
         }
         BigDecimal existingTotal = calculateTotalRepayment(existingLoans);
-
 
         List<LoanDTO> loansWithNew = new ArrayList<>(existingLoans);
         loansWithNew.add(newLoan);
