@@ -3,5 +3,5 @@
 // 예: domain/HomePage에는 HomePage.vue에서 사용할 컴포넌트들을 보관합니다.
 </script>
 <template>
-  <div>임의의 섹션2입니다.</div>
+  <div>메인 홈 페이지입니다.</div>
 </template>
