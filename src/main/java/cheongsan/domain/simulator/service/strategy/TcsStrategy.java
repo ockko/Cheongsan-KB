@@ -32,8 +32,6 @@ public class TcsStrategy implements RepaymentStrategy {
                 .map(LoanDTO::getLoanName)
                 .collect(Collectors.toList());
 
-        originalLoans.forEach(loan -> System.out.println(" - " + loan.getLoanName()));
-
         BigDecimal monthlyAvailable = request.getMonthlyAvailableAmount();
         BigDecimal totalPayment = BigDecimal.ZERO;
         BigDecimal originalTotalPayment = BigDecimal.ZERO;

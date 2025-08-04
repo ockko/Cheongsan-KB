@@ -30,7 +30,7 @@ public class SmallAmountStrategy implements RepaymentStrategy {
                 .collect(Collectors.toList());
 
         BigDecimal monthlyAvailable = request.getMonthlyAvailableAmount();
-        LocalDate currentDate = LocalDate.now();
+
         BigDecimal totalPayment = BigDecimal.ZERO;
         BigDecimal originalTotalPayment = BigDecimal.ZERO;
         BigDecimal penaltyLoss = BigDecimal.ZERO;
