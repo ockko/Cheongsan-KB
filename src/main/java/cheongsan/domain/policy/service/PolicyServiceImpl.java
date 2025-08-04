@@ -5,9 +5,12 @@ import cheongsan.domain.policy.dto.PolicyDetailDTO;
 import cheongsan.domain.policy.dto.PolicyRequestDTO;
 import cheongsan.domain.user.dto.UserDTO;
 import cheongsan.domain.user.service.UserService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -21,6 +24,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -28,14 +32,14 @@ import java.util.List;
 public class PolicyServiceImpl implements PolicyService {
     private static final String POLICY_API_URL = "https://apis.data.go.kr/B554287/NationalWelfareInformationsV001/NationalWelfarelistV001";
     private final UserService userService;
+    private final RedisTemplate<String, String> redisTemplate;
+    private final ObjectMapper objectMapper;
 
     @Value("${policy.service-key}")
     private String SERVICE_KEY;
 
-
-    @Override
-    public List<PolicyDTO> getPolicyList(PolicyRequestDTO policyRequestDTO) throws Exception {
-
+    public List<PolicyDTO> fetchPoliciesFromApi(PolicyRequestDTO policyRequestDTO) throws Exception {
+        log.info("Fetching Policies from API");
         StringBuilder urlBuilder = new StringBuilder(POLICY_API_URL);
 
         urlBuilder.append("?serviceKey=").append(URLEncoder.encode(SERVICE_KEY, "UTF-8"));
@@ -130,6 +134,25 @@ public class PolicyServiceImpl implements PolicyService {
         }
 
         return policyList;
+    }
+
+
+    @Override
+    public List<PolicyDTO> getPolicyList(PolicyRequestDTO policyRequestDTO) throws Exception {
+        Long userId = 1L;
+        String redisKey = "policies:" + userId;
+        String cached = redisTemplate.opsForValue().get(redisKey);
+        if (cached != null) {
+            log.info("Redis hit: {}", redisKey);
+            return objectMapper.readValue(cached, new TypeReference<List<PolicyDTO>>() {
+            });
+        }
+        List<PolicyDTO> policyList = fetchPoliciesFromApi(policyRequestDTO);
+        String json = objectMapper.writeValueAsString(policyList);
+        redisTemplate.opsForValue().set(redisKey, json, 1, TimeUnit.HOURS);
+
+        return policyList;
+
 
     }
 
