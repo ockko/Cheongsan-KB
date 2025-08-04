@@ -47,11 +47,6 @@ class AuthControllerTest {
         }
 
         @Override
-        public void changePassword(ChangePasswordRequestDTO changePasswordRequestDTO) {
-
-        }
-
-        @Override
         public LogInResponseDTO login(LogInRequestDTO logInRequestDTO) {
             return null;
         }

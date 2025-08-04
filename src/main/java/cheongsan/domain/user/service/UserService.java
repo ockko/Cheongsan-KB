@@ -16,6 +16,8 @@ public interface UserService {
 
     UpdateMyProfileResponseDTO updateMyProfile(String userId, UpdateMyProfileRequestDTO updateMyProfileRequestDTO);
 
+    void changePassword(ChangePasswordRequestDTO changePasswordRequestDTO);
+
     void deleteAccount(String userId, DeleteAccountRequestDTO dto);
 
     List<UserDebtAccountResponseDTO> getUserDebtAccounts(Long userId);
