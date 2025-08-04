@@ -21,4 +21,6 @@ public interface UserService {
     void deleteAccount(String userId, DeleteAccountRequestDTO dto);
 
     List<UserDebtAccountResponseDTO> getUserDebtAccounts(Long userId);
+
+    void logout(String username);
 }

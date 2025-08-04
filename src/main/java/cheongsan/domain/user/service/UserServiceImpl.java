@@ -7,6 +7,8 @@ import cheongsan.domain.user.entity.User;
 import cheongsan.domain.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final DebtMapper debtMapper;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Transactional
     public void submitDiagnosisAnswerToUser(Long userId, Long workoutId) {
@@ -113,8 +116,11 @@ public class UserServiceImpl implements UserService {
         }
         log.info(userDebtAccountResponseDTOList.toString());
         return userDebtAccountResponseDTOList;
-
-
     }
 
+    @Override
+    public void logout(String userId) {
+        redisTemplate.delete("RT:" + userId);
+        SecurityContextHolder.clearContext();
+    }
 }

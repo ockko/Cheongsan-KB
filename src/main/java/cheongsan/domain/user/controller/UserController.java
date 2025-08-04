@@ -1,5 +1,6 @@
 package cheongsan.domain.user.controller;
 
+import cheongsan.common.constant.ResponseMessage;
 import cheongsan.common.exception.ResponseDTO;
 import cheongsan.domain.debt.service.DebtService;
 import cheongsan.domain.user.dto.*;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -139,10 +141,14 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
-        // 실제로는 토큰을 블랙리스트(DB 또는 Redis)에 저장해서 무효화하는 과정이 필요함
-        // 고객의 토큰을 받아서 서버단에서 처리
-        // 예시: 블랙리스트에 추가하는 코드 (생략)
-        return ResponseEntity.ok().body("로그아웃 완료");
+    public ResponseEntity<ResponseDTO> logout(Principal principal) {
+        if (principal == null) {
+            ResponseDTO response = new ResponseDTO(ResponseMessage.UNAUTHENTICATED_USER.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+        }
+        String userId = principal.getName();
+        userService.logout(userId);
+        ResponseDTO response = new ResponseDTO(ResponseMessage.UNAUTHENTICATED_USER.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
