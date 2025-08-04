@@ -1,5 +1,6 @@
 package cheongsan.common.security.config;
 
+import cheongsan.common.security.filter.JwtAuthenticationFilter;
 import cheongsan.common.security.filter.JwtUsernamePasswordAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -28,6 +29,7 @@ import org.springframework.web.filter.CorsFilter;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Autowired
     private JwtUsernamePasswordAuthenticationFilter jwtUsernamePasswordAuthenticationFilter;
@@ -64,6 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.addFilterBefore(encodingFilter(), CsrfFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, JwtUsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         http.httpBasic().disable()
