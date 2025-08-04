@@ -1,6 +1,7 @@
 package cheongsan.domain.simulator.controller;
 
 import cheongsan.common.util.LoanCalculator;
+import cheongsan.common.util.RepaymentTypeMapper;
 import cheongsan.domain.simulator.dto.*;
 import cheongsan.domain.simulator.service.LoanRecommendationService;
 import cheongsan.domain.simulator.service.LoanSimulationService;
@@ -26,27 +27,14 @@ public class LoanSimulatorController {
 
     @PostMapping("/loan")
     public ResponseEntity<LoanResultDTO> analyzeAndRecommend(@RequestBody LoanAnalyzeRequestDTO request) {
-
-        // 1. 영향 분석
+        // 1. 사용자 대출 분석
         LoanAnalyzeResponseDTO analysis = loanSimulationService.analyze(request);
 
-        // 2. 상환 방식 변환
-        LoanCalculator.RepaymentMethod repaymentMethod;
-        switch (request.getRepaymentType()) {
-            case EQUAL_PAYMENT:
-                repaymentMethod = LoanCalculator.RepaymentMethod.EQUAL_PRINCIPAL_INTEREST;
-                break;
-            case EQUAL_PRINCIPAL:
-                repaymentMethod = LoanCalculator.RepaymentMethod.EQUAL_PRINCIPAL;
-                break;
-            case LUMP_SUM:
-                repaymentMethod = LoanCalculator.RepaymentMethod.BULLET_REPAYMENT;
-                break;
-            default:
-                throw new IllegalArgumentException("알 수 없는 상환 방식: " + request.getRepaymentType());
-        }
+        // 2. 상환 방식 매핑
+        LoanCalculator.RepaymentMethod repaymentMethod =
+                RepaymentTypeMapper.toMethod(request.getRepaymentType());
 
-        // 3. 월 상환액 계산
+        // 3. 신규 대출 월 상환액 계산
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate.plusMonths(request.getLoanPeriod());
 
@@ -58,7 +46,6 @@ public class LoanSimulatorController {
                 startDate,
                 endDate
         );
-        System.out.println("📌 [월 상환액] 입력값 기준 계산된 월 상환액: " + monthlyRepayment);
 
         // 4. 추천 요청 DTO 구성
         LoanRecommendationRequestDTO recommendationInput = new LoanRecommendationRequestDTO();
@@ -68,10 +55,10 @@ public class LoanSimulatorController {
         recommendationInput.setTerm((int) request.getLoanPeriod());
         recommendationInput.setRepaymentType(request.getRepaymentType().name());
 
-        // 5. 추천 서비스 호출
+        // 5. 대출 상품 추천
         List<LoanProductDTO> recommendations = loanRecommendationService.recommendLoans(recommendationInput, monthlyRepayment);
 
-        // 6. 그래프 구성
+        // 6. 그래프 데이터 구성
         List<GraphDTO> repaymentGraph = List.of(
                 new GraphDTO("기존 상환액", analysis.getTotalComparison().getOriginalTotal()),
                 new GraphDTO("신규 포함 상환액", analysis.getTotalComparison().getNewLoanTotal())
@@ -85,7 +72,7 @@ public class LoanSimulatorController {
                 new GraphDTO("신규 부채비율", analysis.getDebtRatioComparison().getNewDebtRatio())
         );
 
-        // 7. 통합 결과 반환
+        // 7. 응답 반환
         LoanResultDTO result = new LoanResultDTO(
                 analysis.getTotalComparison(),
                 analysis.getInterestComparison(),
