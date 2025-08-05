@@ -1,0 +1,82 @@
+.dayCell {
+  min-height: 80px;
+  padding: 8px 6px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+}
+
+.otherMonth {
+  opacity: 0.5;
+}
+
+.today .dateNumber {
+  background: linear-gradient(
+    45deg,
+    #ff0000 0%,
+    /* 빨강 */ #ff8000 14%,
+    /* 주황 */ #ffff00 28%,
+    /* 노랑 */ #80ff00 42%,
+    /* 연두 */ #00ff80 57%,
+    /* 초록 */ #0080ff 71%,
+    /* 하늘 */ #8000ff 85%,
+    /* 남색 */ #ff00ff 100% /* 보라 */
+  );
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  margin-top: 63%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.dateNumber {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+  align-self: flex-start;
+}
+
+.transactions {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.amount {
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.income {
+  color: #2196f3;
+}
+
+.expense {
+  color: #f44336;
+}
+
+.loanTag {
+  background-color: #ff9800;
+  color: white;
+  font-size: 8px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 9px;
+  text-align: center;
+  margin-top: auto;
+  width: 42px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+}
