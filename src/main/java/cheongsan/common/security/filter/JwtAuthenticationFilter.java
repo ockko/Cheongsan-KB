@@ -3,7 +3,6 @@ package cheongsan.common.security.filter;
 import cheongsan.common.security.util.JwtProcessor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,7 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
 
     private Authentication getAuthentication(String token) {
-        String username = jwtProcessor.getUsername(token);
+        String username = jwtProcessor.getUserIdFromToken(token);
         UserDetails principal = userDetailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
     }

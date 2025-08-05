@@ -32,10 +32,10 @@ class JwtProcessorTest {
     }
 
     @Test
-    void getUsername() {
+    void getUserIdFromToken() {
         String token = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c2VyMCIsImlhdCI6MTc1NDAxNTA0OCwiZXhwIjoxNzU0MDE1MTY4fQ.IcHqm7YxR6skUT1LE0toYGrb8HJzS9s_DVpw3p2lm0hbj7pT2P1RxnK95-1-4Wux";
 
-        String username = jwtProcessor.getUsername(token);
+        String username = jwtProcessor.getUserIdFromToken(token);
         log.info(username);
         assertNotNull(username);
     }

@@ -14,4 +14,6 @@ public interface AuthService {
     LogInResponseDTO login(LogInRequestDTO logInRequestDTO);
 
     NicknameResponseDTO submitNickname(NicknameRequestDTO nicknameRequestDTO);
+
+    TokenRefreshResponseDTO reissueTokens(String refreshToken);
 }

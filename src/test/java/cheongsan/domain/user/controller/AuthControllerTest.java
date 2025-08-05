@@ -55,6 +55,11 @@ class AuthControllerTest {
         public NicknameResponseDTO submitNickname(NicknameRequestDTO nicknameRequestDTO) {
             return null;
         }
+
+        @Override
+        public TokenRefreshResponseDTO reissueTokens(String refreshToken) {
+            return null;
+        }
     }
 
     @BeforeEach

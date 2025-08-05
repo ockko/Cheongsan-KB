@@ -37,7 +37,7 @@ public class JwtProcessor {
                 .compact();
     }
 
-    public String getUsername(String token) {
+    public String getUserIdFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()

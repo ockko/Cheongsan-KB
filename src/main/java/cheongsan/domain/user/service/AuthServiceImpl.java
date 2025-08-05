@@ -1,6 +1,8 @@
 package cheongsan.domain.user.service;
 
 
+import cheongsan.common.constant.ResponseMessage;
+import cheongsan.common.security.util.JwtProcessor;
 import cheongsan.domain.codef.dto.ConnectedIdRequestDTO;
 import cheongsan.domain.codef.service.CodefService;
 import cheongsan.domain.user.dto.*;
@@ -8,13 +10,16 @@ import cheongsan.domain.user.entity.User;
 import cheongsan.domain.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -23,8 +28,12 @@ public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
     private final JavaMailSender mailSender;
     private final CodefService codefService;
+    private final JwtProcessor jwtProcessor;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    private static final long REFRESH_TOKEN_VALIDITY_SECONDS = 60 * 60 * 24 * 14;
 
     @Override
     public boolean checkDuplicate(String userId) {
@@ -153,5 +162,29 @@ public class AuthServiceImpl implements AuthService {
         return new NicknameResponseDTO("닉네임이 성공적으로 반영되었습니다.", nicknameRequestDTO.getNickname());
     }
 
+    @Override
+    public TokenRefreshResponseDTO reissueTokens(String refreshToken) {
+        if (!jwtProcessor.validateToken(refreshToken)) {
+            throw new BadCredentialsException(ResponseMessage.INVALID_REFRESH_TOKEN.getMessage());
+        }
 
+        String userId = jwtProcessor.getUserIdFromToken(refreshToken);
+
+        String storedRefreshToken = (String) redisTemplate.opsForValue().get("RT:" + userId);
+        if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
+            throw new BadCredentialsException(ResponseMessage.REFRESH_TOKEN_MISMATCH.getMessage());
+        }
+
+        String newAccessToken = jwtProcessor.generateAccessToken(userId);
+        String newRefreshToken = jwtProcessor.generateRefreshToken(userId);
+
+        redisTemplate.opsForValue().set(
+                "RT:" + userId,
+                newRefreshToken,
+                REFRESH_TOKEN_VALIDITY_SECONDS,
+                TimeUnit.SECONDS
+        );
+
+        return new TokenRefreshResponseDTO(newAccessToken, newRefreshToken);
+    }
 }
