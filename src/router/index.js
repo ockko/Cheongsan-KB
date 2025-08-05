@@ -5,6 +5,7 @@ import Policy from '@/pages/Policy.vue';
 import Calendar from '@/pages/Calendar.vue';
 import Simulation from '@/pages/Simulation.vue';
 import Study from '@/pages/Study.vue';
+import StudyDetail from '@/pages/StudyDetail.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,6 +38,11 @@ const router = createRouter({
       path: '/study',
       name: 'Study',
       component: Study,
+    },
+    {
+      path: '/study/detail',
+      name: 'StudyDetail',
+      component: StudyDetail,
     },
   ],
 });

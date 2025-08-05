@@ -303,9 +303,6 @@ function selectCategory(index) {
   font-weight: 900;
   font-size: 14px;
 }
-.study-page {
-  text-align: center;
-}
 .carousel {
   display: flex;
   align-items: center;
