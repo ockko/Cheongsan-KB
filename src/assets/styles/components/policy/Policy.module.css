@@ -1,0 +1,525 @@
+/* 전체 페이지 스타일 */
+.policyPage {
+  width: 100%;
+  background-color: #ffffff;
+  font-family: 'Pretendard', sans-serif;
+}
+
+/* 메인 콘텐츠 */
+.mainContent {
+  padding: 10px 20px 100px 20px;
+}
+
+/* 진단 섹션 컨테이너 */
+.diagnosisSectionContainer {
+  /* 추가 스타일이 필요한 경우 여기에 */
+}
+
+/* 정책 섹션 컨테이너 */
+.policySectionContainer {
+  /* 추가 스타일이 필요한 경우 여기에 */
+}
+
+/* 진단 결과 섹션 컨테이너 */
+.diagnosisResultContainer {
+  background-color: var(--color-main);
+  min-height: 200px;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  border-radius: 20px;
+}
+
+/* 상단 상태 텍스트 */
+.statusSection {
+  text-align: center;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.userStatusText {
+  font-family: var(--font-family);
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0 0 8px 0;
+  color: white;
+  line-height: 1.2;
+}
+
+.userName {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.userSuffix {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.diagnosisStageText {
+  font-family: var(--font-family);
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  color: white;
+  line-height: 1.2;
+}
+
+.diagnosisStage {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.stageSuffix {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* 카드 슬라이더 */
+.cardSlider {
+  display: flex;
+  background-color: #e0e6ee;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 20px;
+  width: 100%;
+  height: 220px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 중앙 카드 */
+.resultCard {
+  background-color: var(--color-main);
+  border-radius: 20px;
+  padding: 0 15px 0 15px;
+  width: 220px;
+  height: 180px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.resultCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* 사이드 카드 */
+.sideCard {
+  background-color: #2d6081;
+  border-radius: 20px;
+  width: 60px;
+  height: 180px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 1;
+  backdrop-filter: blur(10px);
+  margin: 0 -30px;
+}
+
+.sideCard:hover {
+  background-color: #2d6081;
+  opacity: 0.8;
+  transform: translateY(-2px);
+}
+
+/* 카드 헤더 */
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.institutionIcon {
+  width: 13px;
+  height: 13px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.institutionIcon img {
+  width: 13px;
+  height: 13px;
+  object-fit: contain;
+}
+
+.institutionName {
+  font-family: var(--font-family);
+  font-size: 13px;
+  color: white;
+  font-weight: 400;
+}
+
+.policyName {
+  font-family: var(--font-family);
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 15px 0;
+  line-height: 1;
+}
+
+/* 카드 내용 */
+.cardBody {
+  flex: 1;
+}
+
+.policyDescription {
+  font-family: var(--font-family);
+  font-size: 11.5px;
+  line-height: 1;
+  color: white;
+  margin: 0 0 -5px 0;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+}
+
+/* 카드 푸터 */
+.cardFooter {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.detailButton {
+  background: none;
+  border: none;
+  color: white;
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  margin-bottom: 10px;
+}
+
+.detailButton:hover {
+  opacity: 0.8;
+}
+
+/* 하단 버튼 */
+.bottomButton {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.rediagnosisButton {
+  background: none;
+  border: none;
+  color: white;
+  font-family: var(--font-family);
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.2s ease;
+}
+
+.rediagnosisButton:hover {
+  opacity: 0.8;
+}
+
+/* 검색 섹션 */
+.searchSection {
+  padding: 20px 0 0 0;
+  text-align: left;
+}
+
+.searchIcon {
+  margin-bottom: 20px;
+  margin-left: -10px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.searchIconImg {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.searchText {
+  /* 추가 스타일이 필요한 경우 여기에 */
+}
+
+.searchTitle {
+  font-size: 32px;
+  font-weight: 400;
+  color: #003e65;
+  line-height: 1;
+  margin: 0 0 15px 0;
+}
+
+.searchDescription {
+  font-size: 16px;
+  color: #003e65;
+  line-height: 1;
+  margin: 0 0 32px 0;
+}
+
+.searchButton {
+  background: none;
+  border: none;
+  border-bottom: 1px solid #003e65;
+  color: #003e65;
+  font-size: 16px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-family: inherit;
+  display: block;
+  margin: 0 auto 32px auto;
+}
+
+/* 카테고리 필터 */
+.categoryFilter {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 32px;
+  overflow-x: auto;
+  padding: 0 4px;
+}
+
+.categoryBtn {
+  background-color: #f9f9fd;
+  border: 1px solid #72787f;
+  border-radius: 30px;
+  padding: 8px 16px;
+  font-size: 10px;
+  font-weight: 900;
+  color: #72787f;
+  white-space: nowrap;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.categoryBtn.active {
+  background-color: #72787f;
+  color: #f9f9fd;
+}
+
+/* 제목 섹션 */
+.titleSection {
+  text-align: left;
+  margin-top: 16px;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #000000;
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+.titleLine {
+  width: 100%;
+  height: 2px;
+  background-color: #e1e2e6;
+  margin: 0;
+}
+
+/* 검색창 */
+.searchBox {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.searchInput {
+  width: 100%;
+  height: 64px;
+  background-color: #edeef2;
+  border: none;
+  border-radius: 8px;
+  padding: 0 60px 0 24px;
+  font-size: 13px;
+  color: #72787f;
+  font-family: inherit;
+}
+
+.searchInput::placeholder {
+  color: #72787f;
+  letter-spacing: 1.3px;
+}
+
+.searchButtonIcon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.searchIconContainer {
+  position: relative;
+  width: 45px;
+  height: 45px;
+}
+
+.searchIconInner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 정책 카드들 */
+.policyCards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.policyCard {
+  border: 2px solid #72787f;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.policyCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 정책 카드 헤더 */
+.policyCard .cardHeader {
+  padding: 16px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e1e2e6;
+  min-height: 80px; /* 최소 높이 보장 */
+  display: flex;
+  align-items: center;
+}
+
+.cardLogo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 60px; /* 최소 높이 보장 */
+}
+
+.logoImage {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  margin: 0; /* 마진 제거로 일관성 확보 */
+  overflow: hidden;
+  flex-shrink: 0; /* 크기 고정 */
+}
+
+.logoImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* 비율 유지하면서 컨테이너에 맞춤 */
+  border-radius: 4px;
+  max-width: 100%;
+  max-height: 100%;
+  padding: 4px; /* 로고 주변에 약간의 여백 */
+}
+
+.logoText {
+  font-size: 14px;
+  font-weight: 700;
+  color: #003e65;
+  font-family: 'Pretendard', sans-serif;
+  line-height: 1.2;
+  flex: 1;
+  min-width: 0; /* 텍스트 오버플로우 방지 */
+}
+
+.cardContent {
+  padding: 16px;
+}
+
+.cardTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+  margin: 0 0 0px 0;
+  letter-spacing: 1.6px;
+  line-height: 1;
+}
+
+.cardTags {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tag {
+  background-color: #f9f9fd;
+  border: 2px solid #003e65;
+  border-radius: 30px;
+  padding: 4px 12px;
+  font-size: 10px;
+  font-weight: 900;
+  color: #003e65;
+}
+
+.tag.offline {
+  background-color: #f9f9fd !important;
+  border: 1px solid #003e65 !important;
+  padding: 2px 8px !important;
+  font-size: 12px !important;
+  line-height: 2 !important;
+}
+
+.tag.online {
+  background-color: #e8f5e8 !important;
+  border: 1px solid #28a745 !important;
+  color: #28a745 !important;
+  padding: 2px 8px !important;
+  font-size: 12px !important;
+  line-height: 2 !important;
+}
+
+.date {
+  font-size: 12px;
+  font-weight: 900;
+  color: #72787f;
+  letter-spacing: 1px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 375px) {
+  .policyPage {
+    width: 100%;
+  }
+
+  .titleLine {
+    width: 100%;
+  }
+
+  .categoryFilter {
+    padding: 0;
+  }
+}
