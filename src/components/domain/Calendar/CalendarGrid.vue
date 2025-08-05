@@ -20,7 +20,13 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+  selectedDate: {
+    type: Number,
+    default: null,
+  },
 });
+
+const emit = defineEmits(['date-click']);
 
 // 요일 헤더
 const weekdays = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
@@ -51,6 +57,7 @@ const calendarDays = computed(() => {
       isToday,
       transactions: props.transactionData[day] || null,
       loan: props.loanData[day] || null,
+      isSelected: props.selectedDate === day && isCurrentMonth,
     });
 
     currentDate.setDate(currentDate.getDate() + 1);
@@ -58,6 +65,13 @@ const calendarDays = computed(() => {
 
   return days;
 });
+
+// 날짜 클릭 핸들러
+const handleDayClick = (day) => {
+  if (day.isCurrentMonth) {
+    emit('date-click', day.date);
+  }
+};
 </script>
 
 <template>
@@ -78,6 +92,7 @@ const calendarDays = computed(() => {
         v-for="(day, index) in calendarDays"
         :key="index"
         :day="day"
+        @click="handleDayClick(day)"
       />
     </div>
   </div>

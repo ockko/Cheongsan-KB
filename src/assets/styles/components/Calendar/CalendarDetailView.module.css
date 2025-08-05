@@ -1,0 +1,77 @@
+.detailContainer {
+  padding: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.loanSection {
+  margin-bottom: 20px;
+}
+
+.transactionSection {
+  margin-bottom: 20px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.loanAlert {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #fff4e8;
+  border: 1px solid var(--color-secondary);
+  border-radius: 8px;
+}
+
+.alertText {
+  font-size: 14px;
+  color: #000000;
+  font-weight: 500;
+}
+
+.transactionList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.transactionItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.transactionDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.transactionItem.income .transactionDot {
+  background-color: #2196f3;
+}
+
+.transactionItem.expense .transactionDot {
+  background-color: #f44336;
+}
+
+.transactionAmount {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.transactionItem.income .transactionAmount {
+  color: #2196f3;
+}
+
+.transactionItem.expense .transactionAmount {
+  color: #f44336;
+}

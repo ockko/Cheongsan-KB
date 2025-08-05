@@ -9,6 +9,8 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(['click']);
+
 // 금액 포맷팅 함수
 const formatAmount = (amount) => {
   if (amount >= 0) {
@@ -30,12 +32,26 @@ const dayClasses = computed(() => {
     classes.push(styles.today);
   }
 
+  if (props.day.isSelected) {
+    classes.push(styles.selected);
+  }
+
+  // 클릭 가능한 날짜인지 확인 (데이터가 있는 날짜)
+  if ((props.day.transactions || props.day.loan) && props.day.isCurrentMonth) {
+    classes.push(styles.clickable);
+  }
+
   return classes;
 });
+
+// 클릭 핸들러
+const handleClick = () => {
+  emit('click');
+};
 </script>
 
 <template>
-  <div :class="dayClasses">
+  <div :class="dayClasses" @click="handleClick">
     <div :class="styles.dateNumber">{{ day.date }}</div>
 
     <!-- 거래 내역 표시 -->
