@@ -9,9 +9,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface DepositService {
-    List<MonthlyTransactionDTO> getMonthlyTransactions(int year, int month);
+    List<MonthlyTransactionDTO> getMonthlyTransactions(Long userId, int year, int month);
 
-    List<DailyTransactionDTO> getDailyTransactions(LocalDate date);
+    List<DailyTransactionDTO> getDailyTransactions(Long userId, LocalDate date);
 
     BigDecimal calculateRegularMonthlyTransfer(Long userId, int year, int month);
 

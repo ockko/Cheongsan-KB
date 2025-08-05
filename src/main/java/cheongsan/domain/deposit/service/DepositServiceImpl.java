@@ -37,11 +37,8 @@ public class DepositServiceImpl implements DepositService {
     ));
 
     @Override
-    public List<MonthlyTransactionDTO> getMonthlyTransactions(int year, int month) {
-        log.info("월별 거래 내역 조회 - year: {}, month: {}", year, month);
-
-        // TODO: 현재는 하드코딩된 사용자 ID 사용, 실제로는 SecurityContext에서 가져와야 함
-        Long userId = 1L;
+    public List<MonthlyTransactionDTO> getMonthlyTransactions(Long userId, int year, int month) {
+        log.info("월별 거래 내역 조회 - userId: {}, year: {}, month: {}", userId, year, month);
 
         List<MonthlyTransactionDTO> monthlyTransactions = depositMapper.getMonthlyTransactions(userId, year, month);
 
@@ -50,11 +47,8 @@ public class DepositServiceImpl implements DepositService {
     }
 
     @Override
-    public List<DailyTransactionDTO> getDailyTransactions(LocalDate date) {
-        log.info("일별 거래 내역 조회 - date: {}", date);
-
-        // TODO: 현재는 하드코딩된 사용자 ID 사용, 실제로는 SecurityContext에서 가져와야 함
-        Long userId = 1L;
+    public List<DailyTransactionDTO> getDailyTransactions(Long userId, LocalDate date) {
+        log.info("일별 거래 내역 조회 - userId: {}, date: {}", userId, date);
 
         List<Transaction> transactions = depositMapper.getDailyTransactions(userId, date);
 
