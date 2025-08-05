@@ -148,7 +148,7 @@ public class UserController {
         }
         String userId = principal.getName();
         userService.logout(userId);
-        ResponseDTO response = new ResponseDTO(ResponseMessage.UNAUTHENTICATED_USER.getMessage());
+        ResponseDTO response = new ResponseDTO(ResponseMessage.LOGOUT_SUCCESS.getMessage());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
