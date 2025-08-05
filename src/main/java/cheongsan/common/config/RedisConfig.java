@@ -20,6 +20,15 @@ public class RedisConfig {
     private String redisPassword;
 
     @Bean
+    public RedisTemplate<String, Object> redisTemplateForToken() {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        return redisTemplate;
+    }
+
+    @Bean
     public RedisTemplate<String, RepaymentResponseDTO> repaymentStrategyRedisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, RepaymentResponseDTO> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);

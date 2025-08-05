@@ -5,11 +5,12 @@ import cheongsan.domain.debt.mapper.DebtMapper;
 import cheongsan.domain.user.dto.*;
 import cheongsan.domain.user.entity.User;
 import cheongsan.domain.user.mapper.UserMapper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,13 +18,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 @Log4j2
 public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
     private final DebtMapper debtMapper;
     private final RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    public UserServiceImpl(
+            UserMapper userMapper,
+            PasswordEncoder passwordEncoder,
+            DebtMapper debtMapper,
+            @Qualifier("redisTemplateForToken") RedisTemplate<String, Object> redisTemplate
+    ) {
+        this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
+        this.debtMapper = debtMapper;
+        this.redisTemplate = redisTemplate;
+    }
 
     @Transactional
     public void submitDiagnosisAnswerToUser(Long userId, Long workoutId) {
