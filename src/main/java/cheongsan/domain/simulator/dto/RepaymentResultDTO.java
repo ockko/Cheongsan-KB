@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -13,5 +12,5 @@ public class RepaymentResultDTO {
     private BigDecimal existingRepaymentAmount;
     private BigDecimal additionalRepaymentAmount;
     private BigDecimal totalRepaymentAmount;
-    private List<RepaymentResponseDTO> repayments = new ArrayList<>();
+    private List<RepaymentResponseDTO> repayments;
 }
