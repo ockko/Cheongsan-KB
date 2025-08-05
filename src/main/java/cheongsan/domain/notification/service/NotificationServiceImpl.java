@@ -1,14 +1,12 @@
 package cheongsan.domain.notification.service;
 
 import cheongsan.domain.deposit.dto.WeeklyReportDTO;
-import cheongsan.domain.deposit.mapper.DepositMapper;
 import cheongsan.domain.notification.dto.CreateNotificationDTO;
 import cheongsan.domain.notification.dto.NotificationDTO;
 import cheongsan.domain.notification.entity.Notification;
 import cheongsan.domain.notification.mapper.NotificationMapper;
 import cheongsan.domain.notification.websocket.WebSocketManager;
 import cheongsan.domain.user.entity.User;
-import cheongsan.domain.user.mapper.UserMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -34,8 +32,6 @@ import java.util.stream.Collectors;
 public class NotificationServiceImpl implements NotificationService {
     private final NotificationMapper notificationMapper;
     private final WebSocketManager webSocketManager;
-    private final UserMapper userMapper;
-    private final DepositMapper depositMapper;
 
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;

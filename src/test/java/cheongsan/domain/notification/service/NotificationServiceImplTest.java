@@ -98,7 +98,7 @@ class NotificationServiceImplTest {
 
         notificationService.createNotification(dto);
 
-        List<Notification> notis = notificationMapper.findByUserId(1L);
-        System.out.println(notis.size());
+//        List<Notification> notis = notificationMapper.findByUserId(1L);
+//        System.out.println(notis.size());
     }
 }
