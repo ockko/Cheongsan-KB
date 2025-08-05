@@ -1,13 +1,13 @@
 package cheongsan.domain.simulator.controller;
 
-import cheongsan.domain.simulator.dto.RepaymentRequestDTO;
-import cheongsan.domain.simulator.dto.RepaymentResponseDTO;
-import cheongsan.domain.simulator.dto.StrategyType;
+import cheongsan.domain.simulator.dto.*;
 import cheongsan.domain.simulator.service.RepaymentSimulationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -25,7 +25,7 @@ public class RepaymentSimulationController {
     }
 
     @GetMapping("/result")
-    public ResponseEntity<List<RepaymentResponseDTO>> showSimulationMain(@RequestParam("userId") Long userId) {
+    public ResponseEntity<RepaymentResultDTO> showSimulationMain(@RequestParam("userId") Long userId, @RequestParam("monthlyAvailableAmount") BigDecimal monthlyAvailable) {
         List<RepaymentResponseDTO> strategies = List.of(
                 simulationService.getStrategy(userId, StrategyType.TCS_RECOMMEND),
                 simulationService.getStrategy(userId, StrategyType.HIGH_INTEREST_FIRST),
@@ -33,8 +33,27 @@ public class RepaymentSimulationController {
                 simulationService.getStrategy(userId, StrategyType.OLDEST_FIRST)
         );
 
-        return ResponseEntity.ok(strategies);
+        RepaymentResponseDTO tcs = simulationService.getStrategy(userId, StrategyType.TCS_RECOMMEND);
+        BigDecimal existingRepaymentAmount = BigDecimal.ZERO;
+        BigDecimal totalRepaymentAmount = BigDecimal.ZERO;
+
+        LocalDate now = LocalDate.now();
+        for (List<MonthlyPaymentDetailDTO> payments : tcs.getRepaymentHistory().values()) {
+            for (MonthlyPaymentDetailDTO payment : payments) {
+                LocalDate paymentDate = payment.getPaymentDate();
+                if (paymentDate != null
+                        && paymentDate.getYear() == now.getYear()
+                        && paymentDate.getMonth() == now.getMonth()) {
+                    existingRepaymentAmount = existingRepaymentAmount.add(payment.getPrincipal()).add(payment.getInterest());
+                }
+            }
+        }
+        totalRepaymentAmount = totalRepaymentAmount.add(existingRepaymentAmount).add(monthlyAvailable);
+        RepaymentResultDTO result = new RepaymentResultDTO(existingRepaymentAmount, monthlyAvailable, totalRepaymentAmount, strategies);
+
+        return ResponseEntity.ok(result);
     }
+
 
     @GetMapping("/detail")
     public ResponseEntity<RepaymentResponseDTO> showStrategyDetail(@RequestParam("strategyType") StrategyType strategyType,
