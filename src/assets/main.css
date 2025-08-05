@@ -1,6 +1,6 @@
 /* CSS 변수 및 타이포그래피 임포트 */
-@import './styles/typography.css';
-@import './styles/variables.css';
+@import './styles/common/typography.css';
+@import './styles/common/variables.css';
 
 /* 모든 여백 제거 */
 body,

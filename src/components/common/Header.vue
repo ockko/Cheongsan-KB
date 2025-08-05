@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
+import styles from '@/assets/styles/components/Header.module.css';
 
 const route = useRoute();
 
@@ -21,93 +22,42 @@ const headerTitle = computed(() => {
 </script>
 
 <template>
-  <header class="header">
+  <header :class="styles.header">
     <!-- 좌측: 로고와 현재 페이지 타이틀 -->
-    <div class="header-left">
+    <div :class="styles.headerLeft">
       <img
         src="/images/logo-blue.png"
         alt="티끌모아 청산 로고"
-        class="header-logo"
+        :class="styles.headerLogo"
       />
-      <span class="header-title text-bold">{{ headerTitle }}</span>
+      <span :class="[styles.headerTitle, 'text-bold']">{{ headerTitle }}</span>
     </div>
 
     <!-- 우측: 아이콘들 -->
-    <div class="header-right">
-      <button class="header-icon-btn" type="button">
+    <div :class="styles.headerRight">
+      <button :class="styles.headerIconBtn" type="button">
         <img
           src="/images/refresh-icon-blue.png"
           alt="새로고침"
-          class="header-icon"
+          :class="styles.headerIcon"
         />
       </button>
 
-      <button class="header-icon-btn" type="button">
+      <button :class="styles.headerIconBtn" type="button">
         <img
           src="/images/notification-icon-blue.png"
           alt="알림"
-          class="header-icon"
+          :class="styles.headerIcon"
         />
       </button>
 
-      <button class="header-icon-btn" type="button">
+      <button :class="styles.headerIconBtn" type="button">
         <img
           src="/images/user-icon-blue.png"
           alt="사용자"
-          class="header-icon"
+          :class="styles.headerIcon"
         />
       </button>
     </div>
   </header>
 </template>
-
-<style scoped>
-.header {
-  width: 343px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 16px 16px 12px 16px;
-  box-sizing: border-box;
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.header-logo {
-  width: 45.31px;
-  height: 45.31px;
-  object-fit: contain;
-}
-
-.header-title {
-  color: var(--color-main);
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.header-icon-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.header-icon {
-  width: 30px;
-  height: 30px;
-  object-fit: contain;
-}
-</style>

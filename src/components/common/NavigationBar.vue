@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import styles from '@/assets/styles/components/NavigationBar.module.css';
 
 const route = useRoute();
 const router = useRouter();
@@ -52,75 +53,22 @@ const navigateTo = (route) => {
 </script>
 
 <template>
-  <nav class="navigation-bar">
+  <nav :class="styles.navigationBar">
     <button
       v-for="item in navItems"
       :key="item.name"
-      class="nav-item"
-      :class="{ 'nav-item--active': isActive(item.route) }"
+      :class="[
+        styles.navItem,
+        { [styles.navItemActive]: isActive(item.route) },
+      ]"
       @click="navigateTo(item.route)"
     >
       <img
         :src="`/images/${getIcon(item)}`"
         :alt="item.name"
-        class="nav-icon"
+        :class="styles.navIcon"
       />
-      <span class="nav-label">{{ item.name }}</span>
+      <span :class="styles.navLabel">{{ item.name }}</span>
     </button>
   </nav>
 </template>
-
-<style scoped>
-.navigation-bar {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 375px;
-  height: 60px;
-  background-color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 8px 16px;
-  box-sizing: border-box;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  box-shadow: 0 -4px 16px rgba(0, 62, 101, 0.1);
-  z-index: 1000;
-}
-
-.nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 8px 4px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  flex: 1;
-  max-width: 60px;
-}
-
-.nav-icon {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-}
-
-.nav-label {
-  font-family: var(--font-family);
-  font-size: 10px;
-  font-weight: 400;
-  color: var(--color-gray0);
-  text-align: center;
-}
-
-.nav-item--active .nav-label {
-  color: var(--color-main);
-  font-weight: 500;
-}
-</style>

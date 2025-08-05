@@ -1,0 +1,52 @@
+.navigationBar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 375px;
+  height: 60px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 8px 16px;
+  box-sizing: border-box;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  box-shadow: 0 -4px 16px rgba(0, 62, 101, 0.1);
+  z-index: 1000;
+}
+
+.navItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 4px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  flex: 1;
+  max-width: 60px;
+}
+
+.navIcon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.navLabel {
+  font-family: var(--font-family);
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--color-gray0);
+  text-align: center;
+}
+
+.navItemActive .navLabel {
+  color: var(--color-main);
+  font-weight: 500;
+}
