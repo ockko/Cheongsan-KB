@@ -1,6 +1,5 @@
 package cheongsan.domain.simulator.service;
 
-import cheongsan.common.util.DsrCalculator;
 import cheongsan.common.util.LoanCalculator;
 import cheongsan.common.util.RepaymentTypeMapper;
 import cheongsan.domain.debt.dto.DebtInfoResponseDTO;
@@ -29,7 +28,7 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
     @Override
     public LoanAnalyzeResponseDTO analyze(LoanAnalyzeRequestDTO request) {
         Long userId = 1L; // TODO: 로그인 연동 후 사용자 id 교체
-        
+
         if (request == null) {
             throw new IllegalArgumentException("분석 요청(request)은 null일 수 없습니다.");
         }

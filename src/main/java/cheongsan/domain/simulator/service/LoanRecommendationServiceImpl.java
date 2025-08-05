@@ -1,6 +1,5 @@
 package cheongsan.domain.simulator.service;
 
-import cheongsan.common.util.DsrCalculator;
 import cheongsan.common.util.LoanCalculator;
 import cheongsan.domain.simulator.dto.LoanProductDTO;
 import cheongsan.domain.simulator.dto.LoanRecommendationRequestDTO;

@@ -1,5 +1,7 @@
-package cheongsan.common.util;
+package cheongsan.domain.simulator.service;
 
+import cheongsan.common.util.LoanCalculator;
+import cheongsan.common.util.RepaymentTypeMapper;
 import cheongsan.domain.simulator.dto.LoanDTO;
 import org.springframework.stereotype.Component;
 
@@ -29,15 +31,7 @@ public class DsrCalculator {
                             loan.getStartDate(),
                             loan.getEndDate()
                     );
-
-                    System.out.println("=== DSR 계산 대상 대출 ===");
-                    System.out.println("▶ 상환 방식: " + method);
-                    System.out.println("▶ 원금: " + loan.getPrincipal());
-                    System.out.println("▶ 이자율: " + loan.getInterestRate());
-                    System.out.println("▶ 시작일: " + loan.getStartDate());
-                    System.out.println("▶ 종료일: " + loan.getEndDate());
-                    System.out.println("▶ 월 상환액: " + monthly);
-
+                    
                     return monthly;
                 })
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
