@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
     private final TransactionMapper transactionMapper;
-    private final NotificationService notificationService;
     private final LimitCheckService limitCheckService;
 
     @Transactional
