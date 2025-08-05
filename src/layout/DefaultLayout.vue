@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import Header from '@/components/common/Header.vue';
 import NavigationBar from '@/components/common/NavigationBar.vue';
+import styles from '@/assets/styles/layout/DefaultLayout.module.css';
 
 const route = useRoute();
 
@@ -17,51 +18,31 @@ const showNavigation = computed(() => {
   const mainPages = ['/home', '/policy', '/calendar', '/simulation', '/study'];
   return mainPages.includes(route.path);
 });
+
+// 동적 클래스 계산
+const mainContentClass = computed(() => {
+  const classes = [styles.mainContent];
+
+  if (showHeader.value && showNavigation.value) {
+    classes.push(styles.withHeaderAndNavigation);
+  } else if (showHeader.value) {
+    classes.push(styles.withHeader);
+  } else if (showNavigation.value) {
+    classes.push(styles.withNavigation);
+  }
+
+  return classes;
+});
 </script>
 
 <template>
-  <div class="layout">
+  <div :class="styles.layout">
     <Header v-if="showHeader" />
 
-    <main
-      class="main-content"
-      :class="{
-        'with-header': showHeader,
-        'with-navigation': showNavigation,
-      }"
-    >
+    <main :class="mainContentClass">
       <slot></slot>
     </main>
 
     <NavigationBar v-if="showNavigation" />
   </div>
 </template>
-
-<style scoped>
-.layout {
-  width: 375px;
-  min-height: 100vh;
-  margin: 0 auto;
-  position: relative;
-  background-color: #fff;
-}
-
-.main-content {
-  padding: 16px;
-  box-sizing: border-box;
-  min-height: 100vh;
-}
-
-.main-content.with-header {
-  padding-top: 76px; /* 헤더 높이 + 여백 */
-}
-
-.main-content.with-navigation {
-  padding-bottom: 96px; /* 네비게이션 바 높이 + 여백 */
-}
-
-.main-content.with-header.with-navigation {
-  padding-top: 76px;
-  padding-bottom: 96px;
-}
-</style>
