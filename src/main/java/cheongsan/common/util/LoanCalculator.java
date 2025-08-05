@@ -88,13 +88,19 @@ public class LoanCalculator {
         return monthlyPrincipalPayment.add(monthlyInterest);
     }
 
-    // 만기일시상환
+    // 만기일시상환 (DSR 계산용: 원금 10년 분할 가정)
     private BigDecimal calculateBulletRepayment(BigDecimal principal, BigDecimal interestRate) {
         // 연이율을 월이율로 변환
         BigDecimal monthlyRate = interestRate.divide(new BigDecimal("100"), 10, RoundingMode.HALF_UP)
                 .divide(new BigDecimal("12"), 10, RoundingMode.HALF_UP);
 
-        // 이번 달에 내야 할 이자
-        return principal.multiply(monthlyRate).setScale(2, RoundingMode.HALF_UP);
+        // 원금은 10년(120개월)로 나눔
+        BigDecimal monthlyPrincipal = principal.divide(new BigDecimal("120"), 2, RoundingMode.HALF_UP);
+
+        // 월 이자
+        BigDecimal monthlyInterest = principal.multiply(monthlyRate).setScale(2, RoundingMode.HALF_UP);
+
+        // 총 월 상환액 = 원금분할 + 월 이자
+        return monthlyPrincipal.add(monthlyInterest);
     }
 }

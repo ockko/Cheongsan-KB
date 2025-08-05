@@ -17,5 +17,4 @@ public class LoanAnalyzeRequestDTO {
     private BigDecimal annualIncome;
     private long loanPeriod;
     private RepaymentType repaymentType;
-    private BigDecimal monthlyRepayment;
 }
