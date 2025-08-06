@@ -81,7 +81,7 @@
 .categoryFilter {
   display: flex;
   gap: 8px;
-  margin-bottom: 32px;
+  margin-bottom: 16px;
   overflow-x: auto;
   padding: 0 4px;
 }
@@ -116,6 +116,7 @@
   border-radius: 20px;
   overflow: hidden;
   background-color: #ffffff;
+  height: 160px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -127,10 +128,10 @@
 
 /* 정책 카드 헤더 */
 .policyCard .cardHeader {
-  padding: 16px;
+  padding: 10px;
   background-color: #ffffff;
   border-bottom: 1px solid #e1e2e6;
-  min-height: 80px; /* 최소 높이 보장 */
+  height: 50px; /* 최소 높이 보장 */
   display: flex;
   align-items: center;
 }
@@ -175,56 +176,69 @@
 }
 
 .cardContent {
-  padding: 16px;
+  padding: 8px;
 }
 
-.cardTitle {
-  font-size: 14px;
-  font-weight: 500;
-  color: #000000;
-  margin: 0 0 0px 0;
-  letter-spacing: 1.6px;
-  line-height: 1;
-}
-
-.cardTags {
+.cardDetailHeader {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  min-height: 24px;
+  padding: 5px 0;
+  margin-bottom: 4px;
 }
 
-.tag {
-  background-color: #f9f9fd;
-  border: 2px solid #003e65;
-  border-radius: 30px;
-  padding: 4px 12px;
-  font-size: 10px;
-  font-weight: 900;
-  color: #003e65;
-}
-
-.tag.offline {
-  background-color: #f9f9fd !important;
-  border: 1px solid #003e65 !important;
-  padding: 2px 8px !important;
-  font-size: 12px !important;
-  line-height: 2 !important;
-}
-
-.tag.online {
-  background-color: #e8f5e8 !important;
-  border: 1px solid #28a745 !important;
-  color: #28a745 !important;
-  padding: 2px 8px !important;
-  font-size: 12px !important;
-  line-height: 2 !important;
-}
-
-.date {
+.supportCycle {
   font-size: 12px;
-  font-weight: 900;
-  color: #72787f;
+  font-weight: 400;
+  color: #003e65;
+  background-color: #e8f4fd;
+  padding: 1px 4px;
+  border-radius: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 45px;
+  text-align: center;
+  line-height: 1.2;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cardTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: #000000;
+  margin: 0;
   letter-spacing: 1px;
+  line-height: 1.2;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+/* 정책 요약 */
+.cardSummary {
+  font-size: 12px;
+  color: #72787f;
+  margin: 4px 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  overflow: hidden;
+}
+
+/* 로딩 및 빈 상태 메시지 */
+.loadingMessage,
+.noPoliciesMessage {
+  text-align: center;
+  padding: 40px 20px;
+  color: #72787f;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 /* 반응형 디자인 */

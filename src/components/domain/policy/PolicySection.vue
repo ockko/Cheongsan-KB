@@ -1,15 +1,44 @@
 <script setup>
 import styles from '@/assets/styles/components/policy/PolicySection.module.css';
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import PolicyDetailModal from './PolicyDetailModal.vue';
+import { getCustomPolicies } from '@/api/policy.js';
+import { useAuthStore } from '@/stores/auth';
+import { getAccessToken } from '@/config/tokens.js';
 
 const router = useRouter();
+const authStore = useAuthStore();
 
 // 모달 상태 관리
 const isModalVisible = ref(false);
 const selectedPolicyData = ref({});
 const isLoading = ref(false);
+
+// 정책 데이터 상태 관리
+const policies = ref([]);
+const isPoliciesLoading = ref(false);
+const searchKeyword = ref('');
+
+// 맞춤 지원 정책 데이터 로드
+const loadCustomPolicies = async () => {
+  try {
+    isPoliciesLoading.value = true;
+
+    // 설정 파일에서 토큰 가져오기
+    const accessToken = getAccessToken();
+
+    const data = await getCustomPolicies(accessToken);
+    policies.value = data;
+    console.log('맞춤 지원 정책 데이터 로드 완료:', data);
+  } catch (error) {
+    console.error('맞춤 지원 정책 데이터 로드 실패:', error);
+    // 에러 발생 시 빈 배열로 설정
+    policies.value = [];
+  } finally {
+    isPoliciesLoading.value = false;
+  }
+};
 
 // 정책 상세 정보 조회 및 모달 열기
 const openPolicyDetail = async (policyId) => {
@@ -143,6 +172,51 @@ const selectCategory = (categoryId) => {
   // 여기에 카테고리별 필터링 로직을 추가할 수 있습니다
   console.log('선택된 카테고리:', categoryId);
 };
+
+// 필터링된 정책 목록 계산
+const filteredPolicies = computed(() => {
+  let filtered = policies.value;
+
+  // 카테고리 필터링
+  if (activeCategory.value !== '전체') {
+    filtered = filtered.filter(
+      (policy) =>
+        policy.tagList && policy.tagList.includes(activeCategory.value)
+    );
+  }
+
+  // 검색어 필터링
+  if (searchKeyword.value.trim()) {
+    const keyword = searchKeyword.value.toLowerCase();
+    filtered = filtered.filter(
+      (policy) =>
+        policy.serviceName.toLowerCase().includes(keyword) ||
+        policy.summary.toLowerCase().includes(keyword) ||
+        policy.jurMnofNm.toLowerCase().includes(keyword)
+    );
+  }
+
+  return filtered;
+});
+
+// 태그별 CSS 클래스 결정
+const getTagClass = (tag) => {
+  const tagClassMap = {
+    주거: styles.housing,
+    다자녀: styles.multiChild,
+    장애인: styles.disabled,
+    저소득: styles.lowIncome,
+    '한부모·조손': styles.singleParent,
+    '보호·돌봄': styles.care,
+    생활지원: styles.lifeSupport,
+  };
+  return tagClassMap[tag] || styles.default;
+};
+
+// 컴포넌트 마운트 시 정책 데이터 로드
+onMounted(() => {
+  loadCustomPolicies();
+});
 </script>
 
 <template>
@@ -155,6 +229,7 @@ const selectCategory = (categoryId) => {
     <!-- 검색창 -->
     <div :class="styles.searchBox">
       <input
+        v-model="searchKeyword"
         type="text"
         placeholder="원하시는 키워드로 정책을 찾아보세요."
         :class="styles.searchInput"
@@ -207,159 +282,44 @@ const selectCategory = (categoryId) => {
 
     <!-- 정책 카드들 -->
     <div :class="styles.policyCards">
-      <div :class="styles.policyCard" @click="openPolicyDetail('WLF00000917')">
-        <div :class="styles.cardHeader">
-          <div :class="styles.cardLogo">
-            <div :class="styles.logoImage">
-              <img
-                :src="getMinisterLogo('서민금융진흥원')"
-                :alt="'서민금융진흥원'"
-                @error="(e) => (e.target.style.display = 'none')"
-              />
-            </div>
-            <span :class="styles.logoText">서민금융진흥원</span>
-          </div>
-        </div>
-        <div :class="styles.cardContent">
-          <h3 :class="styles.cardTitle">[오프라인/모집중] 청년도약계좌</h3>
-          <div :class="styles.cardTags">
-            <span :class="[styles.tag, styles.offline]">오프라인</span>
-            <span :class="styles.date">2025년 7월 17일(금)</span>
-          </div>
-        </div>
+      <!-- 로딩 상태 -->
+      <div v-if="isPoliciesLoading" :class="styles.loadingMessage">
+        정책 정보를 불러오는 중입니다...
       </div>
 
-      <div :class="styles.policyCard" @click="openPolicyDetail('policy-2')">
-        <div :class="styles.cardHeader">
-          <div :class="styles.cardLogo">
-            <div :class="styles.logoImage">
-              <img
-                :src="getMinisterLogo('고용노동부')"
-                :alt="'고용노동부'"
-                @error="(e) => (e.target.style.display = 'none')"
-              />
-            </div>
-            <span :class="styles.logoText">고용노동부</span>
-          </div>
-        </div>
-        <div :class="styles.cardContent">
-          <h3 :class="styles.cardTitle">[온라인/모집중] 청년 일자리 지원</h3>
-          <div :class="styles.cardTags">
-            <span :class="[styles.tag, styles.online]">온라인</span>
-            <span :class="styles.date">2025년 7월 20일(월)</span>
-          </div>
-        </div>
+      <!-- 정책이 없을 때 -->
+      <div
+        v-else-if="filteredPolicies.length === 0"
+        :class="styles.noPoliciesMessage"
+      >
+        조건에 맞는 정책이 없습니다.
       </div>
 
-      <div :class="styles.policyCard" @click="openPolicyDetail('policy-3')">
+      <!-- 정책 카드들 -->
+      <div
+        v-for="policy in filteredPolicies"
+        :key="policy.serviceId"
+        :class="styles.policyCard"
+        @click="openPolicyDetail(policy.serviceId)"
+      >
         <div :class="styles.cardHeader">
           <div :class="styles.cardLogo">
             <div :class="styles.logoImage">
               <img
-                :src="getMinisterLogo('보건복지부')"
-                :alt="'보건복지부'"
+                :src="getMinisterLogo(policy.jurMnofNm)"
+                :alt="policy.jurMnofNm"
                 @error="(e) => (e.target.style.display = 'none')"
               />
             </div>
-            <span :class="styles.logoText">보건복지부</span>
+            <span :class="styles.logoText">{{ policy.jurMnofNm }}</span>
           </div>
         </div>
         <div :class="styles.cardContent">
-          <h3 :class="styles.cardTitle">[오프라인/모집완료] 건강보험 지원</h3>
-          <div :class="styles.cardTags">
-            <span :class="[styles.tag, styles.offline]">오프라인</span>
-            <span :class="styles.date">2025년 7월 15일(수)</span>
+          <div :class="styles.cardDetailHeader">
+            <span :class="styles.supportCycle">{{ policy.supportCycle }}</span>
+            <h3 :class="styles.cardTitle">{{ policy.serviceName }}</h3>
           </div>
-        </div>
-      </div>
-
-      <div :class="styles.policyCard" @click="openPolicyDetail('policy-4')">
-        <div :class="styles.cardHeader">
-          <div :class="styles.cardLogo">
-            <div :class="styles.logoImage">
-              <img
-                :src="getMinisterLogo('국토교통부')"
-                :alt="'국토교통부'"
-                @error="(e) => (e.target.style.display = 'none')"
-              />
-            </div>
-            <span :class="styles.logoText">국토교통부</span>
-          </div>
-        </div>
-        <div :class="styles.cardContent">
-          <h3 :class="styles.cardTitle">[온라인/모집중] 대중교통 이용 지원</h3>
-          <div :class="styles.cardTags">
-            <span :class="[styles.tag, styles.online]">온라인</span>
-            <span :class="styles.date">2025년 7월 25일(금)</span>
-          </div>
-        </div>
-      </div>
-
-      <div :class="styles.policyCard" @click="openPolicyDetail('policy-5')">
-        <div :class="styles.cardHeader">
-          <div :class="styles.cardLogo">
-            <div :class="styles.logoImage">
-              <img
-                :src="getMinisterLogo('교육부')"
-                :alt="'교육부'"
-                @error="(e) => (e.target.style.display = 'none')"
-              />
-            </div>
-            <span :class="styles.logoText">교육부</span>
-          </div>
-        </div>
-        <div :class="styles.cardContent">
-          <h3 :class="styles.cardTitle">[오프라인/모집중] 청년 교육 지원</h3>
-          <div :class="styles.cardTags">
-            <span :class="[styles.tag, styles.offline]">오프라인</span>
-            <span :class="styles.date">2025년 7월 30일(수)</span>
-          </div>
-        </div>
-      </div>
-
-      <div :class="styles.policyCard" @click="openPolicyDetail('policy-6')">
-        <div :class="styles.cardHeader">
-          <div :class="styles.cardLogo">
-            <div :class="styles.logoImage">
-              <img
-                :src="getMinisterLogo('중소벤처기업부')"
-                :alt="'중소벤처기업부'"
-                @error="(e) => (e.target.style.display = 'none')"
-              />
-            </div>
-            <span :class="styles.logoText">중소벤처기업부</span>
-          </div>
-        </div>
-        <div :class="styles.cardContent">
-          <h3 :class="styles.cardTitle">[온라인/모집중] 창업 지원 프로그램</h3>
-          <div :class="styles.cardTags">
-            <span :class="[styles.tag, styles.online]">온라인</span>
-            <span :class="styles.date">2025년 8월 5일(화)</span>
-          </div>
-        </div>
-      </div>
-
-      <div :class="styles.policyCard" @click="openPolicyDetail('policy-7')">
-        <div :class="styles.cardHeader">
-          <div :class="styles.cardLogo">
-            <div :class="styles.logoImage">
-              <img
-                :src="getMinisterLogo('환경부')"
-                :alt="'환경부'"
-                @error="(e) => (e.target.style.display = 'none')"
-              />
-            </div>
-            <span :class="styles.logoText">환경부</span>
-          </div>
-        </div>
-        <div :class="styles.cardContent">
-          <h3 :class="styles.cardTitle">
-            [오프라인/모집완료] 친환경 생활 지원
-          </h3>
-          <div :class="styles.cardTags">
-            <span :class="[styles.tag, styles.offline]">오프라인</span>
-            <span :class="styles.date">2025년 7월 10일(목)</span>
-          </div>
+          <p :class="styles.cardSummary">{{ policy.summary }}</p>
         </div>
       </div>
     </div>

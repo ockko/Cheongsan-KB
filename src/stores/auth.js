@@ -3,7 +3,8 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 const initState = {
-  token: '', // 접근 토큰(JWT)
+  token:
+    'yJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbnRlaHl1bjQ4ODAiLCJpYXQiOjE3NTQ0NjkzNjgsImV4cCI6MTc1NDQ3Mjk2OH0.NMQ10HNM6OQR8C1RlP5gHsRL1ZofRYcb5FBXEPQ56Pk', // 접근 토큰(JWT)
   user: {},
 };
 
@@ -24,6 +25,11 @@ export const useAuthStore = defineStore('auth', () => {
 
   const getToken = () => state.value.token;
 
+  const setToken = (token) => {
+    state.value.token = token;
+    localStorage.setItem('auth', JSON.stringify(state.value));
+  };
+
   const load = () => {
     const auth = localStorage.getItem('auth');
     if (auth != null) {
@@ -39,5 +45,6 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     logout,
     getToken,
+    setToken,
   };
 });

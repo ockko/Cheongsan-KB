@@ -66,3 +66,56 @@ export const searchPolicies = async (keyword) => {
     throw error;
   }
 };
+
+// 맞춤 지원 정책 목록 조회
+export const getCustomPolicies = async (token = null) => {
+  try {
+    const config = {};
+
+    // 토큰이 제공된 경우 헤더에 추가
+    if (token) {
+      config.headers = {
+        Authorization: `Bearer ${token}`,
+      };
+    }
+
+    const response = await axios.get(
+      'https://cheongsan.shop/cheongsan/policies/list',
+      config
+    );
+    return response.data;
+  } catch (error) {
+    console.error('맞춤 지원 정책 목록 조회 실패:', error);
+
+    // 개발용 Mock 데이터 반환
+    console.log('Mock 데이터를 사용합니다.');
+    return [
+      {
+        jurMnofNm: '국토교통부',
+        summary:
+          '도심 내 저소득층이 현 생활권에서 안정적으로 거주할 수 있도록 임대료가 저렴한 임대주택을 지원하여 주거안정을 도모합니다.',
+        serviceId: 'WLF00003269',
+        serviceName: '기존주택 전세임대주택 지원사업',
+        supportCycle: '수시',
+        tagList: ['주거', '다자녀', '장애인', '저소득', '한부모·조손'],
+      },
+      {
+        jurMnofNm: '보건복지부',
+        summary:
+          '생계곤란 등의 위기상황에 처하여 도움이 필요한 경우 일시적으로 신속하게 지원함으로써 위기상황에서 벗어날 수 있도록 지원합니다.',
+        serviceId: 'WLF00000917',
+        serviceName: '긴급복지 주거지원',
+        supportCycle: '월',
+        tagList: ['주거', '저소득', '위기상황가구'],
+      },
+      {
+        jurMnofNm: '고용노동부',
+        summary: '청년들의 안정적인 일자리 취업을 지원하는 프로그램입니다.',
+        serviceId: 'WLF00004567',
+        serviceName: '청년 일자리 지원',
+        supportCycle: '연',
+        tagList: ['고용', '청년', '일자리'],
+      },
+    ];
+  }
+};
