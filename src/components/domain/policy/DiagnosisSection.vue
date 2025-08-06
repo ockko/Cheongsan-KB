@@ -1,5 +1,13 @@
 <script setup>
-import styles from '@/assets/styles/components/policy/Policy.module.css';
+import styles from '@/assets/styles/components/policy/DiagnosisSection.module.css';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+// 자가진단 페이지로 이동
+const goToDiagnosis = () => {
+  router.push('/diagnosis');
+};
 </script>
 
 <template>
@@ -20,6 +28,8 @@ import styles from '@/assets/styles/components/policy/Policy.module.css';
         </p>
       </div>
     </div>
-    <button :class="styles.searchButton">제도 찾으러 가기</button>
+    <button @click="goToDiagnosis" :class="styles.searchButton">
+      제도 찾으러 가기
+    </button>
   </div>
 </template>

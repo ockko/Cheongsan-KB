@@ -1,9 +1,8 @@
 <script setup>
-import styles from '@/assets/styles/components/policy/Policy.module.css';
+import styles from '@/assets/styles/components/policy/PolicySection.module.css';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import PolicyDetailModal from './PolicyDetailModal.vue';
-import { getPolicyDetail } from '@/api/policy';
 
 const router = useRouter();
 
@@ -16,8 +15,8 @@ const isLoading = ref(false);
 const openPolicyDetail = async (policyId) => {
   try {
     isLoading.value = true;
-    const policyData = await getPolicyDetail(policyId);
-    selectedPolicyData.value = policyData;
+    // policyId만 전달하여 PolicyDetailModal에서 mockData를 사용하도록 함
+    selectedPolicyData.value = { policyId };
     isModalVisible.value = true;
   } catch (error) {
     console.error('정책 상세 정보 조회 실패:', error);

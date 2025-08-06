@@ -53,7 +53,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 18px;
 }
 
 .institutionIcon {
@@ -75,6 +75,8 @@
   object-fit: contain;
   max-width: 100%;
   max-height: 100%;
+  background-color: #f5f5f5;
+  transition: opacity 0.2s ease;
 }
 
 .institutionDetails {
@@ -102,7 +104,7 @@
 }
 
 .policyHeader {
-  margin-bottom: 20px;
+  margin-bottom: 0px;
 }
 
 .policyTitle {
@@ -110,7 +112,7 @@
   font-size: 28px;
   font-weight: 700;
   color: #003e65;
-  margin: 0 0 16px 0;
+  margin: 0 0 0 0;
   letter-spacing: 2.8px;
   line-height: 1.2;
 }
@@ -118,7 +120,7 @@
 .policyMeta {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
@@ -139,14 +141,15 @@
 .tag {
   display: inline-flex;
   align-items: center;
-  padding: 4px 12px;
+  padding: 2px 8px;
   background-color: #e8f4fd;
   color: #007bff;
-  border-radius: 16px;
+  border-radius: 12px;
   font-family: 'Pretendard', sans-serif;
   font-size: 12px;
   font-weight: 500;
-  letter-spacing: 1.2px;
+  letter-spacing: 0.8px;
+  line-height: 1.6;
 }
 
 .policySummary {
@@ -192,13 +195,17 @@
   margin: 0;
 }
 
+.listContent {
+  padding-left: 10px;
+}
+
 /* 지원 정보 스타일 */
 .supportInfo {
   display: flex;
   flex-direction: column;
   gap: 16px;
   background-color: white;
-  padding: 24px;
+  padding: 4px 10px 4px 10px;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
@@ -207,7 +214,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 0;
+  padding: 4px 5px;
   border-bottom: 1px solid #f0f1f5;
 }
 
@@ -219,6 +226,7 @@
   font-family: 'Pretendard', sans-serif;
   font-size: 16px;
   font-weight: 500;
+  padding-left: 10px;
   color: #72787f;
   letter-spacing: 1.6px;
 }
@@ -227,6 +235,7 @@
   font-family: 'Pretendard', sans-serif;
   font-size: 16px;
   font-weight: 600;
+  padding-right: 10px;
   color: #003e65;
   letter-spacing: 1.6px;
 }
@@ -234,7 +243,7 @@
 /* 신청 정보 스타일 */
 .applicationInfo {
   background-color: white;
-  padding: 24px;
+  padding: 10px;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
@@ -243,6 +252,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  padding-left: 10px;
 }
 
 .applicationIcon {
@@ -265,7 +275,7 @@
 /* 문의처 스타일 */
 .contactInfo {
   background-color: white;
-  padding: 24px;
+  padding: 10px;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
@@ -274,6 +284,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  padding-left: 10px;
 }
 
 .contactIcon {
@@ -297,7 +308,7 @@
 .listItem {
   display: flex;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   padding: 0;
 }
 

@@ -127,7 +127,8 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
+import { useModalStore } from '@/stores/modal';
 import styles from '@/assets/styles/components/policy/DiagnosisStageModal.module.css';
 
 const props = defineProps({
@@ -142,6 +143,21 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['close']);
+
+// 모달 스토어 사용
+const modalStore = useModalStore();
+
+// props.isVisible 변화를 감지하여 스토어 상태 업데이트
+watch(
+  () => props.isVisible,
+  (newValue) => {
+    if (newValue) {
+      modalStore.openDiagnosisStageModal();
+    } else {
+      modalStore.closeDiagnosisStageModal();
+    }
+  }
+);
 
 const closeModal = () => {
   emit('close');

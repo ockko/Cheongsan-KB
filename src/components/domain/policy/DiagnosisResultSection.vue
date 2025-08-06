@@ -1,5 +1,5 @@
 <script setup>
-import styles from '@/assets/styles/components/policy/Policy.module.css';
+import styles from '@/assets/styles/components/policy/DiagnosisResultSection.module.css';
 import { useRouter } from 'vue-router';
 import { ref, computed } from 'vue';
 import DiagnosisStageModal from './DiagnosisStageModal.vue';
