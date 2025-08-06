@@ -40,6 +40,7 @@ const router = createRouter({
       component: Study,
     },
     {
+      // path: /study/:id
       path: '/study/detail',
       name: 'StudyDetail',
       component: StudyDetail,
