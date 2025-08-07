@@ -1,0 +1,495 @@
+/**상세 모달**/
+.main-content {
+  padding: 0 !important;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.divider {
+  border: none;
+  border-top: 16px solid var(--color-gray2);
+  width: 100%;
+}
+
+.divider2 {
+  margin: 1rem 0;
+  border-bottom: 1px solid var(--color-gray-unnamed);
+}
+
+.title {
+  font-size: 22px;
+  color: white;
+  padding: 1rem 2rem 0 2rem;
+}
+
+.subtitle {
+  font-size: 16px;
+  margin-bottom: 1rem;
+  color: white;
+  padding: 0 2rem;
+}
+
+.result {
+  background-color: var(--color-main);
+  width: 100%;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding: 0 2rem;
+}
+
+.loan-card-list {
+  display: flex;
+  flex-direction: column;
+  padding: 0 2rem;
+  gap: 12px;
+}
+
+.repayment-card1 {
+  background-color: #fff;
+}
+
+.repayment-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.card-icon {
+  width: 60px;
+  height: 60px;
+  background-color: var(--color-main);
+  color: #fff;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.d-day {
+  user-select: none;
+}
+
+.loan-name-top {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--color-gray5);
+}
+
+.card-info {
+  margin-left: 16px;
+  flex-direction: column; /* 수직 정렬 */
+  justify-content: center;
+  flex: 1;
+  margin-bottom: 2px;
+}
+
+.repayment-date {
+  font-size: 14px;
+  color: var(--color-gray0);
+  margin-top: 10px;
+  line-height: 0;
+}
+
+.repayment-amount-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.repayment-amount {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.extra-payment {
+  font-size: 18px;
+  font-weight: bold;
+  color: #e74c3c;
+  white-space: nowrap;
+  margin-left: 6px;
+  line-height: 2;
+}
+
+.fee-label {
+  display: block; /* 줄바꿈 */
+  font-size: 12px;
+  color: #e74c3c;
+  margin-left: 6px;
+  margin-top: 0;
+  padding-top: 0;
+  line-height: 0;
+}
+
+.highlight {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: white;
+  margin: 0 4px;
+}
+
+.label {
+  color: var(--color-main);
+  font-weight: 500;
+  font-size: 18px;
+  margin-left: 5px;
+  flex: 1;
+  text-align: left;
+}
+
+.content {
+  color: var(--color-main);
+  font-size: 18px;
+  line-height: 1.6;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.title-label {
+  font-size: 22px;
+  color: var(--color-main);
+  padding: 0 2rem;
+}
+
+.section-title {
+  margin: 1rem 0 0.5rem;
+  font-weight: bold;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.actions .cancel {
+  background-color: white;
+  color: var(--color-main);
+  font-size: 14px;
+  width: 60px;
+  height: 36px;
+  border: 1.5px solid var(--color-main);
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 16px 0px;
+}
+
+.actions .apply {
+  background-color: var(--color-main);
+  color: white;
+  font-size: 14px;
+  width: 88px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 16px 16px;
+}
+
+/*input 페이지*/
+.underline-input {
+  border: none;
+  border-bottom: 1px solid var(--color-main);
+  padding: 6px 0 4px;
+  font-size: 16px;
+  width: 280px;
+  outline: none;
+}
+
+.underline-input::placeholder {
+  color: var(--color-main);
+  user-select: none;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px;
+}
+
+.description {
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.icon {
+  width: 128px;
+  height: 128px;
+  margin-bottom: 32px;
+}
+
+.analyze-button {
+  background-color: var(--color-main);
+  color: white;
+  font-size: 16px;
+  width: 280px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 16px;
+}
+.tight-line {
+  line-height: 1.4;
+}
+
+.pre-label {
+  align-self: flex-start;
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+/**결과 페이지**/
+.repayment-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px 24px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.divider1 {
+  border: none; /* 기본 테두리 제거 */
+  border-top: 1px solid var(--color-gray4); /* 위쪽 테두리를 파란색 2px 선으로 */
+  width: 100%; /* 길이 조절 */
+}
+
+.info {
+  font-size: 12px;
+  color: var(--color-gray0);
+  text-align: center;
+  height: fit-content;
+}
+
+.amount-box,
+.total-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+}
+
+.amount-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px; /* 텍스트와 숫자 사이 최소 간격 */
+}
+
+.res-label {
+  font-size: 14px;
+  color: #888;
+  line-height: 1 !important;
+}
+
+.value {
+  font-size: 22px;
+  font-weight: bold;
+  line-height: 1 !important;
+}
+
+.value.blue {
+  color: #003f66;
+}
+
+.value.red {
+  color: #d60000;
+}
+
+.symbol,
+.equal {
+  font-size: 24px;
+  color: #444;
+  margin: 0 8px;
+  display: flex;
+  align-items: center;
+  transform: translateY(12px);
+}
+
+.analysis,
+.chart-section {
+  margin-top: 1.5rem;
+  background: white;
+  padding: 0 1rem;
+  border-radius: 8px;
+  align-items: center;
+}
+
+.strategy-comparison {
+  background: white;
+  padding: 0 1rem;
+  border-radius: 8px;
+  align-items: center;
+}
+
+/* 카드 리스트 스타일 */
+.strategy-card-list {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  list-style: none;
+}
+
+/* 개별 카드 스타일 */
+.strategy-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 10px;
+  background-color: #fff;
+}
+
+/* 텍스트 박스 스타일 및 줄 간격 조절 */
+.strategy-text {
+  line-height: 1.3; /* 줄 간격 줄이기 */
+  font-size: 14px;
+  color: #333;
+}
+
+.strategy-text strong {
+  font-size: 16px;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.recommended-plan {
+  background: #fff;
+  border-radius: 12px;
+  padding: 0 1.5rem;
+  text-align: center; /* 가운데 정렬 */
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.recommended-plan button {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+}
+
+.strategy-comparison ul {
+  padding: 0;
+  list-style: none;
+}
+
+h3 {
+  text-align: center;
+}
+
+.strategy-comparison li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.strategy-comparison button {
+  padding: 0.25rem 0.5rem;
+}
+
+.recommended-results {
+  background-color: var(--color-main);
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: var(--color-gray3);
+  display: flex;
+  align-items: center; /* 수직 중앙 정렬 */
+  justify-content: center; /* 수평 중앙 정렬 */
+  text-align: center;
+  height: 44px;
+}
+
+.simulator-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 48px;
+  margin-bottom: 1rem;
+}
+
+.simulator-header .title {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.back-button {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2em;
+  cursor: pointer;
+  color: var(--color-main);
+}
+.select-button {
+  background-color: var(--color-main);
+  color: white;
+  font-size: 16px;
+  width: 280px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 16px;
+}
+
+.select-button-mini {
+  background-color: var(--color-main);
+  color: white;
+  font-size: 14px;
+  width: 48px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 16px;
+}
+
+/**차트**/
+.chart-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+.debt-chart-wrapper {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  height: 400px;
+}
