@@ -1,36 +1,36 @@
 <template>
-  <div :class="styles['simulator']">
-    <header :class="styles['simulator-header']">
-      <div :class="styles['back-button']" @click="goBack">
+  <div :class="styles.simulator">
+    <header :class="styles.simulatorHeader">
+      <div :class="styles.backButton" @click="goBack">
         <i class="fa fa-arrow-left"></i>
       </div>
-      <p :class="styles['text-regular']">상환 시뮬레이션</p>
+      <p :class="styles.textRegular">상환 시뮬레이션</p>
     </header>
 
-    <p class="text-light" :class="styles['info']">
+    <p class="text-light" :class="styles.info">
       ⓘ {{ userName }}님의 월 상환액을 기준으로 상환 플랜을 제시합니다.
     </p>
-    <div :class="styles['repayment-card']">
-      <div :class="styles['amount-box']">
-        <div :class="styles['amount-item']">
-          <div :class="styles['res-label']">기존 상환액</div>
+    <div :class="styles.repaymentCard">
+      <div :class="styles.amountBox">
+        <div :class="styles.amountItem">
+          <div :class="styles.resLabel">기존 상환액</div>
           <div :class="[styles.value, styles.blue]">
             {{ formatNumber(existingRepaymentAmount) }}
           </div>
         </div>
-        <div :class="styles['symbol']">+</div>
-        <div :class="styles['amount-item']">
-          <div :class="styles['res-label']">추가 상환액</div>
+        <div :class="styles.symbol">+</div>
+        <div :class="styles.amountItem">
+          <div :class="styles.resLabel">추가 상환액</div>
           <div :class="[styles.value, styles.blue]">
             {{ formatNumber(additionalRepaymentAmount) }}
           </div>
         </div>
       </div>
 
-      <div :class="styles['total-box']">
-        <div :class="styles['equal']">=</div>
-        <div :class="styles['amount-item']">
-          <div :class="styles['res-label']">총 월 상환액</div>
+      <div :class="styles.totalBox">
+        <div :class="styles.equal">=</div>
+        <div :class="styles.amountItem">
+          <div :class="styles.resLabel">총 월 상환액</div>
           <div :class="[styles.value, styles.red]">
             {{ formatNumber(totalRepaymentAmount) }}
           </div>
@@ -38,33 +38,33 @@
       </div>
     </div>
 
-    <div :class="styles['recommended-results']">분석 결과</div>
-    <div :class="styles['recommended-plan']">
-      <h3 :class="styles['strategy-title']">{{ strategy.name }}</h3>
+    <div :class="styles.recommendedResults">분석 결과</div>
+    <div :class="styles.recommendedPlan">
+      <h3 :class="styles.strategyTitle">{{ strategy.name }}</h3>
       <p>최종 빚 졸업일: {{ strategy.endDate }}</p>
       <p>총 상환 기간: {{ strategy.totalMonths }}개월</p>
       <p>절약 이자: {{ formatNumber(strategy.interestSaved) }}원</p>
-      <button :class="styles['select-button']">이 전략 선택하기</button>
+      <button :class="styles.selectButton">이 전략 선택하기</button>
     </div>
 
     <hr class="divider" />
 
-    <section :class="styles['strategy-comparison']">
+    <section :class="styles.strategyComparison">
       <h3>전략별 상세 비교</h3>
-      <ul :class="styles['strategy-card-list']">
+      <ul :class="styles.strategyCardList">
         <li
           v-for="strategy in strategyMetaList"
           :key="strategy.strategyType"
-          :class="styles['strategy-card']"
+          :class="styles.strategyCard"
         >
-          <div :class="styles['strategy-text']">
+          <div :class="styles.strategyText">
             <strong>{{ strategy.name }}</strong
             ><br />
             {{ strategy.summary }}
           </div>
           <button
             @click="openModal(strategy.strategyType)"
-            :class="styles['select-button-mini']"
+            :class="styles.selectButtonMini"
           >
             상세
           </button>
@@ -79,7 +79,7 @@
       />
     </section>
 
-    <hr :class="styles['divider1']" />
+    <hr :class="styles.divider1" />
     <DebtChart :repaymentData="strategies" />
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
-  <div :class="styles['debt-chart-wrapper']">
-    <h3 :class="styles['chart-title']">부채 감소 추이</h3>
+  <div :class="styles.debtChartWrapper">
+    <h3 :class="styles.chartTitle">부채 감소 추이</h3>
     <Line :data="chartData" :options="chartOptions" />
   </div>
 </template>

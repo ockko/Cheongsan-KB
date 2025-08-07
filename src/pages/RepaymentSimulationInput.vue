@@ -1,28 +1,28 @@
 <template>
-  <div :class="styles['container']">
-    <div :class="styles['description']">
-      <p :class="styles['text-medium tight-line']">
+  <div :class="styles.container">
+    <div :class="styles.description">
+      <p :class="styles.textMediumTightLine">
         <span>추가 상환 가능액을 입력하고</span><br />
         <span>AI 추천 상환 플랜을 비교해보세요</span>
       </p>
     </div>
 
-    <img src="/images/logo-blue.png" alt="저금통" :class="styles['icon']" />
+    <img src="/images/logo-blue.png" alt="저금통" :class="styles.icon" />
 
-    <div :class="styles['container']">
-      <p class="text-light" :class="styles['pre-label']">월 추가 상환 가능액</p>
+    <div :class="styles.container">
+      <p class="text-light" :class="styles.preLabel">월 추가 상환 가능액</p>
       <input
         type="text"
         :value="formattedValue"
         placeholder="없음"
-        :class="styles['underline-input']"
+        :class="styles.underlineInput"
         inputmode="numeric"
         @input="onInput"
         @keydown="onKeyDown"
         ref="inputRef"
       />
     </div>
-    <button :class="styles['analyze-button']" @click="analyze">분석하기</button>
+    <button :class="styles.analyzeButton" @click="analyze">분석하기</button>
   </div>
 </template>
 
