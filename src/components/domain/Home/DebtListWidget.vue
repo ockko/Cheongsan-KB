@@ -70,15 +70,14 @@ const sortedDebts = computed(() => {
         <span>대출명</span>
         <span>상환율</span>
       </div>
-      <ul :class="styles.debtList">
+      <ul>
         <li
           v-for="debt in sortedDebts"
           :key="debt.debtId"
           :class="styles.debtItem"
           @click="openDetailModal(debt)"
         >
-          <div :class="styles.debtInfo">
-            <span :class="styles.icon">B</span>
+          <div>
             <div :class="styles.nameDetails">
               <span :class="styles.organizationName">{{
                 debt.organizationName
@@ -87,14 +86,16 @@ const sortedDebts = computed(() => {
             </div>
           </div>
           <div :class="styles.repaymentInfo">
-            <progress
-              :class="styles.repaymentProgress"
-              :value="debt.repaymentRate * 100"
-              max="100"
-            ></progress>
-            <span :class="styles.repaymentPercent"
-              >{{ (debt.repaymentRate * 100).toFixed(0) }}%</span
-            >
+            <div :class="styles.progressContainer">
+              <progress
+                :class="styles.repaymentProgress"
+                :value="debt.repaymentRate * 100"
+                max="100"
+              ></progress>
+              <span :class="styles.repaymentPercent"
+                >{{ (debt.repaymentRate * 100).toFixed(0) }}%</span
+              >
+            </div>
             <span :class="styles.arrow">&gt;</span>
           </div>
         </li>
