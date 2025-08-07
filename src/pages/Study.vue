@@ -1,5 +1,4 @@
 <script setup>
-
 import styles from '@/assets/styles/pages/Study.module.css'
 import StudyContentItem from '@/components/domain/Study/StudyContentItem.vue';
 import { ref, onMounted } from 'vue';

@@ -78,23 +78,6 @@
   z-index: 1;
 }
 
-/* 1단계: 연결선이 중앙에서 오른쪽 끝으로 
-.progressDots.step-0::before {
-  left: 50%;
-  right: 6px;
-}*/
-
-/* 2단계: 연결선이 전체 
-.progressDots.step-1::before {
-  left: 6px;
-  right: 6px;
-}*/
-
-/* 3단계: 연결선이 왼쪽 끝에서 중앙으로 
-.progressDots.step-2::before {
-  left: 6px;
-  right: 50%;
-}*/
 
 /* 이동하는 점 */
 .progressDot {
