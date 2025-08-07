@@ -239,7 +239,7 @@ const goHome = () => {
     <!-- 헤더 영역 -->
     <header :class="styles.header">
       <button @click="goHome" :class="styles.backButton">←</button>
-      <h1 :class="styles.title">자가진단</h1>
+      <h1 :class="styles.title">진단하기</h1>
     </header>
 
     <!-- 진행률 표시 (진단 시작 후에만 표시) -->

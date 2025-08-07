@@ -13,7 +13,6 @@
   padding: 1rem 1.5rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -28,6 +27,8 @@
   padding: 0.5rem;
   border-radius: 50%;
   transition: background-color 0.2s ease;
+  position: relative;
+  z-index: 10;
 }
 
 .backButton:hover {
@@ -39,6 +40,11 @@
   font-weight: 600;
   color: #003e65;
   margin: 0;
+  text-align: center;
+  flex: 1;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /* 진행률 표시 - 점들이 선 위를 이동하는 형태 */
@@ -264,14 +270,14 @@
   color: white;
   cursor: pointer;
   transition: all 0.2s ease;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
   position: relative;
   width: 283px;
   height: 40px;
   font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  margin: 0 auto;
 }
 
 .startButton:hover {
@@ -503,6 +509,11 @@
   .startButton {
     padding: 1rem 2rem;
     font-size: 1rem;
+    margin: 0 auto;
+  }
+
+  .title {
+    text-align: center;
   }
 
   .stepContainer {

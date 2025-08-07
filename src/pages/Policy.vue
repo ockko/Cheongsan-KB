@@ -17,54 +17,20 @@ const userDiagnosis = ref(null); // null이면 진단 해야함, 있으면 진�
 const hasDiagnosis = computed(() => userDiagnosis.value !== null);
 
 // 백엔드에서 진단 결과 가져오기
-const loadDiagnosisFromBackend = async (diagnosisId, recommendationId) => {
+const loadDiagnosisFromBackend = async (diagnosisData) => {
   try {
-    console.log('백엔드에서 진단 결과 로딩:', {
-      diagnosisId,
-      recommendationId,
-    });
+    console.log('백엔드에서 진단 결과 로딩:', diagnosisData);
 
-    // 백엔드에서 진단 결과 상세 정보 가져오기
-    const diagnosisData = await getDiagnosisResult();
-
-    console.log('백엔드 진단 결과:', diagnosisData);
-
-    // 추천 제도명 변환
-    const recommendationName = getRecommendationName(Number(recommendationId));
-
-    // 백엔드 데이터를 기존 형식에 맞게 변환
-    const transformedData = {
-      userName: diagnosisData.userName || '사용자',
-      diagnosisStage: recommendationName,
-      institution: getInstitutionByRecommendation(Number(recommendationId)),
-      policyName: recommendationName,
-      description: getDescriptionByRecommendation(Number(recommendationId)),
-      diagnosisId: diagnosisId,
-      recommendationId: recommendationId,
-    };
-
-    userDiagnosis.value = transformedData;
+    // 서버 데이터를 그대로 사용 (DiagnosisResultSection에서 처리)
+    userDiagnosis.value = diagnosisData;
+    console.log('userDiagnosis 설정 완료:', userDiagnosis.value);
+    console.log('hasDiagnosis 값:', hasDiagnosis.value);
   } catch (error) {
     console.error('백엔드 진단 결과 로딩 실패:', error);
-
-    // 에러 발생 시 기본 추천으로 fallback
-    const fallbackRecommendation = getRecommendationName(
-      Number(recommendationId)
-    );
-    // 기본 데이터로 설정
-    userDiagnosis.value = {
-      userName: '사용자',
-      diagnosisStage: fallbackRecommendation,
-      institution: getInstitutionByRecommendation(Number(recommendationId)),
-      policyName: fallbackRecommendation,
-      description: getDescriptionByRecommendation(Number(recommendationId)),
-      diagnosisId: diagnosisId,
-      recommendationId: recommendationId,
-    };
   }
 };
 
-// 추천 제도별 담당 기관 반환
+// 추천 제도별 담당 기관 반환 (URL 파라미터용 fallback)
 const getInstitutionByRecommendation = (recommendationId) => {
   const institutionMap = {
     0: '금융감독원', // 예방적 상담
@@ -77,7 +43,7 @@ const getInstitutionByRecommendation = (recommendationId) => {
   return institutionMap[recommendationId] || '관련 기관';
 };
 
-// 추천 제도별 설명 반환
+// 추천 제도별 설명 반환 (URL 파라미터용 fallback)
 const getDescriptionByRecommendation = (recommendationId) => {
   const descriptionMap = {
     0: '채무 문제 예방을 위한 상담 서비스를 제공합니다.',
@@ -92,34 +58,56 @@ const getDescriptionByRecommendation = (recommendationId) => {
 
 // 페이지 마운트 시 자가진단 결과 확인
 onMounted(async () => {
+  console.log('Policy.vue onMounted 시작');
+
   // URL 쿼리 파라미터에서 진단 결과 확인
   const diagnosisId = route.query.diagnosisId;
   const recommendationId = route.query.recommendationId;
   const legacyDiagnosis = route.query.diagnosis;
 
+  console.log('URL 쿼리 파라미터:', {
+    diagnosisId,
+    recommendationId,
+    legacyDiagnosis,
+  });
+
   if (diagnosisId && recommendationId) {
-    // 백엔드 연동 버전
-    await loadDiagnosisFromBackend(diagnosisId, recommendationId);
+    // URL 파라미터가 있는 경우 - 기존 방식 유지
+    console.log('URL 파라미터로 진단 결과 로딩');
+    const fallbackData = {
+      id: diagnosisId,
+      operatingEntity: getInstitutionByRecommendation(Number(recommendationId)),
+      programName: getRecommendationName(Number(recommendationId)),
+      simpleDescription: getDescriptionByRecommendation(
+        Number(recommendationId)
+      ),
+    };
+    await loadDiagnosisFromBackend(fallbackData);
   } else if (legacyDiagnosis) {
     // 기존 fallback 버전 - 더 이상 지원하지 않음
     console.log('Legacy diagnosis parameter is no longer supported');
   } else {
-    // 기존 사용자의 진단 결과가 있는지 확인 (로그인 상태라면)
+    // 기존 사용자의 진단 결과가 있는지 확인
+    console.log('getDiagnosisResult API 호출 시작');
     try {
       const existingDiagnosis = await getDiagnosisResult();
-      if (
-        existingDiagnosis &&
-        existingDiagnosis.recommendationId !== undefined
-      ) {
-        await loadDiagnosisFromBackend(
-          existingDiagnosis.diagnosisId,
-          existingDiagnosis.recommendationId
-        );
+      console.log('기존 진단 결과:', existingDiagnosis);
+      console.log('진단 결과 타입:', typeof existingDiagnosis);
+
+      if (existingDiagnosis && existingDiagnosis.id !== undefined) {
+        console.log('기존 진단 결과로 DiagnosisResultSection 표시');
+        await loadDiagnosisFromBackend(existingDiagnosis);
+      } else {
+        console.log('진단 결과가 없거나 id가 없음');
+        console.log('hasDiagnosis 값:', hasDiagnosis.value);
       }
     } catch (error) {
-      console.log('기존 진단 결과 없음 또는 로그인되지 않음');
+      console.log('기존 진단 결과 없음 또는 로그인되지 않음:', error);
+      console.log('hasDiagnosis 값:', hasDiagnosis.value);
     }
   }
+
+  console.log('onMounted 완료, 최종 hasDiagnosis 값:', hasDiagnosis.value);
 });
 </script>
 
