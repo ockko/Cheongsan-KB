@@ -1,35 +1,38 @@
 <template>
-  <div class="container">
-    <div class="description">
-      <p class="text-medium tight-line">
+  <div :class="styles['container']">
+    <div :class="styles['description']">
+      <p :class="styles['text-medium tight-line']">
         <span>추가 상환 가능액을 입력하고</span><br />
         <span>AI 추천 상환 플랜을 비교해보세요</span>
       </p>
     </div>
 
-    <img src="/images/logo-blue.png" alt="저금통" class="icon" />
+    <img src="/images/logo-blue.png" alt="저금통" :class="styles['icon']" />
 
-    <div class="container">
-      <p class="text-light label">월 추가 상환 가능액</p>
+    <div :class="styles['container']">
+      <p class="text-light" :class="styles['pre-label']">월 추가 상환 가능액</p>
       <input
         type="text"
         :value="formattedValue"
         placeholder="없음"
-        class="underline-input"
+        :class="styles['underline-input']"
         inputmode="numeric"
         @input="onInput"
         @keydown="onKeyDown"
         ref="inputRef"
       />
     </div>
-    <button class="analyze-button" @click="analyze">분석하기</button>
+    <button :class="styles['analyze-button']" @click="analyze">분석하기</button>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import styles from '@/assets/styles/pages/RepaymentSimulation.module.css';
 
 const rawValue = ref('');
+const router = useRouter();
 
 const inputRef = ref(null);
 
@@ -100,63 +103,11 @@ function analyze() {
       ? '추가 상환 가능액: 없음'
       : `추가 상환 가능액: ${Number(rawValue.value).toLocaleString()}원`
   );
+  router.push({
+    path: '/result',
+    query: {
+      monthlyAvailableAmount: rawValue.value || 0,
+    },
+  });
 }
 </script>
-
-<style scoped>
-.underline-input {
-  border: none;
-  border-bottom: 1px solid var(--color-main);
-  padding: 6px 0 4px;
-  font-size: 16px;
-  width: 280px;
-  outline: none;
-}
-
-.underline-input::placeholder {
-  color: var(--color-main);
-  user-select: none;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 32px 16px;
-}
-
-.description {
-  text-align: center;
-  font-size: 18px;
-  line-height: 1.5;
-  margin-bottom: 24px;
-}
-
-.icon {
-  width: 128px;
-  height: 128px;
-  margin-bottom: 32px;
-}
-
-.analyze-button {
-  background-color: var(--color-main);
-  color: white;
-  font-size: 16px;
-  width: 280px;
-  height: 40px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-top: 16px;
-}
-.tight-line {
-  line-height: 1.4;
-}
-
-.label {
-  align-self: flex-start;
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 4px;
-}
-</style>
