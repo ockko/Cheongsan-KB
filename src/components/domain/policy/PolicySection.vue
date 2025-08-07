@@ -190,9 +190,9 @@ const filteredPolicies = computed(() => {
     const keyword = searchKeyword.value.toLowerCase();
     filtered = filtered.filter(
       (policy) =>
-        policy.serviceName.toLowerCase().includes(keyword) ||
-        policy.summary.toLowerCase().includes(keyword) ||
-        policy.jurMnofNm.toLowerCase().includes(keyword)
+        policy.policyName.toLowerCase().includes(keyword) ||
+        policy.policySummary.toLowerCase().includes(keyword) ||
+        policy.ministryName.toLowerCase().includes(keyword)
     );
   }
 
@@ -211,6 +211,23 @@ const getTagClass = (tag) => {
     생활지원: styles.lifeSupport,
   };
   return tagClassMap[tag] || styles.default;
+};
+
+// 온라인/오프라인 변환 함수
+const formatPolicyOnline = (online) => {
+  if (!online) return '오프라인';
+  return online === 'Y' ? '온라인' : '오프라인';
+};
+
+// 날짜 형식 변환 함수 (20250807 -> 2025년 08월 07일)
+const formatPolicyDate = (dateString) => {
+  if (!dateString || dateString.length !== 8) return '';
+
+  const year = dateString.substring(0, 4);
+  const month = dateString.substring(4, 6);
+  const day = dateString.substring(6, 8);
+
+  return `${year}년 ${month}월 ${day}일`;
 };
 
 // 컴포넌트 마운트 시 정책 데이터 로드
@@ -298,28 +315,38 @@ onMounted(() => {
       <!-- 정책 카드들 -->
       <div
         v-for="policy in filteredPolicies"
-        :key="policy.serviceId"
+        :key="policy.policyId"
         :class="styles.policyCard"
-        @click="openPolicyDetail(policy.serviceId)"
+        @click="openPolicyDetail(policy.policyId)"
       >
         <div :class="styles.cardHeader">
           <div :class="styles.cardLogo">
-            <div :class="styles.logoImage">
-              <img
-                :src="getMinisterLogo(policy.jurMnofNm)"
-                :alt="policy.jurMnofNm"
-                @error="(e) => (e.target.style.display = 'none')"
-              />
+            <div :class="styles.cardDetailHeader">
+              <span :class="styles.supportCycle">{{
+                policy.supportCycle
+              }}</span>
+              <h3 :class="styles.cardTitle">{{ policy.policyName }}</h3>
             </div>
-            <span :class="styles.logoText">{{ policy.jurMnofNm }}</span>
           </div>
         </div>
+
         <div :class="styles.cardContent">
-          <div :class="styles.cardDetailHeader">
-            <span :class="styles.supportCycle">{{ policy.supportCycle }}</span>
-            <h3 :class="styles.cardTitle">{{ policy.serviceName }}</h3>
+          <div :class="styles.logoImage">
+            <img
+              :src="getMinisterLogo(policy.ministryName)"
+              :alt="policy.ministryName"
+              @error="(e) => (e.target.style.display = 'none')"
+            />
           </div>
-          <p :class="styles.cardSummary">{{ policy.summary }}</p>
+          <span :class="styles.logoText">{{ policy.ministryName }}</span>
+        </div>
+        <div :class="styles.policyInfo">
+          <span :class="styles.policyOnline">{{
+            formatPolicyOnline(policy.policyOnline)
+          }}</span>
+          <span :class="styles.policyDate">{{
+            formatPolicyDate(policy.policyDate)
+          }}</span>
         </div>
       </div>
     </div>

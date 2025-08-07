@@ -77,6 +77,13 @@ const progressPercentage = computed(() => {
   return ((currentStep.value + 1) / diagnosisSteps.length) * 100;
 });
 
+// 진행률 선의 너비 (점들 사이의 간격을 고려)
+const progressLineWidth = computed(() => {
+  if (currentStep.value < 0) return 0;
+  // 3개 점이므로 2개 구간, 각 구간은 50%
+  return (currentStep.value / (diagnosisSteps.length - 1)) * 100;
+});
+
 // 시작 페이지 여부
 const isStartPage = computed(() => currentStep.value === -1);
 
@@ -237,15 +244,16 @@ const goHome = () => {
 
     <!-- 진행률 표시 (진단 시작 후에만 표시) -->
     <div v-if="!isStartPage" :class="styles.progressContainer">
-      <div :class="styles.progressBar">
+      <div :class="[styles.progressDots, `step-${currentStep}`]">
         <div
-          :class="styles.progressFill"
-          :style="{ width: progressPercentage + '%' }"
+          v-for="(step, index) in diagnosisSteps"
+          :key="index"
+          :class="[
+            styles.progressDot,
+            { [styles.active]: index <= currentStep },
+          ]"
         ></div>
       </div>
-      <span :class="styles.progressText">
-        {{ currentStep + 1 }} / {{ diagnosisSteps.length }}
-      </span>
     </div>
 
     <!-- 메인 콘텐츠 -->
@@ -273,12 +281,24 @@ const goHome = () => {
 
       <!-- 진단 단계 페이지 -->
       <div v-else :class="styles.stepContainer">
+        <!-- 단계 아이콘 -->
+        <div :class="styles.stepIcon">
+          <img
+            :src="`/images/diagnosis${currentStep + 1}.png`"
+            :alt="`진단 단계 ${currentStep + 1}`"
+            :class="styles.diagnosisIcon"
+          />
+        </div>
+
         <!-- 단계 제목 -->
         <div :class="styles.stepHeader">
           <h2 :class="styles.stepTitle">
             {{ diagnosisSteps[currentStep].title }}
           </h2>
         </div>
+
+        <!-- 구분선 -->
+        <div :class="styles.divider"></div>
 
         <!-- 질문 영역 -->
         <div :class="styles.questionContainer">
@@ -335,6 +355,7 @@ const goHome = () => {
             styles.button,
             styles.nextButton,
             { [styles.disabled]: !isCurrentStepComplete },
+            { [styles.fullWidth]: currentStep === 0 },
           ]"
         >
           {{ currentStep === diagnosisSteps.length - 1 ? '진단 완료' : '다음' }}
