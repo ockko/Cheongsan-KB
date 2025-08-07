@@ -11,17 +11,17 @@ const props = defineProps({
     type: Object,
     required: true,
     // 데이터가 아직 로드되지 않았을 때를 대비한 기본값
-    default: () => ({ limit: 0, spent: 0, remaining: 0 }),
+    default: () => ({ dailyLimit: 0, spent: 0, remaining: 0 }),
   },
 });
 
 // 지출액이 한도를 초과했는지 여부를 계산하는 computed 속성
 const isOverLimit = computed(() => {
   // 한도가 0일 경우 초과로 보지 않음
-  if (props.spendingData.limit === 0) {
+  if (props.spendingData.dailyLimit === 0) {
     return false;
   }
-  return props.spendingData.spent > props.spendingData.limit;
+  return props.spendingData.spent > props.spendingData.dailyLimit;
 });
 
 // 숫자에 콤마(,)를 찍어주는 헬퍼 함수
@@ -46,7 +46,7 @@ const formatCurrency = (value) => {
         <span>일일 사용 한도 : </span>
         <div>
           <span :class="styles.limitAmount"
-            >{{ formatCurrency(spendingData.limit) }}원</span
+            >{{ formatCurrency(spendingData.dailyLimit) }}원</span
           >
           <button
             :class="styles.settingsButton"
@@ -61,7 +61,7 @@ const formatCurrency = (value) => {
       <progress
         :class="[styles.spendingProgress, { [styles.overLimit]: isOverLimit }]"
         :value="spendingData.spent"
-        :max="spendingData.limit"
+        :max="spendingData.dailyLimit"
       ></progress>
 
       <p :class="styles.remainingAmount">

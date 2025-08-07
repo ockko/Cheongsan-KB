@@ -5,18 +5,18 @@ import { ref, defineEmits, computed } from 'vue';
 const emit = defineEmits(['close']); // 'close' 이벤트를 부모에게 보낼 것을 정의
 
 // 부모로부터 최대 한도값을 받아옴 (실제로는 API 호출 결과)
-const maximumLimit = ref(50000);
-const limitValue = ref(40000);
+const maximumDailyLimit = ref(50000);
+const currentDailyLimit = ref(40000);
 
 // 슬라이더의 현재 진행률을 퍼센트로 계산하는 computed 속성
 const sliderProgress = computed(() => {
-  if (maximumLimit.value === 0) return 0;
-  return (limitValue.value / maximumLimit.value) * 100;
+  if (maximumDailyLimit.value === 0) return 0;
+  return (currentDailyLimit.value / maximumDailyLimit.value) * 100;
 });
 
 // 슬라이더 값을 업데이트하는 함수 (v-model만으로도 충분하지만, 명시적으로 둘 수 있음)
 const updateSliderProgress = (event) => {
-  limitValue.value = event.target.value;
+  currentDailyLimit.value = event.target.value;
 };
 
 // 숫자에 콤마(,)를 찍어주는 헬퍼 함수
@@ -27,7 +27,7 @@ const formatCurrency = (value) => {
 
 const applyChanges = () => {
   // TODO: 여기에 '적용' 버튼 클릭 시 실행될 API 호출 로직을 구현합니다.
-  console.log('적용된 한도:', limitValue.value);
+  console.log('적용된 한도:', currentDailyLimit.value);
 
   // API 호출 성공 후 모달을 닫습니다.
   emit('close');
@@ -46,21 +46,21 @@ const applyChanges = () => {
       <div :class="styles.limitLabels">
         <span>0원</span>
         <span :class="styles.maxLimit"
-          >{{ formatCurrency(maximumLimit) }}원</span
+          >{{ formatCurrency(maximumDailyLimit) }}원</span
         >
       </div>
       <input
         type="range"
         min="0"
-        :max="maximumLimit"
-        v-model="limitValue"
+        :max="maximumDailyLimit"
+        v-model="currentDailyLimit"
         :class="styles.slider"
         @input="updateSliderProgress"
         :style="{ '--slider-progress': sliderProgress + '%' }"
         step="500"
       />
       <div :class="styles.currentValueBox">
-        {{ formatCurrency(limitValue) }}원
+        {{ formatCurrency(currentDailyLimit) }}원
       </div>
 
       <div :class="styles.buttonGroup">
