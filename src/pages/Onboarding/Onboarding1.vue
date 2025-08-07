@@ -47,7 +47,7 @@ function goNext() {
   }
   .container {
     margin-top: 1rem;
-    padding: 0 2rem;
+    padding: 0 1.5rem;
     text-align: center;
   }
   
@@ -91,7 +91,6 @@ function goNext() {
   .next-button {
     width: 100%;
     height: 44px;
-    padding: 14px;
     background-color: #00497a;
     color: #fff;
     border: none;

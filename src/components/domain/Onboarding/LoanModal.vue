@@ -1,8 +1,8 @@
 <script setup>
-import { ref, nextTick, watchEffect  } from 'vue'
+import { ref, nextTick, watchEffect, computed  } from 'vue'
 // import axios from 'axios';
 
-defineEmits(['confirm', 'cancel'])
+const emit = defineEmits(['confirm', 'cancel'])
 
 const props = defineProps({
   institution: String,
@@ -23,9 +23,28 @@ watchEffect(async () => {
   }
 })
 
-// 입력값 상태
 const repaymentDay = ref('')
 const repaymentMethod = ref('원금 균등 상환')
+
+// 모든 항목 입력 완료했는지 확인
+const isFormValid = computed(() => {
+  const day = Number(repaymentDay.value)
+  return (
+    !isNaN(day) &&
+    day >= 1 &&
+    day <= 31 &&
+    repaymentMethod.value.trim() !== ''
+  )
+})
+
+// 확인 버튼 클릭 시 유효하지 않으면 알림
+const handleConfirm = () => {
+  if (!isFormValid.value) {
+    alert('상환일과 상환 방식을 모두 입력해 주세요.')
+    return
+  }
+  emit('confirm')
+}
 </script>
 
 <template>
@@ -82,7 +101,15 @@ const repaymentMethod = ref('원금 균등 상환')
 
         <div class="button-group">
             <button @click="$emit('cancel')" class="cancel-btn">취소</button>
-            <button @click="$emit('confirm')" class="confirm-btn">확인</button>
+            <!-- <button @click="$emit('confirm')" class="confirm-btn" :disabled="!isFormValid">확인</button> -->
+            <button 
+  @click="handleConfirm" 
+  class="confirm-btn"
+  :disabled="!isFormValid"
+>
+  확인
+</button>
+
         </div>
       </div>
     </div>
