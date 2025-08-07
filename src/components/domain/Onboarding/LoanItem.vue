@@ -13,35 +13,34 @@ function onClick() {
 </script>
 
 <template>
-    <div class="container">
-        <div
-            class="loan-item"
-            :class="{ selected }"
-            @click="onClick"
-        >
-            <img :src="logoUrl" alt="기관 로고" class="logo" />
-            <div class="loan-info">
-            <div class="loan-text">{{ institution }}/{{ loanName }}</div>
-            </div>
-            <img
-            :src="selected ? '/images/checkbox-on.png' : '/images/checkbox-off.png'"
-            alt="선택 상태 아이콘"
-            class="status-icon"
-            />
-        </div>
+  <div
+    class="loan-item"
+    :class="{ selected }"
+    @click="onClick"
+  >
+    <img :src="logoUrl" alt="기관 로고" class="logo" />
+    <div class="loan-info">
+      {{ institution }}/{{ loanName }}
     </div>
-  </template>
+    <img
+    :src="selected ? '/images/checkbox-on.png' : '/images/checkbox-off.png'"
+    alt="완료 상태 아이콘"
+    class="status-icon"
+    />
+  </div>
+</template>
   
   <style scoped>
   .loan-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 6px 16px;
+    padding: 2px 20px 2px 16px;
     border-radius: 16px;
-    box-shadow: 0 4px 8px rgba(0, 44, 75, 0.2);
+    box-shadow: 0 2px 6px rgba(0, 44, 75, 0.15), 0 -2px 4px rgba(0, 44, 75, 0.1);
     border: 2px solid transparent;
     transition: all 0.2s;
+    margin-bottom: 16px;
   }
   .loan-item.selected {
     border-color: #002c4b; /* 선택 시 테두리 진하게 */
@@ -52,17 +51,16 @@ function onClick() {
     width: 32px;
     height: 32px;
     border-radius: 6px;
-    margin-left: 8px;
-    margin-right: 8px;
+    margin: 0 8px;
   }
   .loan-info {
     flex: 1;
-    font-size: 14px;
+    font-size: 16px;
     color: #222;
   }
   .status-icon {
-    width: 20px;
-    height: 20px;
+    width: 28px;
+    height: 28px;
   }
   </style>
   

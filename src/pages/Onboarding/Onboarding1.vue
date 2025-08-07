@@ -17,7 +17,7 @@ function goNext() {
   }
 
   // 유효성 통과 시 다음 페이지로 이동
-  router.push('/onboarding/step2')
+  router.push('/onboarding/page2')
 }
 
 </script>
@@ -47,7 +47,7 @@ function goNext() {
   }
   .container {
     margin-top: 1rem;
-    padding: 0 3rem;
+    padding: 0 2rem;
     text-align: center;
   }
   
