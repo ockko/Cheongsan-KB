@@ -6,6 +6,7 @@ import Calendar from '@/pages/Calendar.vue';
 import Simulation from '@/pages/Simulation.vue';
 import Study from '@/pages/Study.vue';
 import Diagnosis from '@/pages/Diagnosis.vue';
+import StudyDetail from '@/pages/StudyDetail.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -43,6 +44,12 @@ const router = createRouter({
       path: '/diagnosis',
       name: 'Diagnosis',
       component: Diagnosis,
+    },
+    {
+      // path: /study/:id
+      path: '/study/detail',
+      name: 'StudyDetail',
+      component: StudyDetail,
     },
   ],
 });

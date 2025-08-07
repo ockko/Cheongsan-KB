@@ -27,11 +27,11 @@
               />
             </div>
             <span :class="styles.institutionName">{{
-              currentStage.institution
+              detailData?.operatingEntity || '관련 기관'
             }}</span>
           </div>
-          <h1 :class="styles.stageTitle">{{ currentStage.name }}</h1>
-          <p :class="styles.stageDescription">{{ currentStage.description }}</p>
+          <h1 :class="styles.stageTitle">{{ detailData?.programName || '제도명' }}</h1>
+          <p :class="styles.stageDescription">{{ detailData?.simpleDescription || '제도 설명' }}</p>
         </div>
 
         <!-- 대상자 섹션 -->
@@ -41,7 +41,7 @@
           <h2 :class="styles.sectionTitle">대상자</h2>
           <ul :class="styles.sectionList">
             <li
-              v-for="(item, index) in currentStage.targets"
+              v-for="(item, index) in targetList"
               :key="index"
               :class="styles.listItem"
             >
@@ -70,7 +70,7 @@
           <h2 :class="styles.sectionTitle">장점</h2>
           <ul :class="styles.sectionList">
             <li
-              v-for="(item, index) in currentStage.advantages"
+              v-for="(item, index) in advantagesList"
               :key="index"
               :class="styles.listItem"
             >
@@ -100,7 +100,7 @@
           <h2 :class="styles.sectionTitle">주의사항</h2>
           <ul :class="styles.sectionList">
             <li
-              v-for="(item, index) in currentStage.warnings"
+              v-for="(item, index) in cautionsList"
               :key="index"
               :class="styles.listItem"
             >
@@ -136,9 +136,9 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  diagnosisStage: {
-    type: String,
-    default: '개인파산',
+  detailData: {
+    type: Object,
+    default: () => ({}),
   },
 });
 
@@ -170,97 +170,58 @@ const handleImageError = (e) => {
   e.target.style.display = 'none';
 };
 
-// 진단 단계별 데이터
-const stageData = {
-  개인파산: {
-    name: '개인파산',
-    institution: '법원',
-    icon: '/images/court.png',
-    description:
-      '재산을 모두 처분하여 채권자에게 배당하고 남은 부채를 면책받는 제도입니다.',
-    targets: [
-      '지급불능 상태',
-      '면책불허가 사유에 해당하지 않는 자',
-      '성실한 파산절차 참여',
-    ],
-    advantages: [
-      '부채의 최대 90%까지 탕감 가능',
-      '강제집행 중단',
-      '이자 부담 없음',
-      '주택 등 재산 보유 가능',
-    ],
-    warnings: [
-      '재산 처분 필요',
-      '신용등급 최하위 (7년간)',
-      '일부 직업 제한',
-      '면책 불허가 사유 존재',
-    ],
-  },
-  신속채무조정: {
-    name: '신속채무조정',
-    institution: '법원',
-    icon: '/images/court.png',
-    description:
-      '법원의 개입 하에 채권자와 채무자가 합의하여 채무를 조정하는 제도입니다.',
-    targets: [
-      '지급불능 상태',
-      '채무조정 신청 자격이 있는 자',
-      '성실한 채무조정 참여',
-    ],
-    advantages: [
-      '부채의 최대 80%까지 탕감 가능',
-      '강제집행 중단',
-      '이자 부담 감소',
-      '재산 처분 없이 가능',
-    ],
-    warnings: [
-      '채무조정 계획 준수 필요',
-      '신용등급 하락 (5년간)',
-      '일부 금융거래 제한',
-      '채무조정 실패 시 파산 가능',
-    ],
-  },
-  개인워크아웃: {
-    name: '개인워크아웃',
-    institution: '금융감독원',
-    icon: '/images/court.png',
-    description: '금융기관과의 자율적 합의를 통해 채무를 조정하는 제도입니다.',
-    targets: ['금융채무 보유자', '지급불능 상태', '성실한 채무조정 의지'],
-    advantages: [
-      '부채의 최대 70%까지 탕감 가능',
-      '강제집행 중단',
-      '이자 부담 감소',
-      '재산 처분 없이 가능',
-    ],
-    warnings: [
-      '금융채무만 대상',
-      '신용등급 하락 (3년간)',
-      '일부 금융거래 제한',
-      '워크아웃 실패 시 법적 절차',
-    ],
-  },
-  프리워크아웃: {
-    name: '프리워크아웃',
-    institution: '금융감독원',
-    icon: '/images/court.png',
-    description: '금융기관과의 자율적 합의를 통해 채무를 조정하는 제도입니다.',
-    targets: ['금융채무 보유자', '지급불능 상태', '성실한 채무조정 의지'],
-    advantages: [
-      '부채의 최대 60%까지 탕감 가능',
-      '강제집행 중단',
-      '이자 부담 감소',
-      '재산 처분 없이 가능',
-    ],
-    warnings: [
-      '금융채무만 대상',
-      '신용등급 하락 (2년간)',
-      '일부 금융거래 제한',
-      '워크아웃 실패 시 법적 절차',
-    ],
-  },
-};
+// 대상자 목록 생성 (eligibleDebtors와 eligibleDebts 결합)
+const targetList = computed(() => {
+  const targets = [];
+  
+  // eligibleDebtors 처리
+  if (props.detailData?.eligibleDebtors) {
+    if (Array.isArray(props.detailData.eligibleDebtors)) {
+      targets.push(...props.detailData.eligibleDebtors);
+    } else if (typeof props.detailData.eligibleDebtors === 'string') {
+      // 문자열인 경우 쉼표로 분리
+      const debtors = props.detailData.eligibleDebtors.split(',').map(item => item.trim());
+      targets.push(...debtors);
+    }
+  }
+  
+  // eligibleDebts 처리
+  if (props.detailData?.eligibleDebts) {
+    if (Array.isArray(props.detailData.eligibleDebts)) {
+      targets.push(...props.detailData.eligibleDebts);
+    } else if (typeof props.detailData.eligibleDebts === 'string') {
+      // 문자열인 경우 쉼표로 분리
+      const debts = props.detailData.eligibleDebts.split(',').map(item => item.trim());
+      targets.push(...debts);
+    }
+  }
+  
+  return targets.length > 0 ? targets : ['대상자 정보가 없습니다.'];
+});
 
-const currentStage = computed(() => {
-  return stageData[props.diagnosisStage] || stageData['개인파산'];
+// 장점 목록 생성
+const advantagesList = computed(() => {
+  if (props.detailData?.advantages) {
+    if (Array.isArray(props.detailData.advantages)) {
+      return props.detailData.advantages;
+    } else if (typeof props.detailData.advantages === 'string') {
+      // 문자열인 경우 쉼표로 분리
+      return props.detailData.advantages.split(',').map(item => item.trim());
+    }
+  }
+  return [];
+});
+
+// 주의사항 목록 생성
+const cautionsList = computed(() => {
+  if (props.detailData?.cautions) {
+    if (Array.isArray(props.detailData.cautions)) {
+      return props.detailData.cautions;
+    } else if (typeof props.detailData.cautions === 'string') {
+      // 문자열인 경우 쉼표로 분리
+      return props.detailData.cautions.split(',').map(item => item.trim());
+    }
+  }
+  return [];
 });
 </script>

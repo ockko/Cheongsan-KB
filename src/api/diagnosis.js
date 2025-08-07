@@ -84,15 +84,15 @@ export const getDiagnosisResult = async (userId = null) => {
 
 /**
  * 추천 제도 상세 정보 조회
- * @param {number} recommendationId - 추천 제도 ID
+ * @param {number} diagnosisId - 추천 제도 ID
  * @returns {Promise<Object>} 제도 상세 정보
  */
-export const getRecommendationDetail = async (recommendationId) => {
+export const getRecommendationDetail = async (diagnosisId) => {
   try {
     const config = createAuthConfig();
 
     const response = await apiClient.get(
-      `/diagnosis/result/${recommendationId}`,
+      `/cheongsan/diagnosis/result/${diagnosisId}`,
       config
     );
 

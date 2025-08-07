@@ -177,60 +177,18 @@ const completeDiagnosis = async () => {
   } catch (error) {
     console.error('진단 완료 처리 실패:', error);
 
-    // 에러 발생 시 기본 로직으로 fallback
-    const fallbackRecommendation = calculateRecommendation();
-    router.push({
-      path: '/policy',
-      query: { diagnosis: fallbackRecommendation },
-    });
-
-    // 사용자에게 에러 메시지 표시 (선택적)
+    // 사용자에게 에러 메시지 표시
     alert(
-      '진단 결과를 저장하는데 문제가 발생했습니다. 임시 결과를 표시합니다.'
+      '진단 결과를 저장하는데 문제가 발생했습니다. 다시 시도해주세요.'
     );
   }
 };
 
-// 추천 제도 계산 (새로운 질문 기반 로직)
-const calculateRecommendation = () => {
-  const overdueStatus = answers.value['overdue-period'];
-  const debtAmount = answers.value['debt-amount'];
-  const hasIncome = answers.value['has-income'];
 
-  // 새로운 규칙 기반 추천 로직
-  // 1. 소득 없음 + 고액 채무 (5억 이상) = 개인파산
-  if (
-    hasIncome === 'no-income' &&
-    (debtAmount === '500m-1b' || debtAmount === 'over-1b')
-  ) {
-    return '개인파산';
-  }
 
-  // 2. 장기 연체 (90일 이상) + 고액 채무 = 개인파산
-  if (overdueStatus === 'over-90' && debtAmount === 'over-1b') {
-    return '개인파산';
-  }
-
-  // 3. 소득 있음 + 연체 없음 또는 단기 연체 = 개인워크아웃
-  if (
-    hasIncome === 'has-income' &&
-    (overdueStatus === 'no-overdue' || overdueStatus === 'under-30')
-  ) {
-    return '개인워크아웃';
-  }
-
-  // 4. 소득 있음 + 중기 연체 (30-90일) = 신속채무조정
-  if (hasIncome === 'has-income' && overdueStatus === 'under-90') {
-    return '신속채무조정';
-  }
-
-  // 5. 기타 경우 = 프리워크아웃
-  return '프리워크아웃';
-};
-
-// 홈으로 돌아가기
+// 정책 페이지로 돌아가기
 const goHome = () => {
-  router.push('/home');
+  router.push('/policy');
 };
 </script>
 
@@ -262,7 +220,11 @@ const goHome = () => {
       <div v-if="isStartPage" :class="styles.startContainer">
         <div :class="styles.startContent">
           <div :class="styles.iconContainer">
-            <div :class="styles.diagnosticIcon"></div>
+            <img
+              src="/images/diagnosis0.png"
+              alt="진단 아이콘"
+              :class="styles.diagnosticIcon"
+            />
           </div>
 
           <div :class="styles.startTextContainer">
