@@ -63,7 +63,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOriginPattern("*");
+
+        // 특정 origins만 허용 (보안 강화)
+        config.addAllowedOrigin("http://localhost:5173");     // Vite 개발 서버
+        config.addAllowedOrigin("http://127.0.0.1:5173");     // Vite 개발 서버
+
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
@@ -72,7 +76,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.addFilterBefore(encodingFilter(), CsrfFilter.class)
+        http.addFilterBefore(corsFilter(), CsrfFilter.class)
+                .addFilterBefore(encodingFilter(), CsrfFilter.class)
                 .addFilterBefore(jwtUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, JwtUsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(authenticationErrorFilter, JwtAuthenticationFilter.class);
@@ -87,7 +92,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS).permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // 모든 경로의 OPTIONS 요청 허용
                 .antMatchers("/cheongsan/auth/**").permitAll()
                 .antMatchers("/cheongsan/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
