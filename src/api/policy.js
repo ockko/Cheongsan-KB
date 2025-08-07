@@ -1,4 +1,23 @@
 import axios from './index';
+import { getAccessToken } from '@/config/tokens.js';
+
+// 토큰을 포함한 기본 설정 생성
+const createAuthConfig = (customConfig = {}) => {
+  const accessToken = getAccessToken();
+  const config = {
+    timeout: 10000,
+    ...customConfig,
+  };
+
+  if (accessToken) {
+    config.headers = {
+      ...config.headers,
+      Authorization: `Bearer ${accessToken}`,
+    };
+  }
+
+  return config;
+};
 
 // 정책 목록 조회
 export const getPolicies = async (params = {}) => {
@@ -67,25 +86,85 @@ export const searchPolicies = async (keyword) => {
   }
 };
 
-// 맞춤 지원 정책 목록 조회
-export const getCustomPolicies = async (token = null) => {
+// 맞춤 정책 검색 (백엔드 API)
+export const searchCustomPolicies = async (searchWrd) => {
   try {
-    const config = {};
+    const config = createAuthConfig();
 
-    // 토큰이 제공된 경우 헤더에 추가
-    if (token) {
-      config.headers = {
-        Authorization: `Bearer ${'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbnRlaHl1bjQ4ODAiLCJpYXQiOjE3NTQ1Mjc1NDUsImV4cCI6MTc1NDUzMTE0NX0.0n8giHYmBRvS1YMoASFQY52txjjKQHBRELjmlz_-dKU'}`,
-      };
+    // params 옵션을 사용하여 자동 인코딩 처리
+    const params = { searchWrd };
+
+    console.log(
+      '검색 API 요청 시작:',
+      'http://localhost:8080/cheongsan/policies/search'
+    );
+    console.log('검색 파라미터:', params);
+    console.log('검색 요청 설정:', config);
+
+    const response = await axios.get(
+      'http://localhost:8080/cheongsan/policies/search',
+      { ...config, params }
+    );
+
+    console.log('검색 API 응답 성공:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('맞춤 정책 검색 실패:', error);
+
+    // 에러 타입별 상세 로깅
+    if (error.response) {
+      console.error('서버 응답 에러:', {
+        status: error.response.status,
+        statusText: error.response.statusText,
+        data: error.response.data,
+      });
+    } else if (error.request) {
+      console.error('네트워크 에러:', error.request);
+    } else {
+      console.error('요청 설정 에러:', error.message);
     }
+
+    // 검색 실패 시 빈 배열 반환
+    return [];
+  }
+};
+
+// 맞춤 지원 정책 목록 조회
+export const getCustomPolicies = async () => {
+  try {
+    const config = createAuthConfig();
+
+    console.log(
+      'API 요청 시작:',
+      'http://localhost:8080/cheongsan/policies/list'
+    );
+    console.log('요청 설정:', config);
 
     const response = await axios.get(
       'http://localhost:8080/cheongsan/policies/list',
       config
     );
+
+    console.log('API 응답 성공:', response.data);
     return response.data;
   } catch (error) {
     console.error('맞춤 지원 정책 목록 조회 실패:', error);
+
+    // 에러 타입별 상세 로깅
+    if (error.response) {
+      // 서버가 응답을 반환한 경우
+      console.error('서버 응답 에러:', {
+        status: error.response.status,
+        statusText: error.response.statusText,
+        data: error.response.data,
+      });
+    } else if (error.request) {
+      // 요청이 전송되었지만 응답을 받지 못한 경우
+      console.error('네트워크 에러:', error.request);
+    } else {
+      // 요청 설정 중 에러가 발생한 경우
+      console.error('요청 설정 에러:', error.message);
+    }
 
     // 개발용 Mock 데이터 반환
     console.log('Mock 데이터를 사용합니다.');

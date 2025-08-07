@@ -1,7 +1,10 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  timeout: 1000,
+  timeout: 10000, // 타임아웃을 10초로 증가
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 export default instance;

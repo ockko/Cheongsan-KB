@@ -3,9 +3,8 @@ import styles from '@/assets/styles/components/policy/PolicySection.module.css';
 import { useRouter } from 'vue-router';
 import { ref, onMounted, computed } from 'vue';
 import PolicyDetailModal from './PolicyDetailModal.vue';
-import { getCustomPolicies } from '@/api/policy.js';
+import { getCustomPolicies, searchCustomPolicies } from '@/api/policy.js';
 import { useAuthStore } from '@/stores/auth';
-import { getAccessToken } from '@/config/tokens.js';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -19,16 +18,15 @@ const isLoading = ref(false);
 const policies = ref([]);
 const isPoliciesLoading = ref(false);
 const searchKeyword = ref('');
+const isSearching = ref(false);
+const hasSearched = ref(false); // 검색 실행 여부 추적
 
 // 맞춤 지원 정책 데이터 로드
 const loadCustomPolicies = async () => {
   try {
     isPoliciesLoading.value = true;
 
-    // 설정 파일에서 토큰 가져오기
-    const accessToken = getAccessToken();
-
-    const data = await getCustomPolicies(accessToken);
+    const data = await getCustomPolicies();
     policies.value = data;
     console.log('맞춤 지원 정책 데이터 로드 완료:', data);
   } catch (error) {
@@ -38,6 +36,40 @@ const loadCustomPolicies = async () => {
   } finally {
     isPoliciesLoading.value = false;
   }
+};
+
+// 검색 기능
+const handleSearch = async () => {
+  try {
+    isSearching.value = true;
+    hasSearched.value = true; // 검색 실행 표시
+    console.log('검색 시작:', searchKeyword.value || '(빈 검색어)');
+
+    // 검색 API 호출 (빈 검색어도 허용)
+    const searchResults = await searchCustomPolicies(
+      searchKeyword.value.trim() || ''
+    );
+
+    if (searchResults && searchResults.length > 0) {
+      policies.value = searchResults;
+      console.log('검색 결과:', searchResults);
+    } else {
+      policies.value = [];
+      console.log('검색 결과가 없습니다.');
+    }
+  } catch (error) {
+    console.error('검색 실패:', error);
+    // 검색 실패 시 기존 정책 목록 유지
+  } finally {
+    isSearching.value = false;
+  }
+};
+
+// 검색어 초기화 및 전체 정책 목록 로드
+const clearSearch = async () => {
+  searchKeyword.value = '';
+  hasSearched.value = false; // 검색 상태 초기화
+  await loadCustomPolicies();
 };
 
 // 정책 상세 정보 조회 및 모달 열기
@@ -177,22 +209,11 @@ const selectCategory = (categoryId) => {
 const filteredPolicies = computed(() => {
   let filtered = policies.value;
 
-  // 카테고리 필터링
+  // 카테고리 필터링만 적용 (검색은 API에서 처리)
   if (activeCategory.value !== '전체') {
     filtered = filtered.filter(
       (policy) =>
         policy.tagList && policy.tagList.includes(activeCategory.value)
-    );
-  }
-
-  // 검색어 필터링
-  if (searchKeyword.value.trim()) {
-    const keyword = searchKeyword.value.toLowerCase();
-    filtered = filtered.filter(
-      (policy) =>
-        policy.policyName.toLowerCase().includes(keyword) ||
-        policy.policySummary.toLowerCase().includes(keyword) ||
-        policy.ministryName.toLowerCase().includes(keyword)
     );
   }
 
@@ -250,8 +271,9 @@ onMounted(() => {
         type="text"
         placeholder="원하시는 키워드로 정책을 찾아보세요."
         :class="styles.searchInput"
+        @keyup.enter="handleSearch"
       />
-      <div :class="styles.searchButtonIcon">
+      <div :class="styles.searchButtonIcon" @click="handleSearch">
         <div :class="styles.searchIconContainer">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -300,8 +322,13 @@ onMounted(() => {
     <!-- 정책 카드들 -->
     <div :class="styles.policyCards">
       <!-- 로딩 상태 -->
-      <div v-if="isPoliciesLoading" :class="styles.loadingMessage">
-        정책 정보를 불러오는 중입니다...
+      <div
+        v-if="isPoliciesLoading || isSearching"
+        :class="styles.loadingMessage"
+      >
+        {{
+          isSearching ? '검색 중입니다...' : '정책 정보를 불러오는 중입니다...'
+        }}
       </div>
 
       <!-- 정책이 없을 때 -->
@@ -309,7 +336,11 @@ onMounted(() => {
         v-else-if="filteredPolicies.length === 0"
         :class="styles.noPoliciesMessage"
       >
-        조건에 맞는 정책이 없습니다.
+        {{
+          searchKeyword.trim()
+            ? '검색 결과가 없습니다.'
+            : '조건에 맞는 정책이 없습니다.'
+        }}
       </div>
 
       <!-- 정책 카드들 -->
