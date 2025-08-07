@@ -3,7 +3,11 @@ import styles from '@/assets/styles/components/policy/PolicySection.module.css';
 import { useRouter } from 'vue-router';
 import { ref, onMounted, computed } from 'vue';
 import PolicyDetailModal from './PolicyDetailModal.vue';
-import { getCustomPolicies, searchCustomPolicies } from '@/api/policy.js';
+import {
+  getCustomPolicies,
+  searchCustomPolicies,
+  getPolicyDetail,
+} from '@/api/policy.js';
 import { useAuthStore } from '@/stores/auth';
 
 const router = useRouter();
@@ -43,6 +47,7 @@ const handleSearch = async () => {
   try {
     isSearching.value = true;
     hasSearched.value = true; // 검색 실행 표시
+    activeCategory.value = '전체'; // 검색 시 카테고리 초기화
     console.log('검색 시작:', searchKeyword.value || '(빈 검색어)');
 
     // 검색 API 호출 (빈 검색어도 허용)
@@ -69,16 +74,21 @@ const handleSearch = async () => {
 const clearSearch = async () => {
   searchKeyword.value = '';
   hasSearched.value = false; // 검색 상태 초기화
+  activeCategory.value = '전체'; // 카테고리도 초기화
   await loadCustomPolicies();
 };
 
 // 정책 상세 정보 조회 및 모달 열기
-const openPolicyDetail = async (policyId) => {
+const openPolicyDetail = async (policy) => {
   try {
     isLoading.value = true;
-    // policyId만 전달하여 PolicyDetailModal에서 mockData를 사용하도록 함
-    selectedPolicyData.value = { policyId };
+
+    // 정책 이름으로 상세 정보 조회
+    const policyDetail = await getPolicyDetail(policy.policyName);
+    selectedPolicyData.value = policyDetail;
     isModalVisible.value = true;
+
+    console.log('정책 상세 정보 로드 완료:', policyDetail);
   } catch (error) {
     console.error('정책 상세 정보 조회 실패:', error);
   } finally {
@@ -201,7 +211,7 @@ const getMinisterLogo = (logoText) => {
 
 const selectCategory = (categoryId) => {
   activeCategory.value = categoryId;
-  // 여기에 카테고리별 필터링 로직을 추가할 수 있습니다
+  // 카테고리 변경 시에는 검색 상태를 유지하고 클라이언트 사이드 필터링만 적용
   console.log('선택된 카테고리:', categoryId);
 };
 
@@ -304,6 +314,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
+
     <!-- 카테고리 필터 -->
     <div :class="styles.categoryFilter">
       <button
@@ -348,7 +359,7 @@ onMounted(() => {
         v-for="policy in filteredPolicies"
         :key="policy.policyId"
         :class="styles.policyCard"
-        @click="openPolicyDetail(policy.policyId)"
+        @click="openPolicyDetail(policy)"
       >
         <div :class="styles.cardHeader">
           <div :class="styles.cardLogo">

@@ -30,35 +30,64 @@ export const getPolicies = async (params = {}) => {
   }
 };
 
-// 정책 상세 정보 조회
-export const getPolicyDetail = async (policyId) => {
+// 정책 상세 정보 조회 (policyName으로 조회)
+export const getPolicyDetail = async (policyName) => {
   try {
-    const response = await axios.get(`/api/policies/${policyId}`);
+    const config = createAuthConfig();
+
+    // params 옵션을 사용하여 자동 인코딩 처리
+    const params = { policyName };
+
+    console.log(
+      '정책 상세 API 요청 시작:',
+      'http://localhost:8080/cheongsan/policies/detail'
+    );
+    console.log('정책 상세 파라미터:', params);
+    console.log('정책 상세 요청 설정:', config);
+
+    const response = await axios.get(
+      'http://localhost:8080/cheongsan/policies/detail',
+      { ...config, params }
+    );
+
+    console.log('정책 상세 API 응답 성공:', response.data);
     return response.data;
   } catch (error) {
     console.error('정책 상세 정보 조회 실패:', error);
 
-    // 임시 테스트 데이터 반환 (개발용)
-    const mockData = {
-      policyNumber: '39488',
+    // 에러 타입별 상세 로깅
+    if (error.response) {
+      console.error('서버 응답 에러:', {
+        status: error.response.status,
+        statusText: error.response.statusText,
+        data: error.response.data,
+      });
+    } else if (error.request) {
+      console.error('네트워크 에러:', error.request);
+    } else {
+      console.error('요청 설정 에러:', error.message);
+    }
+
+    // 개발용 Mock 데이터 반환
+    console.log('Mock 데이터를 사용합니다.');
+    return {
+      policyNumber: '40785',
       ministryName: '보건복지부',
       departmentName: '기초생활보장과',
-      policyName: '긴급복지 주거지원',
+      policyName: policyName,
       policyTags: ['주거'],
       policySummary:
         '생계곤란 등의 위기상황에 처하여 도움이 필요한 경우 일시적으로 신속하게 지원함으로써 위기상황에서 벗어날 수 있도록 지원합니다.',
       supportAge: null,
-      supportTarget: ['저소득', '위기상황가구', '주거지원필요자'],
+      supportTarget: ['저소득'],
       supportType: '현금지급,현물지급',
       supportCycle: '월',
       isOnlineApplyAvailable: 'N',
       contactNumber: '129',
       detailPageUrl:
         'https://www.bokjiro.go.kr/ssis-tbu/twataa/wlfareInfo/moveTWAT52011M.do?wlfareInfoId=WLF00000917&wlfareInfoReldBztpCd=01',
-      policyId: policyId,
+      policyId: 'WLF00000917',
     };
-
-    return mockData;
   }
 };
 

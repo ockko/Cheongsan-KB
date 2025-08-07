@@ -5,477 +5,198 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #f9f9fd;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 1000;
-  overflow-y: auto;
 }
 
 /* 모달 컨텐츠 */
 .modalContent {
-  width: 100%;
-  min-height: 100vh;
-  background-color: #f9f9fd;
+  background-color: #ffffff;
+  border-radius: 20px;
+  width: 375px;
+  height: 812px;
   position: relative;
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 /* 닫기 버튼 */
 .closeButton {
   position: absolute;
   top: 24px;
-  right: 30px;
+  right: 24px;
   width: 24px;
   height: 24px;
   background: none;
   border: none;
   cursor: pointer;
   z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
 }
 
 /* 모달 본문 */
 .modalBody {
-  padding: 48px 47px 40px 47px;
-  position: relative;
-}
-
-/* 제목 섹션 */
-.titleSection {
-  margin-bottom: 0;
-}
-
-.institutionInfo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-.institutionIcon {
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  overflow: hidden;
-  flex-shrink: 0;
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.institutionIcon img {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-  max-width: 100%;
-  max-height: 100%;
-  background-color: #f5f5f5;
-  transition: opacity 0.2s ease;
-}
-
-.institutionDetails {
+  padding: 50px 16px 32px 16px;
+  height: 100%;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
+}
+/* 부처 정보 */
+.ministryInfo {
+  text-align: left;
+  height: 50px;
 }
 
-.institutionName {
-  font-family: 'Pretendard', sans-serif;
-  font-size: 22px;
-  font-weight: 600;
-  color: #003e65;
-  letter-spacing: 2.2px;
-  line-height: 1;
-}
-
-.departmentName {
-  font-family: 'Pretendard', sans-serif;
-  font-size: 16px;
+.ministryText {
+  font-size: 18px;
   font-weight: 400;
-  color: #72787f;
-  letter-spacing: 1.6px;
-  line-height: 1;
+  color: #003e65;
+  letter-spacing: 1.8px;
 }
 
-.policyHeader {
-  margin-bottom: 0px;
-}
-
+/* 정책 제목 */
 .policyTitle {
-  font-family: 'Pretendard', sans-serif;
-  font-size: 28px;
-  font-weight: 700;
-  color: #003e65;
-  margin: 0 0 0 0;
-  letter-spacing: 2.8px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #000000;
+  margin: 0;
+  letter-spacing: 2.4px;
   line-height: 1.2;
+  text-align: left;
 }
 
-.policyMeta {
+/* 태그 컨테이너 */
+.tagContainer {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.policyNumber {
-  font-family: 'Pretendard', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  color: #72787f;
-  letter-spacing: 1.4px;
-}
-
-.policyTags {
-  display: flex;
-  gap: 8px;
+  gap: 6px;
+  justify-content: left;
+  height: 16px;
+  margin-bottom: 6px;
   flex-wrap: wrap;
 }
 
 .tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 8px;
-  background-color: #e8f4fd;
-  color: #007bff;
-  border-radius: 12px;
-  font-family: 'Pretendard', sans-serif;
+  background-color: transparent;
+  border: 1px solid #003e65;
+  border-radius: 4px;
+  padding: 2px 6px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
+  color: #003e65;
   letter-spacing: 0.8px;
-  line-height: 1.6;
-}
-
-.policySummary {
-  font-family: 'Pretendard', sans-serif;
-  font-size: 18px;
-  font-weight: 400;
-  color: #003e65;
-  line-height: 1.6;
-  margin: 0;
-  letter-spacing: 1.8px;
-  background-color: white;
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
-/* 구분선 */
-.divider {
-  width: calc(100% + 94px);
-  height: 1px;
-  background-color: #e1e2e6;
-  margin: 40px -47px;
-}
-
-/* 섹션 */
-.section {
-  margin-bottom: 0;
-}
-
-.sectionTitle {
-  font-family: 'Pretendard', sans-serif;
-  font-size: 20px;
-  font-weight: 600;
-  color: #003e65;
-  margin: 30px 0 20px 0;
-  letter-spacing: 2px;
-  line-height: 1;
-}
-
-.sectionList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.listContent {
-  padding-left: 10px;
-}
-
-/* 지원 정보 스타일 */
-.supportInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  background-color: white;
-  padding: 4px 10px 4px 10px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
-.supportItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 4px 5px;
-  border-bottom: 1px solid #f0f1f5;
-}
-
-.supportItem:last-child {
-  border-bottom: none;
-}
-
-.supportLabel {
-  font-family: 'Pretendard', sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  padding-left: 10px;
-  color: #72787f;
-  letter-spacing: 1.6px;
-}
-
-.supportValue {
-  font-family: 'Pretendard', sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  padding-right: 10px;
-  color: #003e65;
-  letter-spacing: 1.6px;
-}
-
-/* 신청 정보 스타일 */
-.applicationInfo {
-  background-color: white;
-  padding: 10px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
-.applicationItem {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-left: 10px;
-}
-
-.applicationIcon {
-  width: 16px;
+  white-space: nowrap;
   height: 16px;
-  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.applicationText {
-  font-family: 'Pretendard', sans-serif;
+/* 정책 요약 */
+.policySummary {
   font-size: 16px;
-  font-weight: 500;
-  color: #003e65;
+  font-weight: 300;
+  color: #202020;
+  margin: 0;
   letter-spacing: 1.6px;
+  line-height: 1.18;
+  text-align: left;
 }
 
-/* 문의처 스타일 */
+/* 정보 섹션 */
+.infoSection {
+  margin: 12px 0;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #202020;
+  margin: 0 0 5px 0;
+  letter-spacing: 1.6px;
+  line-height: 1.3;
+}
+
+.sectionContent {
+  font-size: 16px;
+  font-weight: 400;
+  color: #000000;
+  margin: 0;
+  letter-spacing: 1.6px;
+  line-height: 1.18;
+}
+
+/* 문의 정보 */
 .contactInfo {
-  background-color: white;
-  padding: 10px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
-.contactItem {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding-left: 10px;
+  gap: 8px;
+  line-height: 1.18;
 }
 
-.contactIcon {
+.phoneIcon {
   width: 16px;
   height: 16px;
-  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .contactText {
-  font-family: 'Pretendard', sans-serif;
-  font-size: 18px;
-  font-weight: 600;
-  color: #007bff;
-  letter-spacing: 1.8px;
-}
-
-/* 리스트 스타일 */
-.listItem {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-  padding: 0;
-}
-
-.listItem:last-child {
-  margin-bottom: 0;
-}
-
-.listContent {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  background-color: white;
-  padding: 16px 20px;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.targetIcon {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.listText {
-  font-family: 'Pretendard', sans-serif;
   font-size: 16px;
   font-weight: 400;
-  color: #003e65;
-  line-height: 1.3;
+  color: #41474f;
   letter-spacing: 1.6px;
-  flex: 1;
-  margin: 0;
 }
 
-/* 액션 섹션 */
-.actionSection {
-  margin-top: 20px;
-}
-
-.actionButtons {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.detailButton {
-  flex: 1;
-  min-width: 200px;
-  padding: 16px 24px;
-  background-color: white;
-  color: #007bff;
-  border: 2px solid #007bff;
-  border-radius: 8px;
-  font-family: 'Pretendard', sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 1.6px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.detailButton:hover {
-  background-color: #f8f9fa;
-}
-
+/* 신청하러 가기 버튼 */
 .applyButton {
-  flex: 1;
-  min-width: 200px;
-  padding: 16px 24px;
-  background-color: #007bff;
-  color: white;
-  border: 2px solid #007bff;
-  border-radius: 8px;
-  font-family: 'Pretendard', sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 1.6px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 55px;
+  background-color: #003e65;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.2s ease;
 }
 
 .applyButton:hover {
-  background-color: #0056b3;
-  border-color: #0056b3;
+  background-color: #002d4a;
+}
+
+.applyText {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 1.6px;
+}
+
+.externalLinkIcon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* 반응형 디자인 */
-@media (max-width: 768px) {
+@media (max-width: 375px) {
+  .modalContent {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+
   .modalBody {
-    padding: 32px 24px;
-  }
-
-  .institutionName {
-    font-size: 18px;
-  }
-
-  .policyTitle {
-    font-size: 24px;
-  }
-
-  .policySummary {
-    font-size: 16px;
-    padding: 20px;
-  }
-
-  .actionButtons {
-    flex-direction: column;
-  }
-
-  .detailButton,
-  .applyButton {
-    min-width: unset;
-  }
-}
-
-@media (max-width: 480px) {
-  .modalBody {
-    padding: 24px 16px;
-  }
-
-  .closeButton {
-    top: 16px;
-    right: 16px;
-  }
-
-  .institutionIcon {
-    width: 40px;
-    height: 40px;
-  }
-
-  .institutionIcon img {
-    width: 32px;
-    height: 32px;
-  }
-
-  .institutionName {
-    font-size: 16px;
-  }
-
-  .departmentName {
-    font-size: 14px;
-  }
-
-  .policyTitle {
-    font-size: 20px;
-  }
-
-  .policySummary {
-    font-size: 14px;
-    padding: 16px;
-  }
-
-  .sectionTitle {
-    font-size: 18px;
-  }
-
-  .listText {
-    font-size: 14px;
-  }
-
-  .supportValue,
-  .contactText {
-    font-size: 14px;
+    padding: 108px 16px 32px 16px;
   }
 }

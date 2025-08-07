@@ -195,26 +195,26 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  min-height: 24px;
-  padding: 5px 0;
+  min-height: 20px;
+  padding: 3px 0;
   margin-bottom: 4px;
 }
 
 .supportCycle {
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 600;
   color: #003e65;
   background-color: #e8f4fd;
-  padding: 1px 4px;
-  border-radius: 6px;
+  padding: 1px 3px;
+  border-radius: 4px;
   white-space: nowrap;
   flex-shrink: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 45px;
+  width: 40px;
   text-align: center;
-  line-height: 1.2;
-  height: 25px;
+  line-height: 1.1;
+  height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -231,7 +231,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   min-width: 0;
-  max-width: 240px;
+  max-width: 280px;
 }
 
 /* 정책 요약 */
