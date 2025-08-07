@@ -5,6 +5,9 @@ import Policy from '@/pages/Policy.vue';
 import Calendar from '@/pages/Calendar.vue';
 import Simulation from '@/pages/Simulation.vue';
 import Study from '@/pages/Study.vue';
+import Onboarding1 from '@/pages/Onboarding/Onboarding1.vue';
+import Onboarding2 from '@/pages/Onboarding/Onboarding2.vue';
+import Onboarding3 from '@/pages/Onboarding/Onboarding3.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,6 +41,18 @@ const router = createRouter({
       name: 'Study',
       component: Study,
     },
+    { path: '/onboarding/page1',
+      name: 'Onboarding1',
+      component: Onboarding1,
+    },
+    { path: '/onboarding/page2',
+      name: 'Onboarding2',
+      component: Onboarding2,
+    },
+    { path: '/onboarding/page3',
+      name: 'Onboarding3',
+      component: Onboarding3,
+    }
   ],
 });
 
