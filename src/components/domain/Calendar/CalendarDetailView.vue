@@ -60,7 +60,6 @@ const loanNamesText = computed(() => {
 
 <template>
   <div :class="styles.detailContainer">
-    <!-- 대출 상환 안내 -->
     <div v-if="loanList.length > 0" :class="styles.loanSection">
       <div :class="styles.sectionTitle">대출 상환 안내</div>
       <div :class="styles.loanAlert">
@@ -75,7 +74,6 @@ const loanNamesText = computed(() => {
       </div>
     </div>
 
-    <!-- 거래 내역 -->
     <div v-if="transactionList.length > 0" :class="styles.transactionSection">
       <div :class="styles.sectionTitle">거래 내역</div>
       <div :class="styles.transactionList">
