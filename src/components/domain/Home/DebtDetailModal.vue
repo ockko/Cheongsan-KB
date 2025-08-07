@@ -1,10 +1,13 @@
 <script setup>
+import styles from '@/assets/styles/components/Home/DebtDetailModal.module.css';
 import { defineProps, defineEmits } from 'vue';
 
+// 부모 컴포넌트로부터 받을 데이터(props)를 정의합니다.
 const props = defineProps({
   debtDetails: {
     type: Object,
-    default: null, // 기본값은 null
+    required: true,
+    default: () => ({}),
   },
 });
 defineEmits(['close']);
@@ -14,50 +17,64 @@ const formatCurrency = (value) => {
   if (typeof value !== 'number') return '0';
   return value.toLocaleString('ko-KR');
 };
+
+// 상환 방식 코드값을 한글로 변환하는 헬퍼 함수
+const formatRepaymentMethod = (method) => {
+  switch (method) {
+    case 'EQUAL_PRINCIPAL_INTEREST':
+      return '원리금균등상환';
+    case 'EQUAL_PRINCIPAL':
+      return '원금균등상환';
+    case 'BULLET_REPAYMENT':
+      return '만기일시상환';
+    default:
+      return method;
+  }
+};
 </script>
 
 <template>
   <div class="modal-overlay" @click.self="$emit('close')">
     <div class="modal-content">
-      <h3>대출 상세 정보</h3>
+      <h3 class="debt-title">{{ debtDetails.debtName }}</h3>
+      <p class="organization-name">
+        <span class="icon">🏢</span> {{ debtDetails.organizationName }}
+      </p>
 
-      <div v-if="debtDetails" class="details-grid">
-        <span class="label">대출 기관:</span>
-        <span class="value">{{ debtDetails.organizationName }}</span>
+      <ul class="details-list">
+        <li>
+          <span class="label">✔️ 원금</span>
+          <span class="value"
+            >{{ formatCurrency(debtDetails.originalAmount) }} 원</span
+          >
+        </li>
+        <li>
+          <span class="label">✔️ 이자율</span>
+          <span class="value">{{ debtDetails.interestRate.toFixed(2) }} %</span>
+        </li>
+        <li>
+          <span class="label">✔️ 대출 시작일</span>
+          <span class="value">{{ debtDetails.loanStartDate }}</span>
+        </li>
+        <li>
+          <span class="label">✔️ 남은 상환액</span>
+          <span class="value"
+            >{{ formatCurrency(debtDetails.currentBalance) }} 원</span
+          >
+        </li>
+        <li>
+          <span class="label">✔️ 거치기간</span>
+          <span class="value">{{ debtDetails.gracePeriodMonths }} 개월</span>
+        </li>
+        <li>
+          <span class="label">✔️ 상환 방식</span>
+          <span class="value">{{
+            formatRepaymentMethod(debtDetails.repaymentMethod)
+          }}</span>
+        </li>
+      </ul>
 
-        <span class="label">대출명:</span>
-        <span class="value">{{ debtDetails.debtName }}</span>
-
-        <span class="label">총 대출 원금:</span>
-        <span class="value"
-          >{{ formatCurrency(debtDetails.originalAmount) }} 원</span
-        >
-
-        <span class="label">남은 상환액:</span>
-        <span class="value"
-          >{{ formatCurrency(debtDetails.currentBalance) }} 원</span
-        >
-
-        <span class="label">상환율:</span>
-        <span class="value"
-          >{{ (debtDetails.repaymentRate * 100).toFixed(2) }} %</span
-        >
-
-        <span class="label">이자율:</span>
-        <span class="value">{{ debtDetails.interestRate.toFixed(2) }} %</span>
-
-        <span class="label">대출 기간:</span>
-        <span class="value"
-          >{{ debtDetails.loanStartDate }} ~ {{ debtDetails.loanEndDate }}</span
-        >
-      </div>
-      <div v-else>
-        <p>표시할 정보가 없습니다.</p>
-      </div>
-
-      <div class="button-group">
-        <button class="cancel-button" @click="$emit('close')">닫기</button>
-      </div>
+      <button class="close-button" @click="$emit('close')">닫기</button>
     </div>
   </div>
 </template>
