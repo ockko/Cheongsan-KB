@@ -117,15 +117,14 @@ watch(
           @date-click="handleDateClick"
         />
       </div>
+    </div>
+    <!-- 날짜의 상세내역 -->
+    <CalendarDetailView v-if="selectedDateData" :data="selectedDateData" />
 
-      <!-- 날짜의 상세내역 -->
-      <CalendarDetailView v-if="selectedDateData" :data="selectedDateData" />
-
-      <!-- 에러 표시 -->
-      <div v-if="calendarStore.error" :class="styles.error">
-        {{ calendarStore.error }}
-        <button @click="calendarStore.clearError">닫기</button>
-      </div>
+    <!-- 에러 표시 -->
+    <div v-if="calendarStore.error" :class="styles.error">
+      {{ calendarStore.error }}
+      <button @click="calendarStore.clearError">닫기</button>
     </div>
   </div>
 </template>

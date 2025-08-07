@@ -7,6 +7,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  hasSelectedDate: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(['click']);
@@ -72,6 +76,11 @@ const dayClasses = computed(() => {
     classes.push(styles.clickable);
   }
 
+  // 선택된 날짜가 있을 때 컴팩트 모드 적용
+  if (props.hasSelectedDate) {
+    classes.push(styles.compact);
+  }
+
   return classes;
 });
 
@@ -85,46 +94,83 @@ const handleClick = () => {
   <div :class="dayClasses" @click="handleClick">
     <div :class="styles.dateNumber">{{ day.date }}</div>
 
-    <!-- 거래 내역 표시 -->
-    <div v-if="day.transactions" :class="styles.transactions">
-      <!-- 지출 표시 -->
-      <div
-        v-if="day.transactions.expense && day.transactions.expense > 0"
-        :class="[styles.amount, styles.expense]"
-      >
-        - {{ formatAmount(day.transactions.expense) }}
+    <!-- 선택된 날짜가 없을 때: 기본 표시 -->
+    <template v-if="!hasSelectedDate">
+      <!-- 대출 정보 표시 (최대 3개 + 더보기) -->
+      <div v-if="displayLoans.length > 0" :class="styles.loanContainer">
+        <template v-for="(item, index) in displayLoans" :key="index">
+          <!-- 일반 대출 -->
+          <div
+            v-if="item.type === 'loan'"
+            :class="styles.loanTag"
+            :title="item.data.debtName"
+          >
+            {{ truncateLoanName(item.data.debtName) }}
+          </div>
+
+          <!-- 더보기 표시 -->
+          <div
+            v-else-if="item.type === 'more'"
+            :class="[styles.loanTag, styles.moreTag]"
+            :title="`${item.count}개 더 있음`"
+          >
+            +{{ item.count }}
+          </div>
+        </template>
       </div>
 
-      <!-- 수익 표시 -->
-      <div
-        v-if="day.transactions.income && day.transactions.income > 0"
-        :class="[styles.amount, styles.income]"
-      >
-        + {{ formatAmount(day.transactions.income) }}
+      <!-- 거래 내역 표시 -->
+      <div v-if="day.transactions" :class="styles.transactions">
+        <!-- 지출 표시 -->
+        <div
+          v-if="day.transactions.expense && day.transactions.expense > 0"
+          :class="[styles.amount, styles.expense]"
+        >
+          - {{ formatAmount(day.transactions.expense) }}
+        </div>
+
+        <!-- 수익 표시 -->
+        <div
+          v-if="day.transactions.income && day.transactions.income > 0"
+          :class="[styles.amount, styles.income]"
+        >
+          + {{ formatAmount(day.transactions.income) }}
+        </div>
       </div>
-    </div>
+    </template>
 
-    <!-- 대출 정보 표시 (최대 3개 + 더보기) -->
-    <div v-if="displayLoans.length > 0" :class="styles.loanContainer">
-      <template v-for="(item, index) in displayLoans" :key="index">
-        <!-- 일반 대출 -->
+    <!-- 선택된 날짜가 있을 때: 동그라미 표시 -->
+    <template v-else>
+      <div :class="styles.compactIndicators">
+        <!-- 대출 동그라미 -->
         <div
-          v-if="item.type === 'loan'"
-          :class="styles.loanTag"
-          :title="item.data.debtName"
-        >
-          {{ truncateLoanName(item.data.debtName) }}
-        </div>
+          v-if="displayLoans.length > 0"
+          :class="[styles.indicator, styles.loanIndicator]"
+          :title="`대출 ${displayLoans.length}개`"
+        ></div>
 
-        <!-- 더보기 표시 -->
+        <!-- 지출 동그라미 -->
         <div
-          v-else-if="item.type === 'more'"
-          :class="[styles.loanTag, styles.moreTag]"
-          :title="`${item.count}개 더 있음`"
-        >
-          +{{ item.count }}
-        </div>
-      </template>
-    </div>
+          v-if="
+            day.transactions &&
+            day.transactions.expense &&
+            day.transactions.expense > 0
+          "
+          :class="[styles.indicator, styles.expenseIndicator]"
+          :title="`지출 ${formatAmount(day.transactions.expense)}`"
+        ></div>
+
+        <!-- 수입 동그라미 -->
+        <div
+          v-if="
+            day.transactions &&
+            day.transactions.income &&
+            day.transactions.income > 0
+          "
+          :class="[styles.indicator, styles.incomeIndicator]"
+          :title="`수입 ${formatAmount(day.transactions.income)}`"
+        ></div>
+      </div>
+    </template>
   </div>
 </template>

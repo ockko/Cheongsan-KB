@@ -21,7 +21,7 @@ const props = defineProps({
     default: () => ({}),
   },
   selectedDate: {
-    type: Number,
+    type: Object, // selectedDateData 객체 전체를 받음
     default: null,
   },
 });
@@ -30,6 +30,11 @@ const emit = defineEmits(['date-click']);
 
 // 요일 헤더
 const weekdays = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+
+// 선택된 날짜 번호 계산
+const selectedDateNumber = computed(() => {
+  return props.selectedDate ? props.selectedDate.date : null;
+});
 
 // 달력 날짜 계산
 const calendarDays = computed(() => {
@@ -62,7 +67,7 @@ const calendarDays = computed(() => {
       isToday,
       transactions: transactions,
       loan: loan,
-      isSelected: props.selectedDate === day && isCurrentMonth,
+      isSelected: selectedDateNumber.value === day && isCurrentMonth,
     });
 
     currentDate.setDate(currentDate.getDate() + 1);
@@ -81,9 +86,6 @@ const handleDayClick = (day) => {
 
 <template>
   <div :class="styles.calendarContainer">
-    <!-- 로고 배경 -->
-    <!-- <div :class="styles.logoBackground"></div> -->
-
     <!-- 요일 헤더 -->
     <div :class="styles.weekdaysHeader">
       <div v-for="weekday in weekdays" :key="weekday" :class="styles.weekday">
@@ -97,6 +99,7 @@ const handleDayClick = (day) => {
         v-for="(day, index) in calendarDays"
         :key="index"
         :day="day"
+        :has-selected-date="selectedDateNumber !== null"
         @click="handleDayClick(day)"
       />
     </div>
