@@ -1,0 +1,136 @@
+.dayCell {
+  min-height: 80px;
+  margin-left: 10px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+  transition: background-color 0.2s ease, min-height 0.3s ease; /* height 전환 애니메이션 추가 */
+  overflow: hidden; /* 내용이 넘치지 않도록 */
+}
+
+.otherMonth {
+  opacity: 0.5;
+}
+
+.selected {
+  background-color: rgba(33, 150, 243, 0.1);
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dateNumber {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 2px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; /* 크기 고정 */
+}
+
+/* 컴팩트 모드 스타일 */
+.compact {
+  min-height: 50px; /* 기본 80px에서 50px로 줄임 */
+  transition: min-height 0.3s ease; /* 부드러운 애니메이션 */
+}
+
+.compact .dateNumber {
+  margin-bottom: 4px; /* 동그라미와의 간격 조정 */
+}
+
+/* 컴팩트 모드의 동그라미 인디케이터 */
+.compactIndicators {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-top: 2px;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+.indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.loanIndicator {
+  background-color: #ff9800; /* 주황색 - 대출 */
+}
+
+.expenseIndicator {
+  background-color: #ff8b8b; /* 빨간색 - 지출 */
+}
+
+.incomeIndicator {
+  background-color: #8b93ff; /* 파란색 - 수입 */
+}
+
+.transactions {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-height: 0; /* flexbox 줄어들기 허용 */
+}
+
+.amount {
+  font-size: 8px;
+  font-weight: 500;
+  line-height: 1.1;
+  word-break: break-all;
+}
+
+.income {
+  color: #8b93ff;
+}
+
+.expense {
+  color: #ff8b8b;
+}
+
+.loanContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  max-height: 50px; /* 최대 높이 제한 */
+  overflow: hidden;
+}
+
+.loanTag {
+  background-color: #ff9800;
+  color: white;
+  font-size: 7px;
+  font-weight: 500;
+  padding: 1px 3px;
+  border-radius: 6px;
+  text-align: center;
+  width: 30px;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0; /* 크기 고정 */
+  line-height: 1;
+}
+
+.moreTag {
+  background-color: #757575; /* 회색 배경 */
+  font-size: 6px;
+  font-weight: 600;
+}

@@ -1,0 +1,88 @@
+.detailContainer {
+  margin-top: -70px;
+  margin-bottom: 66px;
+  padding: 20px;
+  position: relative;
+  z-index: 2;
+  background-color: #f8f9fa;
+}
+
+.loanSection {
+  margin-bottom: 24px;
+}
+
+.transactionSection {
+  margin-bottom: 20px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-third);
+}
+
+.loanAlert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background-color: #fff4e8;
+  border: 2px solid var(--color-secondary);
+  border-radius: 8px;
+}
+
+.alertText {
+  font-size: 14px;
+  color: #333;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.transactionList {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-left: 15px;
+}
+
+/* 전체 연결선 - 백그라운드에 하나의 긴 선 */
+.transactionList::before {
+  content: '';
+  position: absolute;
+  left: 6px; /* 도트 중앙 정렬 */
+  top: 1px; /* 첫 번째 도트 중앙부터 시작 */
+  bottom: 1px; /* 마지막 도트 중앙까지 */
+  width: 3px;
+  background-color: var(--color-gray1);
+  z-index: 0;
+}
+
+.transactionItem {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  height: 40px;
+  gap: 20px;
+  position: relative;
+}
+
+.transactionDot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1; /* 연결선 위에 표시 */
+}
+
+.transactionItem.income .transactionDot {
+  background-color: #8b93ff;
+}
+
+.transactionItem.expense .transactionDot {
+  background-color: #ff8b8b;
+}
+
+.transactionAmount {
+  color: var(--color-main);
+}
