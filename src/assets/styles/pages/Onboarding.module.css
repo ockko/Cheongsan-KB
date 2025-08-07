@@ -1,0 +1,52 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 148px;
+}
+
+.title {
+  font-family: var(--font-family);
+  font-weight: 600; /* SemiBold */
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  margin: 0 0 38px 0;
+}
+
+.description {
+  font-family: var(--font-family);
+  font-weight: 500; /* Regular */
+  font-size: 16px;
+  line-height: 1.4;
+  letter-spacing: -0.25px;
+  margin: 0 0 22px 0;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.button {
+  width: 136px;
+  height: 43px;
+  border-radius: 8px;
+  border: none;
+  font-family: var(--font-family);
+  font-weight: 700; /* SemiBold */
+  font-size: 20px;
+  letter-spacing: -0.25px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.loginButton {
+  background-color: var(--color-light2);
+}
+
+.signupButton {
+  background-color: var(--color-main);
+  color: white;
+}

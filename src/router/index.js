@@ -6,13 +6,19 @@ import Calendar from '@/pages/Calendar.vue';
 import Simulation from '@/pages/Simulation.vue';
 import Study from '@/pages/Study.vue';
 import StudyDetail from '@/pages/StudyDetail.vue';
+import Onboarding from '@/pages/Onboarding.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      redirect: '/home', // 기본 경로를 홈으로 리다이렉트 했지만, 이 부분은 나중에 로그인 페이지가 생성되면 그 때 바꿀 예정입니다.
+      redirect: '/onboarding',
+    },
+    {
+      path: '/onboarding', // 온보딩 라우트 추가
+      name: 'Onboarding',
+      component: Onboarding,
     },
     {
       path: '/home',
