@@ -1,23 +1,15 @@
 .header {
-  padding: 20px;
   background-color: transparent;
   text-align: center;
   position: relative;
   z-index: 1;
 }
 
-.year {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 8px;
-  font-weight: 400;
-}
-
 .monthNavigation {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 80px;
 }
 
 .navButton {
@@ -35,7 +27,7 @@
 }
 
 .arrow {
-  width: 20px;
+  width: 10px;
   height: 20px;
 }
 

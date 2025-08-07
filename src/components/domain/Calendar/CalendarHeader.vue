@@ -44,7 +44,7 @@ const nextMonth = () => {
 
 <template>
   <div :class="styles.header">
-    <div :class="styles.year">{{ year }}년</div>
+    <div class="text-light" style="color: var(--color-main)">{{ year }}년</div>
 
     <div :class="styles.monthNavigation">
       <button :class="styles.navButton" @click="previousMonth" type="button">
