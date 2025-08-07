@@ -75,7 +75,7 @@
   background-color: var(--color-main);
   border-radius: 20px;
   padding: 0 15px 0 15px;
-  width: 220px;
+  width: 210px;
   height: 180px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -96,7 +96,7 @@
 .sideCard {
   background-color: #2d6081;
   border-radius: 20px;
-  width: 60px;
+  width: 50px;
   height: 180px;
   cursor: pointer;
   transition: all 0.2s ease;
