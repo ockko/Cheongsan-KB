@@ -9,13 +9,27 @@ const route = useRoute();
 
 // 헤더를 표시할 페이지들 (네비게이션 바가 있는 메인 페이지들)
 const showHeader = computed(() => {
-  const mainPages = ['/home', '/policy', '/calendar', '/simulation', '/study'];
+  const mainPages = [
+    '/home',
+    '/policy',
+    '/calendar',
+    '/simulation',
+    '/study',
+    '/study/detail',
+  ];
   return mainPages.includes(route.path);
 });
 
 // 네비게이션 바를 표시할 페이지들
 const showNavigation = computed(() => {
-  const mainPages = ['/home', '/policy', '/calendar', '/simulation', '/study'];
+  const mainPages = [
+    '/home',
+    '/policy',
+    '/calendar',
+    '/simulation',
+    '/study',
+    '/study/detail',
+  ];
   return mainPages.includes(route.path);
 });
 
