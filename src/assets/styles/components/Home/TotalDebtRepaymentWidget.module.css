@@ -1,0 +1,71 @@
+.widgetCard {
+  border-radius: 10px;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
+  line-height: 1.5;
+}
+
+.widgetHeader {
+  background-color: var(--color-main);
+  border-radius: 10px 10px 0 0;
+  padding: 0.5rem 1.5rem;
+}
+
+.widgetHeader h3 {
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--color-gray3);
+}
+
+.widgetContent {
+  padding: 1rem 1.5rem;
+}
+
+.chartContainer {
+  position: relative;
+  width: 85px;
+  height: 85px;
+  margin: 0 auto 1rem auto;
+}
+
+.progressRing {
+  transform: rotate(-90deg); /* 12시 방향에서 시작하도록 회전 */
+}
+
+.progressRingTrack {
+  stroke: var(--color-gray1);
+}
+
+.progressRingIndicator {
+  stroke: var(--color-main);
+  stroke-linecap: square;
+  transition: stroke-dashoffset 0.5s ease-out;
+}
+
+.percentageText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1rem;
+  font-weight: 700;
+  color: black;
+}
+
+.summaryText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.summaryItem {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  color: var(--color-gray-unnamed);
+}
+
+.summaryItem .amount {
+  font-weight: 600;
+  color: var(--color-secondary);
+}

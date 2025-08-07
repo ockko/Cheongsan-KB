@@ -4,7 +4,7 @@ import DailySpendingWidget from '@/components/domain/Home/DailySpendingWidget.vu
 import DebtListWidget from '@/components/domain/Home/DebtListWidget.vue';
 import OverdueAlertWidget from '@/components/domain/Home/OverdueAlertWidget.vue';
 import RepaymentPlanWidget from '@/components/domain/Home/RepaymentPlanWidget.vue';
-import TotalDebtStatusWidget from '@/components/domain/Home/TotalDebtStatusWidget.vue';
+import TotalDebtRepaymentWidget from '@/components/domain/Home/TotalDebtRepaymentWidget.vue';
 import WeeklyReportWidget from '@/components/domain/Home/WeeklyReportWidget.vue';
 </script>
 <template>
@@ -12,7 +12,7 @@ import WeeklyReportWidget from '@/components/domain/Home/WeeklyReportWidget.vue'
     <DailySpendingWidget />
     <OverdueAlertWidget />
     <WeeklyReportWidget />
-    <TotalDebtStatusWidget />
+    <TotalDebtRepaymentWidget />
     <RepaymentPlanWidget />
     <DebtListWidget />
   </div>
