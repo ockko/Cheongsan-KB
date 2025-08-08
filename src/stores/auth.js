@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import axios from 'axios';
-import { getApiBaseUrl } from '@/config/api';
+import { getApiBaseUrl } from '@/config/url';
 
 const initState = {
   accessToken: '',
@@ -44,7 +44,7 @@ export const useAuthStore = defineStore('auth', () => {
       // localStorage에 저장
       localStorage.setItem('auth', JSON.stringify(state.value));
 
-      console.log('로그인 성공:', state.value);
+      console.log('로그인 성공:');
       return response.data;
     } catch (error) {
       console.error('로그인 실패:', error);
@@ -121,7 +121,6 @@ export const useAuthStore = defineStore('auth', () => {
       if (auth) {
         const parsedAuth = JSON.parse(auth);
         state.value = parsedAuth;
-        console.log('인증 상태 로드:', state.value);
       }
     } catch (error) {
       console.error('인증 상태 로드 실패:', error);

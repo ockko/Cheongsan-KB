@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getApiBaseUrl } from '@/config/api';
+import { getApiBaseUrl } from '@/config/url';
 
 const instance = axios.create({
   baseURL: getApiBaseUrl(),
@@ -18,19 +18,7 @@ instance.interceptors.request.use(
 
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
-      console.log(
-        'API 요청 with token:',
-        config.method?.toUpperCase(),
-        config.url
-      );
-    } else {
-      console.log(
-        'API 요청 without token:',
-        config.method?.toUpperCase(),
-        config.url
-      );
     }
-
     return config;
   },
   (error) => {
@@ -42,7 +30,6 @@ instance.interceptors.request.use(
 // 응답 인터셉터 - 토큰 만료 처리
 instance.interceptors.response.use(
   (response) => {
-    console.log('API 응답 성공:', response.status, response.config.url);
     return response;
   },
   async (error) => {

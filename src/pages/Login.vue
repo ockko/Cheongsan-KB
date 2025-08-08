@@ -122,15 +122,13 @@ const goToFindAccount = () => {
         <span>SNS 계정 로그인</span>
       </div>
 
-      <!-- 네이버 로그인 -->
-      <button
+      <img
         @click="handleNaverLogin"
-        :class="styles.naverButton"
+        style="height: 44px; cursor: pointer"
         :disabled="isSubmitting"
-      >
-        <span>N</span>
-        네이버 로그인
-      </button>
+        src="/images/naver-btn.png"
+        alt="네이버 로그인 버튼"
+      />
 
       <!-- 하단 링크들 -->
       <div :class="styles.footer">
