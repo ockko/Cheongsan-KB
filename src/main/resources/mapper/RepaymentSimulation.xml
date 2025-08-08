@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cheongsan.domain.simulator.mapper.RepaymentSimulationMapper">
+
+    <select id="findByUserIdAndStrategyType" parameterType="map" resultType="string">
+        SELECT json_value
+        FROM repayment_simulation
+        WHERE user_id = #{userId}
+          AND cache_key = #{cacheKey}
+        LIMIT 1
+    </select>
+
+    <insert id="insertCacheData" parameterType="map">
+        INSERT INTO repayment_simulation (user_id, cache_key, json_value)
+        VALUES (#{userId}, #{cacheKey}, #{jsonValue})
+        ON DUPLICATE KEY UPDATE json_value = VALUES(json_value)
+    </insert>
+
+    <delete id="deleteByUserId" parameterType="long">
+        DELETE
+        FROM repayment_simulation
+        WHERE user_id = #{userId}
+    </delete>
+
+</mapper>
