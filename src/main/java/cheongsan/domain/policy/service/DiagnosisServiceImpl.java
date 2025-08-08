@@ -60,7 +60,7 @@ public class DiagnosisServiceImpl implements DiagnosisService {
 
         switch (q1) {
             case 1: // 연체 없음
-                return 0L; // 예방적 상담 또는 일반 금융상품 추천
+                return 6L; // 예방적 상담 또는 일반 금융상품 추천
 
             case 2: // 30일 이하 단기 연체
                 if (q3 != null && q3 == 1) { // 소득 있음
@@ -88,7 +88,7 @@ public class DiagnosisServiceImpl implements DiagnosisService {
                 }
 
             default:
-                return 0L; // 예외 상황
+                return 6L; // 예외 상황
         }
     }
 
