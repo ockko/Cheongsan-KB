@@ -47,11 +47,15 @@ const debtList = ref([
 
 <template>
   <div :class="styles.page">
-    <DailySpendingWidget />
-    <OverdueAlertWidget />
+    <div :class="styles.widgetsContainer">
+      <DailySpendingWidget :class="styles.widget" />
+      <OverdueAlertWidget :class="styles.widget" />
+    </div>
     <WeeklyReportWidget />
-    <TotalDebtRepaymentWidget />
-    <RepaymentPlanWidget />
+    <div :class="styles.widgetsContainer">
+      <TotalDebtRepaymentWidget :class="styles.widget" />
+      <RepaymentPlanWidget :class="styles.widget" />
+    </div>
     <DebtListWidget :debts="debtList" />
   </div>
 </template>
