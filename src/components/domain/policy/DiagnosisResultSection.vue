@@ -144,7 +144,7 @@ const openModal = async () => {
 
     // API 호출하여 상세 정보 가져오기
     const detailData = await getRecommendationDetail(policyId);
-    console.log(detailData)
+    console.log(detailData);
     modalData.value = detailData;
 
     // 모달 열기
@@ -180,7 +180,7 @@ const goToDiagnosis = () => {
     <!-- 상단 상태 텍스트 -->
     <div :class="styles.statusSection">
       <p :class="styles.userStatusText">
-        <span :class="styles.userName">{{ diagnosisResult.userName }}</span>
+        <span :class="styles.userName">{{ diagnosisResult.nickName }}</span>
         <span :class="styles.userSuffix">님은</span>
       </p>
       <p :class="styles.diagnosisStageText">

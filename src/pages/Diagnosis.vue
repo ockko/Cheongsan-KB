@@ -3,8 +3,10 @@ import styles from '@/assets/styles/pages/Diagnosis.module.css';
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { submitDiagnosis } from '@/api/diagnosis.js';
+import { useAuthStore } from '@/stores/auth';
 
 const router = useRouter();
+const authStore = useAuthStore();
 
 // 현재 단계 관리 (-1: 시작 페이지, 0~2: 진단 단계)
 const currentStep = ref(-1);
@@ -178,13 +180,9 @@ const completeDiagnosis = async () => {
     console.error('진단 완료 처리 실패:', error);
 
     // 사용자에게 에러 메시지 표시
-    alert(
-      '진단 결과를 저장하는데 문제가 발생했습니다. 다시 시도해주세요.'
-    );
+    alert('진단 결과를 저장하는데 문제가 발생했습니다. 다시 시도해주세요.');
   }
 };
-
-
 
 // 정책 페이지로 돌아가기
 const goHome = () => {
@@ -228,7 +226,9 @@ const goHome = () => {
           </div>
 
           <div :class="styles.startTextContainer">
-            <h1 :class="styles.startTitle">가나다님의 이야기를 알려주세요</h1>
+            <h1 :class="styles.startTitle">
+              {{ authStore.state.user.nickName }}님의 이야기를 알려주세요
+            </h1>
             <p :class="styles.startDescription">
               간단한 질문에 답하시면 현재 상황에 가장 적합한 공적 채무조정
               제도를 추천해드립니다.
