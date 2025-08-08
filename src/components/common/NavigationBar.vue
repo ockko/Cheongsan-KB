@@ -1,10 +1,12 @@
 <script setup>
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useModalStore } from '@/stores/modal';
 import styles from '@/assets/styles/components/NavigationBar.module.css';
 
 const route = useRoute();
 const router = useRouter();
+const modalStore = useModalStore();
 
 const navItems = [
   {
@@ -53,7 +55,7 @@ const navigateTo = (route) => {
 </script>
 
 <template>
-  <nav :class="styles.navigationBar">
+  <nav v-show="!modalStore.isAnyModalOpen" :class="styles.navigationBar">
     <button
       v-for="item in navItems"
       :key="item.name"
