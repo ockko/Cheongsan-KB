@@ -2,6 +2,7 @@ package cheongsan.common.config;
 
 import cheongsan.domain.simulator.dto.RepaymentResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,11 +14,14 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@RequiredArgsConstructor
 public class RedisConfig {
     @Value("${redis.url}")
     private String redisUrl;
     @Value("${redis.password}")
     private String redisPassword;
+
+    private final ObjectMapper objectMapper;
 
     @Bean
     public RedisTemplate<String, Object> redisTemplateForToken() {
@@ -34,9 +38,7 @@ public class RedisConfig {
         template.setConnectionFactory(connectionFactory);
 
         Jackson2JsonRedisSerializer<RepaymentResponseDTO> serializer = new Jackson2JsonRedisSerializer<>(RepaymentResponseDTO.class);
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.findAndRegisterModules(); // JavaTimeModule 등 자동 등록
-        serializer.setObjectMapper(mapper);
+        serializer.setObjectMapper(objectMapper);
 
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(serializer);

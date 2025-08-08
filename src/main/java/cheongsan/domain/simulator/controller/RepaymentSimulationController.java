@@ -33,7 +33,7 @@ public class RepaymentSimulationController {
         List<LoanDTO> loans = convertToLoanDTOList(debtService.getUserDebtList(userId));
         RepaymentRequestDTO request = RepaymentRequestDTO.builder().loans(loans).monthlyAvailableAmount(monthlyAvailableAmount).build();
         List<RepaymentResponseDTO> results = simulationService.simulateAll(request);
-        simulationService.saveStrategies(1L, results);
+        simulationService.saveStrategies(userId, results);
         return ResponseEntity.ok(results);
     }
 
@@ -82,6 +82,14 @@ public class RepaymentSimulationController {
         }
 
         return ResponseEntity.ok(strategyResult);
+    }
+
+    @DeleteMapping("/delete")
+    public void deleteUserCache(Principal principal) {
+        Authentication authentication = (Authentication) principal;
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        Long userId = customUser.getUser().getId();
+        simulationService.deleteUserCache(userId);
     }
 
     private static List<LoanDTO> convertToLoanDTOList(List<DebtInfoResponseDTO> debtInfoList) {

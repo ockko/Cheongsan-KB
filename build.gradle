@@ -102,6 +102,8 @@ dependencies {
     implementation 'redis.clients:jedis:2.10.2'
     implementation 'io.lettuce:lettuce-core:6.3.1.RELEASE'
 
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2'
+
 
     // 테스트
     testImplementation "org.springframework:spring-test:${springVersion}"
