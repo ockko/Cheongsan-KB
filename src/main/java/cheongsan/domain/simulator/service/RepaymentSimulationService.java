@@ -14,5 +14,7 @@ public interface RepaymentSimulationService {
     void saveStrategies(Long userId, List<RepaymentResponseDTO> simulationResults);
 
     RepaymentResponseDTO getStrategy(Long userId, StrategyType strategyType);
+
+    void deleteUserCache(Long userId);
 }
 

@@ -4,8 +4,11 @@ import cheongsan.domain.simulator.dto.LoanDTO;
 import cheongsan.domain.simulator.dto.RepaymentRequestDTO;
 import cheongsan.domain.simulator.dto.RepaymentResponseDTO;
 import cheongsan.domain.simulator.dto.StrategyType;
+import cheongsan.domain.simulator.mapper.RepaymentSimulationMapper;
 import cheongsan.domain.simulator.service.strategy.RepaymentStrategy;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +20,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RepaymentSimulationServiceImpl implements RepaymentSimulationService {
 
-    private final RedisTemplate<String, RepaymentResponseDTO> redisTemplate;
+    private final RedisTemplate<String, RepaymentResponseDTO> repaymentStrategyRedisTemplate;
+    private final List<RepaymentStrategy> strategies;
+    private final RepaymentSimulationMapper repaymentSimulationMapper;
+
+    private static final Duration CACHE_TTL = Duration.ofHours(1);
 
     private static final String STRATEGY_PREFIX = "repayment:";
 
-    private final List<RepaymentStrategy> strategies;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Override
     public List<RepaymentResponseDTO> simulateAll(RepaymentRequestDTO request) {
@@ -53,7 +61,15 @@ public class RepaymentSimulationServiceImpl implements RepaymentSimulationServic
     @Override
     public void saveStrategy(Long userId, RepaymentResponseDTO simulationResult) {
         String key = generateKey(userId, simulationResult.getStrategyType());
-        redisTemplate.opsForValue().set(key, simulationResult, Duration.ofHours(1));
+        try {
+            String jsonValue = objectMapper.writeValueAsString(simulationResult);
+            repaymentSimulationMapper.insertCacheData(userId, key, jsonValue);
+            repaymentStrategyRedisTemplate.opsForValue().set(key, simulationResult, CACHE_TTL);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("저장 실패", e);
+        }
     }
 
     @Override
@@ -64,7 +80,28 @@ public class RepaymentSimulationServiceImpl implements RepaymentSimulationServic
     @Override
     public RepaymentResponseDTO getStrategy(Long userId, StrategyType strategyType) {
         String key = generateKey(userId, strategyType);
-        return redisTemplate.opsForValue().get(key);
+        RepaymentResponseDTO cachedDto = repaymentStrategyRedisTemplate.opsForValue().get(key);
+        if (cachedDto != null) {
+            return cachedDto;
+        }
+        String jsonValue = repaymentSimulationMapper.findByUserIdAndStrategyType(userId, key);
+        if (jsonValue != null) {
+            try {
+                RepaymentResponseDTO dto = objectMapper.readValue(jsonValue, RepaymentResponseDTO.class);
+
+                repaymentStrategyRedisTemplate.opsForValue().set(key, dto, CACHE_TTL);
+
+                return dto;
+            } catch (Exception e) {
+                throw new RuntimeException("JSON 파싱 실패", e);
+            }
+        }
+        return new RepaymentResponseDTO();
+    }
+
+    @Override
+    public void deleteUserCache(Long userId) {
+        repaymentSimulationMapper.deleteByUserId(userId);
     }
 
     private String generateKey(Long userId, StrategyType strategyType) {
