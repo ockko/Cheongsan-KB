@@ -47,7 +47,7 @@ function handleLoanClick(index) {
 
 function confirmSelection() {
   if (clickedIndex.value !== null) {
-    confirmedIndexes.value.add(clickedIndex.value) // ✅ 선택 추가
+    confirmedIndexes.value.add(clickedIndex.value)
   }
   isModalOpen.value = false
   clickedIndex.value = null

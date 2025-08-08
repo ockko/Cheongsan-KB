@@ -1,4 +1,5 @@
 <script setup>
+import styles from '@/assets/styles/components/Onboarding/ProgressHeader.module.css'
 import { computed } from 'vue'
 
 const props = defineProps({
@@ -10,36 +11,10 @@ const percent = computed(() => (100 * props.current) / props.total)
 </script>
 
 <template>
-    <div class="progress-header">
-      <div class="progress-bar-wrapper">
-        <div class="progress-bar color-main" :style="{ width: percent + '%' }"></div>
+    <div :class="styles.progressHeader">
+      <div :class="styles.progressBarWrapper">
+        <div :class="[styles.progressBar, 'color-main']" :style="{ width: percent + '%' }"></div>
       </div>
-      <p class="step-text color-main">{{ current }} / {{ total }}</p>
+      <p :class="[styles.stepText, 'color-main']">{{ current }} / {{ total }}</p>
     </div>
   </template>
-  
-  <style scoped>
-  .progress-header {
-    padding: 1rem 0;
-    text-align: center;
-  }
-  
-  .progress-bar-wrapper {
-    height: 10px;
-    background-color: gray;
-  }
-  
-  .progress-bar {
-    height: 10px;
-    transition: width 0.3s;
-    background-color: navy;
-  }
-
-  .step-text {
-    font-size: 22px;
-    margin-top: 1.5rem;
-    font-weight: 500;
-    color: #00497a;
-  }
-  </style>
-  

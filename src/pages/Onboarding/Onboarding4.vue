@@ -61,7 +61,11 @@ function goNext() {
         티모청 시작하기
       </button>
 
-    <LoanAddModal v-if="isModalOpen" @close="closeModal" @add-loan="handleAddLoan" />
+    <LoanAddModal
+      v-if="isModalOpen"
+      @close="closeModal"
+      @add-loan="handleAddLoan"
+    />
   </div>
   </div>
 </template>
