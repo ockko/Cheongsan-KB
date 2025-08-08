@@ -1,29 +1,10 @@
-import axios from './index';
-import { getAccessToken } from '@/config/tokens.js';
-
-// 토큰을 포함한 기본 설정 생성
-const createAuthConfig = (customConfig = {}) => {
-  const accessToken = getAccessToken();
-  const config = {
-    timeout: 10000,
-    ...customConfig,
-  };
-
-  if (accessToken) {
-    config.headers = {
-      ...config.headers,
-      Authorization: `Bearer ${accessToken}`,
-    };
-  }
-
-  return config;
-};
+import { request } from '@/api/index';
 
 // 정책 목록 조회
 export const getPolicies = async (params = {}) => {
   try {
-    const response = await axios.get('/api/policies', { params });
-    return response.data;
+    const data = await request.get('/api/policies', { params });
+    return data;
   } catch (error) {
     console.error('정책 목록 조회 실패:', error);
     throw error;
@@ -33,25 +14,16 @@ export const getPolicies = async (params = {}) => {
 // 정책 상세 정보 조회 (policyName으로 조회)
 export const getPolicyDetail = async (policyName) => {
   try {
-    const config = createAuthConfig();
-
     // params 옵션을 사용하여 자동 인코딩 처리
     const params = { policyName };
 
-    console.log(
-      '정책 상세 API 요청 시작:',
-      'http://localhost:8080/cheongsan/policies/detail'
-    );
+    console.log('정책 상세 API 요청 시작:', '/cheongsan/policies/detail');
     console.log('정책 상세 파라미터:', params);
-    console.log('정책 상세 요청 설정:', config);
 
-    const response = await axios.get(
-      'http://localhost:8080/cheongsan/policies/detail',
-      { ...config, params }
-    );
+    const data = await request.get('/cheongsan/policies/detail', { params });
 
-    console.log('정책 상세 API 응답 성공:', response.data);
-    return response.data;
+    console.log('정책 상세 API 응답 성공:', data);
+    return data;
   } catch (error) {
     console.error('정책 상세 정보 조회 실패:', error);
 
@@ -94,8 +66,8 @@ export const getPolicyDetail = async (policyName) => {
 // 정책 카테고리별 조회
 export const getPoliciesByCategory = async (categoryId) => {
   try {
-    const response = await axios.get(`/api/policies/category/${categoryId}`);
-    return response.data;
+    const data = await request.get(`/api/policies/category/${categoryId}`);
+    return data;
   } catch (error) {
     console.error('카테고리별 정책 조회 실패:', error);
     throw error;
@@ -105,10 +77,10 @@ export const getPoliciesByCategory = async (categoryId) => {
 // 정책 검색
 export const searchPolicies = async (keyword) => {
   try {
-    const response = await axios.get('/api/policies/search', {
+    const data = await request.get('/api/policies/search', {
       params: { keyword },
     });
-    return response.data;
+    return data;
   } catch (error) {
     console.error('정책 검색 실패:', error);
     throw error;
@@ -118,25 +90,16 @@ export const searchPolicies = async (keyword) => {
 // 맞춤 정책 검색 (백엔드 API)
 export const searchCustomPolicies = async (searchWrd) => {
   try {
-    const config = createAuthConfig();
-
     // params 옵션을 사용하여 자동 인코딩 처리
     const params = { searchWrd };
 
-    console.log(
-      '검색 API 요청 시작:',
-      'http://localhost:8080/cheongsan/policies/search'
-    );
+    console.log('검색 API 요청 시작:', '/cheongsan/policies/search');
     console.log('검색 파라미터:', params);
-    console.log('검색 요청 설정:', config);
 
-    const response = await axios.get(
-      'http://localhost:8080/cheongsan/policies/search',
-      { ...config, params }
-    );
+    const data = await request.get('/cheongsan/policies/search', { params });
 
-    console.log('검색 API 응답 성공:', response.data);
-    return response.data;
+    console.log('검색 API 응답 성공:', data);
+    return data;
   } catch (error) {
     console.error('맞춤 정책 검색 실패:', error);
 
@@ -161,21 +124,12 @@ export const searchCustomPolicies = async (searchWrd) => {
 // 맞춤 지원 정책 목록 조회
 export const getCustomPolicies = async () => {
   try {
-    const config = createAuthConfig();
+    console.log('API 요청 시작:', '/cheongsan/policies/list');
 
-    console.log(
-      'API 요청 시작:',
-      'http://localhost:8080/cheongsan/policies/list'
-    );
-    console.log('요청 설정:', config);
+    const data = await request.get('/cheongsan/policies/list');
 
-    const response = await axios.get(
-      'http://localhost:8080/cheongsan/policies/list',
-      config
-    );
-
-    console.log('API 응답 성공:', response.data);
-    return response.data;
+    console.log('API 응답 성공:', data);
+    return data;
   } catch (error) {
     console.error('맞춤 지원 정책 목록 조회 실패:', error);
 

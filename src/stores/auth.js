@@ -8,7 +8,7 @@ const initState = {
   refreshToken: '',
   user: {
     id: null,
-    nickname: '',
+    nickName: '',
   },
 };
 
@@ -29,7 +29,7 @@ export const useAuthStore = defineStore('auth', () => {
         }
       );
 
-      const { id, accessToken, refreshToken, nickname } = response.data;
+      const { id, accessToken, refreshToken, nickName } = response.data;
 
       // 상태 업데이트
       state.value = {
@@ -37,7 +37,7 @@ export const useAuthStore = defineStore('auth', () => {
         refreshToken,
         user: {
           id,
-          nickname: nickname || '', // nickname이 없을 경우 빈 문자열
+          nickName: nickName || '', // nickName 없을 경우 빈 문자열
         },
       };
 
