@@ -7,7 +7,7 @@
 .widgetHeader {
   background-color: var(--color-main);
   border-radius: 10px 10px 0 0;
-  padding: 0.5rem 1.5rem;
+  padding: 0.4rem 1.3rem;
 }
 
 .widgetHeader h3 {
@@ -17,7 +17,7 @@
 }
 
 .widgetContent {
-  padding: 1rem 1.5rem;
+  padding: 1rem 1.3rem;
 }
 
 .controls {

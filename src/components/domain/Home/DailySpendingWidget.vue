@@ -11,7 +11,7 @@ const props = defineProps({
     type: Object,
     required: true,
     // 데이터가 아직 로드되지 않았을 때를 대비한 기본값
-    default: () => ({ dailyLimit: 0, spent: 0, remaining: 0 }),
+    default: () => ({ dailyLimit: 40000, spent: 32000, remaining: 8000 }),
   },
 });
 

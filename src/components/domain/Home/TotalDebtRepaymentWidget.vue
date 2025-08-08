@@ -16,7 +16,7 @@ const props = defineProps({
 });
 
 // --- 차트 계산을 위한 변수 ---
-const chartSize = 85;
+const chartSize = 80;
 const strokeWidth = 12;
 const radius = chartSize / 2 - strokeWidth / 2;
 const circumference = 2 * Math.PI * radius;

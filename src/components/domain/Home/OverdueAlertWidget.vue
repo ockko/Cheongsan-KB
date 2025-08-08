@@ -16,8 +16,8 @@ const props = defineProps({
         overdueDays: 2435,
       },
       {
-        debtName: '베리베리 익스펜시브 새로운 대출',
-        organizationName: '베x0g8s리굿 대출기관',
+        debtName: '베리 익스펜시브 새로운 대출',
+        organizationName: '베리굿 대출기관',
         overdueDays: 23,
       },
       {
@@ -48,7 +48,7 @@ const getDdayIcon = (overdueDays) => {
       <p :class="styles.title">
         ※ 연체 중인 대출이
         <span :class="styles.highlight">{{ overdueLoans.length }}</span
-        >건 존재합니다.
+        >건<br />존재합니다.
       </p>
       <ul>
         <li
@@ -62,10 +62,7 @@ const getDdayIcon = (overdueDays) => {
             }}</span>
             <span> D+{{ loan.overdueDays }} </span>
           </div>
-          <span
-            >{{ loan.organizationName }}<br />
-            /{{ loan.debtName }}</span
-          >
+          <span>{{ loan.debtName }}</span>
         </li>
       </ul>
     </div>

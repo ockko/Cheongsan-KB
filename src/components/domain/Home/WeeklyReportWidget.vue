@@ -10,17 +10,17 @@ const props = defineProps({
     default: () => ({
       startDate: '2025-08-04',
       endDate: '2025-08-10',
-      achievementRate: 0.0,
-      dailyLimit: 0,
-      averageDailySpending: 0,
+      achievementRate: 57.0,
+      dailyLimit: 40000,
+      averageDailySpending: 34000,
       spendingByDay: {
-        MON: 0,
-        TUE: 0,
-        WED: 0,
-        THU: 0,
-        FRI: 0,
-        SAT: 0,
-        SUN: 0,
+        MON: 35000,
+        TUE: 45000,
+        WED: 45000,
+        THU: 35000,
+        FRI: 35000,
+        SAT: 45000,
+        SUN: 45000,
       },
     }),
   },
@@ -153,7 +153,7 @@ const selectWeek = () => {
       </div>
 
       <div :class="styles.bottomSummary">
-        <div :class="styles.summaryItem">
+        <div :class="[styles.summaryItem, styles.average]">
           <p>일일 평균 지출</p>
           <p :class="styles.amount">
             {{ formatCurrency(reportData.averageDailySpending) }} 원

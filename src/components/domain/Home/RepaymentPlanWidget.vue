@@ -8,9 +8,9 @@ const props = defineProps({
     type: Object,
     required: true,
     default: () => ({
-      monthlyPayment: 0,
-      totalMonths: 0,
-      debtFreeDate: 'N/A',
+      monthlyPayment: 600000,
+      totalMonths: 3,
+      debtFreeDate: '2026년 8월',
     }),
   },
 });
