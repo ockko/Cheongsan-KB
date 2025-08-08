@@ -1,6 +1,6 @@
 <script setup>
-import styles from '@/assets/styles/pages/Onboarding/Onboarding1.module.css'
-import ProgressHeader from '@/components/domain/Onboarding/ProgressHeader.vue'
+import styles from '@/assets/styles/pages/InitialSetup/InitialSetup1.module.css'
+import ProgressHeader from '@/components/domain/InitialSetup/ProgressHeader.vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 

@@ -1,5 +1,5 @@
 <script setup>
-import styles from '@/assets/styles/components/Onboarding/LoanItem.module.css'
+import styles from '@/assets/styles/components/InitialSetup/LoanItem.module.css'
 
 defineProps({
   logoUrl: String,

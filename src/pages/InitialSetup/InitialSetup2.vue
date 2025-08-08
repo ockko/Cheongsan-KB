@@ -1,6 +1,6 @@
 <script setup>
-import styles from '@/assets/styles/pages/Onboarding/Onboarding2.module.css'
-import ProgressHeader from '@/components/domain/Onboarding/ProgressHeader.vue'
+import styles from '@/assets/styles/pages/InitialSetup/InitialSetup2.module.css'
+import ProgressHeader from '@/components/domain/InitialSetup/ProgressHeader.vue'
 </script>
 
 <template>

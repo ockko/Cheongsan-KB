@@ -2,10 +2,10 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-import styles from '@/assets/styles/pages/Onboarding/Onboarding3.module.css'
-import ProgressHeader from '@/components/domain/Onboarding/ProgressHeader.vue'
-import LoanItem from '@/components/domain/Onboarding/LoanItem.vue'
-import LoanModal from '@/components/domain/Onboarding/LoanModal.vue'
+import styles from '@/assets/styles/pages/InitialSetup/InitialSetup3.module.css'
+import ProgressHeader from '@/components/domain/InitialSetup/ProgressHeader.vue'
+import LoanItem from '@/components/domain/InitialSetup/LoanItem.vue'
+import LoanModal from '@/components/domain/InitialSetup/LoanModal.vue'
   
 const router = useRouter()
 

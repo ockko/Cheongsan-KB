@@ -1,5 +1,5 @@
 <script setup>
-import styles from '@/assets/styles/components/Onboarding/ProgressHeader.module.css'
+import styles from '@/assets/styles/components/InitialSetup/ProgressHeader.module.css'
 import { computed } from 'vue'
 
 const props = defineProps({

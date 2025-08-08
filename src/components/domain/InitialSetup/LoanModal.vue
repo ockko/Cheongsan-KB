@@ -1,5 +1,5 @@
 <script setup>
-import styles from '@/assets/styles/components/Onboarding/LoanModal.module.css'
+import styles from '@/assets/styles/components/InitialSetup/LoanModal.module.css'
 import { ref, nextTick, watchEffect, computed  } from 'vue'
 
 const emit = defineEmits(['confirm', 'cancel'])
