@@ -1,0 +1,55 @@
+/* 진단 섹션 컨테이너 */
+.diagnosisSectionContainer {
+  /* 추가 스타일이 필요한 경우 여기에 */
+}
+
+/* 검색 섹션 */
+.searchSection {
+  padding: 20px 0 0 0;
+  text-align: left;
+}
+
+.searchIcon {
+  margin-bottom: 20px;
+  margin-left: -10px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.searchIconImg {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.searchText {
+  /* 추가 스타일이 필요한 경우 여기에 */
+}
+
+.searchTitle {
+  font-size: 32px;
+  font-weight: 400;
+  color: #003e65;
+  line-height: 1;
+  margin: 0 0 15px 0;
+}
+
+.searchDescription {
+  font-size: 16px;
+  color: #003e65;
+  line-height: 1;
+  margin: 0 0 32px 0;
+}
+
+.searchButton {
+  background: none;
+  border: none;
+  border-bottom: 1px solid #003e65;
+  color: #003e65;
+  font-size: 16px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-family: inherit;
+  display: block;
+  margin: 0 auto 32px auto;
+}

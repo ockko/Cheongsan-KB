@@ -9,6 +9,7 @@ import Onboarding1 from '@/pages/Onboarding/Onboarding1.vue';
 import Onboarding2 from '@/pages/Onboarding/Onboarding2.vue';
 import Onboarding3 from '@/pages/Onboarding/Onboarding3.vue';
 import Onboarding4 from '@/pages/Onboarding/Onboarding4.vue';
+import Diagnosis from '@/pages/Diagnosis.vue';
 import StudyDetail from '@/pages/StudyDetail.vue';
 
 const router = createRouter({
@@ -58,6 +59,11 @@ const router = createRouter({
     { path: '/onboarding/page4',
       name: 'Onboarding4',
       component: Onboarding4,
+    },
+    {
+      path: '/diagnosis',
+      name: 'Diagnosis',
+      component: Diagnosis,
     },
     {
       // path: /study/:id

@@ -1,0 +1,332 @@
+/* 정책 섹션 컨테이너 */
+.policySectionContainer {
+  /* 추가 스타일이 필요한 경우 여기에 */
+}
+
+/* 제목 섹션 */
+.titleSection {
+  text-align: left;
+  margin-top: 16px;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #000000;
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+.titleLine {
+  width: 100%;
+  height: 2px;
+  background-color: #e1e2e6;
+  margin: 0;
+}
+
+/* 검색창 */
+.searchBox {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.searchInput {
+  width: 100%;
+  height: 64px;
+  background-color: #edeef2;
+  border: none;
+  border-radius: 8px;
+  padding: 0 60px 0 15px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #72787f;
+  font-family: inherit;
+}
+
+.searchInput::placeholder {
+  color: #72787f;
+  letter-spacing: 1.3px;
+}
+
+.searchButtonIcon {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.searchIconContainer {
+  position: relative;
+  width: 45px;
+  height: 45px;
+}
+
+.searchIconInner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 카테고리 필터 */
+.categoryFilter {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+  padding: 0 4px;
+}
+
+.categoryBtn {
+  background-color: #f9f9fd;
+  border: 1px solid #72787f;
+  border-radius: 30px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 900;
+  color: #222121;
+  white-space: nowrap;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.categoryBtn.active {
+  background-color: #72787f;
+  color: #f9f9fd;
+}
+
+/* 정책 카드들 */
+.policyCards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.policyCard {
+  border: 2px solid #72787f;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: #ffffff;
+  height: 150px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.policyCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 정책 카드 헤더 */
+.policyCard .cardHeader {
+  padding: 10px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e1e2e6;
+  height: 50px; /* 최소 높이 보장 */
+  display: flex;
+  align-items: center;
+}
+
+.cardLogo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 60px; /* 최소 높이 보장 */
+}
+
+.logoImage {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  margin: 0;
+  overflow: hidden;
+  flex-shrink: 0;
+  order: 1;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.logoImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+  max-width: 100%;
+  max-height: 100%;
+  padding: 4px;
+  transition: transform 0.2s ease;
+}
+
+.logoText {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2c3e50;
+  font-family: 'Pretendard', sans-serif;
+  line-height: 1.3;
+  flex: 1;
+  min-width: 0;
+  order: 1;
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.cardContent {
+  padding: 10px 0 3px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 12px;
+}
+
+.cardDetailHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 20px;
+  padding: 3px 0;
+  margin-bottom: 4px;
+}
+
+.supportCycle {
+  font-size: 11px;
+  font-weight: 700;
+  color: #003e65;
+  background-color: #e8f4fd;
+  padding: 1px 3px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 40px;
+  text-align: center;
+  line-height: 1.1;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cardTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #000000;
+  margin: 0;
+  letter-spacing: 1.2px;
+  line-height: 1.2;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  max-width: 280px;
+}
+
+/* 정책 요약 */
+.cardSummary {
+  font-size: 12px;
+  color: #000000;
+  font-weight: 500;
+  margin: 4px 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  overflow: hidden;
+  padding: 5px 12px;
+}
+
+/* 정책 정보 (온라인/오프라인, 날짜) */
+.policyInfo {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0px 8px 8px 8px;
+  height: 35px;
+  gap: 8px;
+}
+
+.policyOnline {
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  color: #2c3e50;
+  padding: 4px 4px;
+}
+
+.policyDate {
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000;
+  display: flex;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  padding: 4px 4px;
+}
+
+/* 로딩 및 빈 상태 메시지 */
+.loadingMessage,
+.noPoliciesMessage {
+  text-align: center;
+  padding: 40px 20px;
+  color: #72787f;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 검색 결과 헤더 */
+.searchResultHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #e1e2e6;
+}
+
+.searchResultHeader span {
+  font-size: 14px;
+  font-weight: 600;
+  color: #003e65;
+  letter-spacing: 1.4px;
+}
+
+.clearSearchBtn {
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 1.2px;
+}
+
+.clearSearchBtn:hover {
+  background: #edf2f7;
+  border-color: #cbd5e0;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 375px) {
+  .titleLine {
+    width: 100%;
+  }
+
+  .categoryFilter {
+    padding: 0;
+  }
+}
