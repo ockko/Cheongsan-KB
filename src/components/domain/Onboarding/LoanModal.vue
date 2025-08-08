@@ -74,7 +74,7 @@ const handleConfirm = () => {
                 <img src="/images/dot-icon.png" alt="dot">
             </div>
             <div class="form-label">상환일</div>
-            <div class="form-control repayment-control">
+            <div class="form-control">
             매월 
             <input
                 v-model="repaymentDay"
@@ -88,8 +88,8 @@ const handleConfirm = () => {
         </div>
 
         <div class="form-row">
-            <img src="/public/images/dot-icon.png" alt="dot">
-            <label class="form-label">상환 방식</label>
+            <img src="/images/dot-icon.png" alt="dot">
+            <div class="form-label">상환 방식</div>
             <div class="form-control">
                 <select v-model="repaymentMethod" class="repayment-select">
                     <option>원금 균등 상환</option>

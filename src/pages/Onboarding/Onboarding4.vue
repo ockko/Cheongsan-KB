@@ -5,7 +5,7 @@ import { useRouter } from 'vue-router'
 import styles from '@/assets/styles/pages/Onboarding/Onboarding4.module.css'
 import ProgressHeader from '@/components/domain/Onboarding/ProgressHeader.vue'
 import LoanItem from '@/components/domain/Onboarding/LoanItem.vue'
-import LoanAddModal from '@/components/domain/Onboarding/LoanAddModal.vue'
+import LoanAddModal from '@/components/domain/Home/LoanAddModal.vue'
 
 const router = useRouter()
 
