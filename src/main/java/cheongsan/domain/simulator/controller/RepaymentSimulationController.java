@@ -84,8 +84,11 @@ public class RepaymentSimulationController {
         return ResponseEntity.ok(strategyResult);
     }
 
-    @DeleteMapping("/repayment/cache/{userId}")
-    public void deleteUserCache(@PathVariable Long userId) {
+    @DeleteMapping("/delete")
+    public void deleteUserCache(Principal principal) {
+        Authentication authentication = (Authentication) principal;
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        Long userId = customUser.getUser().getId();
         simulationService.deleteUserCache(userId);
     }
 
