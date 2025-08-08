@@ -5,6 +5,7 @@ import Policy from '@/pages/Policy.vue';
 import Calendar from '@/pages/Calendar.vue';
 import Simulation from '@/pages/Simulation.vue';
 import Study from '@/pages/Study.vue';
+import Diagnosis from '@/pages/Diagnosis.vue';
 import StudyDetail from '@/pages/StudyDetail.vue';
 import Onboarding from '@/pages/Onboarding.vue';
 
@@ -44,6 +45,11 @@ const router = createRouter({
       path: '/study',
       name: 'Study',
       component: Study,
+    },
+    {
+      path: '/diagnosis',
+      name: 'Diagnosis',
+      component: Diagnosis,
     },
     {
       // path: /study/:id
