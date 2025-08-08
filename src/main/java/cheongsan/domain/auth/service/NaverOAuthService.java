@@ -99,9 +99,10 @@ public class NaverOAuthService {
         // 2. 없으면 회원가입 처리
         // 3. JWT 토큰 생성
 
+
         String accessToken = "accessToken";
         String refreshToken = "refreshToken";
-        return new LogInResponseDTO(3L, accessToken, refreshToken);
+        return new LogInResponseDTO(3L, socialUserInfo.getNickname(), accessToken, refreshToken);
     }
 
 }

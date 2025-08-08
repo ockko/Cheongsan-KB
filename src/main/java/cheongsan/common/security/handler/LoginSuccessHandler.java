@@ -37,6 +37,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private LogInResponseDTO makeLogInResponse(CustomUser user) {
         String userId = user.getUser().getUserId();
+        String nickName = user.getUser().getNickname();
         String accessToken = jwtProcessor.generateAccessToken(userId);
         String refreshToken = jwtProcessor.generateRefreshToken(userId);
 
@@ -47,7 +48,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                 TimeUnit.SECONDS
         );
 
-        return new LogInResponseDTO(user.getUser().getId(), accessToken, refreshToken);
+        return new LogInResponseDTO(user.getUser().getId(), nickName, accessToken, refreshToken);
     }
 
     @Override
