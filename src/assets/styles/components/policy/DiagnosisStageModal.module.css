@@ -1,0 +1,214 @@
+/* 모달 오버레이 */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #f9f9fd;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+/* 모달 컨텐츠 */
+.modalContent {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f9f9fd;
+  position: relative;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* 닫기 버튼 */
+.closeButton {
+  position: absolute;
+  top: 24px;
+  right: 30px;
+  width: 24px;
+  height: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+/* 모달 본문 */
+.modalBody {
+  padding: 48px 47px 40px 47px;
+  position: relative;
+}
+
+/* 제목 섹션 */
+.titleSection {
+  margin-bottom: 0;
+}
+
+.institutionInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.institutionIcon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.institutionIcon img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  color: #003e65;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.institutionName {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #003e65;
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+.stageTitle {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #003e65;
+  margin: 8px 0 12px 0;
+  letter-spacing: 1.8px;
+  line-height: 1;
+}
+
+.stageDescription {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  color: #003e65;
+  line-height: 1.5;
+  margin: 0 0 30px 0;
+  letter-spacing: 1.6px;
+}
+
+/* 구분선 */
+.divider {
+  width: calc(100% + 94px);
+  height: 1px;
+  background-color: #e1e2e6;
+  margin: 30px -47px;
+}
+
+/* 섹션 */
+.section {
+  margin-bottom: 0;
+}
+
+.sectionTitle {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #003e65;
+  margin: 30px 0 16px 0;
+  letter-spacing: 1.8px;
+  line-height: 1;
+}
+
+.sectionList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* 아이콘 스타일 */
+.checkIcon,
+.infoIcon,
+.warningIcon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 리스트 컨텐츠 스타일 */
+.forListContent,
+.advantagesListContent,
+.warnListContent {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+/* 리스트 아이템 간격 조정 */
+.listItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+  padding: 0;
+}
+
+.listItem:last-child {
+  margin-bottom: 0;
+}
+
+.listText {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  color: #003e65;
+  line-height: 1.2;
+  letter-spacing: 1.6px;
+  flex: 1;
+  margin: 0;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+  .modalContent {
+    padding: 16px;
+  }
+
+  .modalBody {
+    padding-top: 50px;
+  }
+
+  .institutionName {
+    font-size: 18px;
+  }
+
+  .stageTitle {
+    font-size: 16px;
+  }
+
+  .stageDescription {
+    font-size: 14px;
+  }
+
+  .sectionTitle {
+    font-size: 16px;
+  }
+
+  .listText {
+    font-size: 14px;
+  }
+}

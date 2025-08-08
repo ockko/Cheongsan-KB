@@ -1,0 +1,557 @@
+/* 자가진단 페이지 스타일 */
+.diagnosisPage {
+  min-height: 100vh;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* 헤더 영역 */
+.header {
+  background: #ffffff;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #003e65;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+  position: relative;
+  z-index: 10;
+}
+
+.backButton:hover {
+  background-color: #f0f4f8;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #003e65;
+  margin: 0;
+  text-align: center;
+  flex: 1;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* 진행률 표시 - 점들이 선 위를 이동하는 형태 */
+.progressContainer {
+  background: #ffffff;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
+}
+
+.progressDots {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 120px;
+}
+
+/* 배경 연결선 */
+.progressDots::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  right: 6px;
+  height: 2px;
+  background-color: #e2e8f0;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+
+/* 이동하는 점 */
+.progressDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #e2e8f0;
+  border: 2px solid #e2e8f0;
+  transition: all 0.3s ease;
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.progressDot.active {
+  background-color: #003e65;
+  border-color: #003e65;
+}
+
+/* 점들의 기본 위치 */
+.progressDot:nth-child(1) {
+  left: 0;
+}
+
+.progressDot:nth-child(2) {
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.progressDot:nth-child(3) {
+  right: 0;
+  left: auto;
+}
+
+/* 1단계: 첫 번째 점이 중앙, 두 번째 점이 오른쪽 끝 */
+.progressDots.step-0 .progressDot:nth-child(1) {
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.progressDots.step-0 .progressDot:nth-child(2) {
+  left: 100%;
+  transform: translate(-100%, -50%);
+}
+
+.progressDots.step-0 .progressDot:nth-child(3) {
+  left: 100%;
+  transform: translate(-100%, -50%);
+}
+
+/* 2단계: 첫 번째 점이 왼쪽 끝, 두 번째 점이 중앙, 세 번째 점이 오른쪽 끝 */
+.progressDots.step-1 .progressDot:nth-child(1) {
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.progressDots.step-1 .progressDot:nth-child(2) {
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.progressDots.step-1 .progressDot:nth-child(3) {
+  left: 100%;
+  transform: translate(-100%, -50%);
+}
+
+/* 3단계: 첫 번째, 두 번째 점이 왼쪽 끝, 세 번째 점이 중앙 */
+.progressDots.step-2 .progressDot:nth-child(1) {
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.progressDots.step-2 .progressDot:nth-child(2) {
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.progressDots.step-2 .progressDot:nth-child(3) {
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 메인 콘텐츠 */
+.mainContent {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 10;
+  min-height: 50vh;
+  height: 80%;
+}
+
+/* 진단 시작 페이지 스타일 */
+.startContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  position: relative;
+  z-index: 10;
+  padding: 2rem 0.5rem;
+}
+
+.startContent {
+  background: #ffffff;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+  position: relative;
+  margin: 0 auto;
+}
+
+.iconContainer {
+  margin-bottom: 3rem;
+  margin-top: 4rem;
+}
+
+.diagnosticIcon {
+  width: 64px;
+  height: 68px;
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.startTextContainer {
+  margin-bottom: 4rem;
+}
+
+.startTitle {
+  font-size:15px;
+  font-weight: 400;
+  color: #000000;
+  margin: 0 0 2rem 0;
+  letter-spacing: 1.6px;
+}
+
+.startDescription {
+  font-size: 1rem;
+  color: #72787f;
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: 1.6px;
+  font-weight: 400;
+}
+
+/* 특징 섹션 제거 */
+
+.startButton {
+  background: #003e65;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 283px;
+  height: 40px;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  margin: 0 auto !important;
+}
+
+.startButton:hover {
+  background: #002a47;
+}
+
+.startButtonText {
+  position: relative;
+  z-index: 1;
+}
+
+.startButtonIcon {
+  display: none;
+}
+
+.stepContainer {
+  background: #ffffff;
+  padding: 5px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 단계 아이콘 */
+.stepIcon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+}
+
+.diagnosisIcon {
+  width: 76px;
+  height: 72px;
+  object-fit: contain;
+}
+
+/* 단계 헤더 */
+.stepHeader {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.stepTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #003e65;
+  margin: 0;
+}
+
+/* 구분선 */
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: #e1e2e6;
+  margin: 1.5rem 0;
+}
+
+/* 질문 영역 */
+.questionContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem 0 0 0;
+}
+
+.questionItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+}
+
+/* 선택 옵션 - 피그마 디자인 스타일 */
+.optionsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 320px;
+}
+
+.optionLabel {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #ffffff;
+  position: relative;
+  text-decoration: none;
+  min-height: 50px;
+}
+
+/* 상단 바 제거 */
+
+.optionInput {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.optionText {
+  font-size: 1rem;
+  color: #000000;
+  font-weight: 400;
+  flex: 1;
+  position: relative;
+  padding-left: 2.5rem;
+  line-height: 1.4;
+  transition: color 0.3s ease;
+  font-family: 'Pretendard', sans-serif;
+  letter-spacing: 1.6px;
+}
+
+.optionText::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  transition: all 0.2s ease;
+}
+
+.optionLabel.selected .optionText::before {
+  border-color: #003e65;
+  background: #003e65;
+  box-shadow: inset 0 0 0 3px #ffffff;
+}
+
+/* 하단 버튼 영역 */
+.footer {
+  background: #ffffff;
+  padding: 1rem 1.5rem;
+  position: relative;
+  z-index: 10;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 600px;
+  margin: 0 auto;
+  gap: 1rem;
+}
+
+.button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 156px;
+}
+
+/* 1단계에서만 다음 버튼이 전체 너비를 차지 */
+.nextButton.fullWidth {
+  width: 100%;
+  max-width: 600px;
+}
+
+.prevButton {
+  background: #f7fafc;
+  color: #4a5568;
+  border: 2px solid #e2e8f0;
+}
+
+.prevButton:hover {
+  background: #edf2f7;
+  border-color: #cbd5e0;
+}
+
+.nextButton {
+  background: #003e65;
+  color: #ffffff;
+  font-weight: 700;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+}
+
+.nextButton:hover:not(.disabled) {
+  background: #002a47;
+}
+
+.nextButton.disabled {
+  background: #cbd5e0;
+  color: #a0aec0;
+  cursor: not-allowed;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .mainContent {
+    padding: 1rem;
+  }
+
+  .startContent {
+    padding: 2.5rem 0.5rem;
+    border-radius: 20px;
+  }
+
+  .startTitle {
+    font-size: 20px;
+  }
+
+  .startDescription {
+    font-size: 14px;
+  }
+
+  .startFeatures {
+    gap: 1rem;
+  }
+
+  .startButton {
+    font-size: 1rem;
+    margin: 0 auto !important;
+    padding: 12px 0;
+    width: 283px;
+  }
+
+  .title {
+    text-align: center;
+  }
+
+  .stepContainer {
+    padding: 1rem;
+    border-radius: 28px;
+  }
+
+  .stepTitle {
+    font-size: 1.375rem;
+  }
+
+  .optionLabel {
+    padding: 1.25rem 1.5rem;
+    border-radius: 18px;
+  }
+
+  .optionText {
+    font-size: 1rem;
+    padding-left: 2.75rem;
+  }
+
+  .optionText::before {
+    width: 24px;
+    height: 24px;
+  }
+
+  .optionText::after {
+    font-size: 1.5rem;
+    right: -1.75rem;
+  }
+
+  .buttonContainer {
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .button {
+    min-height: 40px;
+    font-size: 1rem;
+    width: 156px;
+  }
+}
+
+/* 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stepContainer {
+  animation: fadeIn 0.3s ease;
+}
+
+/* 접근성 */
+.button:focus,
+.optionLabel:focus {
+  outline: 2px solid #4299e1;
+  outline-offset: 2px;
+}
+
+.optionInput:focus + .optionText::before {
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3);
+}
