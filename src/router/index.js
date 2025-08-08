@@ -7,8 +7,12 @@ import Simulation from '@/pages/Simulation.vue';
 import Study from '@/pages/Study.vue';
 import Diagnosis from '@/pages/Diagnosis.vue';
 import StudyDetail from '@/pages/StudyDetail.vue';
-import Onboarding from '@/pages/Onboarding.vue';
 import Login from '@/pages/Login.vue';
+import Onboarding from '@/pages/Onboarding.vue';
+import InitialSetup1 from '@/pages/InitialSetup/InitialSetup1.vue';
+import InitialSetup2 from '@/pages/InitialSetup/InitialSetup2.vue';
+import InitialSetup3 from '@/pages/InitialSetup/InitialSetup3.vue';
+import InitialSetup4 from '@/pages/InitialSetup/InitialSetup4.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -58,9 +62,34 @@ const router = createRouter({
       meta: { requiresAuth: true }, // 인증 필요
     },
     {
+      path: '/initialSetup/page1',
+      name: 'InitialSetup1',
+      component: InitialSetup1,
+      meta: { requiresAuth: true }, // 인증 필요
+    },
+    {
+      path: '/initialSetup/page2',
+      name: 'InitialSetup2',
+      component: InitialSetup2,
+      meta: { requiresAuth: true }, // 인증 필요
+    },
+    {
+      path: '/initialSetup/page3',
+      name: 'InitialSetup3',
+      component: InitialSetup3,
+      meta: { requiresAuth: true }, // 인증 필요
+    },
+    {
+      path: '/initialSetup/page4',
+      name: 'InitialSetup4',
+      component: InitialSetup4,
+      meta: { requiresAuth: true }, // 인증 필요
+    },
+    {
       path: '/diagnosis',
       name: 'Diagnosis',
       component: Diagnosis,
+      meta: { requiresAuth: true }, // 인증 필요
     },
     {
       // path: /study/:id
