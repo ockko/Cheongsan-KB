@@ -1,32 +1,32 @@
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-import styles from '@/assets/styles/pages/InitialSetup/InitialSetup4.module.css'
-import ProgressHeader from '@/components/domain/InitialSetup/ProgressHeader.vue'
-import LoanItem from '@/components/domain/InitialSetup/LoanItem.vue'
-import LoanAddModal from '@/components/domain/Home/LoanAddModal.vue'
+import styles from '@/assets/styles/pages/InitialSetup/InitialSetup4.module.css';
+import ProgressHeader from '@/components/domain/InitialSetup/ProgressHeader.vue';
+import LoanItem from '@/components/domain/InitialSetup/LoanItem.vue';
+import LoanAddModal from '@/components/domain/Home/LoanAddModal.vue';
 
-const router = useRouter()
+const router = useRouter();
 
-const customLoans = ref([])
-const isModalOpen = ref(false)
+const customLoans = ref([]);
+const isModalOpen = ref(false);
 
 function openModal() {
-  isModalOpen.value = true
+  isModalOpen.value = true;
 }
 
 function closeModal() {
-  isModalOpen.value = false
+  isModalOpen.value = false;
 }
 
 function handleAddLoan(loan) {
-  customLoans.value.push(loan)
-  isModalOpen.value = false
+  customLoans.value.push(loan);
+  isModalOpen.value = false;
 }
 
 function goNext() {
-  router.push('/onboarding/complete')
+  router.push('/onboarding/complete');
 }
 </script>
 
@@ -37,7 +37,7 @@ function goNext() {
       <div :class="styles.titleBox">
         <h2 :class="styles.titleBoxMain">대출 상품 추가</h2>
         <p :class="styles.titleBoxSub">
-            연동되지 않은 대출 상품이 있다면 추가해주세요.
+          연동되지 않은 대출 상품이 있다면 추가해주세요.
         </p>
       </div>
 
@@ -53,7 +53,12 @@ function goNext() {
 
         <div :class="styles.addBox" @click="openModal">
           <span>대출 상품 추가하기</span>
-          <img src="/images/add-off.png" alt="추가" width="30px" height="30px"/>
+          <img
+            src="/images/add-off.png"
+            alt="추가"
+            width="30px"
+            height="30px"
+          />
         </div>
       </div>
 
@@ -61,11 +66,11 @@ function goNext() {
         티모청 시작하기
       </button>
 
-    <LoanAddModal
-      v-if="isModalOpen"
-      @close="closeModal"
-      @add-loan="handleAddLoan"
-    />
-  </div>
+      <LoanAddModal
+        v-if="isModalOpen"
+        @close="closeModal"
+        @add-loan="handleAddLoan"
+      />
+    </div>
   </div>
 </template>
