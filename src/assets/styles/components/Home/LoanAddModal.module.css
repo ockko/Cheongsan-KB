@@ -1,0 +1,146 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal-container {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 340px;
+  margin: 0 auto;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
+  line-height: 1.5;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row img {
+  width: 10px;
+  height: 10px;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+}
+
+.form-label {
+  width: 60px;
+  text-align: left;
+  margin-left: 1rem;
+  font-weight: bold;
+  white-space: nowrap;
+  margin-right: 1rem;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.title-label {
+  width: 55px;
+  text-align: left;
+  margin-left: 1rem;
+  font-weight: bold;
+  white-space: nowrap;
+  margin-right: 1rem;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.sub-label {
+  width: 70px;
+  text-align: left;
+  margin-left: 1rem;
+  font-weight: bold;
+  white-space: nowrap;
+  margin-right: 1rem;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.form-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  flex: 1;
+}
+
+.text-input {
+  margin-left: 6px;
+  width: 60px;
+  border: none;
+  border-bottom: 1px solid #333;
+  text-align: center;
+  font-size: 15px;
+  background: transparent;
+}
+
+label {
+  width: fit-content;
+  margin: 0 14px;
+  font-size: 14px;
+}
+
+input,
+select {
+  border: none;
+  border-bottom: 1px solid #999;
+  padding: 4px;
+  flex: 1;
+  outline: none;
+  font-size: 14px;
+}
+
+.year-input {
+  width: 45px;
+  text-align: right;
+}
+
+.date-input {
+  width: 16px;
+  text-align: right;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 10px;
+  margin-top: 0.5rem;
+}
+
+.button {
+  flex: 1;
+  padding: 0.7rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cancelButton {
+  background-color: white;
+  border: 2px solid var(--color-main);
+  color: var(--color-main);
+}
+
+.submit-btn {
+  background-color: var(--color-main);
+  color: white;
+}
+
+.submit-btn:hover {
+  background: #004b6e;
+}

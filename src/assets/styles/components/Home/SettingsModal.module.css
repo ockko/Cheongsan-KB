@@ -127,3 +127,7 @@
   background-color: var(--color-main);
   color: white;
 }
+
+.applyButton:hover {
+  background: #004b6e;
+}

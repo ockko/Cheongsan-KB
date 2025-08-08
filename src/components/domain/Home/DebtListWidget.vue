@@ -1,6 +1,6 @@
 <script setup>
 import styles from '@/assets/styles/components/Home/DebtListWidget.module.css';
-// import LoanAddModal from '@/components/domain/Home/LoanAddModal.vue';
+import LoanAddModal from '@/components/domain/Home/LoanAddModal.vue';
 import DebtDetailModal from '@/components/domain/Home/DebtDetailModal.vue';
 import { ref, computed, defineProps } from 'vue';
 
@@ -19,6 +19,11 @@ const selectedDebt = ref(null);
 const openDetailModal = (debt) => {
   selectedDebt.value = debt;
   isDetailModalOpen.value = true;
+};
+
+// 추가 모달을 여는 메소드
+const openAddModal = () => {
+  isAddModalOpen.value = true;
 };
 
 // 정렬 옵션을 저장할 반응형 변수
@@ -57,7 +62,9 @@ const sortedDebts = computed(() => {
     </div>
     <div :class="styles.widgetContent">
       <div :class="styles.controls">
-        <button :class="styles.addButton">대출 상품 추가</button>
+        <button :class="styles.addButton" @click="openAddModal()">
+          대출 상품 추가
+        </button>
         <select :class="styles.sortSelect" v-model="sortOption">
           <option value="startedAtDesc">최신 순</option>
           <option value="startedAtAsc">오래된 순</option>
@@ -103,7 +110,7 @@ const sortedDebts = computed(() => {
     </div>
   </div>
 
-  <!-- <LoanAddModal v-if="isAddModalOpen" @close="isAddModalOpen = false" /> -->
+  <LoanAddModal v-if="isAddModalOpen" @close="isAddModalOpen = false" />
 
   <DebtDetailModal
     v-if="isDetailModalOpen"
