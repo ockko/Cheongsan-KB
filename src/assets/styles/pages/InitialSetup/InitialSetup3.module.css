@@ -1,0 +1,65 @@
+.page {
+    margin-top: 2rem;
+  }
+  .container {
+    margin-top: 1rem;
+    padding: 0 0.5rem;
+    text-align: center;
+  }
+  .title-box {
+    margin: 0 1rem 2rem 1rem;
+  }
+  .title-box-main {
+    font-size: 30px;
+    font-weight: bold;
+    color: navy;
+    line-height: 2.3rem;
+  }
+  .title-box-sub {
+    margin-top: 1rem;
+    font-size: 14px;
+    color: #666;
+    line-height: 150%;
+  }
+  .loanList{
+    margin: 0 0.8rem 2rem 1rem;
+    max-height: 290px;
+    overflow-x: auto;
+  
+    padding-top: 4px;
+    padding-left: 4px;
+    padding-right: 14px;
+
+    box-sizing: content-box;
+    
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent;
+  }
+  
+  /* 크롬용 */
+  .loanList::-webkit-scrollbar {
+    width: 6px;
+  }
+  .loanList::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
+  }
+  .loanList::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .next-button {
+      width: calc(100% - 2rem); /* 좌우 여백 1.5rem씩 고려 */
+      height: 44px;
+      padding: 14px;
+      background-color: #00497a;
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+  }
+  .next-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }

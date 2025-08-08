@@ -1,24 +1,6 @@
 // 진단 관련 API 서비스
-import apiClient from './index.js';
-import { getAccessToken } from '@/config/tokens.js';
+import { request } from '@/api/index';
 
-// 토큰을 포함한 기본 설정 생성
-const createAuthConfig = (customConfig = {}) => {
-  const accessToken = getAccessToken();
-  const config = {
-    timeout: 10000,
-    ...customConfig,
-  };
-
-  if (accessToken) {
-    config.headers = {
-      ...config.headers,
-      Authorization: `Bearer ${accessToken}`,
-    };
-  }
-
-  return config;
-};
 /**
  * 자가진단 결과를 백엔드로 전송
  * @param {Object} diagnosisData - 진단 데이터
@@ -29,8 +11,6 @@ const createAuthConfig = (customConfig = {}) => {
  */
 export const submitDiagnosis = async (diagnosisData) => {
   try {
-    const config = createAuthConfig();
-
     const requestBody = {
       sessionId: 'test-high-risk-001',
       answers: [
@@ -49,13 +29,8 @@ export const submitDiagnosis = async (diagnosisData) => {
       ],
     };
 
-    const response = await apiClient.post(
-      '/cheongsan/diagnosis/submit',
-      requestBody,
-      config
-    );
-
-    return response.data;
+    const data = await request.post('/cheongsan/diagnosis/submit', requestBody);
+    return data;
   } catch (error) {
     console.error('진단 결과 전송 실패:', error);
     throw new Error('진단 결과를 저장하는데 실패했습니다.');
@@ -69,13 +44,12 @@ export const submitDiagnosis = async (diagnosisData) => {
  */
 export const getDiagnosisResult = async (userId = null) => {
   try {
-    const config = createAuthConfig();
     const url = userId
       ? `/cheongsan/diagnosis/result/${userId}`
       : '/cheongsan/diagnosis/result';
-    const response = await apiClient.get(url, config);
 
-    return response.data;
+    const data = await request.get(url);
+    return data;
   } catch (error) {
     console.error('진단 결과 조회 실패:', error);
     throw new Error('진단 결과를 불러오는데 실패했습니다.');
@@ -89,14 +63,10 @@ export const getDiagnosisResult = async (userId = null) => {
  */
 export const getRecommendationDetail = async (diagnosisId) => {
   try {
-    const config = createAuthConfig();
-
-    const response = await apiClient.get(
-      `/cheongsan/diagnosis/result/${diagnosisId}`,
-      config
+    const data = await request.get(
+      `/cheongsan/diagnosis/result/${diagnosisId}`
     );
-
-    return response.data;
+    return data;
   } catch (error) {
     console.error('추천 제도 상세 정보 조회 실패:', error);
     throw new Error('추천 제도 정보를 불러오는데 실패했습니다.');
