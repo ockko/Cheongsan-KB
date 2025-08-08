@@ -1,0 +1,22 @@
+.progress-header {
+    padding: 1rem 0;
+    text-align: center;
+  }
+  
+  .progress-bar-wrapper {
+    height: 10px;
+    background-color: gray;
+  }
+  
+  .progress-bar {
+    height: 10px;
+    transition: width 0.3s;
+    background-color: navy;
+  }
+
+  .step-text {
+    font-size: 22px;
+    margin-top: 1.5rem;
+    font-weight: 500;
+    color: #00497a;
+  }

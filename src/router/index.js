@@ -5,8 +5,16 @@ import Policy from '@/pages/Policy.vue';
 import Calendar from '@/pages/Calendar.vue';
 import Simulation from '@/pages/Simulation.vue';
 import Study from '@/pages/Study.vue';
+import Onboarding1 from '@/pages/InitialSetup/InitialSetup1.vue';
+import Onboarding2 from '@/pages/InitialSetup/InitialSetup2.vue';
+import Onboarding3 from '@/pages/InitialSetup/InitialSetup3.vue';
+import Onboarding4 from '@/pages/InitialSetup/InitialSetup4.vue';
 import Diagnosis from '@/pages/Diagnosis.vue';
 import StudyDetail from '@/pages/StudyDetail.vue';
+import InitialSetup1 from '@/pages/InitialSetup/InitialSetup1.vue';
+import InitialSetup2 from '@/pages/InitialSetup/InitialSetup2.vue';
+import InitialSetup3 from '@/pages/InitialSetup/InitialSetup3.vue';
+import InitialSetup4 from '@/pages/InitialSetup/InitialSetup4.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +47,22 @@ const router = createRouter({
       path: '/study',
       name: 'Study',
       component: Study,
+    },
+    { path: '/initialSetup/page1',
+      name: 'InitialSetup1',
+      component: InitialSetup1,
+    },
+    { path: '/initialSetup/page2',
+      name: 'InitialSetup2',
+      component: InitialSetup2,
+    },
+    { path: '/initialSetup/page3',
+      name: 'InitialSetup3',
+      component: InitialSetup3,
+    },
+    { path: '/initialSetup/page4',
+      name: 'InitialSetup4',
+      component: InitialSetup4,
     },
     {
       path: '/diagnosis',

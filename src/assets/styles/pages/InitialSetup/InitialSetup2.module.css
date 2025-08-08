@@ -1,0 +1,23 @@
+.page {
+    margin-top: 2rem;
+  }
+  .container {
+    margin-top: 1rem;
+    padding: 0 1rem;
+    text-align: center;
+  }
+  .title-box {
+    margin: 0 1rem 3.5rem 2rem;
+  }
+  .title-box h2 {
+    font-size: 30px;
+    font-weight: bold;
+    color: navy;
+    line-height: 2.3rem;
+  }
+  .title-box p {
+    margin-top: 2rem;
+    font-size: 16px;
+    color: #666;
+    line-height: 150%;
+  }
