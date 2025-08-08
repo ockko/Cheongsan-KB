@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: '', // 프록시를 사용하므로 빈 문자열로 설정
+  baseURL: 'http://localhost:8080', // 프록시를 사용하므로 빈 문자열로 설정
   timeout: 10000, // 타임아웃을 10초로 증가
   headers: {
     'Content-Type': 'application/json',
