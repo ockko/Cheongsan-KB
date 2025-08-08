@@ -34,47 +34,73 @@ const formatRepaymentMethod = (method) => {
 </script>
 
 <template>
-  <div class="modal-overlay" @click.self="$emit('close')">
-    <div class="modal-content">
-      <h3 class="debt-title">{{ debtDetails.debtName }}</h3>
-      <p class="organization-name">
-        <span class="icon">🏢</span> {{ debtDetails.organizationName }}
+  <div :class="styles.modalOverlay" @click.self="$emit('close')">
+    <div :class="styles.modalContent">
+      <h3 :class="styles.debtTitle">{{ debtDetails.debtName }}</h3>
+      <p :class="styles.organizationName">
+        <span :class="styles.icon">🏢</span> {{ debtDetails.organizationName }}
       </p>
 
-      <ul class="details-list">
+      <ul :class="styles.detailsList">
         <li>
-          <span class="label">✔️ 원금</span>
-          <span class="value"
+          <span :class="styles.label">
+            <span>✔️</span>
+            <sapn>원금</sapn>
+          </span>
+          <span :class="styles.value"
             >{{ formatCurrency(debtDetails.originalAmount) }} 원</span
           >
         </li>
         <li>
-          <span class="label">✔️ 이자율</span>
-          <span class="value">{{ debtDetails.interestRate.toFixed(2) }} %</span>
+          <span :class="styles.label">
+            <span>✔️</span>
+            <sapn>이자율</sapn>
+          </span>
+          <span :class="styles.value"
+            >{{ debtDetails.interestRate.toFixed(2) }} %</span
+          >
         </li>
         <li>
-          <span class="label">✔️ 대출 시작일</span>
-          <span class="value">{{ debtDetails.loanStartDate }}</span>
+          <span :class="styles.label">
+            <span>✔️</span>
+            <sapn>대출 시작일</sapn>
+          </span>
+          <span :class="styles.value">{{ debtDetails.loanStartDate }}</span>
         </li>
         <li>
-          <span class="label">✔️ 남은 상환액</span>
-          <span class="value"
+          <span :class="styles.label">
+            <span>✔️</span>
+            <sapn>남은 상환액</sapn>
+          </span>
+          <span :class="styles.value"
             >{{ formatCurrency(debtDetails.currentBalance) }} 원</span
           >
         </li>
         <li>
-          <span class="label">✔️ 거치기간</span>
-          <span class="value">{{ debtDetails.gracePeriodMonths }} 개월</span>
+          <span :class="styles.label">
+            <span>✔️</span>
+            <sapn>거치기간</sapn>
+          </span>
+          <span :class="styles.value"
+            >{{ debtDetails.gracePeriodMonths }} 개월</span
+          >
         </li>
         <li>
-          <span class="label">✔️ 상환 방식</span>
-          <span class="value">{{
+          <span :class="styles.label">
+            <span>✔️</span>
+            <sapn>상환 방식</sapn>
+          </span>
+          <span :class="styles.value">{{
             formatRepaymentMethod(debtDetails.repaymentMethod)
           }}</span>
         </li>
       </ul>
 
-      <button class="close-button" @click="$emit('close')">닫기</button>
+      <div :class="styles.buttonContainer">
+        <button :class="styles.closeButton" @click="$emit('close')">
+          닫기
+        </button>
+      </div>
     </div>
   </div>
 </template>
