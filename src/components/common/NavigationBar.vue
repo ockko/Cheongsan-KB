@@ -63,19 +63,13 @@ const navigateTo = (route) => {
         styles.navItem,
         { [styles.navItemActive]: isActive(item.route) },
       ]"
-      :class="[
-        styles.navItem,
-        { [styles.navItemActive]: isActive(item.route) },
-      ]"
       @click="navigateTo(item.route)"
     >
       <img
         :src="`/images/${getIcon(item)}`"
         :alt="item.name"
         :class="styles.navIcon"
-        :class="styles.navIcon"
       />
-      <span :class="styles.navLabel">{{ item.name }}</span>
       <span :class="styles.navLabel">{{ item.name }}</span>
     </button>
   </nav>

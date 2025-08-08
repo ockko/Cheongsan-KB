@@ -23,8 +23,7 @@ export default defineConfig({
   },
   css: {
     modules: {
-      localsConvention: 'camelCase' // css 에서 케밥 케이스 -> vue 템플릿에서 카멜 케이스로 사용 가능
-    }
-  }
-})
+      localsConvention: 'camelCase', // css 에서 케밥 케이스 -> vue 템플릿에서 카멜 케이스로 사용 가능
+    },
+  },
 });
