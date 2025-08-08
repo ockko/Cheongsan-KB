@@ -1,5 +1,17 @@
 <script setup>
 import styles from '@/assets/styles/pages/Onboarding.module.css';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const goToLogin = () => {
+  router.push('/login');
+};
+
+const goToSignup = () => {
+  // 회원가입 페이지로 이동 (추후 구현)
+  console.log('회원가입 페이지로 이동');
+};
 </script>
 
 <template>
@@ -14,8 +26,12 @@ import styles from '@/assets/styles/pages/Onboarding.module.css';
       티모청의 맞춤형 부채관리 서비스를 이용해보세요
     </div>
     <div :class="styles.buttonContainer">
-      <button :class="[styles.button, styles.loginButton]">로그인</button>
-      <button :class="[styles.button, styles.signupButton]">회원가입</button>
+      <button :class="[styles.button, styles.loginButton]" @click="goToLogin">
+        로그인
+      </button>
+      <button :class="[styles.button, styles.signupButton]" @click="goToSignup">
+        회원가입
+      </button>
     </div>
   </div>
 </template>
