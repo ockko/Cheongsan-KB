@@ -59,6 +59,7 @@ public class DebtServiceImpl implements DebtService {
                             .repaymentType(RepaymentType.fromRepaymentMethod(debt.getRepaymentMethod()))
                             .loanStartDate(debt.getLoanStartDate())
                             .loanEndDate(debt.getLoanEndDate())
+                            .nextPaymentDate(debt.getNextPaymentDate())
                             .repaymentRate(repaymentRate)
                             .build();
                 })

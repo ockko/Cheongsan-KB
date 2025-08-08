@@ -1,14 +1,20 @@
 package cheongsan.domain.simulator.controller;
 
+import cheongsan.domain.debt.dto.DebtInfoResponseDTO;
+import cheongsan.domain.debt.service.DebtService;
 import cheongsan.domain.simulator.dto.*;
 import cheongsan.domain.simulator.service.RepaymentSimulationService;
+import cheongsan.domain.user.entity.CustomUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,16 +22,26 @@ import java.util.List;
 public class RepaymentSimulationController {
 
     private final RepaymentSimulationService simulationService;
+    private final DebtService debtService;
 
     @PostMapping("/analyze")
-    public ResponseEntity<List<RepaymentResponseDTO>> simulate(@RequestBody RepaymentRequestDTO request) {
+    public ResponseEntity<List<RepaymentResponseDTO>> simulate(@RequestParam("monthlyAvailableAmount") BigDecimal monthlyAvailableAmount, Principal principal) {
+        Authentication authentication = (Authentication) principal;
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        Long userId = customUser.getUser().getId();
+
+        List<LoanDTO> loans = convertToLoanDTOList(debtService.getUserDebtList(userId));
+        RepaymentRequestDTO request = RepaymentRequestDTO.builder().loans(loans).monthlyAvailableAmount(monthlyAvailableAmount).build();
         List<RepaymentResponseDTO> results = simulationService.simulateAll(request);
         simulationService.saveStrategies(1L, results);
         return ResponseEntity.ok(results);
     }
 
     @GetMapping("/result")
-    public ResponseEntity<RepaymentResultDTO> showSimulationMain(@RequestParam("userId") Long userId, @RequestParam("monthlyAvailableAmount") BigDecimal monthlyAvailable) {
+    public ResponseEntity<RepaymentResultDTO> showSimulationMain(@RequestParam("monthlyAvailableAmount") BigDecimal monthlyAvailable, Principal principal) {
+        Authentication authentication = (Authentication) principal;
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        Long userId = customUser.getUser().getId();
         List<RepaymentResponseDTO> strategies = List.of(
                 simulationService.getStrategy(userId, StrategyType.TCS_RECOMMEND),
                 simulationService.getStrategy(userId, StrategyType.HIGH_INTEREST_FIRST),
@@ -56,13 +72,32 @@ public class RepaymentSimulationController {
 
 
     @GetMapping("/detail")
-    public ResponseEntity<RepaymentResponseDTO> showStrategyDetail(@RequestParam("strategyType") StrategyType strategyType,
-                                                                   @RequestParam("userId") Long userId) {
+    public ResponseEntity<RepaymentResponseDTO> showStrategyDetail(@RequestParam("strategyType") StrategyType strategyType, Principal principal) {
+        Authentication authentication = (Authentication) principal;
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        Long userId = customUser.getUser().getId();
         RepaymentResponseDTO strategyResult = simulationService.getStrategy(userId, strategyType);
         if (strategyResult == null) {
             return ResponseEntity.notFound().build();
         }
 
         return ResponseEntity.ok(strategyResult);
+    }
+
+    private static List<LoanDTO> convertToLoanDTOList(List<DebtInfoResponseDTO> debtInfoList) {
+        return debtInfoList.stream()
+                .map(debt -> LoanDTO.builder()
+                        .id(debt.getDebtId())
+                        .loanName(debt.getDebtName())
+                        .institutionType(debt.getOrganizationName())
+                        .principal(debt.getCurrentBalance())
+                        .interestRate(debt.getInterestRate())
+                        .startDate(debt.getLoanStartDate())
+                        .endDate(debt.getLoanEndDate())
+                        .repaymentType(debt.getRepaymentType())
+                        .prepaymentFeeRate(BigDecimal.valueOf(0.01)) // 중도상환수수료 1%로 고정
+                        .paymentDate(debt.getNextPaymentDate())
+                        .build())
+                .collect(Collectors.toList());
     }
 }
