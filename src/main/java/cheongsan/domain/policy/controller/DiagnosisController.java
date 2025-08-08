@@ -6,11 +6,15 @@ import cheongsan.domain.policy.dto.SimpleDiagnosisDTO;
 import cheongsan.domain.policy.dto.UserDiagnosisDTO;
 import cheongsan.domain.policy.service.DiagnosisService;
 import cheongsan.domain.user.dto.UserDTO;
+import cheongsan.domain.user.entity.CustomUser;
 import cheongsan.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/cheongsan/diagnosis")
@@ -27,11 +31,14 @@ public class DiagnosisController {
      */
     @PostMapping("/submit")
     public ResponseEntity<DiagnosisDTO> submitDiagnosisSurvey(
-            @RequestBody UserDiagnosisDTO userDiagnosisDTO
+            @RequestBody UserDiagnosisDTO userDiagnosisDTO,
+            Principal principal
     ) {
         DiagnosisDTO result = diagnosisService.processDiagnosis(userDiagnosisDTO);
 
-        Long currentUserId = 1L;
+        Authentication authentication = (Authentication) principal;
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        Long currentUserId = customUser.getUser().getId();
         Long recommendDiagnosisId = result.getId();
 
         userService.submitDiagnosisAnswerToUser(currentUserId, recommendDiagnosisId);
@@ -41,8 +48,12 @@ public class DiagnosisController {
 
 
     @GetMapping("/result")
-    public ResponseEntity<SimpleDiagnosisDTO> getDiagnosisResult() {
-        Long currentUserId = 1L;
+    public ResponseEntity<SimpleDiagnosisDTO> getDiagnosisResult(
+            Principal principal
+    ) {
+        Authentication authentication = (Authentication) principal;
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        Long currentUserId = customUser.getUser().getId();
 
         UserDTO userDTO = userService.getUser(currentUserId);
         log.info("userDTO={}", userDTO.getEmail());
@@ -56,6 +67,7 @@ public class DiagnosisController {
         }
         SimpleDiagnosisDTO simpleDiagnosisDTO = diagnosisService.getSimpleDiagnosis(recommendedDiagnosisId);
         log.info("simpleDiagnosisDTO={}", simpleDiagnosisDTO.toString());
+        simpleDiagnosisDTO.setNickName(customUser.getUser().getNickname());
 
         return ResponseEntity.ok(simpleDiagnosisDTO);
     }

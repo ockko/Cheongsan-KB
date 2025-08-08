@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface PolicyService {
 
-    public List<PolicyDTO> getPolicyList(PolicyRequestDTO policyRequestDTO) throws UnsupportedEncodingException, IOException, Exception;
+    List<PolicyDTO> getPolicyList(PolicyRequestDTO policyRequestDTO) throws UnsupportedEncodingException, IOException, Exception;
 
-    public List<PolicyDTO> getPolicyListByTags(List<String> tags, List<PolicyDTO> policyList);
+    List<PolicyDTO> getPolicyListSearch(PolicyRequestDTO policyRequestDTO) throws UnsupportedEncodingException, IOException, Exception;
 
-    public PolicyDetailDTO getPolicyDetail(PolicyRequestDTO policyRequestDTO) throws UnsupportedEncodingException, IOException, Exception;
+    PolicyDetailDTO getPolicyDetail(PolicyRequestDTO policyRequestDTO) throws UnsupportedEncodingException, IOException, Exception;
 }

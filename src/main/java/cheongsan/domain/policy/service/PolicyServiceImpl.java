@@ -8,7 +8,7 @@ import cheongsan.domain.user.service.UserService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@Slf4j
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class PolicyServiceImpl implements PolicyService {
@@ -58,9 +58,11 @@ public class PolicyServiceImpl implements PolicyService {
 
         // searchWrd가 null이거나 빈값이면 유저 신용 상태 가져오고 "청년"을 기본값으로
         String searchWrd = policyRequestDTO.getSearchWrd();
-        if (searchWrd == null) {
+        System.out.println("policyServie에서" + searchWrd);
+        if (searchWrd == null || searchWrd.trim().isEmpty()) {
             //유저 신용 상태 가져오기
-            UserDTO userDTO = userService.getUser(2L);
+            UserDTO userDTO = userService.getUser(policyRequestDTO.getUserId());
+
             // 신용 상태에 따라 "부채","대출","청년"
             Long userDiagnosisResult = userDTO.getRecommendedProgramId();
             log.info("userDianosisResult={}", userDiagnosisResult);
@@ -71,7 +73,7 @@ public class PolicyServiceImpl implements PolicyService {
                 } else if (userDiagnosisResult.equals(3L) || userDiagnosisResult.equals(4L) || userDiagnosisResult.equals(5L)) {
                     searchWrd = "대출";
                 } else {
-                    searchWrd = "청년";
+                    searchWrd = "신용";
                 }
             } else {
                 searchWrd = "청년";
@@ -82,6 +84,7 @@ public class PolicyServiceImpl implements PolicyService {
         urlBuilder.append("&searchWrd=").append(URLEncoder.encode(searchWrd, "UTF-8"));
 
         log.info("urlBuilder={}", urlBuilder);
+        System.out.println(urlBuilder.toString());
 
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -106,6 +109,7 @@ public class PolicyServiceImpl implements PolicyService {
 
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Node node = nodeList.item(i);
+                log.info(node.toString());
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element e = (Element) node;
                     PolicyDTO dto = new PolicyDTO();
@@ -117,6 +121,8 @@ public class PolicyServiceImpl implements PolicyService {
                     dto.setPolicyId(getTagValue("servId", e));
                     dto.setPolicyName(getTagValue("servNm", e));
                     dto.setSupportCycle(getTagValue("sprtCycNm", e));
+                    dto.setPolicyOnline(getTagValue("onapPsbltYn", e));
+                    dto.setPolicyDate(getTagValue("svcfrstRegTs", e));
 
                     List<String> combinedList = new ArrayList<>();
                     if (themaList != null) combinedList.addAll(themaList);
@@ -139,7 +145,7 @@ public class PolicyServiceImpl implements PolicyService {
 
     @Override
     public List<PolicyDTO> getPolicyList(PolicyRequestDTO policyRequestDTO) throws Exception {
-        Long userId = 1L;
+        Long userId = policyRequestDTO.getUserId();
         String redisKey = "policies:" + userId;
         String cached = redisTemplate.opsForValue().get(redisKey);
         if (cached != null) {
@@ -155,6 +161,24 @@ public class PolicyServiceImpl implements PolicyService {
 
 
     }
+
+    @Override
+    public List<PolicyDTO> getPolicyListSearch(PolicyRequestDTO policyRequestDTO) throws Exception {
+        Long userId = policyRequestDTO.getUserId();
+        String redisKey = "searchPolicies:" + userId + policyRequestDTO.getSearchWrd();
+        String searchCached = redisTemplate.opsForValue().get(redisKey);
+        if (searchCached != null) {
+            log.info("Redis hit: {}", redisKey);
+            return objectMapper.readValue(searchCached, new TypeReference<List<PolicyDTO>>() {
+            });
+        }
+        List<PolicyDTO> policyList = fetchPoliciesFromApi(policyRequestDTO);
+        String json = objectMapper.writeValueAsString(policyList);
+        redisTemplate.opsForValue().set(redisKey, json, 1, TimeUnit.HOURS);
+
+        return policyList;
+    }
+
 
     private String getTagValue(String tag, Element element) {
         NodeList nodeList = element.getElementsByTagName(tag);
@@ -175,24 +199,6 @@ public class PolicyServiceImpl implements PolicyService {
         return result;
     }
 
-    @Override
-    public List<PolicyDTO> getPolicyListByTags(List<String> tags, List<PolicyDTO> policyList) {
-
-        if (tags == null || tags.isEmpty()) {
-            return policyList;
-        }
-        List<PolicyDTO> filtered = new ArrayList<>();
-        for (PolicyDTO policy : policyList) {
-            List<String> tagList = policy.getTagList();
-            if (tagList != null) {
-                boolean matched = tags.stream().anyMatch(
-                        filterTag -> tagList.stream().anyMatch(tag -> tag.contains(filterTag))
-                );
-                if (matched) filtered.add(policy);
-            }
-        }
-        return filtered;
-    }
 
     // 정책 리스트에서 하나를 누르면 그 이름을 searchWrd로 검색
     @Override

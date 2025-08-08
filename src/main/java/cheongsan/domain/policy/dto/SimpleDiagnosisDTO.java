@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class SimpleDiagnosisDTO {
-
+    private String nickName;
     private Long id;
     private String programName;
     private String operatingEntity;
