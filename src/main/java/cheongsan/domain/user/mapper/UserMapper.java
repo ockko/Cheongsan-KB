@@ -55,4 +55,7 @@ public interface UserMapper {
     User findByConnectedId(@Param("connectedId") String connectedId);
 
     List<Long> getAllUserIds();
+
+    void updateStrategy(@Param("id") Long id,
+                        @Param("strategyName") String strategyName);
 }

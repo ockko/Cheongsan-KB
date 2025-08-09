@@ -6,9 +6,9 @@ import cheongsan.domain.simulator.dto.RepaymentResponseDTO;
 import cheongsan.domain.simulator.dto.StrategyType;
 import cheongsan.domain.simulator.mapper.RepaymentSimulationMapper;
 import cheongsan.domain.simulator.service.strategy.RepaymentStrategy;
+import cheongsan.domain.user.mapper.UserMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -23,13 +23,12 @@ public class RepaymentSimulationServiceImpl implements RepaymentSimulationServic
     private final RedisTemplate<String, RepaymentResponseDTO> repaymentStrategyRedisTemplate;
     private final List<RepaymentStrategy> strategies;
     private final RepaymentSimulationMapper repaymentSimulationMapper;
-
+    private final UserMapper userMapper;
+    private final ObjectMapper objectMapper;
     private static final Duration CACHE_TTL = Duration.ofHours(1);
 
     private static final String STRATEGY_PREFIX = "repayment:";
 
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Override
     public List<RepaymentResponseDTO> simulateAll(RepaymentRequestDTO request) {
@@ -102,6 +101,11 @@ public class RepaymentSimulationServiceImpl implements RepaymentSimulationServic
     @Override
     public void deleteUserCache(Long userId) {
         repaymentSimulationMapper.deleteByUserId(userId);
+    }
+
+    @Override
+    public void updateUserStrategy(Long id, String strategyName) {
+        userMapper.updateStrategy(id, strategyName);
     }
 
     private String generateKey(Long userId, StrategyType strategyType) {

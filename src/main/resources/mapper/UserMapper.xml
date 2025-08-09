@@ -114,4 +114,9 @@
         WHERE connected_id = #{connectedId}
     </select>
 
+    <update id="updateStrategy">
+        UPDATE user
+        SET strategy = #{strategyName}
+        WHERE id = #{id}
+    </update>
 </mapper>
