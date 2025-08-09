@@ -131,3 +131,10 @@
 .applyButton:hover {
   background: #004b6e;
 }
+
+.notice {
+  font-size: 0.75rem;
+  color: var(--color-red);
+  text-align: center;
+  margin-top: 0.75rem;
+}
