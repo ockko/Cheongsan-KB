@@ -27,7 +27,6 @@
         WHERE da.user_id = #{userId}
     </select>
 
-
     <select id="getDebtAccountById" parameterType="long" resultType="cheongsan.domain.debt.entity.DebtAccount">
         SELECT id AS debtAccountId,
                debt_name,
@@ -40,6 +39,21 @@
                organization_code
         FROM debt_accounts
         WHERE id = #{loanId}
+    </select>
+
+    <select id="findDebtAccountById" parameterType="long" resultType="cheongsan.domain.debt.entity.DebtAccount">
+        SELECT id,
+               debt_name,
+               original_amount,
+               current_balance,
+               interest_rate,
+               loan_start_date,
+               grace_period_months,
+               repayment_method,
+               organization_code
+        FROM debt_accounts
+        WHERE id = #{loanId}
+          AND user_id = #{userId}
     </select>
 
     <select id="getFinancialInstitutionByCode" parameterType="Long"

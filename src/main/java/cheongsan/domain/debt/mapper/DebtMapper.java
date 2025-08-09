@@ -16,8 +16,10 @@ import java.util.List;
 public interface DebtMapper {
     List<DebtAccount> getUserDebtList(Long userId);
 
-    // 대출 상세 조회 (1)
     DebtAccount getDebtAccountById(Long loanId);
+
+    // 대출 상세 조회 (1)
+    DebtAccount findDebtAccountById(@Param("userId") Long userId, @Param("loanId") Long loanId);
 
     // 대출 상세 조회 (2)
     FinancialInstitution getFinancialInstitutionByCode(Long organizationCode);
