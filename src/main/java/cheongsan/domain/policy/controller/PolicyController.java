@@ -31,15 +31,15 @@ public class PolicyController {
     public ResponseEntity<List<PolicyResponseDTO>> getPolicyList(
             @AuthenticationPrincipal CustomUser customUser
     ) throws Exception {
-        Long userId = customUser.getUser().getId();
+        Long id = customUser.getUser().getId();
         PolicyRequestDTO requestDTO = new PolicyRequestDTO();
-        requestDTO.setUserId(userId);
+        requestDTO.setUserId(id);
 
         try {
             List<PolicyResponseDTO> policyList = policyService.getPolicyList(requestDTO);
             return ResponseEntity.ok(policyList);
         } catch (Exception e) {
-            log.error("Error fetching policy list for userId: {}", userId, e);
+            log.error("Error fetching policy list for userId: {}", id, e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to fetch policy list.");
         }
     }

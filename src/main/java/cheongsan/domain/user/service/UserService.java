@@ -14,6 +14,9 @@ public interface UserService {
 
     MyInfoResponseDTO getMyInfo(Long Id);
 
+    NicknameResponseDTO submitNickname(NicknameRequestDTO nicknameRequestDTO);
+
+
     UpdateMyProfileResponseDTO updateMyProfile(Long Id, UpdateMyProfileRequestDTO updateMyProfileRequestDTO);
 
     void changePassword(Long Id, ChangePasswordRequestDTO changePasswordRequestDTO);

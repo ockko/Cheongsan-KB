@@ -36,15 +36,15 @@ public class DiagnosisController {
             @RequestBody UserDiagnosisRequestDTO userDiagnosisRequestDTO,
             @AuthenticationPrincipal CustomUser customUser
     ) {
-        Long userId = customUser.getUser().getId();
+        Long id = customUser.getUser().getId();
         try {
             DiagnosisResponseDTO result = diagnosisService.processDiagnosis(userDiagnosisRequestDTO);
             Long recommendDiagnosisId = result.getId();
 
-            userService.submitDiagnosisAnswerToUser(userId, recommendDiagnosisId);
+            userService.submitDiagnosisAnswerToUser(id, recommendDiagnosisId);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
-            log.error("Error processing diagnosis survey for userId: {}", userId, e);
+            log.error("Error processing diagnosis survey for userId: {}", id, e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to process diagnosis survey.");
         }
     }
@@ -56,14 +56,14 @@ public class DiagnosisController {
     public ResponseEntity<SimpleDiagnosisResponseDTO> getDiagnosisResult(
             @AuthenticationPrincipal CustomUser customUser
     ) {
-        Long currentUserId = customUser.getUser().getId();
+        Long id = customUser.getUser().getId();
         try {
-            UserDTO userDTO = userService.getUser(currentUserId);
+            UserDTO userDTO = userService.getUser(id);
             log.info("userDTO email={}", userDTO.getEmail());
 
             Long recommendedDiagnosisId = userDTO.getRecommendedProgramId();
             if (recommendedDiagnosisId == null) {
-                log.info("User(ID: {}) has no recommended diagnosis result. Prompt to complete diagnosis first.", currentUserId);
+                log.info("User(ID: {}) has no recommended diagnosis result. Prompt to complete diagnosis first.", id);
                 return ResponseEntity.noContent().build();
             }
 
@@ -73,7 +73,7 @@ public class DiagnosisController {
 
             return ResponseEntity.ok(simpleDiagnosisResponseDTO);
         } catch (Exception e) {
-            log.error("Error retrieving diagnosis result for userId: {}", currentUserId, e);
+            log.error("Error retrieving diagnosis result for userId: {}", id, e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to retrieve diagnosis result.");
         }
     }

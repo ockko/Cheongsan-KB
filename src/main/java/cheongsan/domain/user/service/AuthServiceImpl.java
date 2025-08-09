@@ -169,17 +169,6 @@ public class AuthServiceImpl implements AuthService {
         return new LogInResponseDTO(1L, "nickName", "accessToken", "refreshToken");
     }
 
-    @Override
-    public NicknameResponseDTO submitNickname(NicknameRequestDTO nicknameRequestDTO) {
-        // 1. 유저 존재 확인
-        User user = userMapper.findById(nicknameRequestDTO.getUserId());
-        if (user == null) {
-            throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
-        }
-        // 2. 닉네임 삽입
-        userMapper.submitNickname(user.getUserId(), nicknameRequestDTO.getNickname());
-        return new NicknameResponseDTO("닉네임이 성공적으로 반영되었습니다.", nicknameRequestDTO.getNickname());
-    }
 
     @Override
     public TokenRefreshResponseDTO reissueTokens(String refreshToken) {

@@ -51,10 +51,6 @@ class AuthControllerTest {
             return null;
         }
 
-        @Override
-        public NicknameResponseDTO submitNickname(NicknameRequestDTO nicknameRequestDTO) {
-            return null;
-        }
 
         @Override
         public TokenRefreshResponseDTO reissueTokens(String refreshToken) {

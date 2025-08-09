@@ -28,9 +28,9 @@ public class UserController {
     @GetMapping("/profile")
     public ResponseEntity<?> getMyProfile(@AuthenticationPrincipal CustomUser customUser) {
         try {
-            Long Id = customUser.getUser().getId();
+            Long id = customUser.getUser().getId();
 
-            MyInfoResponseDTO myInfo = userService.getMyInfo(Id);
+            MyInfoResponseDTO myInfo = userService.getMyInfo(id);
             return ResponseEntity.ok(myInfo);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new ResponseDTO(e.getMessage()));
@@ -45,9 +45,9 @@ public class UserController {
             @RequestBody UpdateMyProfileRequestDTO request,
             @AuthenticationPrincipal CustomUser customUser) {
         try {
-            Long Id = customUser.getUser().getId();
+            Long id = customUser.getUser().getId();
 
-            UpdateMyProfileResponseDTO response = userService.updateMyProfile(Id, request);
+            UpdateMyProfileResponseDTO response = userService.updateMyProfile(id, request);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
@@ -60,8 +60,8 @@ public class UserController {
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequestDTO request,
                                             @AuthenticationPrincipal CustomUser customUser) {
         try {
-            Long Id = customUser.getUser().getId();
-            userService.changePassword(Id, request);
+            Long id = customUser.getUser().getId();
+            userService.changePassword(id, request);
             return ResponseEntity.ok(new ChangePasswordResponseDTO("비밀번호가 성공적으로 변경되었습니다."));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
@@ -79,8 +79,8 @@ public class UserController {
             @AuthenticationPrincipal CustomUser customUser
     ) {
         try {
-            Long Id = customUser.getUser().getId();
-            userService.deleteAccount(Id, request);
+            Long id = customUser.getUser().getId();
+            userService.deleteAccount(id, request);
             return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
@@ -93,8 +93,8 @@ public class UserController {
     @GetMapping("/debt-accounts")
     public ResponseEntity<?> getMyDebt(@AuthenticationPrincipal CustomUser customUser) {
         try {
-            Long Id = customUser.getUser().getId();
-            List<UserDebtAccountResponseDTO> accounts = userService.getUserDebtAccounts(Id);
+            Long id = customUser.getUser().getId();
+            List<UserDebtAccountResponseDTO> accounts = userService.getUserDebtAccounts(id);
             if (accounts == null || accounts.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT)
                         .body("해당 유저의 부채 계좌를 찾을 수 없습니다.");
@@ -133,10 +133,10 @@ public class UserController {
                                             @AuthenticationPrincipal CustomUser customUser) {
         try {
 
-            Long Id = customUser.getUser().getId();
-            request.setUserId(Id);
+            Long id = customUser.getUser().getId();
+            request.setUserId(id);
 
-            NicknameResponseDTO response = authService.submitNickname(request);
+            NicknameResponseDTO response = userService.submitNickname(request);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
