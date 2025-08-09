@@ -68,16 +68,20 @@ function addLoan() {
         <!-- 대출명 -->
         <div :class="styles.formRow">
           <label :class="styles.titleLabel">대출명 :</label>
-          <input v-model="debtName" type="text" :class="styles.textInput" />
+          <div :class="styles.formControl">
+            <input v-model="debtName" type="text" :class="styles.textInput" />
+          </div>
         </div>
         <!-- 대출 기관명 -->
         <div :class="styles.formRow">
           <label :class="styles.subLabel">대출 기관명 :</label>
-          <input
-            v-model="institutionName"
-            type="text"
-            :class="styles.textInput"
-          />
+          <div :class="styles.formControl">
+            <input
+              v-model="institutionName"
+              type="text"
+              :class="styles.textInput"
+            />
+          </div>
         </div>
       </form>
 
@@ -89,10 +93,12 @@ function addLoan() {
             v-for="(field, index) in fields"
             :key="index"
           >
-            <div :class="styles.dot">
-              <img src="/images/dot-icon.png" alt="dot" />
+            <div :class="styles.formLabelContainer">
+              <div :class="styles.dot">
+                <img src="/images/dot-icon.png" alt="dot" />
+              </div>
+              <div :class="styles.formLabel">{{ field.label }}</div>
             </div>
-            <div :class="styles.formLabel">{{ field.label }}</div>
 
             <div
               :class="styles.formControl"
@@ -130,8 +136,10 @@ function addLoan() {
         </div>
         <!-- 상환 방식 -->
         <div :class="styles.formRow">
-          <img src="/images/dot-icon.png" alt="dot" />
-          <div :class="styles.formLabel">상환 방식</div>
+          <div :class="styles.formLabelContainer">
+            <img src="/images/dot-icon.png" alt="dot" />
+            <div :class="styles.formLabel">상환 방식</div>
+          </div>
           <div :class="styles.formControl">
             <select v-model="repaymentMethod" :class="styles.repaymentSelect">
               <option>원금 균등 상환</option>
