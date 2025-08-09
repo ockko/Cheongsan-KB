@@ -49,8 +49,8 @@ public class UserServiceImpl implements UserService {
         return userDTO;
     }
 
-    public MyInfoResponseDTO getMyInfo(String userId) {
-        User user = userMapper.findByUserId(userId);
+    public MyInfoResponseDTO getMyInfo(Long userId) {
+        User user = userMapper.findById(userId);
         if (user == null) {
             throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
         }
@@ -62,8 +62,8 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    public UpdateMyProfileResponseDTO updateMyProfile(String userId, UpdateMyProfileRequestDTO updateMyProfileRequestDTO) {
-        User user = userMapper.findByUserId(userId);
+    public UpdateMyProfileResponseDTO updateMyProfile(Long userId, UpdateMyProfileRequestDTO updateMyProfileRequestDTO) {
+        User user = userMapper.findById(userId);
         if (user == null) {
             throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
         }
@@ -81,8 +81,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(ChangePasswordRequestDTO changePasswordRequestDTO) {
-        User user = userMapper.findByUserId(changePasswordRequestDTO.getUserId());
+    public void changePassword(Long userId, ChangePasswordRequestDTO changePasswordRequestDTO) {
+        User user = userMapper.findById(userId);
         if (user == null) {
             log.info("존재하지 않는 사용자입니다.");
             throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
@@ -96,11 +96,11 @@ public class UserServiceImpl implements UserService {
 
         // 3. 새 비밀번호 암호화 후 저장
         String encodedNewPw = passwordEncoder.encode(changePasswordRequestDTO.getNewPassword());
-        userMapper.updatePassword(user.getId(), encodedNewPw);
+        userMapper.updatePassword(userId, encodedNewPw);
     }
 
-    public void deleteAccount(String userId, DeleteAccountRequestDTO dto) {
-        User user = userMapper.findByUserId(userId);
+    public void deleteAccount(Long userId, DeleteAccountRequestDTO dto) {
+        User user = userMapper.findById(userId);
         if (user == null) {
             throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
         }

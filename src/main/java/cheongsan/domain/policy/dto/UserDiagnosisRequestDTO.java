@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class UserDiagnosisDTO {
+public class UserDiagnosisRequestDTO {
     private String sessionId;
     private List<Answer> answers;
 

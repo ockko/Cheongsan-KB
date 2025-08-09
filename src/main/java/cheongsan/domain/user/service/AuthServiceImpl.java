@@ -172,7 +172,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public NicknameResponseDTO submitNickname(NicknameRequestDTO nicknameRequestDTO) {
         // 1. 유저 존재 확인
-        User user = userMapper.findByUserId(nicknameRequestDTO.getUserId());
+        User user = userMapper.findById(nicknameRequestDTO.getUserId());
         if (user == null) {
             throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
         }

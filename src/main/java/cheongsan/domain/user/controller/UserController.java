@@ -2,6 +2,7 @@ package cheongsan.domain.user.controller;
 
 import cheongsan.common.constant.ResponseMessage;
 import cheongsan.common.exception.ResponseDTO;
+import cheongsan.common.util.ExtractUserIdUtil;
 import cheongsan.domain.debt.service.DebtService;
 import cheongsan.domain.user.dto.*;
 import cheongsan.domain.user.service.AuthService;
@@ -23,11 +24,12 @@ public class UserController {
     private final UserService userService;
     private final DebtService debtService;
     private final AuthService authService;
+    private final ExtractUserIdUtil extractUserIdUtil;
 
     @GetMapping("/profile")
-    public ResponseEntity<?> getMyProfile() {
+    public ResponseEntity<?> getMyProfile(Principal principal) {
         try {
-            String userId = "antehyun4880";
+            Long userId = extractUserIdUtil.extractUserId(principal);
 
             MyInfoResponseDTO myInfo = userService.getMyInfo(userId);
             return ResponseEntity.ok(myInfo);
@@ -41,9 +43,10 @@ public class UserController {
 
     @PatchMapping("/profile")
     public ResponseEntity<?> updateMyProfile(
-            @RequestBody UpdateMyProfileRequestDTO request) {
+            @RequestBody UpdateMyProfileRequestDTO request,
+            Principal principal) {
         try {
-            String userId = "antehyun4880";
+            Long userId = extractUserIdUtil.extractUserId(principal);
 
             UpdateMyProfileResponseDTO response = userService.updateMyProfile(userId, request);
             return ResponseEntity.ok(response);
@@ -55,25 +58,29 @@ public class UserController {
     }
 
     @PatchMapping("/changePassword")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequestDTO request) {
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequestDTO request, Principal principal) {
         try {
-            userService.changePassword(request);
+            Long userId = extractUserIdUtil.extractUserId(principal);
+
+            userService.changePassword(userId, request);
             return ResponseEntity.ok(new ChangePasswordResponseDTO("비밀번호가 성공적으로 변경되었습니다."));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
         } catch (Exception e) {
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
+                    .body(new ResponseDTO(e.getMessage()));
         }
     }
 
 
     @DeleteMapping("/profile")
     public ResponseEntity<?> deleteMyAccount(
-            @RequestBody DeleteAccountRequestDTO request
+            @RequestBody DeleteAccountRequestDTO request,
+            Principal principal
     ) {
         try {
-            String userId = "testuser66";
+            Long userId = extractUserIdUtil.extractUserId(principal);
 
             userService.deleteAccount(userId, request);
             return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
@@ -86,9 +93,9 @@ public class UserController {
     }
 
     @GetMapping("/debt-accounts")
-    public ResponseEntity<?> getMyDebt() {
+    public ResponseEntity<?> getMyDebt(Principal principal) {
         try {
-            Long userId = 1L;
+            Long userId = extractUserIdUtil.extractUserId(principal);
             List<UserDebtAccountResponseDTO> accounts = userService.getUserDebtAccounts(userId);
             if (accounts == null || accounts.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT)
@@ -124,10 +131,11 @@ public class UserController {
     }
 
     @PostMapping("/nickname")
-    public ResponseEntity<?> submitNickname(@RequestBody NicknameRequestDTO request) {
+    public ResponseEntity<?> submitNickname(@RequestBody NicknameRequestDTO request,
+                                            Principal principal) {
         try {
 
-            String userId = "antehyun4880";
+            Long userId = extractUserIdUtil.extractUserId(principal);
             request.setUserId(userId);
 
             NicknameResponseDTO response = authService.submitNickname(request);

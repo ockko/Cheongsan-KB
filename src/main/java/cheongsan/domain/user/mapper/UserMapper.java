@@ -33,7 +33,7 @@ public interface UserMapper {
                         @Param("newPassword") String password);
 
 
-    void updateProfile(@Param("userId") String userId,
+    void updateProfile(@Param("userId") Long userId,
                        @Param("nickname") String nickname,
                        @Param("email") String email);
 

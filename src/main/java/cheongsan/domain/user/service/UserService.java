@@ -12,15 +12,15 @@ public interface UserService {
 
     UserDTO getUser(Long id);
 
-    MyInfoResponseDTO getMyInfo(String userId);
+    MyInfoResponseDTO getMyInfo(Long userId);
 
-    UpdateMyProfileResponseDTO updateMyProfile(String userId, UpdateMyProfileRequestDTO updateMyProfileRequestDTO);
+    UpdateMyProfileResponseDTO updateMyProfile(Long userId, UpdateMyProfileRequestDTO updateMyProfileRequestDTO);
 
-    void changePassword(ChangePasswordRequestDTO changePasswordRequestDTO);
+    void changePassword(Long userId, ChangePasswordRequestDTO changePasswordRequestDTO);
 
-    void deleteAccount(String userId, DeleteAccountRequestDTO dto);
+    void deleteAccount(Long userId, DeleteAccountRequestDTO dto);
 
     List<UserDebtAccountResponseDTO> getUserDebtAccounts(Long userId);
 
-    void logout(String username);
+    void logout(String userId);
 }

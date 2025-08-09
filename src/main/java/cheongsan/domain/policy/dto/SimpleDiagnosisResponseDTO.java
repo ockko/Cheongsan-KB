@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SimpleDiagnosisDTO {
+public class SimpleDiagnosisResponseDTO {
     private String nickName;
     private Long id;
     private String programName;
@@ -18,8 +18,8 @@ public class SimpleDiagnosisDTO {
     private String simpleDescription;
 
     // Diagnosis Entity → DTO 변환 static 메서드 (Builder 활용)
-    public static SimpleDiagnosisDTO of(SimpleDiagnosis simpleDiagnosis) {
-        return SimpleDiagnosisDTO.builder()
+    public static SimpleDiagnosisResponseDTO of(SimpleDiagnosis simpleDiagnosis) {
+        return SimpleDiagnosisResponseDTO.builder()
                 .id(simpleDiagnosis.getId())
                 .programName(simpleDiagnosis.getProgramName())
                 .operatingEntity(simpleDiagnosis.getOperatingEntity())
