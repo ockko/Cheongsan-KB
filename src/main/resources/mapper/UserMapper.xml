@@ -79,7 +79,7 @@
                 email = #{email},
             </if>
         </set>
-        WHERE id = #{userId}
+        WHERE id = #{Id}
     </update>
 
     <delete id="deleteById" parameterType="String">
@@ -91,7 +91,7 @@
     <update id="updateConnectedId">
         UPDATE user
         SET connected_id = #{connectedId}
-        WHERE id = #{userId}
+        WHERE id = #{Id}
     </update>
     <select id="findUsersWithConnectedId" resultType="cheongsan.domain.user.entity.User">
         SELECT *

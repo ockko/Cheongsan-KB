@@ -8,19 +8,19 @@ import java.util.List;
 
 @Service
 public interface UserService {
-    void submitDiagnosisAnswerToUser(Long userId, Long workoutId);
+    void submitDiagnosisAnswerToUser(Long Id, Long workoutId);
 
     UserDTO getUser(Long id);
 
-    MyInfoResponseDTO getMyInfo(Long userId);
+    MyInfoResponseDTO getMyInfo(Long Id);
 
-    UpdateMyProfileResponseDTO updateMyProfile(Long userId, UpdateMyProfileRequestDTO updateMyProfileRequestDTO);
+    UpdateMyProfileResponseDTO updateMyProfile(Long Id, UpdateMyProfileRequestDTO updateMyProfileRequestDTO);
 
-    void changePassword(Long userId, ChangePasswordRequestDTO changePasswordRequestDTO);
+    void changePassword(Long Id, ChangePasswordRequestDTO changePasswordRequestDTO);
 
-    void deleteAccount(Long userId, DeleteAccountRequestDTO dto);
+    void deleteAccount(Long Id, DeleteAccountRequestDTO dto);
 
-    List<UserDebtAccountResponseDTO> getUserDebtAccounts(Long userId);
+    List<UserDebtAccountResponseDTO> getUserDebtAccounts(Long Id);
 
     void logout(String userId);
 }

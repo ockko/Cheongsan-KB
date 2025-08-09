@@ -39,8 +39,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public void submitDiagnosisAnswerToUser(Long userId, Long workoutId) {
-        userMapper.saveDiagnosis(userId, workoutId);
+    public void submitDiagnosisAnswerToUser(Long Id, Long workoutId) {
+        userMapper.saveDiagnosis(Id, workoutId);
     }
 
     public UserDTO getUser(Long id) {
@@ -49,8 +49,8 @@ public class UserServiceImpl implements UserService {
         return userDTO;
     }
 
-    public MyInfoResponseDTO getMyInfo(Long userId) {
-        User user = userMapper.findById(userId);
+    public MyInfoResponseDTO getMyInfo(Long Id) {
+        User user = userMapper.findById(Id);
         if (user == null) {
             throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
         }
@@ -62,8 +62,8 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    public UpdateMyProfileResponseDTO updateMyProfile(Long userId, UpdateMyProfileRequestDTO updateMyProfileRequestDTO) {
-        User user = userMapper.findById(userId);
+    public UpdateMyProfileResponseDTO updateMyProfile(Long Id, UpdateMyProfileRequestDTO updateMyProfileRequestDTO) {
+        User user = userMapper.findById(Id);
         if (user == null) {
             throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
         }
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("닉네임은 10자 이내로 입력하세요.");
         }
 
-        userMapper.updateProfile(userId, updateMyProfileRequestDTO.getNickname(), updateMyProfileRequestDTO.getEmail());
+        userMapper.updateProfile(Id, updateMyProfileRequestDTO.getNickname(), updateMyProfileRequestDTO.getEmail());
         return UpdateMyProfileResponseDTO.builder()
                 .message("내 정보가 성공적으로 수정되었습니다.")
                 .nickname(updateMyProfileRequestDTO.getNickname())
@@ -81,8 +81,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(Long userId, ChangePasswordRequestDTO changePasswordRequestDTO) {
-        User user = userMapper.findById(userId);
+    public void changePassword(Long Id, ChangePasswordRequestDTO changePasswordRequestDTO) {
+        User user = userMapper.findById(Id);
         if (user == null) {
             log.info("존재하지 않는 사용자입니다.");
             throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
@@ -96,11 +96,11 @@ public class UserServiceImpl implements UserService {
 
         // 3. 새 비밀번호 암호화 후 저장
         String encodedNewPw = passwordEncoder.encode(changePasswordRequestDTO.getNewPassword());
-        userMapper.updatePassword(userId, encodedNewPw);
+        userMapper.updatePassword(Id, encodedNewPw);
     }
 
-    public void deleteAccount(Long userId, DeleteAccountRequestDTO dto) {
-        User user = userMapper.findById(userId);
+    public void deleteAccount(Long Id, DeleteAccountRequestDTO dto) {
+        User user = userMapper.findById(Id);
         if (user == null) {
             throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
         }
@@ -109,11 +109,11 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
         }
         // 회원 탈퇴(삭제)
-        userMapper.deleteById(user.getUserId());
+        userMapper.deleteById(Id);
     }
 
-    public List<UserDebtAccountResponseDTO> getUserDebtAccounts(Long userId) {
-        List<DebtAccount> debtAccountList = debtMapper.findByUserId(userId);
+    public List<UserDebtAccountResponseDTO> getUserDebtAccounts(Long Id) {
+        List<DebtAccount> debtAccountList = debtMapper.findByUserId(Id);
         log.info(debtAccountList.toString());
         List<UserDebtAccountResponseDTO> userDebtAccountResponseDTOList = new ArrayList<>();
 

@@ -33,11 +33,11 @@ public interface UserMapper {
                         @Param("newPassword") String password);
 
 
-    void updateProfile(@Param("userId") Long userId,
+    void updateProfile(@Param("Id") Long Id,
                        @Param("nickname") String nickname,
                        @Param("email") String email);
 
-    void deleteById(@Param("userId") String userId);
+    void deleteById(@Param("Id") Long Id);
 
 
     void submitNickname(@Param("userId") String userId,
@@ -45,7 +45,7 @@ public interface UserMapper {
 
 
     // Connected ID 업데이트
-    void updateConnectedId(@Param("userId") Long userId,
+    void updateConnectedId(@Param("Id") Long Id,
                            @Param("connectedId") String connectedId);
 
     // Connected ID가 있는 모든 사용자 조회
