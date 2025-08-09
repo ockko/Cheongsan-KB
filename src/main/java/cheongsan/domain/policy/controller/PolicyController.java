@@ -1,6 +1,5 @@
 package cheongsan.domain.policy.controller;
 
-import cheongsan.common.util.ExtractUserIdUtil;
 import cheongsan.domain.policy.dto.PolicyDetailResponseDTO;
 import cheongsan.domain.policy.dto.PolicyRequestDTO;
 import cheongsan.domain.policy.dto.PolicyResponseDTO;
@@ -26,7 +25,6 @@ import java.util.List;
 public class PolicyController {
 
     private final PolicyService policyService;
-    private final ExtractUserIdUtil extractUserIdUtil;
 
 
     @GetMapping("/list")

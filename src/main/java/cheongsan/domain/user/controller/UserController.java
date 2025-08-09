@@ -2,7 +2,6 @@ package cheongsan.domain.user.controller;
 
 import cheongsan.common.constant.ResponseMessage;
 import cheongsan.common.exception.ResponseDTO;
-import cheongsan.common.util.ExtractUserIdUtil;
 import cheongsan.domain.debt.service.DebtService;
 import cheongsan.domain.user.dto.*;
 import cheongsan.domain.user.entity.CustomUser;
@@ -25,7 +24,6 @@ public class UserController {
     private final UserService userService;
     private final DebtService debtService;
     private final AuthService authService;
-    private final ExtractUserIdUtil extractUserIdUtil;
 
     @GetMapping("/profile")
     public ResponseEntity<?> getMyProfile(@AuthenticationPrincipal CustomUser customUser) {

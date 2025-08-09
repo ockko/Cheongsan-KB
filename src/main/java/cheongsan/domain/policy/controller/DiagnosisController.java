@@ -1,7 +1,6 @@
 package cheongsan.domain.policy.controller;
 
 
-import cheongsan.common.util.ExtractUserIdUtil;
 import cheongsan.domain.policy.dto.DiagnosisResponseDTO;
 import cheongsan.domain.policy.dto.SimpleDiagnosisResponseDTO;
 import cheongsan.domain.policy.dto.UserDiagnosisRequestDTO;
@@ -24,7 +23,6 @@ import org.springframework.web.server.ResponseStatusException;
 public class DiagnosisController {
     private final DiagnosisService diagnosisService;
     private final UserService userService;
-    private final ExtractUserIdUtil extractUserIdUtil;
 
     /**
      * 진단 설문 제출 API
