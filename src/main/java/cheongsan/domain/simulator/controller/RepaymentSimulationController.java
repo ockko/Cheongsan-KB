@@ -42,6 +42,7 @@ public class RepaymentSimulationController {
         Authentication authentication = (Authentication) principal;
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
         Long userId = customUser.getUser().getId();
+
         List<RepaymentResponseDTO> strategies = List.of(
                 simulationService.getStrategy(userId, StrategyType.TCS_RECOMMEND),
                 simulationService.getStrategy(userId, StrategyType.HIGH_INTEREST_FIRST),
@@ -90,6 +91,19 @@ public class RepaymentSimulationController {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
         Long userId = customUser.getUser().getId();
         simulationService.deleteUserCache(userId);
+    }
+
+
+    @PutMapping("/apply")
+    public ResponseEntity<String> applyStrategy(
+            @RequestParam String strategyName,
+            Principal principal) {
+
+        Authentication authentication = (Authentication) principal;
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        Long userId = customUser.getUser().getId();
+        simulationService.updateUserStrategy(userId, strategyName);
+        return ResponseEntity.ok("전략이 적용되었습니다.");
     }
 
     private static List<LoanDTO> convertToLoanDTOList(List<DebtInfoResponseDTO> debtInfoList) {
