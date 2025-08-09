@@ -4,11 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @NoArgsConstructor
@@ -27,5 +25,6 @@ public class User {
     private LocalDateTime dailyLimitDate;
     private String status;
     private String role;
+    private String strategy;
 
 }
