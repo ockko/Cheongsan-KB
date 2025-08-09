@@ -33,11 +33,11 @@ public interface UserMapper {
                         @Param("newPassword") String password);
 
 
-    void updateProfile(@Param("userId") String userId,
+    void updateProfile(@Param("id") Long id,
                        @Param("nickname") String nickname,
                        @Param("email") String email);
 
-    void deleteById(@Param("userId") String userId);
+    void deleteById(@Param("id") Long id);
 
 
     void submitNickname(@Param("userId") String userId,
@@ -45,7 +45,7 @@ public interface UserMapper {
 
 
     // Connected ID 업데이트
-    void updateConnectedId(@Param("userId") Long userId,
+    void updateConnectedId(@Param("id") Long id,
                            @Param("connectedId") String connectedId);
 
     // Connected ID가 있는 모든 사용자 조회
@@ -58,4 +58,7 @@ public interface UserMapper {
 
     void updateStrategy(@Param("id") Long id,
                         @Param("strategyName") String strategyName);
+
+    // 네이버 로그인 관련 메서드
+    User findByNaverId(@Param("naverId") String naverId);
 }

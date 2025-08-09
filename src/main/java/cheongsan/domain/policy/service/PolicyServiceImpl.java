@@ -1,8 +1,8 @@
 package cheongsan.domain.policy.service;
 
-import cheongsan.domain.policy.dto.PolicyDTO;
-import cheongsan.domain.policy.dto.PolicyDetailDTO;
+import cheongsan.domain.policy.dto.PolicyDetailResponseDTO;
 import cheongsan.domain.policy.dto.PolicyRequestDTO;
+import cheongsan.domain.policy.dto.PolicyResponseDTO;
 import cheongsan.domain.user.dto.UserDTO;
 import cheongsan.domain.user.service.UserService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -38,7 +38,7 @@ public class PolicyServiceImpl implements PolicyService {
     @Value("${policy.service-key}")
     private String SERVICE_KEY;
 
-    public List<PolicyDTO> fetchPoliciesFromApi(PolicyRequestDTO policyRequestDTO) throws Exception {
+    public List<PolicyResponseDTO> fetchPoliciesFromApi(PolicyRequestDTO policyRequestDTO) throws Exception {
         log.info("Fetching Policies from API");
         StringBuilder urlBuilder = new StringBuilder(POLICY_API_URL);
 
@@ -90,7 +90,7 @@ public class PolicyServiceImpl implements PolicyService {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
 
-        List<PolicyDTO> policyList = new ArrayList<>();
+        List<PolicyResponseDTO> policyList = new ArrayList<>();
         try {
             conn.setRequestProperty("Content-Type", "application/xml; charset=UTF-8");
             conn.setConnectTimeout(5000);
@@ -112,7 +112,7 @@ public class PolicyServiceImpl implements PolicyService {
                 log.info(node.toString());
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element e = (Element) node;
-                    PolicyDTO dto = new PolicyDTO();
+                    PolicyResponseDTO dto = new PolicyResponseDTO();
 
                     List<String> themaList = toStringList(getTagValue("intrsThemaArray", e));
                     List<String> groupList = toStringList(getTagValue("trgterIndvdlArray", e));
@@ -144,16 +144,16 @@ public class PolicyServiceImpl implements PolicyService {
 
 
     @Override
-    public List<PolicyDTO> getPolicyList(PolicyRequestDTO policyRequestDTO) throws Exception {
+    public List<PolicyResponseDTO> getPolicyList(PolicyRequestDTO policyRequestDTO) throws Exception {
         Long userId = policyRequestDTO.getUserId();
         String redisKey = "policies:" + userId;
         String cached = redisTemplate.opsForValue().get(redisKey);
         if (cached != null) {
             log.info("Redis hit: {}", redisKey);
-            return objectMapper.readValue(cached, new TypeReference<List<PolicyDTO>>() {
+            return objectMapper.readValue(cached, new TypeReference<List<PolicyResponseDTO>>() {
             });
         }
-        List<PolicyDTO> policyList = fetchPoliciesFromApi(policyRequestDTO);
+        List<PolicyResponseDTO> policyList = fetchPoliciesFromApi(policyRequestDTO);
         String json = objectMapper.writeValueAsString(policyList);
         redisTemplate.opsForValue().set(redisKey, json, 1, TimeUnit.HOURS);
 
@@ -163,16 +163,16 @@ public class PolicyServiceImpl implements PolicyService {
     }
 
     @Override
-    public List<PolicyDTO> getPolicyListSearch(PolicyRequestDTO policyRequestDTO) throws Exception {
+    public List<PolicyResponseDTO> getPolicyListSearch(PolicyRequestDTO policyRequestDTO) throws Exception {
         Long userId = policyRequestDTO.getUserId();
         String redisKey = "searchPolicies:" + userId + policyRequestDTO.getSearchWrd();
         String searchCached = redisTemplate.opsForValue().get(redisKey);
         if (searchCached != null) {
             log.info("Redis hit: {}", redisKey);
-            return objectMapper.readValue(searchCached, new TypeReference<List<PolicyDTO>>() {
+            return objectMapper.readValue(searchCached, new TypeReference<List<PolicyResponseDTO>>() {
             });
         }
-        List<PolicyDTO> policyList = fetchPoliciesFromApi(policyRequestDTO);
+        List<PolicyResponseDTO> policyList = fetchPoliciesFromApi(policyRequestDTO);
         String json = objectMapper.writeValueAsString(policyList);
         redisTemplate.opsForValue().set(redisKey, json, 1, TimeUnit.HOURS);
 
@@ -202,7 +202,7 @@ public class PolicyServiceImpl implements PolicyService {
 
     // 정책 리스트에서 하나를 누르면 그 이름을 searchWrd로 검색
     @Override
-    public PolicyDetailDTO getPolicyDetail(PolicyRequestDTO policyRequestDTO) throws Exception {
+    public PolicyDetailResponseDTO getPolicyDetail(PolicyRequestDTO policyRequestDTO) throws Exception {
         StringBuilder urlBuilder = new StringBuilder(POLICY_API_URL);
 
         urlBuilder.append("?serviceKey=").append(URLEncoder.encode(SERVICE_KEY, "UTF-8"));
@@ -243,33 +243,33 @@ public class PolicyServiceImpl implements PolicyService {
         Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(conn.getInputStream());
         doc.getDocumentElement().normalize();
         NodeList nodeList = doc.getElementsByTagName("servList");
-        PolicyDetailDTO policyDetailDTO = new PolicyDetailDTO();
+        PolicyDetailResponseDTO policyDetailResponseDTO = new PolicyDetailResponseDTO();
         Node node = nodeList.item(0);
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             Element e = (Element) node;
 
 
-            policyDetailDTO.setPolicyNumber(getTagValue("inqNum", e));
-            policyDetailDTO.setMinistryName(getTagValue("jurMnofNm", e));
-            policyDetailDTO.setDepartmentName(getTagValue("jurOrgNm", e));
-            policyDetailDTO.setPolicyName(getTagValue("servNm", e));
-            policyDetailDTO.setPolicyTags(toStringList(getTagValue("intrsThemaArray", e))); // 콤마로 split해서 리스트 변환
-            policyDetailDTO.setPolicySummary(getTagValue("servDgst", e));
-            policyDetailDTO.setSupportAge(getTagValue("ageInfo", e)); // '지원 연령' 태그가 다를 수 있음. 실제 XML 구조에 따라 수정
-            policyDetailDTO.setSupportTarget(toStringList(getTagValue("trgterIndvdlArray", e))); // list 형태
-            policyDetailDTO.setSupportType(getTagValue("srvPvsnNm", e));
-            policyDetailDTO.setSupportCycle(getTagValue("sprtCycNm", e));
-            policyDetailDTO.setIsOnlineApplyAvailable(getTagValue("onapPsbltYn", e));
-            policyDetailDTO.setContactNumber(getTagValue("rprsCtadr", e));
-            policyDetailDTO.setDetailPageUrl(getTagValue("servDtlLink", e));
-            policyDetailDTO.setPolicyId(getTagValue("servId", e));
+            policyDetailResponseDTO.setPolicyNumber(getTagValue("inqNum", e));
+            policyDetailResponseDTO.setMinistryName(getTagValue("jurMnofNm", e));
+            policyDetailResponseDTO.setDepartmentName(getTagValue("jurOrgNm", e));
+            policyDetailResponseDTO.setPolicyName(getTagValue("servNm", e));
+            policyDetailResponseDTO.setPolicyTags(toStringList(getTagValue("intrsThemaArray", e))); // 콤마로 split해서 리스트 변환
+            policyDetailResponseDTO.setPolicySummary(getTagValue("servDgst", e));
+            policyDetailResponseDTO.setSupportAge(getTagValue("ageInfo", e)); // '지원 연령' 태그가 다를 수 있음. 실제 XML 구조에 따라 수정
+            policyDetailResponseDTO.setSupportTarget(toStringList(getTagValue("trgterIndvdlArray", e))); // list 형태
+            policyDetailResponseDTO.setSupportType(getTagValue("srvPvsnNm", e));
+            policyDetailResponseDTO.setSupportCycle(getTagValue("sprtCycNm", e));
+            policyDetailResponseDTO.setIsOnlineApplyAvailable(getTagValue("onapPsbltYn", e));
+            policyDetailResponseDTO.setContactNumber(getTagValue("rprsCtadr", e));
+            policyDetailResponseDTO.setDetailPageUrl(getTagValue("servDtlLink", e));
+            policyDetailResponseDTO.setPolicyId(getTagValue("servId", e));
 
         }
 
 
         conn.disconnect();
 
-        return policyDetailDTO;
+        return policyDetailResponseDTO;
 
     }
 

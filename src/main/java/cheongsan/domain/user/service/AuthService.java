@@ -1,5 +1,6 @@
 package cheongsan.domain.user.service;
 
+import cheongsan.domain.auth.dto.SocialUserInfo;
 import cheongsan.domain.user.dto.*;
 
 public interface AuthService {
@@ -13,7 +14,11 @@ public interface AuthService {
 
     LogInResponseDTO login(LogInRequestDTO logInRequestDTO);
 
-    NicknameResponseDTO submitNickname(NicknameRequestDTO nicknameRequestDTO);
 
     TokenRefreshResponseDTO reissueTokens(String refreshToken);
+
+    // 네이버 로그인 관련 메서드
+    LogInResponseDTO naverSignUpOrLogin(SocialUserInfo socialUserInfo);
+
+    boolean isNaverUserExists(String naverId);
 }

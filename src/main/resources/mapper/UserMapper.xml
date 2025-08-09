@@ -38,20 +38,12 @@
     <!-- 유저 저장 -->
     <insert id="save" parameterType="cheongsan.domain.user.entity.User" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO user
-        (
-        connected_id,
-        user_id,
-        password,
-        email<!-- 필요한 경우: nickname, recommended_program_id, connected_id 등 추가 -->
-        )
-        VALUES
-        (
-        #{connectedId},
-        #{userId},
-        #{password},
-        #{email}
-        <!-- 필요한 경우: #{nickname}, #{recommendedProgramId}, #{connectedId} 등 추가 -->
-        )
+        (recommended_program_id, connected_id, nickname, user_id, password, email,
+         daily_limit, daily_limit_date, status, role,
+         naver_id, account_type)
+        VALUES (#{recommendedProgramId}, #{connectedId}, #{nickname}, #{userId}, #{password}, #{email},
+                #{dailyLimit}, #{dailyLimitDate}, #{status}, #{role},
+                #{naverId}, #{accountType})
     </insert>
 
     <select id="findByUserIdAndEmail" parameterType="String" resultType="cheongsan.domain.user.entity.User">
@@ -87,7 +79,7 @@
                 email = #{email},
             </if>
         </set>
-        WHERE user_id = #{userId}
+        WHERE id = #{id}
     </update>
 
     <delete id="deleteById" parameterType="String">
@@ -99,7 +91,7 @@
     <update id="updateConnectedId">
         UPDATE user
         SET connected_id = #{connectedId}
-        WHERE id = #{userId}
+        WHERE id = #{id}
     </update>
     <select id="findUsersWithConnectedId" resultType="cheongsan.domain.user.entity.User">
         SELECT *
@@ -119,4 +111,10 @@
         SET strategy = #{strategyName}
         WHERE id = #{id}
     </update>
+
+    <select id="findByNaverId" resultType="cheongsan.domain.user.entity.User">
+        SELECT *
+        FROM user
+        WHERE naver_id = #{naverId}
+    </select>
 </mapper>
