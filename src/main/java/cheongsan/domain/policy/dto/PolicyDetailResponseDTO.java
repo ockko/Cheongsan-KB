@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class PolicyDetailDTO {
+public class PolicyDetailResponseDTO {
     private String policyNumber;            // 정책 조회 번호 (inqNum)
     private String ministryName;            // 소관 부처명 (jurMnofNm)
     private String departmentName;          // 담당 부서명 (jurOrgNm)

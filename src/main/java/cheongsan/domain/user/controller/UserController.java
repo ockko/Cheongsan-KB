@@ -4,15 +4,16 @@ import cheongsan.common.constant.ResponseMessage;
 import cheongsan.common.exception.ResponseDTO;
 import cheongsan.domain.debt.service.DebtService;
 import cheongsan.domain.user.dto.*;
+import cheongsan.domain.user.entity.CustomUser;
 import cheongsan.domain.user.service.AuthService;
 import cheongsan.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -25,11 +26,11 @@ public class UserController {
     private final AuthService authService;
 
     @GetMapping("/profile")
-    public ResponseEntity<?> getMyProfile() {
+    public ResponseEntity<?> getMyProfile(@AuthenticationPrincipal CustomUser customUser) {
         try {
-            String userId = "antehyun4880";
+            Long id = customUser.getUser().getId();
 
-            MyInfoResponseDTO myInfo = userService.getMyInfo(userId);
+            MyInfoResponseDTO myInfo = userService.getMyInfo(id);
             return ResponseEntity.ok(myInfo);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new ResponseDTO(e.getMessage()));
@@ -41,11 +42,12 @@ public class UserController {
 
     @PatchMapping("/profile")
     public ResponseEntity<?> updateMyProfile(
-            @RequestBody UpdateMyProfileRequestDTO request) {
+            @RequestBody UpdateMyProfileRequestDTO request,
+            @AuthenticationPrincipal CustomUser customUser) {
         try {
-            String userId = "antehyun4880";
+            Long id = customUser.getUser().getId();
 
-            UpdateMyProfileResponseDTO response = userService.updateMyProfile(userId, request);
+            UpdateMyProfileResponseDTO response = userService.updateMyProfile(id, request);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
@@ -55,27 +57,30 @@ public class UserController {
     }
 
     @PatchMapping("/changePassword")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequestDTO request) {
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequestDTO request,
+                                            @AuthenticationPrincipal CustomUser customUser) {
         try {
-            userService.changePassword(request);
+            Long id = customUser.getUser().getId();
+            userService.changePassword(id, request);
             return ResponseEntity.ok(new ChangePasswordResponseDTO("비밀번호가 성공적으로 변경되었습니다."));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
         } catch (Exception e) {
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
+                    .body(new ResponseDTO(e.getMessage()));
         }
     }
 
 
     @DeleteMapping("/profile")
     public ResponseEntity<?> deleteMyAccount(
-            @RequestBody DeleteAccountRequestDTO request
+            @RequestBody DeleteAccountRequestDTO request,
+            @AuthenticationPrincipal CustomUser customUser
     ) {
         try {
-            String userId = "testuser66";
-
-            userService.deleteAccount(userId, request);
+            Long id = customUser.getUser().getId();
+            userService.deleteAccount(id, request);
             return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
@@ -86,10 +91,10 @@ public class UserController {
     }
 
     @GetMapping("/debt-accounts")
-    public ResponseEntity<?> getMyDebt() {
+    public ResponseEntity<?> getMyDebt(@AuthenticationPrincipal CustomUser customUser) {
         try {
-            Long userId = 1L;
-            List<UserDebtAccountResponseDTO> accounts = userService.getUserDebtAccounts(userId);
+            Long id = customUser.getUser().getId();
+            List<UserDebtAccountResponseDTO> accounts = userService.getUserDebtAccounts(id);
             if (accounts == null || accounts.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT)
                         .body("해당 유저의 부채 계좌를 찾을 수 없습니다.");
@@ -124,13 +129,14 @@ public class UserController {
     }
 
     @PostMapping("/nickname")
-    public ResponseEntity<?> submitNickname(@RequestBody NicknameRequestDTO request) {
+    public ResponseEntity<?> submitNickname(@RequestBody NicknameRequestDTO request,
+                                            @AuthenticationPrincipal CustomUser customUser) {
         try {
 
-            String userId = "antehyun4880";
-            request.setUserId(userId);
+            Long id = customUser.getUser().getId();
+            request.setUserId(id);
 
-            NicknameResponseDTO response = authService.submitNickname(request);
+            NicknameResponseDTO response = userService.submitNickname(request);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(e.getMessage()));
@@ -141,12 +147,12 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ResponseDTO> logout(Principal principal) {
-        if (principal == null) {
+    public ResponseEntity<ResponseDTO> logout(@AuthenticationPrincipal CustomUser customUser) {
+        if (customUser == null) {
             ResponseDTO response = new ResponseDTO(ResponseMessage.UNAUTHENTICATED_USER.getMessage());
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
-        String userId = principal.getName();
+        String userId = customUser.getUser().getUserId();
         userService.logout(userId);
         ResponseDTO response = new ResponseDTO(ResponseMessage.LOGOUT_SUCCESS.getMessage());
         return new ResponseEntity<>(response, HttpStatus.OK);

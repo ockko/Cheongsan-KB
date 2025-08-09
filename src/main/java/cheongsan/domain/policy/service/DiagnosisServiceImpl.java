@@ -1,8 +1,8 @@
 package cheongsan.domain.policy.service;
 
-import cheongsan.domain.policy.dto.DiagnosisDTO;
-import cheongsan.domain.policy.dto.SimpleDiagnosisDTO;
-import cheongsan.domain.policy.dto.UserDiagnosisDTO;
+import cheongsan.domain.policy.dto.DiagnosisResponseDTO;
+import cheongsan.domain.policy.dto.SimpleDiagnosisResponseDTO;
+import cheongsan.domain.policy.dto.UserDiagnosisRequestDTO;
 import cheongsan.domain.policy.entity.Diagnosis;
 import cheongsan.domain.policy.entity.SimpleDiagnosis;
 import cheongsan.domain.policy.mapper.PolicyMapper;
@@ -24,9 +24,9 @@ public class DiagnosisServiceImpl implements DiagnosisService {
      * 진단 응답을 분석해, 유저 상태 판정 및 추천 정책 반환
      */
     @Override
-    public DiagnosisDTO processDiagnosis(UserDiagnosisDTO request) {
+    public DiagnosisResponseDTO processDiagnosis(UserDiagnosisRequestDTO request) {
         // (1) 사용자의 설문 답변 리스트를 가져옴
-        List<UserDiagnosisDTO.Answer> answers = request.getAnswers();
+        List<UserDiagnosisRequestDTO.Answer> answers = request.getAnswers();
 
         // (2) 답변들을 분석해서 유저 진단 결과(위험도, 상태 등) 판정
         Long diagnosisId = determineUserStatus(answers);
@@ -34,17 +34,17 @@ public class DiagnosisServiceImpl implements DiagnosisService {
         // (3) 판단된 상태/조건을 토대로 정책 조회(실제 추천 로직은 정책 조건 매칭 규칙에 따라 달라짐)
         Diagnosis policy = policyMapper.getDiagnosisResult(diagnosisId);
 
-        DiagnosisDTO diagnosisDTO = DiagnosisDTO.of(policy);
+        DiagnosisResponseDTO diagnosisResponseDTO = DiagnosisResponseDTO.of(policy);
 
-        return diagnosisDTO;
+        return diagnosisResponseDTO;
     }
 
     // 사용자 상태를 판단하는 간단 예시 로직 (실제 프로젝트 정책에 맞게 커스텀)
     // 0-일반 연체, 1 - 파산,2-회생,3-개인워크아웃,4-프리워크아웃,5-신속채무조정.
-    private Long determineUserStatus(List<UserDiagnosisDTO.Answer> answers) {
+    private Long determineUserStatus(List<UserDiagnosisRequestDTO.Answer> answers) {
         // 답변을 빠르게 조회하기 위한 Map 생성
         Map<Integer, Integer> answerMap = new HashMap<>();
-        for (UserDiagnosisDTO.Answer answer : answers) {
+        for (UserDiagnosisRequestDTO.Answer answer : answers) {
             answerMap.put(answer.getQuestionId(), answer.getOptionId());
         }
 
@@ -93,20 +93,20 @@ public class DiagnosisServiceImpl implements DiagnosisService {
     }
 
     // 정책의 모든 내용 가져옴
-    public DiagnosisDTO getDiagnosis(Long diagnosisId) {
+    public DiagnosisResponseDTO getDiagnosis(Long diagnosisId) {
         Diagnosis policy = policyMapper.getDiagnosisResult(diagnosisId);
 
-        DiagnosisDTO diagnosisDTO = DiagnosisDTO.of(policy);
-        return diagnosisDTO;
+        DiagnosisResponseDTO diagnosisResponseDTO = DiagnosisResponseDTO.of(policy);
+        return diagnosisResponseDTO;
     }
 
     //정책 간략화하여 가져옴
-    public SimpleDiagnosisDTO getSimpleDiagnosis(Long diagnosisId) {
+    public SimpleDiagnosisResponseDTO getSimpleDiagnosis(Long diagnosisId) {
         SimpleDiagnosis simpleDiagnosis = policyMapper.getSimpleDiagnosisResult(diagnosisId);
-        SimpleDiagnosisDTO simpleDiagnosisDTO = SimpleDiagnosisDTO.of(simpleDiagnosis);
+        SimpleDiagnosisResponseDTO simpleDiagnosisResponseDTO = SimpleDiagnosisResponseDTO.of(simpleDiagnosis);
         log.info(simpleDiagnosis.toString());
 
-        return simpleDiagnosisDTO;
+        return simpleDiagnosisResponseDTO;
     }
 
 

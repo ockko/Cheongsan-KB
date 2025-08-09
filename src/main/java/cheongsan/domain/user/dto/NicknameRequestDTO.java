@@ -6,6 +6,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class NicknameRequestDTO {
-    private String userId;
+    private Long userId;
     private String nickname;
 }

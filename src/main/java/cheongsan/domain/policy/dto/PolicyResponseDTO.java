@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class PolicyDTO {
+public class PolicyResponseDTO {
     private String ministryName;   // 소관 부처명 (ex: 보건복지부)
     private String policySummary; // 정책 한줄 요약
     private String policyId;   // 정책(서비스) 고유 ID
