@@ -5,17 +5,18 @@ import cheongsan.domain.policy.dto.PolicyDetailResponseDTO;
 import cheongsan.domain.policy.dto.PolicyRequestDTO;
 import cheongsan.domain.policy.dto.PolicyResponseDTO;
 import cheongsan.domain.policy.service.PolicyService;
+import cheongsan.domain.user.entity.CustomUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -30,9 +31,9 @@ public class PolicyController {
 
     @GetMapping("/list")
     public ResponseEntity<List<PolicyResponseDTO>> getPolicyList(
-            Principal principal
+            @AuthenticationPrincipal CustomUser customUser
     ) throws Exception {
-        Long userId = extractUserIdUtil.extractUserId(principal);
+        Long userId = customUser.getUser().getId();
         PolicyRequestDTO requestDTO = new PolicyRequestDTO();
         requestDTO.setUserId(userId);
 
@@ -48,9 +49,9 @@ public class PolicyController {
     @GetMapping("/search")
     public ResponseEntity<List<PolicyResponseDTO>> searchPolicyList(
             @RequestParam(required = false) String searchWrd,
-            Principal principal
+            @AuthenticationPrincipal CustomUser customUser
     ) throws Exception {
-        Long userId = extractUserIdUtil.extractUserId(principal);
+        Long userId = customUser.getUser().getId();
         PolicyRequestDTO requestDTO = new PolicyRequestDTO();
         requestDTO.setUserId(userId);
         requestDTO.setSearchWrd(searchWrd);

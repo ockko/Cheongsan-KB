@@ -5,15 +5,16 @@ import cheongsan.common.exception.ResponseDTO;
 import cheongsan.common.util.ExtractUserIdUtil;
 import cheongsan.domain.debt.service.DebtService;
 import cheongsan.domain.user.dto.*;
+import cheongsan.domain.user.entity.CustomUser;
 import cheongsan.domain.user.service.AuthService;
 import cheongsan.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -27,9 +28,9 @@ public class UserController {
     private final ExtractUserIdUtil extractUserIdUtil;
 
     @GetMapping("/profile")
-    public ResponseEntity<?> getMyProfile(Principal principal) {
+    public ResponseEntity<?> getMyProfile(@AuthenticationPrincipal CustomUser customUser) {
         try {
-            Long userId = extractUserIdUtil.extractUserId(principal);
+            Long userId = customUser.getUser().getId();
 
             MyInfoResponseDTO myInfo = userService.getMyInfo(userId);
             return ResponseEntity.ok(myInfo);
@@ -44,9 +45,9 @@ public class UserController {
     @PatchMapping("/profile")
     public ResponseEntity<?> updateMyProfile(
             @RequestBody UpdateMyProfileRequestDTO request,
-            Principal principal) {
+            @AuthenticationPrincipal CustomUser customUser) {
         try {
-            Long userId = extractUserIdUtil.extractUserId(principal);
+            Long userId = customUser.getUser().getId();
 
             UpdateMyProfileResponseDTO response = userService.updateMyProfile(userId, request);
             return ResponseEntity.ok(response);
@@ -58,10 +59,10 @@ public class UserController {
     }
 
     @PatchMapping("/changePassword")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequestDTO request, Principal principal) {
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequestDTO request,
+                                            @AuthenticationPrincipal CustomUser customUser) {
         try {
-            Long userId = extractUserIdUtil.extractUserId(principal);
-
+            Long userId = customUser.getUser().getId();
             userService.changePassword(userId, request);
             return ResponseEntity.ok(new ChangePasswordResponseDTO("비밀번호가 성공적으로 변경되었습니다."));
         } catch (IllegalArgumentException e) {
@@ -77,11 +78,10 @@ public class UserController {
     @DeleteMapping("/profile")
     public ResponseEntity<?> deleteMyAccount(
             @RequestBody DeleteAccountRequestDTO request,
-            Principal principal
+            @AuthenticationPrincipal CustomUser customUser
     ) {
         try {
-            Long userId = extractUserIdUtil.extractUserId(principal);
-
+            Long userId = customUser.getUser().getId();
             userService.deleteAccount(userId, request);
             return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
         } catch (IllegalArgumentException e) {
@@ -93,9 +93,9 @@ public class UserController {
     }
 
     @GetMapping("/debt-accounts")
-    public ResponseEntity<?> getMyDebt(Principal principal) {
+    public ResponseEntity<?> getMyDebt(@AuthenticationPrincipal CustomUser customUser) {
         try {
-            Long userId = extractUserIdUtil.extractUserId(principal);
+            Long userId = customUser.getUser().getId();
             List<UserDebtAccountResponseDTO> accounts = userService.getUserDebtAccounts(userId);
             if (accounts == null || accounts.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT)
@@ -132,10 +132,10 @@ public class UserController {
 
     @PostMapping("/nickname")
     public ResponseEntity<?> submitNickname(@RequestBody NicknameRequestDTO request,
-                                            Principal principal) {
+                                            @AuthenticationPrincipal CustomUser customUser) {
         try {
 
-            Long userId = extractUserIdUtil.extractUserId(principal);
+            Long userId = customUser.getUser().getId();
             request.setUserId(userId);
 
             NicknameResponseDTO response = authService.submitNickname(request);
@@ -149,12 +149,12 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ResponseDTO> logout(Principal principal) {
-        if (principal == null) {
+    public ResponseEntity<ResponseDTO> logout(@AuthenticationPrincipal CustomUser customUser) {
+        if (customUser == null) {
             ResponseDTO response = new ResponseDTO(ResponseMessage.UNAUTHENTICATED_USER.getMessage());
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
-        String userId = principal.getName();
+        String userId = customUser.getUser().getUserId();
         userService.logout(userId);
         ResponseDTO response = new ResponseDTO(ResponseMessage.LOGOUT_SUCCESS.getMessage());
         return new ResponseEntity<>(response, HttpStatus.OK);

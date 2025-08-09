@@ -7,15 +7,15 @@ import cheongsan.domain.policy.dto.SimpleDiagnosisResponseDTO;
 import cheongsan.domain.policy.dto.UserDiagnosisRequestDTO;
 import cheongsan.domain.policy.service.DiagnosisService;
 import cheongsan.domain.user.dto.UserDTO;
+import cheongsan.domain.user.entity.CustomUser;
 import cheongsan.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/cheongsan/diagnosis")
@@ -36,17 +36,17 @@ public class DiagnosisController {
     @PostMapping("/submit")
     public ResponseEntity<DiagnosisResponseDTO> submitDiagnosisSurvey(
             @RequestBody UserDiagnosisRequestDTO userDiagnosisRequestDTO,
-            Principal principal
+            @AuthenticationPrincipal CustomUser customUser
     ) {
-        Long currentUserId = extractUserIdUtil.extractUserId(principal);
+        Long userId = customUser.getUser().getId();
         try {
             DiagnosisResponseDTO result = diagnosisService.processDiagnosis(userDiagnosisRequestDTO);
             Long recommendDiagnosisId = result.getId();
 
-            userService.submitDiagnosisAnswerToUser(currentUserId, recommendDiagnosisId);
+            userService.submitDiagnosisAnswerToUser(userId, recommendDiagnosisId);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
-            log.error("Error processing diagnosis survey for userId: {}", currentUserId, e);
+            log.error("Error processing diagnosis survey for userId: {}", userId, e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to process diagnosis survey.");
         }
     }
@@ -56,9 +56,9 @@ public class DiagnosisController {
      */
     @GetMapping("/result")
     public ResponseEntity<SimpleDiagnosisResponseDTO> getDiagnosisResult(
-            Principal principal
+            @AuthenticationPrincipal CustomUser customUser
     ) {
-        Long currentUserId = extractUserIdUtil.extractUserId(principal);
+        Long currentUserId = customUser.getUser().getId();
         try {
             UserDTO userDTO = userService.getUser(currentUserId);
             log.info("userDTO email={}", userDTO.getEmail());
