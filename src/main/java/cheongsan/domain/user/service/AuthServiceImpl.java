@@ -3,6 +3,7 @@ package cheongsan.domain.user.service;
 
 import cheongsan.common.constant.ResponseMessage;
 import cheongsan.common.security.util.JwtProcessor;
+import cheongsan.domain.auth.dto.SocialUserInfo;
 import cheongsan.domain.codef.dto.ConnectedIdRequestDTO;
 import cheongsan.domain.codef.service.CodefService;
 import cheongsan.domain.user.dto.*;
@@ -18,6 +19,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -71,6 +73,7 @@ public class AuthServiceImpl implements AuthService {
                 .password(passwordEncoder.encode(signUpRequestDTO.getPassword()))
                 .email(signUpRequestDTO.getEmail())
                 .connectedId(genereateConnectId(signUpRequestDTO.getUserId(), signUpRequestDTO.getPassword()))
+                .accountType("GENERAL")  //일반 회원가입
                 .build();
         log.info("signUp request: {}", user);
         userMapper.save(user);
@@ -202,5 +205,96 @@ public class AuthServiceImpl implements AuthService {
         );
 
         return new TokenRefreshResponseDTO(newAccessToken, newRefreshToken);
+    }
+
+    @Override
+    public LogInResponseDTO naverSignUpOrLogin(SocialUserInfo socialUserInfo) {
+        log.info("네이버 로그인/회원가입 처리 시작: naverId={}", socialUserInfo.getProviderId());
+
+        // 1. 기존 네이버 사용자 조회
+        User existingUser = userMapper.findByNaverId(socialUserInfo.getProviderId());
+
+        User user;
+        if (existingUser != null) {
+            // 기존 사용자 로그인
+            log.info("기존 네이버 사용자 로그인: userId={}", existingUser.getUserId());
+            user = existingUser;
+        } else {
+            // 신규 사용자 회원가입
+            log.info("신규 네이버 사용자 회원가입 진행");
+
+            // 이메일 중복 확인
+            if (userMapper.findByEmail(socialUserInfo.getEmail()) != null) {
+                throw new IllegalArgumentException("이미 사용 중인 이메일입니다. 다른 방법으로 로그인해주세요.");
+            }
+
+            user = createNaverUser(socialUserInfo);
+            userMapper.save(user);
+            log.info("네이버 사용자 회원가입 완료: userId={}", user.getUserId());
+        }
+
+        // 2. JWT 토큰 생성
+        String accessToken = jwtProcessor.generateAccessToken(user.getUserId());
+        String refreshToken = jwtProcessor.generateRefreshToken(user.getUserId());
+
+        // 3. Refresh Token을 Redis에 저장
+        redisTemplate.opsForValue().set(
+                "RT:" + user.getUserId(),
+                refreshToken,
+                REFRESH_TOKEN_VALIDITY_SECONDS,
+                TimeUnit.SECONDS
+        );
+
+        return new LogInResponseDTO(
+                user.getId(),
+                user.getNickname(),
+                accessToken,
+                refreshToken
+        );
+    }
+
+    @Override
+    public boolean isNaverUserExists(String naverId) {
+        User user = userMapper.findByNaverId(naverId);
+        return user != null;
+    }
+
+    /**
+     * 네이버 사용자 생성
+     */
+    private User createNaverUser(SocialUserInfo socialUserInfo) {
+        String dummyConnectedId = generateDummyConnectedId();
+        String naverUserId = generateNaverUserId(socialUserInfo.getProviderId());
+
+        return User.builder()
+                .userId(naverUserId)
+                .password(null)  // 네이버 사용자는 패스워드 없음 (네이버에서 인증)
+                .email(socialUserInfo.getEmail())
+                .nickname(socialUserInfo.getNickname())
+                .connectedId(dummyConnectedId)
+                .naverId(socialUserInfo.getProviderId())
+                .accountType("NAVER")
+                .role("USER")
+                // ⭐ 누락된 필드들 추가
+                .dailyLimit(BigDecimal.ZERO)        // 기본값 0으로 설정
+                .dailyLimitDate(null)               // NULL 허용
+                .status("기타")                     // 기본 상태값
+                .recommendedProgramId(null)         // NULL 허용
+                .build();
+    }
+
+    /**
+     * 더미 ConnectedId 생성 (CODEF 연동 없이)
+     */
+    private String generateDummyConnectedId() {
+        return "DUMMY_OAUTH_" + System.currentTimeMillis() + "_" +
+                new Random().nextInt(10000);
+    }
+
+    /**
+     * 네이버 사용자 ID 생성
+     */
+    private String generateNaverUserId(String naverId) {
+        return "naver_" + naverId;
     }
 }
