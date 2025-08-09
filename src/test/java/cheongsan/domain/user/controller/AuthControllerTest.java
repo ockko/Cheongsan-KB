@@ -1,5 +1,6 @@
 package cheongsan.domain.user.controller;
 
+import cheongsan.domain.auth.dto.SocialUserInfo;
 import cheongsan.domain.user.dto.*;
 import cheongsan.domain.user.service.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,7 +9,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -59,6 +59,16 @@ class AuthControllerTest {
         @Override
         public TokenRefreshResponseDTO reissueTokens(String refreshToken) {
             return null;
+        }
+
+        @Override
+        public LogInResponseDTO naverSignUpOrLogin(SocialUserInfo socialUserInfo) {
+            return null;
+        }
+
+        @Override
+        public boolean isNaverUserExists(String naverId) {
+            return false;
         }
     }
 
