@@ -28,6 +28,7 @@ public class BudgetServiceImpl implements BudgetService {
 
     private static final BigDecimal RECOMMENDATION_RATE = new BigDecimal("0.7");
     private static final int DAYS_IN_MONTH = 30;
+    private static final BigDecimal ROUNDING_UNIT = new BigDecimal("500");
 
     @Override
     public BudgetLimitDTO getBudgetLimits(Long userId) {
@@ -47,9 +48,13 @@ public class BudgetServiceImpl implements BudgetService {
                 .multiply(RECOMMENDATION_RATE)
                 .setScale(0, RoundingMode.DOWN);
 
+        // --- 계산된 값들을 500원 단위로 내림 처리 ---
+        int roundedMaximumLimit = roundDownToUnit(maximumDailyLimit, ROUNDING_UNIT);
+        int roundedRecommendedLimit = roundDownToUnit(recommendedDailyLimit, ROUNDING_UNIT);
+
         return new BudgetLimitDTO(
-                recommendedDailyLimit.intValue(),
-                maximumDailyLimit.intValue(),
+                roundedRecommendedLimit,
+                roundedMaximumLimit,
                 currentDailyLimit
         );
     }
@@ -81,6 +86,12 @@ public class BudgetServiceImpl implements BudgetService {
         }
 
         return new BudgetSettingStatusDTO(user.getDailyLimitDate());
+    }
+
+    // 특정 단위로 숫자를 내림(버림) 처리하는 헬퍼 메소드
+    private int roundDownToUnit(BigDecimal value, BigDecimal unit) {
+        if (unit.compareTo(BigDecimal.ZERO) == 0) return value.intValue();
+        return value.divide(unit, 0, RoundingMode.DOWN).multiply(unit).intValue();
     }
 
     private BigDecimal calculateAvailableMonthlySpending(Long userId) {
