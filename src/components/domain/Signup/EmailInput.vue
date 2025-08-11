@@ -51,7 +51,7 @@ const emitValidation = () => {
 
 <template>
   <div :class="styles.inputGroup">
-    <label :class="styles.label">이메일</label>
+    <div :class="styles.label">이메일</div>
     <div :class="styles.emailRow">
       <input
         :value="emailLocal"

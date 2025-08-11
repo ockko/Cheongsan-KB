@@ -33,7 +33,7 @@ const emitValidation = () => {
 
 <template>
   <div :class="styles.inputGroup">
-    <label :class="styles.label">이용약관</label>
+    <div :class="styles.label">이용약관</div>
     <div :class="styles.agreementsList">
       <div :class="styles.agreementItem" @click="toggleAgreement('service')">
         <img

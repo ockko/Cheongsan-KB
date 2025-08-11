@@ -1,7 +1,6 @@
 .inputGroup {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   width: 100%;
 }
 
@@ -10,7 +9,6 @@
   font-weight: 500;
   font-size: 16px;
   color: var(--color-main);
-  margin-bottom: 8px;
 }
 
 .emailRow {
@@ -27,7 +25,6 @@
   min-width: 0;
   padding: 0 16px;
   border: 1px solid var(--color-gray1);
-  border-radius: 8px;
   background-color: white;
   font-family: var(--font-family);
   font-weight: 400;
