@@ -92,6 +92,20 @@ const slicedMonths = computed(() => {
   return months;
 });
 
+const mapStrategyLabel = (type) => {
+  switch (type) {
+    case 'TCS_RECOMMEND':
+      return '우리 앱 추천';
+    case 'HIGH_INTEREST_FIRST':
+      return '고금리 우선';
+    case 'SMALL_AMOUNT_FIRST':
+      return '소액 우선';
+    case 'OLDEST_FIRST':
+      return '오래된 순';
+    default:
+      return type;
+  }
+};
 watch(
   sourceRepayments,
   (repayments) => {
@@ -248,21 +262,6 @@ const chartOptions = computed(() => {
 const getColor = (index) => {
   const colors = ['#003e65', '#98cbfd', '#dc2121', '#4e6073'];
   return colors[index % colors.length];
-};
-
-const mapStrategyLabel = (type) => {
-  switch (type) {
-    case 'TCS_RECOMMEND':
-      return '우리 앱 추천';
-    case 'HIGH_INTEREST_FIRST':
-      return '고금리 우선';
-    case 'SMALL_AMOUNT_FIRST':
-      return '소액 우선';
-    case 'OLDEST_FIRST':
-      return '오래된 순';
-    default:
-      return type;
-  }
 };
 </script>
 <template>
