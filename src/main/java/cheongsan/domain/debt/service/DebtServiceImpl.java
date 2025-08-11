@@ -50,7 +50,7 @@ public class DebtServiceImpl implements DebtService {
 
                     String organizationName = financialInstitutionMapper.findNameByCode(debt.getOrganizationCode());
                     return DebtInfoResponseDTO.builder()
-                            .debtId(debt.getUserId()) // 필요 시 수정
+                            .debtId(debt.getId()) // 필요 시 수정
                             .debtName(debt.getDebtName())
                             .organizationName(organizationName)
                             .originalAmount(debt.getOriginalAmount())
@@ -106,13 +106,23 @@ public class DebtServiceImpl implements DebtService {
     }
 
     @Override
-    public DebtDetailResponseDTO getLoanDetail(Long loanId) {
-        DebtAccount debtAccount = debtMapper.getDebtAccountById(loanId);
+    public DebtDetailResponseDTO getLoanDetail(Long userId, Long loanId) {
+        DebtAccount debtInfo = debtMapper.findDebtAccountById(loanId, userId);
+        if (debtInfo == null) {
+            log.warn("대출 정보 없음 - userId: {}, loanId: {}", userId, loanId);
+            throw new IllegalArgumentException("해당 대출 정보가 존재하지 않거나 권한이 없습니다.");
+        }
+        log.debug("대출 정보 조회 성공 - debtInfo: {}", debtInfo);
 
-        FinancialInstitution fi = debtMapper.getFinancialInstitutionByCode(debtAccount.getOrganizationCode());
+        FinancialInstitution fi = debtMapper.getFinancialInstitutionByCode(debtInfo.getOrganizationCode());
+        if (fi == null) {
+            log.warn("금융기관 정보 없음 - organizationCode: {}", debtInfo.getOrganizationCode());
+        } else {
+            log.debug("금융기관 정보 조회 성공 - fi: {}", fi);
+        }
 
         // DTO 변환 및 반환
-        return DebtDetailResponseDTO.fromEntity(debtAccount, fi);
+        return DebtDetailResponseDTO.fromEntity(debtInfo, fi);
     }
 
     @Override
