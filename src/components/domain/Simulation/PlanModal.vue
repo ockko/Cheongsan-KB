@@ -130,8 +130,8 @@
       </div>
 
       <div :class="styles.actions">
-        <button @click="close" :class="styles.cancel">취소</button>
-        <button :class="styles.apply">플랜 적용</button>
+        <button :class="styles.cancel" @click="close">취소</button>
+        <button :class="styles.apply" @click="onApplyPlan">플랜 적용</button>
       </div>
     </div>
   </div>
@@ -139,12 +139,13 @@
 
 <script setup>
 import { computed } from 'vue';
-import styles from '@/assets/styles/pages/RepaymentSimulation.module.css';
+import styles from '@/assets/styles/components/simulation/PlanModal.module.css';
+import { applyPlan } from '@/api/simulation';
+const emit = defineEmits(['close']);
 const props = defineProps({
   isOpen: Boolean,
   strategy: Object,
 });
-const emit = defineEmits(['close']);
 
 const mapStrategyLabel = (type) => {
   switch (type) {
@@ -158,6 +159,15 @@ const mapStrategyLabel = (type) => {
       return '오래된 순 전략';
     default:
       return type;
+  }
+};
+
+const onApplyPlan = async () => {
+  try {
+    await applyPlan(props.strategy.strategyType);
+    close();
+  } catch (error) {
+    alert('전략 적용 중 오류가 발생했습니다.');
   }
 };
 
