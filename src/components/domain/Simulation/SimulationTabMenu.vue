@@ -1,9 +1,9 @@
 <script setup>
-import { ref } from 'vue';
-import RepaymentSimulationInput from '@/pages/RepaymentSimulationInput.vue';
-//import LoanSimulation from '@/pages/LoanSimulation.vue';
-import styles from '@/assets/styles/components/simulation/SimulationTabMenu.module.css';
-const activeTab = ref('repayment');
+import { ref } from "vue";
+import RepaymentSimulationInput from "@/pages/RepaymentSimulationInput.vue";
+import LoanSimulation from "@/pages/LoanFormSection.vue";
+import styles from "@/assets/styles/components/simulation/SimulationTabMenu.module.css";
+const activeTab = ref("repayment");
 </script>
 
 <template>
@@ -32,7 +32,7 @@ const activeTab = ref('repayment');
 
     <div :class="styles.tabContent">
       <RepaymentSimulationInput v-if="activeTab === 'repayment'" />
-      <LoanSimulation v-else />
+      <LoanSimulation v-else="activeTab === 'loan'" />
     </div>
   </div>
 </template>
