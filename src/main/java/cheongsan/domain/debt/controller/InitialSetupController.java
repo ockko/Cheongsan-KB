@@ -1,14 +1,12 @@
 package cheongsan.domain.debt.controller;
 
 import cheongsan.domain.debt.dto.InitialDebtDTO;
+import cheongsan.domain.debt.dto.RepaymentInfoRequestDTO;
 import cheongsan.domain.debt.service.DebtService;
 import cheongsan.domain.user.entity.CustomUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,5 +24,14 @@ public class InitialSetupController {
         Long userId = customUser.getUser().getId();
 
         return debtService.getUserInitialLoanList(userId);
+    }
+
+    @PostMapping("/loans/repayment-info")
+    public void updateRepaymentInfo(
+            @RequestBody RepaymentInfoRequestDTO dto,
+            @AuthenticationPrincipal CustomUser customUser
+    ) {
+        Long userId = customUser.getUser().getId();
+        debtService.updateInitialLoanInfo(userId, dto);
     }
 }

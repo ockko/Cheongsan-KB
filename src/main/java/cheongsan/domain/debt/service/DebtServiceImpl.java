@@ -49,6 +49,16 @@ public class DebtServiceImpl implements DebtService {
     }
 
     @Override
+    public void updateInitialLoanInfo(Long userId, RepaymentInfoRequestDTO dto) {
+        DebtAccount debt = debtMapper.getDebtAccountById(dto.getDebtId());
+
+        debt.setNextPaymentDate(dto.getNextPaymentDate());
+        debt.setGracePeriodMonths(dto.getGracePeriod());
+
+        debtMapper.insertDebt(debt);
+    }
+
+    @Override
     public List<DebtInfoResponseDTO> getUserDebtList(Long userId) {
         List<DebtAccount> debts = debtMapper.getUserDebtList(userId);
 
