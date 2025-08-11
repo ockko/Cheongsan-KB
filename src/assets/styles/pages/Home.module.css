@@ -1,5 +1,5 @@
 .page {
-  margin: 0 8px 70px 8px;
+  margin: 0 24px 70px 24px;
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
