@@ -13,6 +13,7 @@ import InitialSetup1 from '@/pages/InitialSetup/InitialSetup1.vue';
 import InitialSetup2 from '@/pages/InitialSetup/InitialSetup2.vue';
 import InitialSetup3 from '@/pages/InitialSetup/InitialSetup3.vue';
 import InitialSetup4 from '@/pages/InitialSetup/InitialSetup4.vue';
+import RepaymentSimulationResult from '@/pages/RepaymentSimulationResult.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -47,12 +48,6 @@ const router = createRouter({
       path: '/calendar',
       name: 'Calendar',
       component: Calendar,
-      meta: { requiresAuth: true }, // 인증 필요
-    },
-    {
-      path: '/simulation',
-      name: 'Simulation',
-      component: Simulation,
       meta: { requiresAuth: true }, // 인증 필요
     },
     {
@@ -97,6 +92,17 @@ const router = createRouter({
       name: 'StudyDetail',
       component: StudyDetail,
       meta: { requiresAuth: true }, // 인증 필요
+    },
+    {
+      path: '/simulation',
+      name: 'Simulation',
+      component: Simulation,
+      meta: { requiresAuth: true }, // 인증 필요
+    },
+    {
+      path: '/repayment-simulation/result',
+      name: RepaymentSimulationResult,
+      component: RepaymentSimulationResult,
     },
   ],
 });
