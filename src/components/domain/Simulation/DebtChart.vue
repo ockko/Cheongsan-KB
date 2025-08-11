@@ -156,6 +156,7 @@ watch(
           label: strategy.label,
           data,
           borderColor: getColor(index),
+          backgroundColor: getColor(index),
           tension: 0.3,
           fill: false,
           pointRadius,
