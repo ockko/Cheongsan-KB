@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { useUiStore } from '@/stores/ui';
 import {
   getBudgetRecommendation,
   saveDailyLimit,
@@ -58,16 +59,24 @@ export const useBudgetStore = defineStore('budget', () => {
 
   // 최종 한도를 저장하는 액션
   async function saveFinalDailyLimit(newLimit) {
+    const uiStore = useUiStore();
     try {
       await saveDailyLimit(newLimit);
       // 저장 성공 시, 현재 한도와 수정일을 즉시 업데이트
       currentLimit.value = newLimit;
       lastUpdatedAt.value = new Date().toISOString();
       isEditable.value = false; // 저장 후에는 수정 불가능으로 변경
-      alert('일일 소비 한도가 성공적으로 저장되었습니다.');
+      uiStore.openModal({
+        title: '저장 완료',
+        message: '일일 소비 한도가 성공적으로 저장되었습니다.',
+      });
     } catch (error) {
       console.error('스토어에서 한도 저장 실패:', error);
-      alert(error.response?.data?.message || '저장에 실패했습니다.');
+      uiStore.openModal({
+        title: '저장 실패',
+        message: error.response?.data?.message || '저장에 실패했습니다.',
+        isError: true,
+      });
     }
   }
 
