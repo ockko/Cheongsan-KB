@@ -16,7 +16,15 @@ const sliderValue = ref(0);
 onMounted(async () => {
   await budgetStore.fetchBudgetRecommendation();
   await budgetStore.fetchBudgetStatus();
-  sliderValue.value = currentLimit.value;
+  // --- 슬라이더 초기값 설정 로직 ---
+  // 사용자가 직접 설정한 한도(currentLimit)가 유효한 값(0보다 큼)인지 확인
+  if (currentLimit.value > 0) {
+    // 유효한 값이 있으면, 그 값을 슬라이더의 초기값으로 설정
+    sliderValue.value = currentLimit.value;
+  } else {
+    // 유효한 값이 없으면(최초 설정 등), 시스템 추천값을 초기값으로 설정
+    sliderValue.value = recommendedLimit.value;
+  }
 });
 
 // 슬라이더의 현재 진행률을 퍼센트로 계산
