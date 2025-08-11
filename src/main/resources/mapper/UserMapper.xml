@@ -111,13 +111,10 @@
         SET strategy = #{strategyName}
         WHERE id = #{id}
     </update>
-<<<<<<< Updated upstream
 
     <select id="findByNaverId" resultType="cheongsan.domain.user.entity.User">
         SELECT *
         FROM user
         WHERE naver_id = #{naverId}
     </select>
-=======
->>>>>>> Stashed changes
 </mapper>
