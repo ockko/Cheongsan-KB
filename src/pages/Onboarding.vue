@@ -9,8 +9,7 @@ const goToLogin = () => {
 };
 
 const goToSignup = () => {
-  // 회원가입 페이지로 이동 (추후 구현)
-  console.log('회원가입 페이지로 이동');
+  router.push('/signup');
 };
 </script>
 

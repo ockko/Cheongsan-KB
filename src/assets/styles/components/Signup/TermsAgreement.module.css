@@ -1,0 +1,41 @@
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--color-main);
+  margin-bottom: 8px;
+}
+
+.agreementsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.agreementItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.checkboxIcon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.agreementText {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--color-main);
+  user-select: none;
+}

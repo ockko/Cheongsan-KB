@@ -8,6 +8,7 @@ import Study from '@/pages/Study.vue';
 import Diagnosis from '@/pages/Diagnosis.vue';
 import StudyDetail from '@/pages/StudyDetail.vue';
 import Login from '@/pages/Login.vue';
+import Signup from '@/pages/Signup.vue';
 import Onboarding from '@/pages/Onboarding.vue';
 import InitialSetup1 from '@/pages/InitialSetup/InitialSetup1.vue';
 import InitialSetup2 from '@/pages/InitialSetup/InitialSetup2.vue';
@@ -30,6 +31,11 @@ const router = createRouter({
       path: '/login', // 로그인 라우트 추가
       name: 'Login',
       component: Login,
+    },
+    {
+      path: '/signup',
+      name: 'Signup',
+      component: Signup, // 회원가입 라우트 추가
     },
     {
       path: '/home',
