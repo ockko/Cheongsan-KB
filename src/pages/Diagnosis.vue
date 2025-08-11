@@ -194,7 +194,9 @@ const goHome = () => {
   <div :class="styles.diagnosisPage">
     <!-- 헤더 영역 -->
     <header :class="styles.header">
-      <button @click="goHome" :class="styles.backButton">←</button>
+      <button @click="goHome" :class="styles.backButton">
+        <i class="fa fa-arrow-left"></i>
+      </button>
       <h1 :class="styles.title">진단하기</h1>
     </header>
 
