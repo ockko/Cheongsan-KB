@@ -34,6 +34,21 @@ public class DebtServiceImpl implements DebtService {
     private final FinancialInstitutionMapper financialInstitutionMapper;
 
     @Override
+    public List<InitialDebtDTO> getUserInitialLoanList(Long userId) {
+        List<DebtAccount> debts = debtMapper.getUserDebtList(userId);
+
+        return debts.stream()
+                .map(debt -> {
+                    String organizationName = financialInstitutionMapper.findNameByCode(debt.getOrganizationCode());
+                    return InitialDebtDTO.builder()
+                            .organizationName(organizationName)
+                            .debtName(debt.getDebtName())
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<DebtInfoResponseDTO> getUserDebtList(Long userId) {
         List<DebtAccount> debts = debtMapper.getUserDebtList(userId);
 
@@ -50,7 +65,7 @@ public class DebtServiceImpl implements DebtService {
 
                     String organizationName = financialInstitutionMapper.findNameByCode(debt.getOrganizationCode());
                     return DebtInfoResponseDTO.builder()
-                            .debtId(debt.getId()) // 필요 시 수정
+                            .debtId(debt.getId())
                             .debtName(debt.getDebtName())
                             .organizationName(organizationName)
                             .originalAmount(debt.getOriginalAmount())
