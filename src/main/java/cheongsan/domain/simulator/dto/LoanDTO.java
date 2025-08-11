@@ -19,7 +19,7 @@ public class LoanDTO {
     private Long id;
     private String loanName; // 대출명
     private BigDecimal principal; // 남은 원금
-    private BigDecimal interestRate; // 연이율(소수점)
+    private BigDecimal interestRate; // 연이율(%)
     private LocalDate startDate; // 대출 시작일
     private LocalDate endDate; // 대출 만기일
     private String institutionType; // 금융1, 금융2, 기타
@@ -28,7 +28,9 @@ public class LoanDTO {
     private LocalDate paymentDate; // 납부일
 
     public BigDecimal getMonthlyInterestRate() {
-        return interestRate.divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP);
+        return interestRate
+                .divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP) // % → 소수 변환
+                .divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP); // 12개월로 나눔
     }
 
     public long getRemainingMonths(LocalDate now) {
