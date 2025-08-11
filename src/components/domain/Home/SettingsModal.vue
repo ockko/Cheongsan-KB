@@ -88,7 +88,11 @@ const applyChanges = async () => {
           취소
         </button>
         <button
-          :class="[styles.button, styles.applyButton]"
+          :class="[
+            styles.button,
+            styles.applyButton,
+            { [styles.disabledButton]: !isEditable },
+          ]"
           @click="applyChanges"
           :disabled="!isEditable"
         >
