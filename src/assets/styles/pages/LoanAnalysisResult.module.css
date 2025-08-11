@@ -23,18 +23,19 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
-.sectionTitle {
+.section-title {
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 16px;
   color: #003e65;
 }
-.chartBox {
+
+.chart-box {
   width: 100%;
   height: 300px;
 }
 
-.alertBox {
+.alert-box {
   background-color: #fff7ed;
   color: #9a3412;
   border-left: 4px solid #f97316;
@@ -43,18 +44,20 @@
   font-size: 14px;
 }
 
-.recommendationList {
+.recommendation-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
-.recommendationCard {
+
+.recommendation-card {
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   padding: 16px;
   background-color: #fff;
 }
-.recommendationTitle {
+
+.recommendation-title {
   font-size: 16px;
   font-weight: 600;
   color: #1f2937;
@@ -66,11 +69,11 @@ body::-webkit-scrollbar {
   height: 0;
 }
 
-.analysisPage {
+.analysis-page {
   min-height: 100vh;
 }
 
-.backHeader {
+.back-header {
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -78,7 +81,7 @@ body::-webkit-scrollbar {
   border-bottom: 1px solid #e5e7eb;
 }
 
-.backInner {
+.back-inner {
   height: 56px;
   padding-top: env(safe-area-inset-top);
   display: flex;
@@ -90,7 +93,7 @@ body::-webkit-scrollbar {
   padding: 0 16px;
 }
 
-.backBtn {
+.back-btn {
   position: absolute;
   left: 12px;
   top: calc(env(safe-area-inset-top) + (56px - 40px) / 2);
@@ -106,7 +109,7 @@ body::-webkit-scrollbar {
   cursor: pointer;
 }
 
-.backTitle {
+.back-title {
   margin: 0;
   font-size: 18px;
   font-weight: 600;

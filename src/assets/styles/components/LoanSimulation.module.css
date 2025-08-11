@@ -1,16 +1,16 @@
-.loanFormContainer {
+.loan-form-container {
   max-width: 400px;
   margin: 0 auto;
   padding: 25px;
 }
 
-.formDescription {
+.form-description {
   margin-top: 10px;
   margin-bottom: 30px;
   text-align: center;
 }
 
-.formDescription h2 {
+.form-description h2 {
   font-size: 18px;
   font-weight: 400;
   line-height: 1.4;
@@ -18,34 +18,34 @@
   margin: 0;
 }
 
-.formGroup {
+.form-group {
   margin-bottom: 24px;
 }
 
-.formGroup.half {
+.form-group.half {
   width: calc(50% - 8px);
 }
 
-.formRow {
+.form-row {
   display: flex;
   gap: 16px;
 }
 
-.formGroup label {
+.form-group label {
   display: block;
   font-size: 16px;
   font-weight: 500;
   color: #374151;
 }
 
-.inputWrapper {
+.input-wrapper {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.formGroup input,
-.formGroup select {
+.form-group input,
+.form-group select {
   width: 100%;
   padding: 16px 0;
   border: none;
@@ -57,15 +57,15 @@
   box-sizing: border-box;
 }
 
-.formGroup input:focus,
-.formGroup select:focus {
+.form-group input:focus,
+.form-group select:focus {
   outline: none;
   border-color: #003e65;
   background-color: transparent;
   box-shadow: none;
 }
 
-.inputWrapper input {
+.input-wrapper input {
   padding-right: 50px;
   padding-left: 0;
 }
@@ -78,7 +78,7 @@
   pointer-events: none;
 }
 
-.formGroup select {
+.form-group select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
   background-position: right 16px center;
@@ -87,7 +87,7 @@
   padding-right: 30px;
 }
 
-.submitButton {
+.submit-button {
   width: 283px;
   height: 40px;
   background: #003e65;
@@ -102,11 +102,11 @@
   display: block;
 }
 
-.submitButton:hover {
+.submit-button:hover {
   background: #35586f;
   transform: translateY(-1px);
 }
 
-.submitButton:active {
+.submit-button:active {
   transform: translateY(0);
 }
