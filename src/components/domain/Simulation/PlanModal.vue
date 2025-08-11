@@ -140,7 +140,7 @@
 <script setup>
 import { computed } from 'vue';
 import styles from '@/assets/styles/components/simulation/PlanModal.module.css';
-import { applyPlan } from '@/api/simulation';
+import { applyPlan } from '@/api/repayment-simulation';
 const emit = defineEmits(['close']);
 const props = defineProps({
   isOpen: Boolean,

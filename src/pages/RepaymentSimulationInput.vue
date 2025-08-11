@@ -32,7 +32,7 @@
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import styles from '@/assets/styles/pages/simulation/RepaymentSimulationInput.module.css';
-import { analyze } from '@/api/simulation';
+import { analyze } from '@/api/repayment-simulation';
 const rawValue = ref('');
 const router = useRouter();
 

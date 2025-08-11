@@ -10,7 +10,7 @@ import { ref, computed, watch } from 'vue';
 import { Line } from 'vue-chartjs';
 import dayjs from 'dayjs';
 import styles from '@/assets/styles/components/simulation/DebtChart.module.css';
-import { useSimulationStore } from '@/stores/simulation';
+import { useSimulationStore } from '@/stores/repayment-simulation';
 import {
   Chart as ChartJS,
   Title,
