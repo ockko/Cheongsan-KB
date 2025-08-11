@@ -1,10 +1,3 @@
-<template>
-  <div :class="styles.debtChartWrapper">
-    <h3 :class="styles.chartTitle">부채 감소 추이</h3>
-    <Line :data="chartData" :options="chartOptions" />
-  </div>
-</template>
-
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { Line } from 'vue-chartjs';
@@ -252,13 +245,12 @@ const chartOptions = computed(() => {
     },
   };
 });
-
-function getColor(index) {
+const getColor = (index) => {
   const colors = ['#003e65', '#98cbfd', '#dc2121', '#4e6073'];
   return colors[index % colors.length];
-}
+};
 
-function mapStrategyLabel(type) {
+const mapStrategyLabel = (type) => {
   switch (type) {
     case 'TCS_RECOMMEND':
       return '우리 앱 추천';
@@ -271,5 +263,11 @@ function mapStrategyLabel(type) {
     default:
       return type;
   }
-}
+};
 </script>
+<template>
+  <div :class="styles.debtChartWrapper">
+    <h3 :class="styles.chartTitle">부채 감소 추이</h3>
+    <Line :data="chartData" :options="chartOptions" />
+  </div>
+</template>

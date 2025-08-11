@@ -28,7 +28,6 @@ export const fetchAnalyzeResult = async (route) => {
     params: { monthlyAvailableAmount },
   });
 
-  console.log('result API 응답:', res);
   store.setRepayments(res.repayments || []);
 
   return {
@@ -43,10 +42,8 @@ export const fetchStrategyDetail = async (strategyType) => {
     const res = await request.get('/cheongsan/simulation/repayments/detail', {
       params: { strategyType },
     });
-    console.log(res);
     return res; // RepaymentResponseDTO 객체
   } catch (error) {
-    console.error('전략 상세 정보 조회 실패', error);
     return null;
   }
 };
@@ -59,7 +56,6 @@ export const applyPlan = async (strategyType) => {
     alert('전략이 적용되었습니다.');
     close();
   } catch (error) {
-    console.error(error);
     alert('전략 적용 중 오류가 발생했습니다.');
   }
 };

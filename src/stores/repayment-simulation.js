@@ -15,10 +15,9 @@ export const useSimulationStore = defineStore('simulation', () => {
 
   const repayments = ref([]);
 
-  function setRepayments(list) {
+  const setRepayments = (list) => {
     repayments.value = list;
-  }
-
+  };
   const existingRepaymentAmount = ref(0);
   const additionalRepaymentAmount = ref(0);
   const totalRepaymentAmount = ref(0);
@@ -55,7 +54,7 @@ export const useSimulationStore = defineStore('simulation', () => {
     return Number(num).toLocaleString('ko-KR');
   };
 
-  async function loadAnalyzeResult(route) {
+  const loadAnalyzeResult = async (route) => {
     const result = await fetchAnalyzeResult(route);
     strategyList.value = result.strategyList;
     existingRepaymentAmount.value = result.existingRepaymentAmount;
@@ -63,9 +62,9 @@ export const useSimulationStore = defineStore('simulation', () => {
     totalRepaymentAmount.value = result.totalRepaymentAmount;
 
     strategy.value = await fetchStrategyDetail('TCS_RECOMMEND');
-  }
+  };
 
-  async function openModal(strategyType) {
+  const openModal = async (strategyType) => {
     const detail = await fetchStrategyDetail(strategyType);
     if (detail) {
       selectedStrategy.value = detail;
@@ -73,7 +72,7 @@ export const useSimulationStore = defineStore('simulation', () => {
     } else {
       alert('상세 정보를 불러오지 못했습니다.');
     }
-  }
+  };
 
   const latestDebtFreeDate = computed(() => {
     if (!strategy.value?.debtFreeDates) return null;
@@ -92,9 +91,9 @@ export const useSimulationStore = defineStore('simulation', () => {
     return found ? found.name : '';
   });
 
-  async function applySelectedPlan(strategyType) {
+  const applySelectedPlan = async (strategyType) => {
     await applyPlan(strategyType);
-  }
+  };
 
   return {
     repayments,

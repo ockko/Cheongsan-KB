@@ -1,3 +1,63 @@
+<script setup>
+import { computed } from 'vue';
+import styles from '@/assets/styles/components/simulation/PlanModal.module.css';
+import { applyPlan } from '@/api/repayment-simulation';
+const emit = defineEmits(['close']);
+const props = defineProps({
+  isOpen: Boolean,
+  strategy: Object,
+});
+
+const mapStrategyLabel = (type) => {
+  switch (type) {
+    case 'TCS_RECOMMEND':
+      return '티모청 추천 전략';
+    case 'HIGH_INTEREST_FIRST':
+      return '고금리 우선 전략';
+    case 'SMALL_AMOUNT_FIRST':
+      return '소액 우선 전략';
+    case 'OLDEST_FIRST':
+      return '오래된 순 전략';
+    default:
+      return type;
+  }
+};
+
+const onApplyPlan = async () => {
+  try {
+    await applyPlan(props.strategy.strategyType);
+    close();
+  } catch (error) {
+    alert('전략 적용 중 오류가 발생했습니다.');
+  }
+};
+
+const close = () => emit('close');
+
+const formatCurrency = (value) =>
+  new Intl.NumberFormat('ko-KR').format(value) + '원';
+
+const formatDate = (dateStr) => {
+  const date = new Date(dateStr);
+  return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+};
+
+const calculateDDay = (dateStr) => {
+  const today = new Date();
+  const target = new Date(dateStr);
+  const diffTime = target - today;
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+};
+
+const hasPrepayment = (payment) => {
+  return (payment.prepayment || 0) > 0 || (payment.prepaymentFee || 0) > 0;
+};
+
+const getExtraAmount = (payment) => {
+  return (payment.prepayment || 0) + (payment.prepaymentFee || 0);
+};
+</script>
+
 <template>
   <div v-if="isOpen" :class="styles.modalOverlay" @click.self="close">
     <div :class="styles.modalContent">
@@ -136,63 +196,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { computed } from 'vue';
-import styles from '@/assets/styles/components/simulation/PlanModal.module.css';
-import { applyPlan } from '@/api/repayment-simulation';
-const emit = defineEmits(['close']);
-const props = defineProps({
-  isOpen: Boolean,
-  strategy: Object,
-});
-
-const mapStrategyLabel = (type) => {
-  switch (type) {
-    case 'TCS_RECOMMEND':
-      return '티모청 추천 전략';
-    case 'HIGH_INTEREST_FIRST':
-      return '고금리 우선 전략';
-    case 'SMALL_AMOUNT_FIRST':
-      return '소액 우선 전략';
-    case 'OLDEST_FIRST':
-      return '오래된 순 전략';
-    default:
-      return type;
-  }
-};
-
-const onApplyPlan = async () => {
-  try {
-    await applyPlan(props.strategy.strategyType);
-    close();
-  } catch (error) {
-    alert('전략 적용 중 오류가 발생했습니다.');
-  }
-};
-
-const close = () => emit('close');
-
-const formatCurrency = (value) =>
-  new Intl.NumberFormat('ko-KR').format(value) + '원';
-
-const formatDate = (dateStr) => {
-  const date = new Date(dateStr);
-  return `${date.getMonth() + 1}월 ${date.getDate()}일`;
-};
-
-const calculateDDay = (dateStr) => {
-  const today = new Date();
-  const target = new Date(dateStr);
-  const diffTime = target - today;
-  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-};
-
-const hasPrepayment = (payment) => {
-  return (payment.prepayment || 0) > 0 || (payment.prepaymentFee || 0) > 0;
-};
-
-const getExtraAmount = (payment) => {
-  return (payment.prepayment || 0) + (payment.prepaymentFee || 0);
-};
-</script>

@@ -1,3 +1,23 @@
+<script setup>
+import { onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useSimulationStore } from '@/stores/repayment-simulation';
+import DebtChart from '@/components/domain/simulation/DebtChart.vue';
+import PlanModal from '@/components/domain/simulation/PlanModal.vue';
+import styles from '@/assets/styles/pages/simulation/RepaymentSimulationResult.module.css';
+
+const store = useSimulationStore();
+const route = useRoute();
+const router = useRouter();
+
+onMounted(async () => {
+  await store.loadAnalyzeResult(route);
+});
+
+const goBack = () => {
+  router.back();
+};
+</script>
 <template>
   <div :class="styles.simulator">
     <header :class="styles.simulatorHeader">
@@ -87,24 +107,3 @@
     <DebtChart :repaymentData="store.strategyList" />
   </div>
 </template>
-
-<script setup>
-import { onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useSimulationStore } from '@/stores/repayment-simulation';
-import DebtChart from '@/components/domain/simulation/DebtChart.vue';
-import PlanModal from '@/components/domain/simulation/PlanModal.vue';
-import styles from '@/assets/styles/pages/simulation/RepaymentSimulationResult.module.css';
-
-const store = useSimulationStore();
-const route = useRoute();
-const router = useRouter();
-
-onMounted(async () => {
-  await store.loadAnalyzeResult(route);
-});
-
-const goBack = () => {
-  router.back();
-};
-</script>
