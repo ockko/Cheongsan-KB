@@ -5,23 +5,18 @@
   align-items: center;
   justify-content: center;
   background-color: white;
-  padding-top: 48px;
-  padding-left: 32px;
-  padding-right: 32px;
-  padding-bottom: 32px;
   min-height: 100vh;
   box-sizing: border-box;
 }
 
 .container {
-  width: 100%;
-  max-width: 335px;
   display: flex;
   flex-direction: column;
 }
 
 /* 타이틀 영역 */
 .title {
+  margin-top: 48px;
   font-family: var(--font-family);
   font-weight: 600;
   font-size: 32px;

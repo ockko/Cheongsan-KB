@@ -18,7 +18,7 @@ const goToSignup = () => {
     <img
       src="/images/logo-blue.png"
       alt="로고"
-      style="width: 166px; height: 166px"
+      style="width: 166px; height: 166px; margin-top: 164px"
     />
     <div :class="styles.title">티끌 모아 청산</div>
     <div :class="styles.description">
