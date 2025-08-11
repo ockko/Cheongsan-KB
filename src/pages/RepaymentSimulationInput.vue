@@ -22,15 +22,17 @@
         ref="inputRef"
       />
     </div>
-    <button :class="styles.analyzeButton" @click="analyze">분석하기</button>
+    <button :class="styles.analyzeButton" @click="clickAnalyze">
+      분석하기
+    </button>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import styles from '@/assets/styles/pages/RepaymentSimulation.module.css';
-
+import styles from '@/assets/styles/pages/simulation/RepaymentSimulationInput.module.css';
+import { analyze } from '@/api/simulation';
 const rawValue = ref('');
 const router = useRouter();
 
@@ -97,17 +99,7 @@ function onKeyDown(e) {
 }
 
 // 분석하기 버튼 클릭 (임의 로직)
-function analyze() {
-  alert(
-    rawValue.value === ''
-      ? '추가 상환 가능액: 없음'
-      : `추가 상환 가능액: ${Number(rawValue.value).toLocaleString()}원`
-  );
-  router.push({
-    path: '/result',
-    query: {
-      monthlyAvailableAmount: rawValue.value || 0,
-    },
-  });
-}
+const clickAnalyze = () => {
+  analyze(rawValue, router);
+};
 </script>
