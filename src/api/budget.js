@@ -6,7 +6,7 @@ export const getBudgetRecommendation = async () => {
     const response = await request.get(
       '/cheongsan/dashboard/budget/recommendation'
     );
-    return response.data;
+    return response;
   } catch (error) {
     console.error('추천 한도 정보 조회 실패:', error);
     throw error;
@@ -19,7 +19,7 @@ export const saveDailyLimit = async (dailyLimit) => {
     const response = await request.patch('/cheongsan/dashboard/budget', {
       dailyLimit: dailyLimit,
     });
-    return response.data;
+    return response;
   } catch (error) {
     console.error('일일 한도 저장 실패:', error);
     throw error;
@@ -30,7 +30,7 @@ export const saveDailyLimit = async (dailyLimit) => {
 export const getBudgetStatus = async () => {
   try {
     const response = await request.get('/cheongsan/dashboard/budget/status');
-    return response.data;
+    return response;
   } catch (error) {
     console.error('예산 설정 상태 조회 실패:', error);
     throw error;
