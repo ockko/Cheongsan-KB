@@ -9,6 +9,7 @@ import {
   getPolicyDetail,
 } from '@/api/policy.js';
 import { useAuthStore } from '@/stores/auth';
+import { useModalStore } from '@/stores/modal';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -107,6 +108,9 @@ const openPolicyDetail = async (policy) => {
 const closeModal = () => {
   isModalVisible.value = false;
   selectedPolicyData.value = {};
+  // 모달 스토어 상태도 명시적으로 업데이트
+  const modalStore = useModalStore();
+  modalStore.closePolicyDetailModal();
 };
 
 const goToPolicyDetail = (policyId) => {

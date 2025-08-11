@@ -1,5 +1,5 @@
 <script setup>
-import { computed, watch } from 'vue';
+import { computed, watch, onMounted, onUnmounted } from 'vue';
 import { useModalStore } from '@/stores/modal';
 import styles from '@/assets/styles/components/policy/PolicyDetailModal.module.css';
 
@@ -28,7 +28,8 @@ watch(
     } else {
       modalStore.closePolicyDetailModal();
     }
-  }
+  },
+  { immediate: true }
 );
 
 // 표시할 정책 데이터
@@ -46,6 +47,39 @@ const openDetailPage = () => {
     window.open(displayPolicyData.value.detailPageUrl, '_blank');
   }
 };
+
+// 뒤로가기 이벤트 처리
+const handlePopState = () => {
+  if (props.isVisible) {
+    closeModal();
+  }
+};
+
+// 컴포넌트 마운트 시 뒤로가기 이벤트 리스너 추가
+onMounted(() => {
+  window.addEventListener('popstate', handlePopState);
+});
+
+// 컴포넌트 언마운트 시 이벤트 리스너 제거
+onUnmounted(() => {
+  window.removeEventListener('popstate', handlePopState);
+});
+
+// 모달이 열릴 때와 닫힐 때 history 상태 관리
+watch(
+  () => props.isVisible,
+  (newValue) => {
+    if (newValue) {
+      // 모달이 열릴 때 history에 상태 추가
+      window.history.pushState({ modal: 'policyDetail' }, '', window.location.href);
+    } else {
+      // 모달이 닫힐 때 history 상태 정리
+      if (window.history.state && window.history.state.modal === 'policyDetail') {
+        window.history.back();
+      }
+    }
+  }
+);
 </script>
 
 <template>

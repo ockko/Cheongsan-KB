@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import { ref, computed, onMounted } from 'vue';
 import DiagnosisStageModal from './DiagnosisStageModal.vue';
 import { getRecommendationDetail } from '@/api/diagnosis.js';
+import { useModalStore } from '@/stores/modal';
 
 // Props 정의
 const props = defineProps({
@@ -167,6 +168,9 @@ const openModal = async () => {
 const closeModal = () => {
   isModalVisible.value = false;
   modalData.value = null;
+  // 모달 스토어 상태도 명시적으로 업데이트
+  const modalStore = useModalStore();
+  modalStore.closeDiagnosisStageModal();
 };
 
 // 진단 페이지로 이동 (검사 다시 하기)
