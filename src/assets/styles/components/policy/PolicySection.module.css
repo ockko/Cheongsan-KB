@@ -330,3 +330,98 @@
     padding: 0;
   }
 }
+
+/* 페이지네이션 스타일 */
+.paginationContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+  padding: 16px 0;
+}
+
+.paginationBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #e1e2e6;
+  background-color: #ffffff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #72787f;
+}
+
+.paginationBtn:hover:not(:disabled) {
+  background-color: #f8f9fa;
+  border-color: #72787f;
+  color: #000000;
+}
+
+.paginationBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f8f9fa;
+}
+
+.prevBtn svg,
+.nextBtn svg {
+  color: inherit;
+}
+
+.pageNumbers {
+  display: flex;
+  gap: 4px;
+}
+
+.pageNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #e1e2e6;
+  background-color: #ffffff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #72787f;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.pageNumber:hover {
+  background-color: #f8f9fa;
+  border-color: #72787f;
+  color: #000000;
+}
+
+.pageNumber.activePage {
+  background-color: #72787f;
+  border-color: #72787f;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* 모바일 반응형 페이지네이션 */
+@media (max-width: 480px) {
+  .paginationContainer {
+    gap: 4px;
+    margin-top: 20px;
+    padding: 12px 0;
+  }
+
+  .paginationBtn,
+  .pageNumber {
+    width: 36px;
+    height: 36px;
+    font-size: 13px;
+  }
+
+  .pageNumbers {
+    gap: 2px;
+  }
+}

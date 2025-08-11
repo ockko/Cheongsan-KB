@@ -25,6 +25,10 @@ const searchKeyword = ref('');
 const isSearching = ref(false);
 const hasSearched = ref(false); // 검색 실행 여부 추적
 
+// 페이지네이션 상태 관리
+const currentPage = ref(1);
+const itemsPerPage = 5;
+
 // 맞춤 지원 정책 데이터 로드
 const loadCustomPolicies = async () => {
   try {
@@ -32,6 +36,7 @@ const loadCustomPolicies = async () => {
 
     const data = await getCustomPolicies();
     policies.value = data;
+    currentPage.value = 1; // 데이터 로드 시 첫 페이지로 초기화
     console.log('맞춤 지원 정책 데이터 로드 완료:', data);
   } catch (error) {
     console.error('맞춤 지원 정책 데이터 로드 실패:', error);
@@ -48,6 +53,7 @@ const handleSearch = async () => {
     isSearching.value = true;
     hasSearched.value = true; // 검색 실행 표시
     activeCategory.value = '전체'; // 검색 시 카테고리 초기화
+    currentPage.value = 1; // 검색 시 첫 페이지로 초기화
     console.log('검색 시작:', searchKeyword.value || '(빈 검색어)');
 
     // 검색 API 호출 (빈 검색어도 허용)
@@ -75,6 +81,7 @@ const clearSearch = async () => {
   searchKeyword.value = '';
   hasSearched.value = false; // 검색 상태 초기화
   activeCategory.value = '전체'; // 카테고리도 초기화
+  currentPage.value = 1; // 첫 페이지로 초기화
   await loadCustomPolicies();
 };
 
@@ -211,6 +218,7 @@ const getMinisterLogo = (logoText) => {
 
 const selectCategory = (categoryId) => {
   activeCategory.value = categoryId;
+  currentPage.value = 1; // 카테고리 변경 시 첫 페이지로 이동
   // 카테고리 변경 시에는 검색 상태를 유지하고 클라이언트 사이드 필터링만 적용
   console.log('선택된 카테고리:', categoryId);
 };
@@ -228,6 +236,67 @@ const filteredPolicies = computed(() => {
   }
 
   return filtered;
+});
+
+// 페이지네이션된 정책 목록 계산
+const paginatedPolicies = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return filteredPolicies.value.slice(startIndex, endIndex);
+});
+
+// 전체 페이지 수 계산
+const totalPages = computed(() => {
+  return Math.ceil(filteredPolicies.value.length / itemsPerPage);
+});
+
+// 페이지 변경 함수
+const changePage = (page) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
+  }
+};
+
+// 이전 페이지로 이동
+const goToPreviousPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
+};
+
+// 다음 페이지로 이동
+const goToNextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+};
+
+// 페이지 번호 배열 생성 (최대 5개 표시)
+const pageNumbers = computed(() => {
+  const pages = [];
+  const maxVisiblePages = 5;
+  
+  if (totalPages.value <= maxVisiblePages) {
+    // 전체 페이지가 5개 이하면 모든 페이지 표시
+    for (let i = 1; i <= totalPages.value; i++) {
+      pages.push(i);
+    }
+  } else {
+    // 현재 페이지를 중심으로 최대 5개 페이지 표시
+    let start = Math.max(1, currentPage.value - Math.floor(maxVisiblePages / 2));
+    let end = Math.min(totalPages.value, start + maxVisiblePages - 1);
+    
+    // 끝에 도달했을 때 시작점 조정
+    if (end === totalPages.value) {
+      start = Math.max(1, end - maxVisiblePages + 1);
+    }
+    
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+  }
+  
+  return pages;
 });
 
 // 태그별 CSS 클래스 결정
@@ -356,7 +425,7 @@ onMounted(() => {
 
       <!-- 정책 카드들 -->
       <div
-        v-for="policy in filteredPolicies"
+        v-for="policy in paginatedPolicies"
         :key="policy.policyId"
         :class="styles.policyCard"
         @click="openPolicyDetail(policy)"
@@ -391,6 +460,66 @@ onMounted(() => {
           }}</span>
         </div>
       </div>
+    </div>
+
+    <!-- 페이지네이션 -->
+    <div v-if="totalPages > 1" :class="styles.paginationContainer">
+      <!-- 이전 페이지 버튼 -->
+      <button
+        :class="[styles.paginationBtn, styles.prevBtn]"
+        :disabled="currentPage === 1"
+        @click="goToPreviousPage"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="15,18 9,12 15,6"></polyline>
+        </svg>
+      </button>
+
+      <!-- 페이지 번호들 -->
+      <div :class="styles.pageNumbers">
+        <button
+          v-for="page in pageNumbers"
+          :key="page"
+          :class="[
+            styles.pageNumber,
+            { [styles.activePage]: currentPage === page }
+          ]"
+          @click="changePage(page)"
+        >
+          {{ page }}
+        </button>
+      </div>
+
+      <!-- 다음 페이지 버튼 -->
+      <button
+        :class="[styles.paginationBtn, styles.nextBtn]"
+        :disabled="currentPage === totalPages"
+        @click="goToNextPage"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="9,18 15,12 9,6"></polyline>
+        </svg>
+      </button>
     </div>
 
     <!-- 정책 상세 모달 -->
