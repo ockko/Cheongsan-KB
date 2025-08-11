@@ -15,10 +15,16 @@
         WHERE id = #{id}
     </update>
 
-    <update id="updateDailyLimit">
+    <update id="updateDailyLimitAndTimestamp">
         UPDATE user
         SET daily_limit      = #{dailyLimit},
             daily_limit_date = #{dailyLimitDate}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateDailyLimitOnly">
+        UPDATE user
+        SET daily_limit = #{dailyLimit}
         WHERE id = #{id}
     </update>
 

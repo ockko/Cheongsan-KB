@@ -16,9 +16,14 @@ public interface UserMapper {
     void saveDiagnosis(@Param("id") Long id,
                        @Param("programId") Long programId);
 
-    void updateDailyLimit(@Param("id") Long id,
+    void updateDailyLimitAndTimestamp(@Param("id") Long id,
                           @Param("dailyLimit") BigDecimal dailyLimit,
                           @Param("dailyLimitDate") LocalDateTime dailyLimitDate);
+
+    void updateDailyLimitOnly(
+            @Param("userId") Long userId,
+            @Param("dailyLimit") BigDecimal dailyLimit
+    );
 
     void save(@RequestBody User user);
 

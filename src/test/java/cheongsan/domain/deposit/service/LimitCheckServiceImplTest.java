@@ -161,7 +161,7 @@ class LimitCheckServiceImplTest {
             testLimit = new BigDecimal("1"); // 최소 1원으로 설정
         }
 
-        userMapper.updateDailyLimit(testUser.getId(), testLimit, LocalDateTime.now());
+        userMapper.updateDailyLimitAndTimestamp(testUser.getId(), testLimit, LocalDateTime.now());
         log.info("한도를 {}원으로 설정 (현재 지출보다 낮음)", testLimit);
 
         // 기존 알림 개수 확인
