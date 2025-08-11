@@ -33,6 +33,6 @@
 import { ref } from 'vue';
 import RepaymentSimulationInput from '@/pages/RepaymentSimulationInput.vue';
 import LoanSimulation from '@/pages/LoanSimulation.vue';
-import styles from '@/assets/styles/components/SimulationTabMenu.module.css';
+import styles from '@/assets/styles/components/simulation/SimulationTabMenu.module.css';
 const activeTab = ref('repayment');
 </script>
