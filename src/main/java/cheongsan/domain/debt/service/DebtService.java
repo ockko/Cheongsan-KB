@@ -11,7 +11,7 @@ import java.util.List;
 public interface DebtService {
     List<DebtInfoResponseDTO> getUserDebtList(Long userId);
 
-    DebtDetailResponseDTO getLoanDetail(Long loanId);
+    DebtDetailResponseDTO getLoanDetail(Long userId, Long loanId);
 
     void registerDebt(DebtRegisterRequestDTO dto, Long userId);
 

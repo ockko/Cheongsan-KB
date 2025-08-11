@@ -2,10 +2,12 @@ package cheongsan.domain.debt.controller;
 
 import cheongsan.domain.debt.dto.*;
 import cheongsan.domain.debt.service.DebtService;
+import cheongsan.domain.user.entity.CustomUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,24 +18,34 @@ import java.util.List;
 public class DebtController {
     private final DebtService debtService;
 
-    // 추후, userId 연동 예정
     @GetMapping("/loans")
     public List<DebtInfoResponseDTO> getUserDebtList(
-            @RequestParam Long userId,
-            @RequestParam(required = false, defaultValue = "createdAtDesc") String sort
+            @RequestParam(required = false, defaultValue = "createdAtDesc") String sort,
+            @AuthenticationPrincipal CustomUser customUser
     ) {
+        Long userId = customUser.getUser().getId();
+
         return debtService.getUserDebtList(userId);
     }
 
     @GetMapping("/loans/{loanId}")
-    public DebtDetailResponseDTO getLoanDetail(@PathVariable Long loanId) {
-        return debtService.getLoanDetail(loanId);
+    public DebtDetailResponseDTO getLoanDetail(
+            @PathVariable Long loanId,
+            @AuthenticationPrincipal CustomUser customUser
+    ) {
+        Long userId = customUser.getUser().getId();
+
+        return debtService.getLoanDetail(userId, loanId);
     }
 
     @PostMapping(value = "/loans", consumes = "application/json")
-    public ResponseEntity<String> registerDebt(@RequestBody DebtRegisterRequestDTO dto,
-                                               @RequestParam Long userId) {
+    public ResponseEntity<String> registerDebt(
+            @RequestBody DebtRegisterRequestDTO dto,
+            @AuthenticationPrincipal CustomUser customUser
+    ) {
         try {
+            Long userId = customUser.getUser().getId();
+
             debtService.registerDebt(dto, userId);
 
             return ResponseEntity.ok()
@@ -51,13 +63,23 @@ public class DebtController {
         }
     }
 
+    // 대출 상환율 조회
     @GetMapping("/loans/repaymentRatio")
-    public RepaymentRatioResponseDTO getRepaymentRatio(@RequestParam Long userId) {
+    public RepaymentRatioResponseDTO getRepaymentRatio(
+            @AuthenticationPrincipal CustomUser customUser
+    ) {
+        Long userId = customUser.getUser().getId();
+
         return debtService.getRepaymentRatio(userId);
     }
 
+    // 연체 대출 정보 조회
     @GetMapping("/delinquentLoans")
-    public List<DelinquentLoanResponseDTO> getDelinquentLoan(@RequestParam Long userId) {
+    public List<DelinquentLoanResponseDTO> getDelinquentLoan(
+            @AuthenticationPrincipal CustomUser customUser
+    ) {
+        Long userId = customUser.getUser().getId();
+
         return debtService.getDelinquentLoans(userId);
     }
 
