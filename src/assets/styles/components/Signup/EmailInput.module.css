@@ -1,0 +1,71 @@
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--color-main);
+  margin-bottom: 8px;
+}
+
+.emailRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.emailInput {
+  flex: 1;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--color-gray1);
+  border-radius: 8px;
+  background-color: white;
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--color-main);
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.emailInput:focus {
+  outline: none;
+  border-color: var(--color-main);
+}
+
+.emailInput:disabled {
+  background-color: var(--color-gray2);
+  cursor: not-allowed;
+}
+
+.emailInput::placeholder {
+  color: var(--color-gray0);
+}
+
+.emailSeparator {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 18px;
+  color: var(--color-main);
+  flex-shrink: 0;
+}
+
+@media (max-width: 320px) {
+  .emailRow {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .emailInput {
+    width: 100%;
+  }
+
+  .emailSeparator {
+    display: none;
+  }
+}

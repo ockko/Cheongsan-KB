@@ -113,12 +113,6 @@ const handleNaverLogin = () => {
   });
   window.location.href = naverAuthUrl;
 };
-
-// 회원가입 페이지로 이동
-const goToSignup = () => {
-  // 회원가입 페이지 구현 후 라우팅
-  console.log('회원가입 페이지로 이동 예정');
-};
 </script>
 
 <template>
