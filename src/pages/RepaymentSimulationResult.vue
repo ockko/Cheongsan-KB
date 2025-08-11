@@ -75,7 +75,7 @@ const goBack = () => {
     <hr class="divider" />
 
     <section :class="styles.strategyComparison">
-      <h3>전략별 상세 비교</h3>
+      <h3 :class="styles.title">전략별 상세 비교</h3>
       <ul :class="styles.strategyCardList">
         <li
           v-for="strategy in store.strategyMetaList"
