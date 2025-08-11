@@ -16,7 +16,7 @@ export const useAuthStore = defineStore('auth', () => {
   const state = ref({ ...initState });
   const isLoading = ref(false);
 
-  // 로그인
+  // 일반 로그인
   const login = async (credentials) => {
     isLoading.value = true;
 
@@ -53,6 +53,55 @@ export const useAuthStore = defineStore('auth', () => {
       let errorMessage = '로그인에 실패했습니다.';
       if (error.response?.status === 400) {
         errorMessage = '아이디 또는 비밀번호가 잘못되었습니다.';
+      } else if (error.response?.status === 500) {
+        errorMessage = '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+
+      throw new Error(errorMessage);
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  // 네이버 로그인
+  const naverLogin = async (code) => {
+    isLoading.value = true;
+
+    try {
+      const response = await axios.post(
+        `${getApiBaseUrl()}/cheongsan/auth/naver/login`,
+        {
+          code: code,
+        }
+      );
+
+      const { id, accessToken, refreshToken, nickName } = response.data;
+
+      // 상태 업데이트
+      state.value = {
+        accessToken,
+        refreshToken,
+        user: {
+          id,
+          nickName: nickName || '',
+        },
+      };
+
+      // localStorage에 저장
+      localStorage.setItem('auth', JSON.stringify(state.value));
+
+      console.log('네이버 로그인 성공:');
+      return response.data;
+    } catch (error) {
+      console.error('네이버 로그인 실패:', error);
+
+      // 에러 메시지 처리
+      let errorMessage = '네이버 로그인에 실패했습니다.';
+      if (error.response?.status === 400) {
+        errorMessage =
+          error.response.data?.message || '네이버 인증에 실패했습니다.';
       } else if (error.response?.status === 500) {
         errorMessage = '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
       } else if (error.response?.data?.message) {
@@ -135,6 +184,7 @@ export const useAuthStore = defineStore('auth', () => {
     state,
     isLoading,
     login,
+    naverLogin,
     logout,
     refreshTokens,
     getToken,
