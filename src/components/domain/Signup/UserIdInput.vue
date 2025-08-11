@@ -65,7 +65,7 @@ const checkUserId = async () => {
 
 <template>
   <div :class="styles.inputGroup">
-    <label :class="styles.label">아이디</label>
+    <div :class="styles.label">아이디</div>
     <div :class="styles.inputRow">
       <input
         :value="modelValue"

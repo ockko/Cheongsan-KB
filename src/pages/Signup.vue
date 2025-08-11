@@ -9,6 +9,7 @@ import UserIdInput from '@/components/domain/Signup/UserIdInput.vue';
 import PasswordInput from '@/components/domain/Signup/PasswordInput.vue';
 import EmailInput from '@/components/domain/Signup/EmailInput.vue';
 import TermsAgreement from '@/components/domain/Signup/TermsAgreement.vue';
+import NaverAuthButton from '@/components/domain/Signup/NaverAuthButton.vue';
 
 const router = useRouter();
 
@@ -122,15 +123,18 @@ const handleSignUp = async () => {
   }
 };
 
-// 네이버 회원가입
-const handleNaverLogin = () => {
-  const naverClientId = 'YOUR_NAVER_CLIENT_ID'; // 실제 네이버 클라이언트 ID로 교체
-  const redirectUri = encodeURIComponent(
-    window.location.origin + '/auth/naver/callback'
-  );
-  const naverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naverClientId}&redirect_uri=${redirectUri}&state=signup`;
+// 네이버 인증 이벤트 핸들러들
+const handleNaverAuthStart = () => {
+  console.log('네이버 회원가입 시작');
+};
 
-  window.location.href = naverAuthUrl;
+const handleNaverAuthSuccess = () => {
+  console.log('네이버 회원가입 성공');
+};
+
+const handleNaverAuthError = (error) => {
+  console.error('네이버 회원가입 실패:', error);
+  alert(error);
 };
 </script>
 <template>
@@ -184,13 +188,13 @@ const handleNaverLogin = () => {
         <span>SNS 계정 회원가입</span>
       </div>
 
-      <!-- 네이버 회원가입 버튼 -->
-      <img
-        @click="handleNaverLogin"
-        :class="styles.naverButton"
+      <!-- 네이버 회원가입 버튼 (컴포넌트 사용) -->
+      <NaverAuthButton
+        type="login"
         :disabled="isSubmitting"
-        src="/images/naver-btn.png"
-        alt="네이버 회원가입 버튼"
+        @auth-start="handleNaverAuthStart"
+        @auth-success="handleNaverAuthSuccess"
+        @auth-error="handleNaverAuthError"
       />
     </div>
   </div>

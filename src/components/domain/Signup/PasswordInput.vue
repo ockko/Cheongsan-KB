@@ -43,7 +43,7 @@ const updatePasswordConfirm = (event) => {
   <div :class="styles.passwordSection">
     <!-- 비밀번호 입력 -->
     <div :class="styles.inputGroup">
-      <label :class="styles.label">비밀번호</label>
+      <div :class="styles.label">비밀번호</div>
       <input
         :value="password"
         @input="updatePassword"
@@ -56,7 +56,7 @@ const updatePasswordConfirm = (event) => {
 
     <!-- 비밀번호 확인 입력 -->
     <div :class="styles.inputGroup">
-      <label :class="styles.label">비밀번호 확인</label>
+      <div :class="styles.label">비밀번호 확인</div>
       <input
         :value="passwordConfirm"
         @input="updatePasswordConfirm"

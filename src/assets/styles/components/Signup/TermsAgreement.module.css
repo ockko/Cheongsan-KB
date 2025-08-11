@@ -1,7 +1,6 @@
 .inputGroup {
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
 .label {
@@ -9,21 +8,18 @@
   font-weight: 500;
   font-size: 16px;
   color: var(--color-main);
-  margin-bottom: 8px;
 }
 
 .agreementsList {
   display: flex;
   flex-direction: column;
-  gap: 12px;
 }
 
 .agreementItem {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   cursor: pointer;
-  padding: 4px 0;
 }
 
 .checkboxIcon {
