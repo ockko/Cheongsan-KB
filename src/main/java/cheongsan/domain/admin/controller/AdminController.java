@@ -4,10 +4,12 @@ import cheongsan.common.exception.ResponseDTO;
 import cheongsan.domain.admin.dto.AdminUserListDTO;
 import cheongsan.domain.admin.service.AdminService;
 import cheongsan.domain.codef.service.CodefSyncService;
+import cheongsan.domain.user.entity.CustomUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -27,8 +29,11 @@ public class AdminController {
         return adminService.getUserList();
     }
 
-    @DeleteMapping("/users/{userId}")
-    public ResponseEntity<Map<String, Object>> deleteUser(@PathVariable Long userId) {
+    @DeleteMapping("/users")
+    public ResponseEntity<Map<String, Object>> deleteUser(
+            @AuthenticationPrincipal CustomUser customUser
+    ) {
+        Long userId = customUser.getUser().getId();
         adminService.deleteUser(userId);
 
         Map<String, Object> response = new HashMap<>();
