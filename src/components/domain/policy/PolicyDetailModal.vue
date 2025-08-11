@@ -1,3 +1,53 @@
+<script setup>
+import { computed, watch } from 'vue';
+import { useModalStore } from '@/stores/modal';
+import styles from '@/assets/styles/components/policy/PolicyDetailModal.module.css';
+
+const props = defineProps({
+  isVisible: {
+    type: Boolean,
+    default: false,
+  },
+  policyData: {
+    type: Object,
+    default: () => ({}),
+  },
+});
+
+const emit = defineEmits(['close']);
+
+// 모달 스토어 사용
+const modalStore = useModalStore();
+
+// props.isVisible 변화를 감지하여 스토어 상태 업데이트
+watch(
+  () => props.isVisible,
+  (newValue) => {
+    if (newValue) {
+      modalStore.openPolicyDetailModal();
+    } else {
+      modalStore.closePolicyDetailModal();
+    }
+  }
+);
+
+// 표시할 정책 데이터
+const displayPolicyData = computed(() => {
+  return props.policyData || {};
+});
+
+const closeModal = () => {
+  emit('close');
+};
+
+// 상세 페이지 열기
+const openDetailPage = () => {
+  if (displayPolicyData.value.detailPageUrl) {
+    window.open(displayPolicyData.value.detailPageUrl, '_blank');
+  }
+};
+</script>
+
 <template>
   <div v-if="isVisible" :class="styles.modalOverlay" @click="closeModal">
     <div :class="styles.modalContent" @click.stop>
@@ -115,53 +165,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { computed, watch } from 'vue';
-import { useModalStore } from '@/stores/modal';
-import styles from '@/assets/styles/components/policy/PolicyDetailModal.module.css';
-
-const props = defineProps({
-  isVisible: {
-    type: Boolean,
-    default: false,
-  },
-  policyData: {
-    type: Object,
-    default: () => ({}),
-  },
-});
-
-const emit = defineEmits(['close']);
-
-// 모달 스토어 사용
-const modalStore = useModalStore();
-
-// props.isVisible 변화를 감지하여 스토어 상태 업데이트
-watch(
-  () => props.isVisible,
-  (newValue) => {
-    if (newValue) {
-      modalStore.openPolicyDetailModal();
-    } else {
-      modalStore.closePolicyDetailModal();
-    }
-  }
-);
-
-// 표시할 정책 데이터
-const displayPolicyData = computed(() => {
-  return props.policyData || {};
-});
-
-const closeModal = () => {
-  emit('close');
-};
-
-// 상세 페이지 열기
-const openDetailPage = () => {
-  if (displayPolicyData.value.detailPageUrl) {
-    window.open(displayPolicyData.value.detailPageUrl, '_blank');
-  }
-};
-</script>

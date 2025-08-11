@@ -1,3 +1,107 @@
+<script setup>
+import { computed, watch } from 'vue';
+import { useModalStore } from '@/stores/modal';
+import styles from '@/assets/styles/components/policy/DiagnosisStageModal.module.css';
+
+const props = defineProps({
+  isVisible: {
+    type: Boolean,
+    default: false,
+  },
+  detailData: {
+    type: Object,
+    default: () => ({}),
+  },
+});
+
+const emit = defineEmits(['close']);
+
+// 모달 스토어 사용
+const modalStore = useModalStore();
+
+// props.isVisible 변화를 감지하여 스토어 상태 업데이트
+watch(
+  () => props.isVisible,
+  (newValue) => {
+    if (newValue) {
+      modalStore.openDiagnosisStageModal();
+    } else {
+      modalStore.closeDiagnosisStageModal();
+    }
+  }
+);
+
+const closeModal = () => {
+  emit('close');
+};
+
+// 이미지 에러 핸들링
+const handleImageError = (e) => {
+  console.log('이미지 로드 실패:', e.target.src);
+  // 대체 이미지나 텍스트로 표시
+  e.target.style.display = 'none';
+};
+
+// 대상자 목록 생성 (eligibleDebtors와 eligibleDebts 결합)
+const targetList = computed(() => {
+  const targets = [];
+
+  // eligibleDebtors 처리
+  if (props.detailData?.eligibleDebtors) {
+    if (Array.isArray(props.detailData.eligibleDebtors)) {
+      targets.push(...props.detailData.eligibleDebtors);
+    } else if (typeof props.detailData.eligibleDebtors === 'string') {
+      // 문자열인 경우 쉼표로 분리
+      const debtors = props.detailData.eligibleDebtors
+        .split(',')
+        .map((item) => item.trim());
+      targets.push(...debtors);
+    }
+  }
+
+  // eligibleDebts 처리
+  if (props.detailData?.eligibleDebts) {
+    if (Array.isArray(props.detailData.eligibleDebts)) {
+      targets.push(...props.detailData.eligibleDebts);
+    } else if (typeof props.detailData.eligibleDebts === 'string') {
+      // 문자열인 경우 쉼표로 분리
+      const debts = props.detailData.eligibleDebts
+        .split(',')
+        .map((item) => item.trim());
+      targets.push(...debts);
+    }
+  }
+
+  return targets.length > 0 ? targets : ['대상자 정보가 없습니다.'];
+});
+
+// 장점 목록 생성
+const advantagesList = computed(() => {
+  if (props.detailData?.advantages) {
+    if (Array.isArray(props.detailData.advantages)) {
+      return props.detailData.advantages;
+    } else if (typeof props.detailData.advantages === 'string') {
+      // 문자열인 경우 쉼표로 분리
+      return props.detailData.advantages.split(',').map((item) => item.trim());
+    }
+  }
+  return [];
+});
+
+// 주의사항 목록 생성
+const cautionsList = computed(() => {
+  if (props.detailData?.cautions) {
+    if (Array.isArray(props.detailData.cautions)) {
+      return props.detailData.cautions;
+    } else if (typeof props.detailData.cautions === 'string') {
+      // 문자열인 경우 쉼표로 분리
+      return props.detailData.cautions.split(',').map((item) => item.trim());
+    }
+  }
+  return [];
+});
+</script>
+
 <template>
   <div v-if="isVisible" :class="styles.modalOverlay" @click="closeModal">
     <div :class="styles.modalContent" @click.stop>
@@ -120,107 +224,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { computed, watch } from 'vue';
-import { useModalStore } from '@/stores/modal';
-import styles from '@/assets/styles/components/policy/DiagnosisStageModal.module.css';
-
-const props = defineProps({
-  isVisible: {
-    type: Boolean,
-    default: false,
-  },
-  detailData: {
-    type: Object,
-    default: () => ({}),
-  },
-});
-
-const emit = defineEmits(['close']);
-
-// 모달 스토어 사용
-const modalStore = useModalStore();
-
-// props.isVisible 변화를 감지하여 스토어 상태 업데이트
-watch(
-  () => props.isVisible,
-  (newValue) => {
-    if (newValue) {
-      modalStore.openDiagnosisStageModal();
-    } else {
-      modalStore.closeDiagnosisStageModal();
-    }
-  }
-);
-
-const closeModal = () => {
-  emit('close');
-};
-
-// 이미지 에러 핸들링
-const handleImageError = (e) => {
-  console.log('이미지 로드 실패:', e.target.src);
-  // 대체 이미지나 텍스트로 표시
-  e.target.style.display = 'none';
-};
-
-// 대상자 목록 생성 (eligibleDebtors와 eligibleDebts 결합)
-const targetList = computed(() => {
-  const targets = [];
-
-  // eligibleDebtors 처리
-  if (props.detailData?.eligibleDebtors) {
-    if (Array.isArray(props.detailData.eligibleDebtors)) {
-      targets.push(...props.detailData.eligibleDebtors);
-    } else if (typeof props.detailData.eligibleDebtors === 'string') {
-      // 문자열인 경우 쉼표로 분리
-      const debtors = props.detailData.eligibleDebtors
-        .split(',')
-        .map((item) => item.trim());
-      targets.push(...debtors);
-    }
-  }
-
-  // eligibleDebts 처리
-  if (props.detailData?.eligibleDebts) {
-    if (Array.isArray(props.detailData.eligibleDebts)) {
-      targets.push(...props.detailData.eligibleDebts);
-    } else if (typeof props.detailData.eligibleDebts === 'string') {
-      // 문자열인 경우 쉼표로 분리
-      const debts = props.detailData.eligibleDebts
-        .split(',')
-        .map((item) => item.trim());
-      targets.push(...debts);
-    }
-  }
-
-  return targets.length > 0 ? targets : ['대상자 정보가 없습니다.'];
-});
-
-// 장점 목록 생성
-const advantagesList = computed(() => {
-  if (props.detailData?.advantages) {
-    if (Array.isArray(props.detailData.advantages)) {
-      return props.detailData.advantages;
-    } else if (typeof props.detailData.advantages === 'string') {
-      // 문자열인 경우 쉼표로 분리
-      return props.detailData.advantages.split(',').map((item) => item.trim());
-    }
-  }
-  return [];
-});
-
-// 주의사항 목록 생성
-const cautionsList = computed(() => {
-  if (props.detailData?.cautions) {
-    if (Array.isArray(props.detailData.cautions)) {
-      return props.detailData.cautions;
-    } else if (typeof props.detailData.cautions === 'string') {
-      // 문자열인 경우 쉼표로 분리
-      return props.detailData.cautions.split(',').map((item) => item.trim());
-    }
-  }
-  return [];
-});
-</script>
