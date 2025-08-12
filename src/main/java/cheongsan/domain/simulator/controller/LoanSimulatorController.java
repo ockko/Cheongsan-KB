@@ -77,10 +77,6 @@ public class LoanSimulatorController {
                 new GraphDTO("기존 상환액", analysis.getTotalComparison().getOriginalTotal()),
                 new GraphDTO("신규 포함 상환액", analysis.getTotalComparison().getNewLoanTotal())
         );
-        List<GraphDTO> interestGraph = List.of(
-                new GraphDTO("기존 이자 총액", analysis.getInterestComparison().getExistingInterest()),
-                new GraphDTO("신규 포함 이자 총액", analysis.getInterestComparison().getNewLoanInterest())
-        );
 
         // 7) 응답 (★ dsr에 퍼센트 값 넣기)
         LoanResultDTO result = new LoanResultDTO(
@@ -88,7 +84,6 @@ public class LoanSimulatorController {
                 analysis.getInterestComparison(),
                 rec.getItems(),
                 repaymentGraph,
-                interestGraph,
                 dsrPercent
         );
 
