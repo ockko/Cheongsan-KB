@@ -67,7 +67,7 @@
 }
 .next-button {
   width: calc(100% - 2rem); /* 좌우 여백 1rem씩 고려 */
-  height: 44px;
+  height: 48px;
   padding: 14px;
   background-color: #00497a;
   color: #fff;

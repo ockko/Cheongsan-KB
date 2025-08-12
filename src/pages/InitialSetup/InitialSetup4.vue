@@ -5,7 +5,7 @@ import { useRouter } from 'vue-router';
 import styles from '@/assets/styles/pages/InitialSetup/InitialSetup4.module.css';
 import ProgressHeader from '@/components/domain/InitialSetup/ProgressHeader.vue';
 import LoanItem from '@/components/domain/InitialSetup/LoanItem.vue';
-import LoanAddModal from '@/components/domain/Home/LoanAddModal.vue';
+import LoanAddModal from '@/components/domain/home/LoanAddModal.vue';
 
 const router = useRouter();
 
@@ -67,6 +67,7 @@ function goNext() {
       </button>
       <LoanAddModal
         v-show="isModalOpen"
+        :visible="isModalOpen"
         @close="closeModal"
         @add-loan="
           (loan) => {

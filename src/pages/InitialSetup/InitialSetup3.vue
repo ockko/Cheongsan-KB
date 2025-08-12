@@ -16,9 +16,9 @@ const nickname = computed(() => authStore.getUser().nickName || '000');
 
 const loans = ref([]);
 
-const confirmedIndexes = ref(new Set()); // 최종 선택된 인덱스
-const clickedIndex = ref(null); // 현재 클릭된 인덱스
-const isModalOpen = ref(false); // 모달 표시 여부
+const confirmedIndexes = ref(new Set());
+const clickedIndex = ref(null);
+const isModalOpen = ref(false);
 
 async function loadLoans() {
   try {
@@ -43,6 +43,15 @@ onMounted(() => {
 
 function handleLoanClick(index) {
   clickedIndex.value = index;
+
+  const selectedLoan = loans.value[index];
+  console.log('[Loan Click]', {
+    index,
+    debtId: selectedLoan?.id,
+    institution: selectedLoan?.institution,
+    name: selectedLoan?.name,
+  });
+
   isModalOpen.value = true;
 }
 

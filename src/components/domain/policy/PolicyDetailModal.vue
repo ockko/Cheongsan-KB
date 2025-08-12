@@ -1,21 +1,62 @@
+<script setup>
+import { computed, watch } from 'vue';
+import { useModalStore } from '@/stores/modal';
+import styles from '@/assets/styles/components/policy/PolicyDetailModal.module.css';
+
+const props = defineProps({
+  isVisible: {
+    type: Boolean,
+    default: false,
+  },
+  policyData: {
+    type: Object,
+    default: () => ({}),
+  },
+});
+
+const emit = defineEmits(['close']);
+
+// 모달 스토어 사용
+const modalStore = useModalStore();
+
+// props.isVisible 변화를 감지하여 스토어 상태 업데이트
+watch(
+  () => props.isVisible,
+  (newValue) => {
+    if (newValue) {
+      modalStore.openPolicyDetailModal();
+    } else {
+      modalStore.closePolicyDetailModal();
+    }
+  }
+);
+
+// 표시할 정책 데이터
+const displayPolicyData = computed(() => {
+  return props.policyData || {};
+});
+
+const closeModal = () => {
+  emit('close');
+};
+
+// 상세 페이지 열기
+const openDetailPage = () => {
+  if (displayPolicyData.value.detailPageUrl) {
+    window.open(displayPolicyData.value.detailPageUrl, '_blank');
+  }
+};
+</script>
+
 <template>
   <div v-if="isVisible" :class="styles.modalOverlay" @click="closeModal">
     <div :class="styles.modalContent" @click.stop>
-      <!-- 닫기 버튼 -->
-      <button :class="styles.closeButton" @click="closeModal">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <circle cx="12" cy="12" r="12" fill="#E1E2E6" />
-          <path
-            d="M15 9L9 15M9 9L15 15"
-            stroke="#72787F"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-        </svg>
-      </button>
-
       <!-- 모달 내용 -->
       <div :class="styles.modalBody">
+        <!-- 닫기 버튼 -->
+        <button @click="closeModal" :class="styles.backButton">
+          <i class="fa fa-arrow-left"></i>
+        </button>
         <!-- 부처 정보 -->
         <div :class="styles.ministryInfo">
           <span :class="styles.ministryText">
@@ -124,53 +165,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { computed, watch } from 'vue';
-import { useModalStore } from '@/stores/modal';
-import styles from '@/assets/styles/components/policy/PolicyDetailModal.module.css';
-
-const props = defineProps({
-  isVisible: {
-    type: Boolean,
-    default: false,
-  },
-  policyData: {
-    type: Object,
-    default: () => ({}),
-  },
-});
-
-const emit = defineEmits(['close']);
-
-// 모달 스토어 사용
-const modalStore = useModalStore();
-
-// props.isVisible 변화를 감지하여 스토어 상태 업데이트
-watch(
-  () => props.isVisible,
-  (newValue) => {
-    if (newValue) {
-      modalStore.openPolicyDetailModal();
-    } else {
-      modalStore.closePolicyDetailModal();
-    }
-  }
-);
-
-// 표시할 정책 데이터
-const displayPolicyData = computed(() => {
-  return props.policyData || {};
-});
-
-const closeModal = () => {
-  emit('close');
-};
-
-// 상세 페이지 열기
-const openDetailPage = () => {
-  if (displayPolicyData.value.detailPageUrl) {
-    window.open(displayPolicyData.value.detailPageUrl, '_blank');
-  }
-};
-</script>
