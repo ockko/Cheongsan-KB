@@ -13,8 +13,9 @@
   opacity: 0.5;
 }
 
-.selected {
-  background-color: rgba(33, 150, 243, 0.1);
+.selected .dateNumber {
+  color: var(--color-main);
+  font-weight: 1000;
 }
 
 .clickable {
