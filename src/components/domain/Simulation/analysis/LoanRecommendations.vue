@@ -1,7 +1,6 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import styles from "@/assets/styles/components/Analysis.module.css";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const props = defineProps({
   products: { type: Array, default: () => [] },
@@ -81,7 +80,8 @@ const getSafeUrl = (url) => {
 <template>
   <div :class="styles.recommendationsContainer">
     <div :class="styles.recommendHeader">
-      <FontAwesomeIcon :icon="['far', 'thumbs-up']" />
+      <i class="far fa-thumbs-up"></i>
+
       <h3 :class="styles.title">대출 대안 추천</h3>
     </div>
     <span :class="styles.info"

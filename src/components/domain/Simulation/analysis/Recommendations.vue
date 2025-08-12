@@ -1,12 +1,11 @@
 <script setup>
 import styles from "@/assets/styles/components/Analysis.module.css";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 </script>
 
 <template>
   <div :class="styles.recommendContainer">
     <div :class="styles.recommendationsHeader">
-      <FontAwesomeIcon :icon="['far', 'face-smile']" />
+      <i class="far fa-smile"></i>
       <h3 :class="styles.recommendTitle">추천 행동</h3>
     </div>
 

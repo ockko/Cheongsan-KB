@@ -47,7 +47,7 @@ const getBarHeight = (amount) => {
 <template>
   <div :class="styles.chartContainer">
     <div :class="styles.alert">
-      <FontAwesomeIcon :icon="['fas', 'bell']" :class="styles.faBell" />
+      <i class="fas fa-bell" :class="styles.faBell"></i>
       <span>
         대출금이
         <span :class="styles.highlight">{{ formatCurrency(difference) }}</span>
