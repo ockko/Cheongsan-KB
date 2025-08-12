@@ -5,14 +5,18 @@
 
 .weekdaysHeader {
   display: grid;
+  height: 45px;
   grid-template-columns: repeat(7, 1fr);
-  background-color: #f8f9fa;
   position: relative;
   z-index: 1;
 }
 
 .weekday {
-  padding: 12px 8px;
+  padding: 4px 8px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   font-size: 12px;
   font-weight: 500;
