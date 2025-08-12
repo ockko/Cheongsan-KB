@@ -3,14 +3,15 @@ import styles from '@/assets/styles/pages/InitialSetup/InitialSetup1.module.css'
 import ProgressHeader from '@/components/domain/InitialSetup/ProgressHeader.vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { saveNickname } from '@/api/initialSetup/initialSetup1.js';
 
 const nickname = ref('');
 const router = useRouter();
 
-function goNext() {
-  const nicknameValue = nickname.value.trim();
+const nicknameRegex = /^[가-힣a-zA-Z0-9_]{2,10}$/;
 
-  const nicknameRegex = /^[가-힣a-zA-Z0-9_]{2,10}$/;
+async function goNext() {
+  const nicknameValue = nickname.value.trim();
 
   if (!nicknameRegex.test(nicknameValue)) {
     alert(
@@ -19,8 +20,24 @@ function goNext() {
     return;
   }
 
-  // 유효성 통과 시 다음 페이지로 이동
-  router.push('/initialSetup/page2');
+  try {
+    const response = await saveNickname(nicknameValue);
+
+    alert(response.message || '닉네임이 저장되었습니다.');
+
+    // 성공 시 다음 페이지로 이동
+    router.push('/initialSetup/page2');
+  } catch (error) {
+    console.error('API 호출 에러 전체:', error);
+    console.error('응답 객체:', error.response);
+
+    if (error.response && error.response.status === 404) {
+      alert('해당 유저를 찾을 수 없습니다.');
+    } else {
+      alert('닉네임 저장 중 오류가 발생했습니다.');
+      console.error(error);
+    }
+  }
 }
 </script>
 

@@ -48,7 +48,7 @@ function goNext() {
           :logoUrl="loan.logo"
           :institution="loan.institution"
           :loanName="loan.name"
-          :selected="true"
+          :selected="loan.selected"
         />
 
         <div :class="styles.addBox" @click="openModal">
@@ -65,12 +65,17 @@ function goNext() {
       <button :class="styles.nextButton" @click="goNext">
         티모청 시작하기
       </button>
-
       <LoanAddModal
-        v-if="isModalOpen"
+        v-show="isModalOpen"
         @close="closeModal"
-        @add-loan="handleAddLoan"
+        @add-loan="
+          (loan) => {
+            handleAddLoan(loan);
+            closeModal();
+          }
+        "
       />
+      <p v-if="isModalOpen">모달 상태 true</p>
     </div>
   </div>
 </template>

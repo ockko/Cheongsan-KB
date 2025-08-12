@@ -1,0 +1,59 @@
+[33ma3c24d0[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/23[m[33m, [m[1;31morigin/refactor/22[m[33m, [m[1;31morigin/feature/23[m[33m, [m[1;31morigin/develop[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mdevelop[m[33m)[m Merge pull request #21 from KB-IT-s-Your-Life-Final-Project/feature/17
+[33m4e1adfb[m[33m ([m[1;31morigin/feature/17[m[33m)[m refactor: 20번 이슈 Pull 이후 충돌 해제 #17
+[33mbb4430e[m Merge pull request #20 from KB-IT-s-Your-Life-Final-Project/feature/16
+[33m9e3a34f[m[33m ([m[1;31morigin/feature/16[m[33m)[m fix: 초기 연동 페이지 파일명 수정 Onboarding -> InitialSetup #16
+[33m15b7348[m fix: style 태그 css 파일로 분리 #16
+[33me62239c[m refactor: token.js 삭제 및 axios 호출 함수 정리  #17
+[33m5ef77b2[m refactor: 로그인 페이지 스타일 수정  #17
+[33m7dbcec6[m Merge branch 'develop' of https://github.com/KB-IT-s-Your-Life-Final-Project/Front-End into feature/16
+[33m75e7e97[m feat: 대출 상품 추가 화면 구현 #16
+[33mdf62416[m feat: login api 연동 완료 및 로그인 페이지 퍼플리싱 #17
+[33m0ea3e48[m Merge branch 'develop' of https://github.com/KB-IT-s-Your-Life-Final-Project/Front-End into feature/17
+[33m16f6482[m Merge pull request #19 from KB-IT-s-Your-Life-Final-Project/feature/6
+[33m0f5865f[m[33m ([m[1;31morigin/feature/6[m[33m)[m fix: proxy 설정 undo
+[33m9c70840[m fix: 사용자 닉네임 pinia에서 받아오기 구현
+[33m4e94488[m fix: 머지 중 발생한 오류 수정
+[33ma61e5ce[m fix : css오류 수정
+[33m441531a[m feat: 제도 상세보기 구현
+[33m9bac644[m Merge branch 'develop' of https://github.com/KB-IT-s-Your-Life-Final-Project/Front-End into feature/6
+[33mf920580[m feat: 정책 세부 조회 기능 하다맘
+[33m4487f76[m feat: 온보딩 페이지 퍼블리싱 #17
+[33m5b3719f[m feat: 대출 상품 추가 화면 #16
+[33m96a2c2b[m Merge branch 'develop' of https://github.com/KB-IT-s-Your-Life-Final-Project/Front-End into feature/16
+[33ma7a01ef[m feat: 온보딩 페이지 #16
+[33m68b2639[m Merge pull request #18 from KB-IT-s-Your-Life-Final-Project/feature/10
+[33me493d5c[m[33m ([m[1;31morigin/feature/10[m[33m)[m refactor: 불필요한 주석 제거 #10
+[33m446ddc7[m Merge branch 'develop' of https://github.com/KB-IT-s-Your-Life-Final-Project/Front-End into feature/10
+[33m68fac8e[m Merge pull request #15 from KB-IT-s-Your-Life-Final-Project/feature/7
+[33m3b0bae6[m refactor: css 전반 수정 #10
+[33me81378e[m feat: 상세 정책 내용 조회 기능 구현
+[33m97ff968[m refactor: css 수정 #10
+[33ma5a0113[m feat: 맞춤 정책 조회 및 검색 기능 연동 구현
+[33mc43e169[m feat: 진단 조정 제도 페이지 디자인 수정
+[33m37e9765[m test: API 테스트 완료
+[33m1d3d26a[m feat: 연동된 대출 추가 정보 입력 화면 #16
+[33ma98f88b[m feat: 마이데이터 연동 화면 #16
+[33mfac07ba[m feat: 닉네임 설정 화면 #16
+[33m0dd2b10[m feat: 정책 페이지 백엔드 연동 시도 중 중단. 세부 디자인 수정
+[33m3eea0de[m[33m ([m[1;31morigin/feature/7[m[33m)[m fix: 학습 콘텐츠 상세 페이지 스타일 태그 분리 -> StudyDetail.module.css  #7
+[33mc2214c5[m fix: 학습 메인 페이지 style 태그 분리 -> Study.module.css #7
+[33mcb05e07[m feat: API 연동 코드 추가 (아직 테스트 미완성 - CORS 해결필요) #10
+[33mf6feb6b[m feat: 진단 설문 페이지 구현
+[33me9c3ce3[m[33m ([m[1;32mfeature/7[m[33m)[m feat: 학습 콘텐츠 상세 페이지 구현 #7
+[33m9620329[m feat: 정책 상세 구현
+[33mea2dd4c[m feat: 정책 모달, 시작페이지 구현
+[33m07a5f8c[m fix: 공통 레이아웃 css 수정 및 styles 폴더와 파일 분리  #11
+[33mee6fa6d[m feat: 학습 컨텐츠 페이지 #7
+[33meba76a9[m feat: 캘린더 페이지 상세내역 퍼블리싱 #10
+[33m49f96f8[m refactor: Calendar 스타일과 CalendarDay 스타일 수정 #10
+[33m4ffd17b[m feat: 캘린더 페이지 기본 퍼블리싱 #10
+[33mb7c81a3[m[33m ([m[1;31morigin/feature/13[m[33m)[m Merge pull request #12 from KB-IT-s-Your-Life-Final-Project/fix/11
+[33meb2bbb0[m[33m ([m[1;31morigin/fix/11[m[33m)[m fix: 공통 레이아웃 css 수정 및 styles 폴더와 파일 분리  #11
+[33m9916105[m[33m ([m[1;31morigin/feature/9[m[33m)[m Merge pull request #8 from KB-IT-s-Your-Life-Final-Project/feature/5
+[33mbcdf4a2[m[33m ([m[1;31morigin/feature/5[m[33m)[m feat: 기본 틀 생성 완료 #5
+[33md23a75c[m feat: 기존 이미지 파일, 폰트 스타일, 공통 색상 코드 추가  #5
+[33m9ade21b[m Merge pull request #2 from KB-IT-s-Your-Life-Final-Project/feature/1
+[33m294d89b[m feat: Vue 탬플릿 제작 #1
+[33mebfd588[m pull_request_template.md 생성
+[33me5234b5[m[33m ([m[1;31morigin/main[m[33m)[m Update issue templates
+[33m331fd9a[m Initial commit

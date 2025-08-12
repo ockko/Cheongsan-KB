@@ -45,7 +45,7 @@ const handleLogin = async () => {
     await authStore.login(formData.value);
 
     // 로그인 성공 시 홈으로 이동
-    router.push('/home');
+    router.push('/initialSetup/page1');
   } catch (error) {
     errorMessage.value = error.message;
   } finally {
