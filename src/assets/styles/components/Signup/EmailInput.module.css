@@ -1,57 +1,60 @@
 .inputGroup {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
 .label {
-  font-family: var(--font-family);
-  font-weight: 500;
-  font-size: 16px;
-  color: var(--color-main);
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--color-main);
 }
 
 .emailRow {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  width: 100%;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
 }
 
 .emailInput {
-  flex: 1;
-  height: 51px;
-  width: 147px;
-  min-width: 0;
-  padding: 0 16px;
-  border: 1px solid var(--color-gray1);
-  background-color: white;
-  font-family: var(--font-family);
-  font-weight: 400;
-  font-size: 16px;
-  color: var(--color-main);
-  transition: border-color 0.2s ease;
-  box-sizing: border-box;
+    flex: 1;
+    height: 51px;
+    width: 147px;
+    min-width: 0;
+    padding: 0 16px;
+    border: 1px solid var(--color-gray1);
+    background-color: white;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 16px;
+    color: var(--color-main);
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+    text-align: left; /* placeholder 왼쪽 정렬 */
 }
 
 .emailInput:focus {
-  outline: none;
-  border-color: var(--color-main);
+    outline: none;
+    border-color: var(--color-main);
 }
 
 .emailInput:disabled {
-  background-color: var(--color-gray2);
-  cursor: not-allowed;
+    background-color: var(--color-gray2);
+    cursor: not-allowed;
 }
 
 .emailInput::placeholder {
-  color: var(--color-gray0);
+    color: var(--color-gray0);
+    text-align: left; /* placeholder 왼쪽 정렬 */
+    padding-left: 0; /* 추가 여백 제거 */
 }
 
 .emailSeparator {
-  font-family: var(--font-family);
-  font-weight: 500;
-  font-size: 18px;
-  color: var(--color-main);
-  flex-shrink: 0;
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 18px;
+    color: var(--color-main);
+    flex-shrink: 0;
 }
