@@ -62,6 +62,9 @@ public class DepositServiceImpl implements DepositService {
                 .collect(Collectors.toList());
 
         log.info("조회된 일별 거래 내역 수: {}", result.size());
+        for(DailyTransactionDTO dto : result){
+            log.info(dto.getResAccountDesc3());
+        }
         return result;
     }
 
