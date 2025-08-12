@@ -1,5 +1,5 @@
 <script setup>
-import styles from '@/assets/styles/components/Home/LoanAddModal.module.css';
+import styles from '@/assets/styles/components/home/LoanAddModal.module.css';
 import { ref, reactive } from 'vue';
 import { defineEmits } from 'vue';
 

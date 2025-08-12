@@ -1,6 +1,6 @@
 <script setup>
-import styles from '@/assets/styles/components/Home/DailySpendingWidget.module.css';
-import SettingsModal from '@/components/domain/Home/SettingsModal.vue';
+import styles from '@/assets/styles/components/home/DailySpendingWidget.module.css';
+import SettingsModal from '@/components/domain/home/SettingsModal.vue';
 import { ref, defineProps, computed } from 'vue';
 
 const isModalOpen = ref(false);

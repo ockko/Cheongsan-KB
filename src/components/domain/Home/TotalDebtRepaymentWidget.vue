@@ -1,5 +1,5 @@
 <script setup>
-import styles from '@/assets/styles/components/Home/TotalDebtRepaymentWidget.module.css';
+import styles from '@/assets/styles/components/home/TotalDebtRepaymentWidget.module.css';
 import { defineProps, computed } from 'vue';
 
 // 부모 컴포넌트로부터 받을 데이터(props)를 정의합니다.

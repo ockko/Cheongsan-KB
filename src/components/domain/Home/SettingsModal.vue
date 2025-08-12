@@ -1,5 +1,5 @@
 <script setup>
-import styles from '@/assets/styles/components/Home/SettingsModal.module.css';
+import styles from '@/assets/styles/components/home/SettingsModal.module.css';
 import { ref, defineEmits, computed, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useBudgetStore } from '@/stores/budget';

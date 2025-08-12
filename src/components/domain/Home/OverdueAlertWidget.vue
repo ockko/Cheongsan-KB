@@ -1,5 +1,5 @@
 <script setup>
-import styles from '@/assets/styles/components/Home/OverdueAlertWidget.module.css';
+import styles from '@/assets/styles/components/home/OverdueAlertWidget.module.css';
 import { defineProps, computed } from 'vue';
 
 // 부모 컴포넌트로부터 받을 부채 목록 데이터(props)를 정의합니다.

@@ -1,7 +1,7 @@
 <script setup>
-import styles from '@/assets/styles/components/Home/DebtListWidget.module.css';
-import LoanAddModal from '@/components/domain/Home/LoanAddModal.vue';
-import DebtDetailModal from '@/components/domain/Home/DebtDetailModal.vue';
+import styles from '@/assets/styles/components/home/DebtListWidget.module.css';
+import LoanAddModal from '@/components/domain/home/LoanAddModal.vue';
+import DebtDetailModal from '@/components/domain/home/DebtDetailModal.vue';
 import { ref, computed, defineProps } from 'vue';
 
 const props = defineProps({
