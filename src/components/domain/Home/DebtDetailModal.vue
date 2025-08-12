@@ -21,11 +21,11 @@ const formatCurrency = (value) => {
 // 상환 방식 코드값을 한글로 변환하는 헬퍼 함수
 const formatRepaymentMethod = (method) => {
   switch (method) {
-    case 'EQUAL_PRINCIPAL_INTEREST':
+    case 'EQUAL_PAYMENT':
       return '원리금균등상환';
     case 'EQUAL_PRINCIPAL':
       return '원금균등상환';
-    case 'BULLET_REPAYMENT':
+    case 'LUMP_SUM':
       return '만기일시상환';
     default:
       return method;
@@ -91,7 +91,7 @@ const formatRepaymentMethod = (method) => {
             <sapn>상환 방식</sapn>
           </span>
           <span :class="styles.value">{{
-            formatRepaymentMethod(debtDetails.repaymentMethod)
+            formatRepaymentMethod(debtDetails.repaymentType)
           }}</span>
         </li>
       </ul>
