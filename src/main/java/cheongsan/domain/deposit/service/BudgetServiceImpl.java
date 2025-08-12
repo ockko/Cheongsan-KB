@@ -1,9 +1,11 @@
 package cheongsan.domain.deposit.service;
 
 import cheongsan.common.constant.ResponseMessage;
+import cheongsan.common.util.BudgetCalculator;
 import cheongsan.domain.debt.service.DebtService;
 import cheongsan.domain.deposit.dto.BudgetLimitDTO;
 import cheongsan.domain.deposit.dto.BudgetSettingStatusDTO;
+import cheongsan.domain.deposit.dto.FinancialSummaryDTO;
 import cheongsan.domain.user.entity.User;
 import cheongsan.domain.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +13,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,10 +26,7 @@ public class BudgetServiceImpl implements BudgetService {
     private final DepositService depositService;
     private final DebtService debtService;
     private final UserMapper userMapper;
-
-    private static final BigDecimal RECOMMENDATION_RATE = new BigDecimal("0.7");
-    private static final int DAYS_IN_MONTH = 30;
-    private static final BigDecimal ROUNDING_UNIT = new BigDecimal("500");
+    private final BudgetCalculator budgetCalculator;
 
     @Override
     public BudgetLimitDTO getBudgetLimits(Long userId) {
@@ -38,25 +36,15 @@ public class BudgetServiceImpl implements BudgetService {
         }
         int currentDailyLimit = (user.getDailyLimit() != null) ? user.getDailyLimit().intValue() : 0;
 
-        BigDecimal availableMonthlySpending = calculateAvailableMonthlySpending(userId);
+        FinancialSummaryDTO summary = getFinancialSummary(userId);
 
-        BigDecimal maximumDailyLimit = availableMonthlySpending.divide(
-                new BigDecimal(DAYS_IN_MONTH), 0, RoundingMode.DOWN
+        BigDecimal availableSpending = budgetCalculator.calculateAvailableMonthlySpending(
+                summary.getMonthlyIncome(), summary.getTotalDebtPayment(), summary.getFixedExpense()
         );
+        int maximumLimit = budgetCalculator.calculateMaximumLimit(availableSpending);
+        int recommendedLimit = budgetCalculator.calculateRecommendedLimit(maximumLimit);
 
-        BigDecimal recommendedDailyLimit = maximumDailyLimit
-                .multiply(RECOMMENDATION_RATE)
-                .setScale(0, RoundingMode.DOWN);
-
-        // --- 계산된 값들을 500원 단위로 내림 처리 ---
-        int roundedMaximumLimit = roundDownToUnit(maximumDailyLimit, ROUNDING_UNIT);
-        int roundedRecommendedLimit = roundDownToUnit(recommendedDailyLimit, ROUNDING_UNIT);
-
-        return new BudgetLimitDTO(
-                roundedRecommendedLimit,
-                roundedMaximumLimit,
-                currentDailyLimit
-        );
+        return new BudgetLimitDTO(recommendedLimit, maximumLimit, currentDailyLimit);
     }
 
     @Override
@@ -68,10 +56,12 @@ public class BudgetServiceImpl implements BudgetService {
 
         checkIfUpdateIsAllowed(user.getDailyLimitDate());
 
-        BigDecimal maximumDailyLimit = calculateAvailableMonthlySpending(userId)
-                .divide(new BigDecimal(DAYS_IN_MONTH), 0, RoundingMode.DOWN);
+        FinancialSummaryDTO summary = getFinancialSummary(userId);
 
-        if (new BigDecimal(finalDailyLimit).compareTo(maximumDailyLimit) > 0) {
+        BigDecimal availableSpending = budgetCalculator.calculateAvailableMonthlySpending(summary.getMonthlyIncome(), summary.getTotalDebtPayment(), summary.getFixedExpense());
+        int maximumLimit = budgetCalculator.calculateMaximumLimit(availableSpending);
+
+        if (finalDailyLimit > maximumLimit) {
             throw new IllegalArgumentException(ResponseMessage.BUDGET_LIMIT_EXCEEDED.getMessage());
         }
 
@@ -88,21 +78,15 @@ public class BudgetServiceImpl implements BudgetService {
         return new BudgetSettingStatusDTO(user.getDailyLimitDate());
     }
 
-    // 특정 단위로 숫자를 내림(버림) 처리하는 헬퍼 메소드
-    private int roundDownToUnit(BigDecimal value, BigDecimal unit) {
-        if (unit.compareTo(BigDecimal.ZERO) == 0) return value.intValue();
-        return value.divide(unit, 0, RoundingMode.DOWN).multiply(unit).intValue();
-    }
-
-    private BigDecimal calculateAvailableMonthlySpending(Long userId) {
+    private FinancialSummaryDTO getFinancialSummary(Long userId) {
         LocalDate lastMonth = LocalDate.now().minusMonths(1);
-        BigDecimal monthlyTransfer = depositService.calculateRegularMonthlyTransfer(
+        BigDecimal monthlyIncome = depositService.calculateRegularMonthlyTransfer(
                 userId,
                 lastMonth.getYear(),
                 lastMonth.getMonthValue()
         );
 
-        if (monthlyTransfer == null || monthlyTransfer.compareTo(BigDecimal.ZERO) <= 0) {
+        if (monthlyIncome == null || monthlyIncome.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalStateException(ResponseMessage.INCOME_NOT_FOUND_FOR_BUDGET_RECOMMENDATION.getMessage());
         }
 
@@ -113,10 +97,7 @@ public class BudgetServiceImpl implements BudgetService {
                 lastMonth.getMonthValue()
         );
 
-        BigDecimal totalFixedCosts = totalMonthlyDebtPayment.add(monthlyFixedWithdraw);
-        BigDecimal availableMonthlySpending = monthlyTransfer.subtract(totalFixedCosts);
-
-        return availableMonthlySpending.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : availableMonthlySpending;
+        return new FinancialSummaryDTO(monthlyIncome, totalMonthlyDebtPayment, monthlyFixedWithdraw);
     }
 
     private void checkIfUpdateIsAllowed(LocalDateTime lastDailyLimitDate) {

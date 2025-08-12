@@ -27,6 +27,7 @@ public class DepositServiceImpl implements DepositService {
 
     private final UserMapper userMapper;
     private final DepositMapper depositMapper;
+    private final BudgetService budgetService;
 
     private static final Set<String> SALARY_KEYWORDS = new HashSet<>(Arrays.asList(
             "급여", "월급", "급료", "상여", "보너스"
@@ -62,7 +63,7 @@ public class DepositServiceImpl implements DepositService {
                 .collect(Collectors.toList());
 
         log.info("조회된 일별 거래 내역 수: {}", result.size());
-        for(DailyTransactionDTO dto : result){
+        for (DailyTransactionDTO dto : result) {
             log.info(dto.getResAccountDesc3());
         }
         return result;
@@ -94,11 +95,21 @@ public class DepositServiceImpl implements DepositService {
         if (user == null) {
             throw new IllegalArgumentException(ResponseMessage.USER_NOT_FOUND.getMessage());
         }
-        int dailyLimit = (user.getDailyLimit() != null) ? user.getDailyLimit().intValue() : 0;
+
+        int dailyLimit;
+        boolean isRecommended;
+
+        if (user.getDailyLimit() != null && user.getDailyLimit().compareTo(BigDecimal.ZERO) > 0) {
+            dailyLimit = user.getDailyLimit().intValue();
+            isRecommended = false;
+        } else {
+            dailyLimit = budgetService.getBudgetLimits(userId).getRecommendedDailyLimit();
+            isRecommended = true;
+        }
 
         BigDecimal todaySpent = depositMapper.sumTodaySpendingByUserId(userId);
 
-        return DailySpendingDTO.getDailySpending(dailyLimit, todaySpent.intValue());
+        return DailySpendingDTO.getDailySpending(dailyLimit, todaySpent.intValue(), isRecommended);
     }
 
     private boolean isSalary(Transaction transaction) {
