@@ -9,7 +9,7 @@ import cheongsan.domain.codef.service.CodefService;
 import cheongsan.domain.user.dto.*;
 import cheongsan.domain.user.entity.User;
 import cheongsan.domain.user.mapper.UserMapper;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -25,7 +25,7 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @Service
-@Slf4j
+@Log4j2
 public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
     private final JavaMailSender mailSender;
@@ -75,7 +75,8 @@ public class AuthServiceImpl implements AuthService {
                 .connectedId(genereateConnectId(signUpRequestDTO.getUserId(), signUpRequestDTO.getPassword()))
                 .accountType("GENERAL")  //일반 회원가입
                 .build();
-        log.info("signUp request: {}", user);
+
+        log.info("signUp request: {}", user.getUserId());
         userMapper.save(user);
 
         return new SignUpResponseDTO(user.getId(), user.getUserId());
