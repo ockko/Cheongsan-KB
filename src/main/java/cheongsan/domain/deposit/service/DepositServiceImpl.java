@@ -1,13 +1,9 @@
 package cheongsan.domain.deposit.service;
 
-import cheongsan.common.constant.ResponseMessage;
-import cheongsan.domain.deposit.dto.DailySpendingDTO;
 import cheongsan.domain.deposit.dto.DailyTransactionDTO;
 import cheongsan.domain.deposit.dto.MonthlyTransactionDTO;
 import cheongsan.domain.deposit.entity.Transaction;
 import cheongsan.domain.deposit.mapper.DepositMapper;
-import cheongsan.domain.user.entity.User;
-import cheongsan.domain.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -24,10 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class DepositServiceImpl implements DepositService {
-
-    private final UserMapper userMapper;
     private final DepositMapper depositMapper;
-    private final BudgetService budgetService;
 
     private static final Set<String> SALARY_KEYWORDS = new HashSet<>(Arrays.asList(
             "급여", "월급", "급료", "상여", "보너스"
@@ -87,29 +80,6 @@ public class DepositServiceImpl implements DepositService {
                 .filter(this::isFixedWithdraw)
                 .map(Transaction::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    @Override
-    public DailySpendingDTO getDailySpendingStatus(Long userId) {
-        User user = userMapper.findById(userId);
-        if (user == null) {
-            throw new IllegalArgumentException(ResponseMessage.USER_NOT_FOUND.getMessage());
-        }
-
-        int dailyLimit;
-        boolean isRecommended;
-
-        if (user.getDailyLimit() != null && user.getDailyLimit().compareTo(BigDecimal.ZERO) > 0) {
-            dailyLimit = user.getDailyLimit().intValue();
-            isRecommended = false;
-        } else {
-            dailyLimit = budgetService.getBudgetLimits(userId).getRecommendedDailyLimit();
-            isRecommended = true;
-        }
-
-        BigDecimal todaySpent = depositMapper.sumTodaySpendingByUserId(userId);
-
-        return DailySpendingDTO.getDailySpending(dailyLimit, todaySpent.intValue(), isRecommended);
     }
 
     private boolean isSalary(Transaction transaction) {

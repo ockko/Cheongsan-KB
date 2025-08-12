@@ -3,6 +3,7 @@ package cheongsan.domain.deposit.controller;
 import cheongsan.domain.deposit.dto.DailySpendingDTO;
 import cheongsan.domain.deposit.dto.DailyTransactionDTO;
 import cheongsan.domain.deposit.dto.MonthlyTransactionDTO;
+import cheongsan.domain.deposit.service.DailySpendingService;
 import cheongsan.domain.deposit.service.DepositService;
 import cheongsan.domain.user.entity.CustomUser;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.List;
 @Log4j2
 public class DepositController {
     private final DepositService depositService;
+    private final DailySpendingService dailySpendingService;
 
     @GetMapping("/calendar/transactions")
     public ResponseEntity<List<MonthlyTransactionDTO>> getMonthlyTransactions(
@@ -80,7 +82,7 @@ public class DepositController {
         Authentication authentication = (Authentication) principal;
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
         Long userId = customUser.getUser().getId();
-        DailySpendingDTO result = depositService.getDailySpendingStatus(userId);
+        DailySpendingDTO result = dailySpendingService.getDailySpendingStatus(userId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
