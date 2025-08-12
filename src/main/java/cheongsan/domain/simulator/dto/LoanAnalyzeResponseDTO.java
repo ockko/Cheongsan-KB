@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,5 +14,5 @@ import lombok.NoArgsConstructor;
 public class LoanAnalyzeResponseDTO {
     private TotalComparisonResultDTO totalComparison;
     private InterestComparisonResultDTO interestComparison;
-    private DebtRatioComparisonResultDTO debtRatioComparison;
+    private BigDecimal dsr;
 }
