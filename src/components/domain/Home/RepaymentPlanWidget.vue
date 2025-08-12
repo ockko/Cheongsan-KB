@@ -1,18 +1,53 @@
 <script setup>
 import styles from '@/assets/styles/components/home/RepaymentPlanWidget.module.css';
-import { defineProps } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { getRepaymentPlanData } from '@/api/dashboard_bottomApi.js';
 
-// 부모 컴포넌트로부터 받을 데이터(props)를 정의합니다.
-const props = defineProps({
-  planData: {
-    type: Object,
-    required: true,
-    default: () => ({
-      monthlyPayment: 600000,
-      totalMonths: 3,
-      debtFreeDate: '2026년 8월',
-    }),
-  },
+// 컴포넌트 내부에서 데이터를 관리
+const planData = ref({
+  monthlyPayment: null,
+  totalMonths: null,
+  finalDebtFreeDate: null,
+  strategyType: null,
+  interestSaved: null,
+  totalPayment: null,
+});
+
+const router = useRouter();
+const loading = ref(true);
+const error = ref(null);
+
+// 데이터 로드 함수
+const loadPlanData = async () => {
+  try {
+    loading.value = true;
+    error.value = null;
+    const data = await getRepaymentPlanData();
+    planData.value = data;
+  } catch (err) {
+    console.error('상환 계획 데이터 로드 실패:', err);
+
+    // bad_request 에러인지 확인
+    if (err.response && err.response.status === 400) {
+      error.value =
+        '전략이 없습니다. 시뮬레이션을 통해 상환 전략을 설정해주세요.';
+    } else {
+      error.value = '데이터를 불러오는데 실패했습니다.';
+    }
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 시뮬레이션 페이지로 이동하는 함수
+const goToSimulation = () => {
+  router.push('/simulation');
+};
+
+// 컴포넌트 마운트 시 데이터 로드
+onMounted(() => {
+  loadPlanData();
 });
 
 // 숫자를 '만원' 단위 텍스트로 변환하는 헬퍼 함수
@@ -21,6 +56,15 @@ const formatToManwon = (value) => {
   // 10000으로 나누어 만원 단위로 변환 후 콤마 추가
   const manwon = Math.round(value / 10000);
   return `${manwon.toLocaleString('ko-KR')} 만원`;
+};
+
+// 날짜를 한국어 형식으로 변환하는 헬퍼 함수
+const formatDateToKorean = (dateString) => {
+  if (!dateString) return '날짜 없음';
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  return `${year}년 ${month}월`;
 };
 </script>
 
@@ -31,21 +75,55 @@ const formatToManwon = (value) => {
     </div>
 
     <div :class="styles.widgetContent">
-      <div :class="styles.planItem">
-        <span :class="styles.label">월 상환액</span>
-        <span :class="[styles.value, styles.highlight]">{{
-          formatToManwon(planData.monthlyPayment)
-        }}</span>
+      <!-- 로딩 상태 -->
+      <div v-if="loading" :class="styles.loading">데이터를 불러오는 중...</div>
+
+      <!-- 에러 상태 -->
+      <div v-else-if="error" :class="styles.error">
+        <div :class="styles.errorMessage">{{ error }}</div>
+        <div :class="styles.errorActions">
+          <button @click="loadPlanData" :class="styles.retryButton">
+            재시도
+          </button>
+        </div>
       </div>
 
-      <div :class="styles.planItem">
-        <span :class="styles.label">총 상환 기간</span>
-        <span :class="styles.value">{{ planData.totalMonths }}개월</span>
-      </div>
+      <!-- 데이터 표시 -->
+      <div v-else>
+        <!-- 데이터가 있는 경우 -->
+        <div
+          v-if="
+            planData.monthlyPayment !== null && planData.totalMonths !== null
+          "
+        >
+          <div :class="styles.planItem">
+            <span :class="styles.label">월 상환액</span>
+            <span :class="[styles.value, styles.highlight]">{{
+              formatToManwon(planData.monthlyPayment)
+            }}</span>
+          </div>
 
-      <div :class="styles.planItem">
-        <span :class="styles.label">최종 빚 졸업일</span>
-        <span :class="styles.value">{{ planData.debtFreeDate }}</span>
+          <div :class="styles.planItem">
+            <span :class="styles.label">총 상환 기간</span>
+            <span :class="styles.value">{{ planData.totalMonths }}개월</span>
+          </div>
+
+          <div :class="styles.planItem">
+            <span :class="styles.label">최종 빚 졸업일</span>
+            <span :class="styles.value">{{
+              formatDateToKorean(planData.finalDebtFreeDate)
+            }}</span>
+          </div>
+        </div>
+
+        <!-- 데이터가 없는 경우 시뮬레이션 안내 -->
+        <div v-else :class="styles.noDataMessage">
+          <div :class="styles.noDataTitle">상환 계획이<br />없습니다</div>
+          <button @click="goToSimulation" :class="styles.simulationButton">
+            시뮬레이션<br />
+            시작하기
+          </button>
+        </div>
       </div>
     </div>
   </div>

@@ -114,3 +114,88 @@ export const getDebtListData = async (sort = 'createdAtDesc') => {
     return [];
   }
 };
+
+/**
+ * 상환 계획 요약 조회 API
+ * @returns {Promise<Object>} 상환 계획 요약 정보
+ */
+export const getRepaymentSummary = async () => {
+  try {
+    const data = await request.get('/cheongsan/dashboard/repaymentSummary');
+    console.log('상환 계획 요약 조회:', data);
+    return data;
+  } catch (error) {
+    console.error('상환 계획 요약 조회 실패:', error);
+    throw error;
+  }
+};
+
+/**
+ * 상환 계획 데이터를 RepaymentPlanWidget 형식으로 변환
+ * @param {Object} repaymentSummaryData - API에서 받은 상환 계획 데이터
+ * @returns {Object} RepaymentPlanWidget에서 사용할 형식
+ */
+export const transformRepaymentSummaryData = (repaymentSummaryData) => {
+  // 백엔드 DTO 구조에 맞게 변환
+  const strategyType = repaymentSummaryData.strategyType || 'UNKNOWN';
+  const totalMonths = repaymentSummaryData.totalMonths || 0;
+  const interestSaved = repaymentSummaryData.interestSaved || 0;
+  const totalPayment = repaymentSummaryData.totalPayment || 0;
+  const originalPayment = repaymentSummaryData.originalPayment || 0;
+  const totalPrepaymentFee = repaymentSummaryData.totalPrepaymentFee || 0;
+  const sortedLoanNames = repaymentSummaryData.sortedLoanNames || [];
+  const repaymentHistory = repaymentSummaryData.repaymentHistory || {};
+  const debtFreeDates = repaymentSummaryData.debtFreeDates || {};
+
+  // 월 상환액 계산 (총 상환액을 총 개월로 나누기)
+  const monthlyPayment = totalMonths > 0 ? totalPayment / totalMonths : 0;
+
+  // 최종 빚졸업일 찾기 (가장 늦은 날짜)
+  const finalDebtFreeDate =
+    Object.values(debtFreeDates).length > 0
+      ? Object.values(debtFreeDates).reduce((latest, date) => {
+          return new Date(date) > new Date(latest) ? date : latest;
+        })
+      : null;
+
+  return {
+    strategyType,
+    totalMonths,
+    interestSaved,
+    totalPayment,
+    originalPayment,
+    totalPrepaymentFee,
+    sortedLoanNames,
+    repaymentHistory,
+    debtFreeDates,
+    monthlyPayment,
+    finalDebtFreeDate,
+  };
+};
+
+/**
+ * RepaymentPlanWidget용 통합 데이터 조회 함수
+ * @returns {Promise<Object>} RepaymentPlanWidget에서 사용할 데이터
+ */
+export const getRepaymentPlanData = async () => {
+  try {
+    const repaymentSummaryData = await getRepaymentSummary();
+    return transformRepaymentSummaryData(repaymentSummaryData);
+  } catch (error) {
+    console.error('RepaymentPlan 데이터 조회 실패:', error);
+    // 에러 시 null 값 반환하여 위젯에서 "데이터 없음" 상태로 처리
+    return {
+      strategyType: null,
+      totalMonths: null,
+      interestSaved: null,
+      totalPayment: null,
+      originalPayment: null,
+      totalPrepaymentFee: null,
+      sortedLoanNames: [],
+      repaymentHistory: {},
+      debtFreeDates: {},
+      monthlyPayment: null,
+      finalDebtFreeDate: null,
+    };
+  }
+};
