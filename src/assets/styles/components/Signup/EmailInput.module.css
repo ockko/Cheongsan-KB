@@ -1,4 +1,4 @@
-.inputGroup {
+.input-group {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -11,14 +11,14 @@
     color: var(--color-main);
 }
 
-.emailRow {
+.email-row {
     display: flex;
     gap: 8px;
     align-items: center;
     width: 100%;
 }
 
-.emailInput {
+.email-input {
     flex: 1;
     height: 51px;
     width: 147px;
@@ -35,23 +35,23 @@
     text-align: left; /* placeholder 왼쪽 정렬 */
 }
 
-.emailInput:focus {
+.email-input:focus {
     outline: none;
     border-color: var(--color-main);
 }
 
-.emailInput:disabled {
+.email-input:disabled {
     background-color: var(--color-gray2);
     cursor: not-allowed;
 }
 
-.emailInput::placeholder {
+.email-input::placeholder {
     color: var(--color-gray0);
     text-align: left; /* placeholder 왼쪽 정렬 */
     padding-left: 0; /* 추가 여백 제거 */
 }
 
-.emailSeparator {
+.email-separator {
     font-family: var(--font-family);
     font-weight: 500;
     font-size: 18px;

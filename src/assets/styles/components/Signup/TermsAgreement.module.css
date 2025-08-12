@@ -1,37 +1,37 @@
-.inputGroup {
-  display: flex;
-  flex-direction: column;
+.input-group {
+    display: flex;
+    flex-direction: column;
 }
 
 .label {
-  font-family: var(--font-family);
-  font-weight: 500;
-  font-size: 16px;
-  color: var(--color-main);
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--color-main);
 }
 
-.agreementsList {
-  display: flex;
-  flex-direction: column;
+.agreements-list {
+    display: flex;
+    flex-direction: column;
 }
 
-.agreementItem {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  cursor: pointer;
+.agreement-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
 }
 
-.checkboxIcon {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
+.checkbox-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
 }
 
-.agreementText {
-  font-family: var(--font-family);
-  font-weight: 400;
-  font-size: 14px;
-  color: var(--color-main);
-  user-select: none;
+.agreement-text {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--color-main);
+    user-select: none;
 }
