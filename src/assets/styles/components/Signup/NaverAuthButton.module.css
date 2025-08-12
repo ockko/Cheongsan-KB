@@ -1,60 +1,60 @@
 /* 네이버 인증 버튼 스타일 */
-.naverButton {
-  width: 100%;
-  height: 44px;
-  background-color: #03c75a; /* 네이버 그린 색상 */
-  border: none;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  font-family: var(--font-family);
-  margin-bottom: 20px;
+.naver-button {
+    width: 100%;
+    height: 44px;
+    background-color: #03c75a; /* 네이버 그린 색상 */
+    border: none;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    font-family: var(--font-family);
+    margin-bottom: 20px;
 }
 
-.naverButton:hover:not(:disabled) {
-  background-color: #02b351; /* 호버 시 조금 더 어두운 그린 */
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(3, 199, 90, 0.3);
+.naver-button:hover:not(:disabled) {
+    background-color: #02b351; /* 호버 시 조금 더 어두운 그린 */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(3, 199, 90, 0.3);
 }
 
-.naverButton:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(3, 199, 90, 0.3);
+.naver-button:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(3, 199, 90, 0.3);
 }
 
-.naverButton:disabled {
-  background-color: #8dd1a5;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
+.naver-button:disabled {
+    background-color: #8dd1a5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 /* 네이버 로고와 텍스트 */
-.naverButtonContent {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+.naver-button-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 /* 네이버 N 로고 */
-.naverLogo {
-  font-size: 20px;
-  font-weight: 700;
-  color: white;
-  font-family: 'Arial Black', Arial, sans-serif;
-  letter-spacing: -1px;
-  margin-right: 5px;
+.naver-logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    font-family: 'Arial Black', Arial, sans-serif;
+    letter-spacing: -1px;
+    margin-right: 5px;
 }
 
 /* 네이버 버튼 텍스트 */
-.naverButtonText {
-  font-size: 20px;
-  font-weight: 700;
-  color: white;
-  letter-spacing: -0.5px;
+.naver-button-text {
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.5px;
 }
