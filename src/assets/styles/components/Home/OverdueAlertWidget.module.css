@@ -1,4 +1,4 @@
-.widgetCard {
+.widget-card {
   background-color: #ffe0dd;
   border-radius: 10px;
   padding: 1rem 1rem 0.6rem 1rem;
@@ -22,20 +22,20 @@
   color: var(--color-red);
 }
 
-.loanItem {
+.loan-item {
   display: flex;
   flex-direction: column;
   margin-bottom: 0.4rem;
   font-size: 0.6875rem;
 }
 
-.dDay {
+.d-day {
   font-weight: 600;
   display: flex;
   align-items: center;
 }
 
-.dDay .icon {
+.d-day .icon {
   width: 20px;
   text-align: center;
   font-size: 0.9rem;

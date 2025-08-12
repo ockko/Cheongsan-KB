@@ -1,47 +1,47 @@
-.widgetCard {
+.widget-card {
   border-radius: 10px;
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
   line-height: 1.5;
 }
 
-.widgetHeader {
+.widget-header {
   background-color: var(--color-main);
   border-radius: 10px 10px 0 0;
   padding: 0.4rem 1.3rem;
 }
 
-.widgetHeader h3 {
+.widget-header h3 {
   font-size: 1rem;
   font-weight: 300;
   color: var(--color-gray3);
 }
 
-.widgetContent {
+.widget-content {
   padding: 1rem 1.3rem;
 }
 
-.chartContainer {
+.chart-container {
   position: relative;
   width: 80px;
   height: 80px;
   margin: 0 auto 0.7rem auto;
 }
 
-.progressRing {
+.progress-ring {
   transform: rotate(-90deg); /* 12시 방향에서 시작하도록 회전 */
 }
 
-.progressRingTrack {
+.progress-ring-track {
   stroke: var(--color-gray1);
 }
 
-.progressRingIndicator {
+.progress-ring-indicator {
   stroke: var(--color-main);
   stroke-linecap: square;
   transition: stroke-dashoffset 0.5s ease-out;
 }
 
-.percentageText {
+.percentage-text {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -51,21 +51,21 @@
   color: black;
 }
 
-.summaryText {
+.summary-text {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
   text-align: center;
 }
 
-.summaryItem {
+.summary-item {
   display: flex;
   flex-direction: column;
   font-size: 0.8rem;
   color: var(--color-gray-unnamed);
 }
 
-.summaryItem .amount {
+.summary-item .amount {
   font-weight: 600;
   color: var(--color-secondary);
 }

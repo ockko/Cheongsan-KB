@@ -1,31 +1,31 @@
-.widgetCard {
+.widget-card {
   border-radius: 10px;
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
   line-height: 1.5;
 }
 
-.widgetHeader {
+.widget-header {
   background-color: var(--color-main);
   border-radius: 10px 10px 0 0;
   padding: 0.4rem 1.3rem;
 }
 
-.widgetHeader h3 {
+.widget-header h3 {
   font-size: 1rem;
   font-weight: 300;
   color: var(--color-gray3);
 }
 
-.widgetContent {
+.widget-content {
   padding: 1rem 1.3rem;
 }
 
-.reportSummary {
+.report-summary {
   text-align: center;
   margin-bottom: 1rem;
 }
 
-.periodSelector {
+.period-selector {
   background: none;
   border: none;
   font-size: 1.3rem;
@@ -37,29 +37,29 @@
   font-size: 1rem;
 }
 
-.achievementRate {
+.achievement-rate {
   margin-top: 0.5rem;
 }
 
-.achievementRate p {
+.achievement-rate p {
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--color-main);
 }
 
-.achievementRate .ratePercent {
+.achievement-rate .rate-percent {
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--color-third);
 }
 
-.chartContainer {
+.chart-container {
   display: flex;
   height: 150px;
   margin: 0 1rem;
 }
 
-.yAxis {
+.y-axis {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -69,18 +69,18 @@
   text-align: right;
 }
 
-.yAxis span {
+.y-axis span {
   position: relative;
   bottom: 11px;
 }
 
-.chartArea {
+.chart-area {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-.chartBars {
+.chart-bars {
   flex: 1;
   display: flex;
   justify-content: space-around;
@@ -90,7 +90,7 @@
   position: relative;
 }
 
-.gridLine {
+.grid-line {
   position: absolute;
   width: 100%;
   border-top: 1px solid var(--color-gray1);
@@ -98,7 +98,7 @@
   z-index: 0;
 }
 
-.limitLine {
+.limit-line {
   position: absolute;
   width: 100%;
   border-top: 1px dashed var(--color-red);
@@ -113,29 +113,29 @@
   z-index: 1;
 }
 
-.bar.overLimit {
+.bar.over-limit {
   background-color: var(--color-accent);
 }
 
-.xAxis {
+.x-axis {
   display: flex;
   justify-content: space-around;
 }
 
-.dayLabel {
+.day-label {
   font-size: 0.7rem;
   color: var(--color-gray0);
   text-align: center;
 }
 
-.bottomSummary {
+.bottom-summary {
   display: flex;
   justify-content: space-around;
   text-align: center;
   margin-top: 1.5rem;
 }
 
-.summaryItem p {
+.summary-item p {
   margin: 0.2rem 0;
   font-size: 0.8rem;
   color: var(--color-gray-unnamed);
@@ -145,13 +145,13 @@
   padding: 0 0.45rem;
 }
 
-.summaryItem .amount {
+.summary-item .amount {
   font-size: 1.2rem;
   font-weight: 600;
   color: var(--color-third);
 }
 
-.summaryItem .highlight {
+.summary-item .highlight {
   color: var(--color-red);
 }
 

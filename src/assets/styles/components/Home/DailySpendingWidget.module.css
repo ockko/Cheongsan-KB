@@ -1,4 +1,4 @@
-.widgetCard {
+.widget-card {
   border-radius: 10px;
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
   display: flex;
@@ -6,19 +6,19 @@
   line-height: 1.5;
 }
 
-.widgetHeader {
+.widget-header {
   background-color: var(--color-main);
   border-radius: 10px 10px 0 0;
   padding: 0.4rem 1.3rem;
 }
 
-.widgetHeader h3 {
+.widget-header h3 {
   font-size: 1rem;
   font-weight: 300;
   color: var(--color-gray3);
 }
 
-.settingsButton {
+.settings-button {
   background: none;
   border: none;
   cursor: pointer;
@@ -27,32 +27,32 @@
   padding: 0;
 }
 
-.widgetContent {
+.widget-content {
   text-align: center;
   padding: 1.2rem 1.3rem;
 }
 
-.spentAmount {
+.spent-amount {
   font-size: 1.125rem;
   font-weight: 700;
   color: #111;
   margin: 0 0 0.3rem 0;
 }
 
-.limitInfo {
+.limit-info {
   display: flex;
   flex-direction: column;
   font-size: 0.6875rem;
   color: var(--color-red);
 }
 
-.limitAmount {
+.limit-amount {
   font-size: 1rem;
   font-weight: 600;
   margin: 0 0.5rem;
 }
 
-.spendingProgress {
+.spending-progress {
   width: 100%;
   height: 0.6875rem;
   appearance: none;
@@ -60,21 +60,21 @@
   overflow: hidden;
 }
 
-.spendingProgress::-webkit-progress-bar {
+.spending-progress::-webkit-progress-bar {
   background-color: var(--color-gray1);
 }
 
-.spendingProgress::-webkit-progress-value {
+.spending-progress::-webkit-progress-value {
   background-color: var(--color-main);
   transition: background-color 0.3s;
 }
 
 /* 한도 초과 시 프로그레스 바 색상 변경 */
-.spendingProgress.overLimit::-webkit-progress-value {
+.spending-progress.over-limit::-webkit-progress-value {
   background-color: var(--color-red);
 }
 
-.remainingAmount {
+.remaining-amount {
   font-size: 0.6875rem;
   color: var(--color-gray-unnamed);
   margin: 0.2rem 0.2rem 0 0;
