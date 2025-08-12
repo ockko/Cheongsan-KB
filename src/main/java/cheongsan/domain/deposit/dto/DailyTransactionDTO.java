@@ -16,12 +16,18 @@ public class DailyTransactionDTO {
     private BigDecimal amount;  // 거래 금액
     private String type;        // 거래 유형 (TRANSFER/WITHDRAW)
     private String accountNumber;
+    private String resAccountDesc1;
+    private String resAccountDesc2;
+    private String resAccountDesc3;
 
     // Entity → DTO 변환 (간소화)
     public static DailyTransactionDTO of(Transaction entity) {
         return DailyTransactionDTO.builder()
                 .amount(entity.getAmount())
                 .type(entity.getType())
+                .resAccountDesc1(entity.getResAccountDesc1())
+                .resAccountDesc2(entity.getResAccountDesc2())
+                .resAccountDesc3(entity.getResAccountDesc3())
                 .build();
     }
 

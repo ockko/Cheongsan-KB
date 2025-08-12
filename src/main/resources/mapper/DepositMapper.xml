@@ -26,6 +26,9 @@
                t.after_balance,
                t.amount,
                t.type,
+               t.res_account_desc1,
+               t.res_account_desc2,
+               t.res_account_desc3,
                da.account_number
         FROM transactions t
                  INNER JOIN deposit_accounts da ON t.deposit_account_id = da.id
