@@ -43,7 +43,7 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
         // 2) 신규 대출 DTO
         LoanDTO newLoan = LoanDTO.builder()
                 .principal(request.getLoanAmount())
-                .interestRate(request.getInterestRate()) // 연이율(%)
+                .interestRate(request.getInterestRate().divide(BigDecimal.valueOf(100))) // 연이율(%)
                 .startDate(startDate)
                 .endDate(endDate)
                 .repaymentType(request.getRepaymentType())
@@ -198,8 +198,7 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
 
         return new InterestComparisonResultDTO(
                 existingInterest.setScale(0, RoundingMode.HALF_UP),
-                withNewLoanInterest.setScale(0, RoundingMode.HALF_UP),
-                increaseRate.multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP)
+                withNewLoanInterest.setScale(0, RoundingMode.HALF_UP)
         );
     }
 
