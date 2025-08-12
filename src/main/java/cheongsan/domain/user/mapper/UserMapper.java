@@ -21,7 +21,7 @@ public interface UserMapper {
                           @Param("dailyLimitDate") LocalDateTime dailyLimitDate);
 
     void updateDailyLimitOnly(
-            @Param("userId") Long userId,
+            @Param("id") Long id,
             @Param("dailyLimit") BigDecimal dailyLimit
     );
 
