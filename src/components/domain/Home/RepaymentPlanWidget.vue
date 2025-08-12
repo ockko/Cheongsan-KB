@@ -1,8 +1,9 @@
 <script setup>
 import styles from '@/assets/styles/components/home/RepaymentPlanWidget.module.css';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
-import { getRepaymentPlanData } from '@/api/dashboard_bottomApi.js';
+import { getRepaymentPlanData } from '@/api/dashboard-bottomApi.js';
+import MyPlanModal from './MyPlanModal.vue';
 
 // 컴포넌트 내부에서 데이터를 관리
 const planData = ref({
@@ -12,11 +13,22 @@ const planData = ref({
   strategyType: null,
   interestSaved: null,
   totalPayment: null,
+  originalPayment: null,
+  totalPrepaymentFee: null,
+  sortedLoanNames: [],
+  repaymentHistory: {},
+  debtFreeDates: {},
 });
 
 const router = useRouter();
 const loading = ref(true);
 const error = ref(null);
+const isModalOpen = ref(false);
+
+// isModalOpen 값 변화 추적
+watch(isModalOpen, (newVal) => {
+  console.log('RepaymentPlanWidget isModalOpen changed to:', newVal);
+});
 
 // 데이터 로드 함수
 const loadPlanData = async () => {
@@ -45,6 +57,26 @@ const goToSimulation = () => {
   router.push('/simulation');
 };
 
+// 모달 열기 함수
+const openPlanModal = () => {
+  console.log('RepaymentPlanWidget openPlanModal 함수 호출됨');
+  if (planData.value.strategyType) {
+    console.log('전략이 있음, 모달을 엽니다');
+    isModalOpen.value = true;
+    console.log('isModalOpen.value를 true로 설정:', isModalOpen.value);
+  } else {
+    console.log('전략이 없음, 모달을 열 수 없습니다');
+  }
+};
+
+// 모달 닫기 함수 (RepaymentSimulationResult.vue와 동일한 패턴 사용)
+// const closePlanModal = () => {
+//   console.log('RepaymentPlanWidget closePlanModal 함수 호출됨');
+//   console.log('닫기 전 isModalOpen.value:', isModalOpen.value);
+//   isModalOpen.value = false;
+//   console.log('닫기 후 isModalOpen.value:', isModalOpen.value);
+// };
+
 // 컴포넌트 마운트 시 데이터 로드
 onMounted(() => {
   loadPlanData();
@@ -69,9 +101,24 @@ const formatDateToKorean = (dateString) => {
 </script>
 
 <template>
-  <div :class="styles.widgetCard">
+  <div
+    :class="[styles.widgetCard, { [styles.disabled]: !planData.strategyType }]"
+    @click="planData.strategyType ? openPlanModal() : null"
+  >
     <div :class="styles.widgetHeader">
-      <h3>나의 청산 플랜</h3>
+      <h3
+        :class="[
+          styles.clickableTitle,
+          { [styles.disabledTitle]: !planData.strategyType },
+        ]"
+        :title="
+          planData.strategyType
+            ? '클릭하여 상세 상환 전략 보기'
+            : '상환 전략이 없습니다'
+        "
+      >
+        나의 청산 플랜
+      </h3>
     </div>
 
     <div :class="styles.widgetContent">
@@ -82,7 +129,7 @@ const formatDateToKorean = (dateString) => {
       <div v-else-if="error" :class="styles.error">
         <div :class="styles.errorMessage">{{ error }}</div>
         <div :class="styles.errorActions">
-          <button @click="loadPlanData" :class="styles.retryButton">
+          <button @click.stop="loadPlanData" :class="styles.retryButton">
             재시도
           </button>
         </div>
@@ -119,12 +166,19 @@ const formatDateToKorean = (dateString) => {
         <!-- 데이터가 없는 경우 시뮬레이션 안내 -->
         <div v-else :class="styles.noDataMessage">
           <div :class="styles.noDataTitle">상환 계획이<br />없습니다</div>
-          <button @click="goToSimulation" :class="styles.simulationButton">
+          <button @click.stop="goToSimulation" :class="styles.simulationButton">
             시뮬레이션<br />
             시작하기
           </button>
         </div>
       </div>
     </div>
+
+    <!-- MyPlanModal 컴포넌트 -->
+    <MyPlanModal
+      :isOpen="isModalOpen"
+      :strategy="planData"
+      @close="isModalOpen = false"
+    />
   </div>
 </template>

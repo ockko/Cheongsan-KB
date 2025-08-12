@@ -1,7 +1,7 @@
 <script setup>
 import styles from '@/assets/styles/components/home/TotalDebtRepaymentWidget.module.css';
 import { ref, computed, onMounted } from 'vue';
-import { getTotalDebtRepaymentData } from '@/api/dashboard_bottomApi.js';
+import { getTotalDebtRepaymentData } from '@/api/dashboard-bottomApi.js';
 
 // 컴포넌트 내부에서 데이터를 관리
 const repaymentData = ref({

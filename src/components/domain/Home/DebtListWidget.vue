@@ -3,7 +3,7 @@ import styles from '@/assets/styles/components/home/DebtListWidget.module.css';
 import LoanAddModal from '@/components/domain/home/LoanAddModal.vue';
 import DebtDetailModal from '@/components/domain/home/DebtDetailModal.vue';
 import { ref, computed, onMounted } from 'vue';
-import { getDebtListData } from '@/api/dashboard_bottomApi.js';
+import { getDebtListData } from '@/api/dashboard-bottomApi.js';
 
 // 컴포넌트 내부에서 데이터를 관리
 const debts = ref([]);
