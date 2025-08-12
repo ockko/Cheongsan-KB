@@ -37,7 +37,7 @@ const formatPercent = (percent) => {
 <template>
   <div :class="styles.chartContainer">
     <div :class="styles.alert">
-      <FontAwesomeIcon :icon="['fas', 'bell']" :class="styles.faBell" />
+      <i class="fas fa-bell" :class="styles.faBell"></i>
       <span>
         변경된 DSR 비율은
         <span :class="styles.highlight">{{ formatPercent(dsrPercent) }}</span>

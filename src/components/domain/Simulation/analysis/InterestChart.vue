@@ -1,6 +1,5 @@
 <script setup>
 import styles from "@/assets/styles/components/Analysis.module.css";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import * as echarts from "echarts";
 import { computed, onMounted, onBeforeUnmount, ref, watch } from "vue";
 
@@ -127,7 +126,7 @@ watch(
 <template>
   <div :class="styles.chartContainer">
     <div :class="styles.alert">
-      <FontAwesomeIcon :icon="['fas', 'bell']" :class="styles.faBell" />
+      <i class="fas fa-bell" :class="styles.faBell"></i>
       <span>
         총 이자 비용이
         <b>{{ formatCurrency(deltaInterest) }}</b>
