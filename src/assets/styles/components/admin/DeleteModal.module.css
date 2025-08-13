@@ -1,0 +1,79 @@
+/* 반투명 배경 */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  z-index: 9999;
+}
+
+/* 카드 */
+.modal-content {
+  width: 300px;
+  max-width: 90vw;
+  background: #f3f4f7;
+  border-radius: 20px;
+  padding: 28px 24px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  text-align: center;
+}
+
+.modal-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 12px 0;
+}
+
+.modal-text {
+  font-size: 18px;
+  color: #333;
+  line-height: 1.5;
+  margin: 8px 0 20px;
+}
+
+.highlight {
+  font-weight: 800;
+  font-size: 20px;
+}
+
+/* 액션 버튼 */
+.modal-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.confirm-btn,
+.cancel-btn {
+  appearance: none;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+}
+
+.confirm-btn {
+  background: #a31219;
+  color: #fff;
+}
+
+.cancel-btn {
+  background: #5d686d;
+  color: #fff;
+}
+
+.confirm-btn:hover,
+.cancel-btn:hover {
+  filter: brightness(0.96);
+}
+
+.confirm-btn:active,
+.cancel-btn:active {
+  transform: translateY(1px);
+}

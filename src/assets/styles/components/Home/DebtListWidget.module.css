@@ -32,8 +32,10 @@
   background-color: white;
   border: 2px solid var(--color-main);
   border-radius: 10px;
-  padding: 0.4rem 1.1rem;
+  width: 10rem;
+  padding: 0.4rem 0.5rem;
   font-size: 0.8rem;
+  font-weight: 600;
   color: var(--color-main);
   cursor: pointer;
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
@@ -42,6 +44,7 @@
 .sort-select {
   border: none;
   font-size: 0.8rem;
+  font-weight: 600;
   color: var(--color-main);
   padding: 0.3rem 0 0.3rem 0.3rem;
 }
@@ -127,4 +130,50 @@
   color: var(--color-gray0);
   font-weight: 700;
   font-size: 1rem;
+}
+
+/* 로딩 상태 스타일 */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1.3rem;
+  color: var(--color-gray0);
+  font-size: 0.9rem;
+  text-align: center;
+  min-height: 120px;
+}
+
+/* 에러 상태 스타일 */
+.error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1.3rem;
+  color: var(--color-red);
+  font-size: 0.9rem;
+  text-align: center;
+  min-height: 120px;
+  gap: 1rem;
+}
+
+/* 재시도 버튼 스타일 */
+.retryButton {
+  background-color: var(--color-main);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.retryButton:hover {
+  background-color: var(--color-secondary);
+}
+
+.retryButton:active {
+  transform: translateY(1px);
 }
