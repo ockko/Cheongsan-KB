@@ -8,10 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -27,13 +26,10 @@ public class RepaymentCalendarController {
     public ResponseEntity<List<RepaymentCalendarDTO>> getMonthlyRepayments(
             @RequestParam int year,
             @RequestParam int month,
-            Principal principal
+            @AuthenticationPrincipal CustomUser customUser
     ) {
         log.info("월별 상환일자 조회 요청 - year: {}, month: {}", year, month);
 
-        // JWT에서 userId 추출
-        Authentication authentication = (Authentication) principal;
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
         Long userId = customUser.getUser().getId();
 
         try {
@@ -58,13 +54,11 @@ public class RepaymentCalendarController {
     @GetMapping("/repayments/{date}")
     public ResponseEntity<List<DailyRepaymentDTO>> getDailyRepayments(
             @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
-            Principal principal
+            @AuthenticationPrincipal CustomUser customUser
     ) {
         log.info("일별 상환일자 조회 요청 - date: {}", date);
 
         // JWT에서 userId 추출
-        Authentication authentication = (Authentication) principal;
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
         Long userId = customUser.getUser().getId();
 
         try {
