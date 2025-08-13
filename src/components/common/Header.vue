@@ -12,6 +12,7 @@ const authStore = useAuthStore();
 // 팝업 상태 관리
 const showUserPopup = ref(false);
 const userPopupRef = ref(null);
+const isRefreshing = ref(false);
 
 // 라우트 이름을 기반으로 헤더 타이틀 결정
 const headerTitle = computed(() => {
@@ -59,7 +60,6 @@ const handleLogout = async () => {
     await request.post('/cheongsan/user/logout');
   } catch (error) {
     console.error('로그아웃 요청 실패:', error);
-    // 서버 요청이 실패해도 클라이언트 로그아웃은 진행
   } finally {
     // 클라이언트 상태 정리
     authStore.logout();
@@ -69,9 +69,32 @@ const handleLogout = async () => {
   }
 };
 
-// 새로고침 핸들러
-const handleRefresh = () => {
-  window.location.reload();
+// 새로고침 CODEF 핸들러
+const handleRefresh = async () => {
+  if (isRefreshing.value) return; // 이미 진행 중이면 중복 실행 방지
+
+  try {
+    isRefreshing.value = true;
+    console.log('계좌 데이터 동기화 시작...');
+
+    // Codef 동기화 API 호출
+    const response = await request.post('/cheongsan/mydata/sync');
+
+    console.log('계좌 데이터 동기화 완료:', response.data);
+
+    // 동기화 완료 후 페이지 새로고침
+    window.location.reload();
+  } catch (error) {
+    console.error('계좌 데이터 동기화 실패:', error);
+
+    // 에러 메시지 표시 (선택사항)
+    alert('계좌 데이터 동기화에 실패했습니다. 페이지를 새로고침합니다.');
+
+    // 에러가 발생해도 페이지는 새로고침
+    window.location.reload();
+  } finally {
+    isRefreshing.value = false;
+  }
 };
 
 // 알림 핸들러 (향후 구현)
@@ -107,12 +130,13 @@ onUnmounted(() => {
         :class="styles.headerIconBtn"
         type="button"
         @click="handleRefresh"
-        title="새로고침"
+        :disabled="isRefreshing"
+        :title="isRefreshing ? '동기화 중...' : '새로고침'"
       >
         <img
           src="/images/refresh-icon-blue.png"
           alt="새로고침"
-          :class="styles.headerIcon"
+          :class="[styles.headerIcon, isRefreshing ? styles.spinning : '']"
         />
       </button>
 
@@ -138,7 +162,11 @@ onUnmounted(() => {
           title="사용자 메뉴"
         >
           <img
-            src="/images/user-icon-blue.png"
+            :src="
+              showUserPopup
+                ? '/images/user-colored-icon.png'
+                : '/images/user-icon.png'
+            "
             alt="사용자"
             :class="styles.headerIcon"
           />
