@@ -1,0 +1,81 @@
+.description {
+  font-size: 15px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.input-wrapper {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+/* input 왼쪽/오른쪽 padding 맞추기 */
+.input-wrapper input {
+  width: 100%;
+  font-size: 16px;
+  padding: 8px 32px 8px 8px; /* 위 오른쪽 아래 왼쪽 */
+  border: none;
+  border-bottom: 1px solid #000;
+  box-sizing: border-box;
+}
+
+.input-wrapper input:focus {
+  outline: none;
+}
+
+/* char-count는 input 텍스트와 수평 정렬 */
+.char-count {
+  position: absolute;
+  right: 8px; /* input 오른쪽 padding과 동일 */
+  bottom: -20px; /* input 아래 */
+  font-size: 12px;
+  color: #aaa;
+  line-height: 1;
+}
+
+.custom-footer {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 375px;
+  background: var(--color-gray4); /* 기본 회색 */
+  padding: 0 16px;
+  box-sizing: border-box;
+  transition: background-color 0.3s;
+  z-index: 1100;
+}
+
+.custom-footer.active {
+  background: var(--color-main); /* 활성 시 파란색 */
+}
+
+.custom-footer button {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  font-size: 16px;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+
+.custom-footer button:disabled {
+  cursor: not-allowed;
+}
+
+.clear-btn {
+  position: absolute;
+  top: 50%;
+  right: 8px; /* input 안쪽 오른쪽 끝에서 8px 떨어짐 */
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #999;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s;
+}
+
+.clear-btn:hover {
+  color: #333;
+}
