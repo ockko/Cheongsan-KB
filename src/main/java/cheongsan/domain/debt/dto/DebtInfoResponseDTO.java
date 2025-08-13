@@ -27,5 +27,6 @@ public class DebtInfoResponseDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate loanEndDate;
     private LocalDate nextPaymentDate;
+    private Long gracePeriodMonths;
 
 }
