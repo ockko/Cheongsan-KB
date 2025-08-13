@@ -83,14 +83,14 @@ public class CodefServiceImpl implements CodefService {
             }
 
             String responseBody = response.toString();
-            log.info("CODEF 원본 응답: {}", responseBody);
+//            log.info("CODEF 원본 응답: {}", responseBody);
 
             // URL 디코딩 처리
             String decodedResponse = responseBody;
             try {
                 if (responseBody.startsWith("%")) {
                     decodedResponse = URLDecoder.decode(responseBody, StandardCharsets.UTF_8.name());
-                    log.info("URL 디코딩된 응답: {}", decodedResponse);
+//                    log.info("URL 디코딩된 응답: {}", decodedResponse);
                 }
             } catch (Exception e) {
                 log.warn("URL 디코딩 실패, 원본 사용: {}", e.getMessage());
@@ -165,14 +165,14 @@ public class CodefServiceImpl implements CodefService {
             }
 
             String responseBody = response.toString();
-            log.info("CODEF 계좌 목록 원본 응답: {}", responseBody);
+//            log.info("CODEF 계좌 목록 원본 응답: {}", responseBody);
 
             // URL 디코딩 처리
             String decodedResponse = responseBody;
             try {
                 if (responseBody.startsWith("%")) {
                     decodedResponse = URLDecoder.decode(responseBody, StandardCharsets.UTF_8.name());
-                    log.info("URL 디코딩된 계좌 목록 응답: {}", decodedResponse);
+//                    log.info("URL 디코딩된 계좌 목록 응답: {}", decodedResponse);
                 }
             } catch (Exception e) {
                 log.warn("URL 디코딩 실패, 원본 사용: {}", e.getMessage());
@@ -227,7 +227,7 @@ public class CodefServiceImpl implements CodefService {
             }
 
             int responseCode = conn.getResponseCode();
-            log.info("CODEF 거래내역 응답 코드: {}", responseCode);
+//            log.info("CODEF 거래내역 응답 코드: {}", responseCode);
 
             StringBuilder response = new StringBuilder();
             try (BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -240,7 +240,7 @@ public class CodefServiceImpl implements CodefService {
             }
 
             String responseBody = response.toString();
-            log.info("CODEF 거래내역 원본 응답: {}", responseBody);
+//            log.info("CODEF 거래내역 원본 응답: {}", responseBody);
 
             // URL 디코딩 처리
             String decodedResponse = responseBody;
@@ -314,14 +314,14 @@ public class CodefServiceImpl implements CodefService {
             }
 
             String responseBody = response.toString();
-            log.info("CODEF 대출 거래내역 원본 응답: {}", responseBody);
+//            log.info("CODEF 대출 거래내역 원본 응답: {}", responseBody);
 
             // URL 디코딩 처리
             String decodedResponse = responseBody;
             try {
                 if (responseBody.startsWith("%")) {
                     decodedResponse = URLDecoder.decode(responseBody, StandardCharsets.UTF_8.name());
-                    log.info("URL 디코딩된 대출 거래내역 응답: {}", decodedResponse);
+//                    log.info("URL 디코딩된 대출 거래내역 응답: {}", decodedResponse);
                 }
             } catch (Exception e) {
                 log.warn("URL 디코딩 실패, 원본 사용: {}", e.getMessage());
