@@ -14,6 +14,14 @@ import InitialSetup2 from '@/pages/InitialSetup/InitialSetup2.vue';
 import InitialSetup3 from '@/pages/InitialSetup/InitialSetup3.vue';
 import InitialSetup4 from '@/pages/InitialSetup/InitialSetup4.vue';
 import RepaymentSimulationResult from '@/pages/RepaymentSimulationResult.vue';
+import Signup from '@/pages/Signup.vue';
+import MyPage from '@/pages/MyPage.vue';
+import EditEmail from '@/pages/EditEmail.vue';
+import EditId from '@/pages/EditId.vue';
+import EditPassword from '@/pages/EditPassword.vue';
+import MemberWithdraw from '@/pages/MemberWithdraw.vue';
+import LoanAnalysisResult from '@/pages/LoanAnalysisResult.vue';
+import Admin from '@/pages/Admin.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
