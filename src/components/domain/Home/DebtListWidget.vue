@@ -48,6 +48,11 @@ const handleSortChange = async () => {
   await loadDebtData();
 };
 
+// 대출 목록 새로고침 함수
+const refreshDebtList = async () => {
+  await loadDebtData();
+};
+
 // 선택된 정렬 옵션에 따라 부채 목록을 동적으로 정렬하는 computed 속성
 const sortedDebts = computed(() => {
   const debtsCopy = [...debts.value];
@@ -153,7 +158,11 @@ onMounted(() => {
     </div>
   </div>
 
-  <LoanAddModal v-if="isAddModalOpen" @close="isAddModalOpen = false" />
+  <LoanAddModal
+    :visible="isAddModalOpen"
+    @close="isAddModalOpen = false"
+    @refresh-debt-list="refreshDebtList"
+  />
 
   <DebtDetailModal
     v-if="isDetailModalOpen"
