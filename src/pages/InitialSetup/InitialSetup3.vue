@@ -20,7 +20,7 @@ const confirmedIndexes = ref(new Set());
 const clickedIndex = ref(null);
 const isModalOpen = ref(false);
 
-async function loadLoans() {
+const loadLoans = async () => {
   try {
     const data = await fetchUserLoans();
     console.log('API 응답:', data);
@@ -34,14 +34,14 @@ async function loadLoans() {
   } catch (error) {
     console.error('대출 목록 불러오기 실패:', error);
   }
-}
+};
 
 // 페이지 로드 시 대출 목록 불러오기
 onMounted(() => {
   loadLoans();
 });
 
-function handleLoanClick(index) {
+const handleLoanClick = (index) => {
   clickedIndex.value = index;
 
   const selectedLoan = loans.value[index];
@@ -53,24 +53,24 @@ function handleLoanClick(index) {
   });
 
   isModalOpen.value = true;
-}
+};
 
-function confirmSelection() {
+const confirmSelection = () => {
   if (clickedIndex.value !== null) {
     confirmedIndexes.value.add(clickedIndex.value);
   }
   isModalOpen.value = false;
   clickedIndex.value = null;
-}
+};
 
-function cancelSelection() {
+const cancelSelection = () => {
   clickedIndex.value = null;
   isModalOpen.value = false;
-}
+};
 
-function goNext() {
+const goNext = () => {
   router.push('/initialSetup/page4');
-}
+};
 </script>
 
 <template>

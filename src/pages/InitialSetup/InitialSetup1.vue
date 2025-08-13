@@ -10,7 +10,7 @@ const router = useRouter();
 
 const nicknameRegex = /^[가-힣a-zA-Z0-9_]{2,10}$/;
 
-async function goNext() {
+const goNext = async () => {
   const nicknameValue = nickname.value.trim();
 
   if (!nicknameRegex.test(nicknameValue)) {
@@ -38,7 +38,7 @@ async function goNext() {
       console.error(error);
     }
   }
-}
+};
 </script>
 
 <template>

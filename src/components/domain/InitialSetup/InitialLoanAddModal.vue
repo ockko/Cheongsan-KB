@@ -1,6 +1,6 @@
 <script setup>
 import styles from '@/assets/styles/components/InitialSetup/initialLoanModal.module.css';
-import { ref, reactive, computed, watch, onMounted } from 'vue';
+import { ref, reactive, computed, watch } from 'vue';
 import { defineEmits, defineProps } from 'vue';
 import { registerDebt } from '@/api/dashboard-bottomApi.js';
 
@@ -87,12 +87,12 @@ watch(
 );
 
 // 닫기 함수
-function closeModal() {
+const closeModal = () => {
   resetForm();
   emit('close');
-}
+};
 
-async function addLoan() {
+const addLoan = async () => {
   if (!isFormComplete.value) {
     alert('모든 항목을 입력해주세요.');
     return;
@@ -164,7 +164,7 @@ async function addLoan() {
     alert(error.message);
     console.error('대출 상품 등록 실패:', error);
   }
-}
+};
 </script>
 
 <template>

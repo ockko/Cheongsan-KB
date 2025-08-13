@@ -12,22 +12,22 @@ const router = useRouter();
 const customLoans = ref([]);
 const isModalOpen = ref(false);
 
-function openModal() {
+const openModal = () => {
   isModalOpen.value = true;
-}
+};
 
-function closeModal() {
+const closeModal = () => {
   isModalOpen.value = false;
-}
+};
 
-function handleAddLoan(loan) {
+const handleAddLoan = (loan) => {
   customLoans.value.push(loan);
   isModalOpen.value = false;
-}
+};
 
-function goNext() {
+const goNext = () => {
   router.push('/home');
-}
+};
 </script>
 
 <template>

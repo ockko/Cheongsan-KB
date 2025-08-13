@@ -9,9 +9,9 @@ defineProps({
 });
 const emit = defineEmits(['click']);
 
-function onClick() {
+const onClick = () => {
   emit('click');
-}
+};
 </script>
 
 <template>
