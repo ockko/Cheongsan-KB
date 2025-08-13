@@ -87,8 +87,6 @@
         </set>
         WHERE id = #{id}
     </update>
-
-    ㅓㄹ
     <delete id="deleteById" parameterType="Long">
         DELETE
         FROM user
