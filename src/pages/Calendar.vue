@@ -106,7 +106,12 @@ watch(
       />
       <div :class="styles.calendarGridWrapper">
         <!-- 로고 배경을 CalendarGrid 영역에만 적용 -->
-        <div :class="styles.logoBackground"></div>
+        <div
+          :class="[
+            styles.logoBackground,
+            { [styles.detailOpen]: selectedDateData },
+          ]"
+        ></div>
 
         <CalendarGrid
           :year="currentYear"

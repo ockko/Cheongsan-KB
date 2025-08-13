@@ -2,6 +2,7 @@
 import { onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useSimulationStore } from '@/stores/repayment-simulation';
+import BackHeader from '@/components/common/BackHeader.vue';
 import DebtChart from '@/components/domain/simulation/DebtChart.vue';
 import PlanModal from '@/components/domain/simulation/PlanModal.vue';
 import styles from '@/assets/styles/pages/simulation/RepaymentSimulationResult.module.css';

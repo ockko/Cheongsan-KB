@@ -30,6 +30,7 @@ const transactionList = computed(() => {
         amount: Math.abs(transaction.amount),
         formatted: formatAmount(transaction.amount, isIncome),
         accountNumber: transaction.accountNumber,
+        resAccountDesc3: transaction.resAccountDesc3 || '', // resAccountDesc3 추가
       });
     });
   }
@@ -85,6 +86,9 @@ const loanNamesText = computed(() => {
           <div :class="styles.transactionDot"></div>
           <div :class="styles.transactionAmount" class="text-medium">
             {{ transaction.formatted }}
+          </div>
+          <div v-if="transaction.resAccountDesc3" :class="styles.transactionDesc">
+            {{ transaction.resAccountDesc3 }}
           </div>
         </div>
       </div>

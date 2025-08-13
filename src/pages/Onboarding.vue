@@ -9,8 +9,7 @@ const goToLogin = () => {
 };
 
 const goToSignup = () => {
-  // 회원가입 페이지로 이동 (추후 구현)
-  console.log('회원가입 페이지로 이동');
+  router.push('/signup');
 };
 </script>
 
@@ -19,7 +18,7 @@ const goToSignup = () => {
     <img
       src="/images/logo-blue.png"
       alt="로고"
-      style="width: 166px; height: 166px"
+      style="width: 166px; height: 166px; margin-top: 164px"
     />
     <div :class="styles.title">티끌 모아 청산</div>
     <div :class="styles.description">

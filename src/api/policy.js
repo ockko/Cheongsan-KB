@@ -1,18 +1,12 @@
 import { request } from '@/api/index';
 
-
 // 정책 상세 정보 조회 (policyName으로 조회)
 export const getPolicyDetail = async (policyName) => {
   try {
     // params 옵션을 사용하여 자동 인코딩 처리
     const params = { policyName };
-
-    console.log('정책 상세 API 요청 시작:', '/cheongsan/policies/detail');
-    console.log('정책 상세 파라미터:', params);
-
     const data = await request.get('/cheongsan/policies/detail', { params });
 
-    console.log('정책 상세 API 응답 성공:', data);
     return data;
   } catch (error) {
     console.error('정책 상세 정보 조회 실패:', error);
@@ -29,11 +23,8 @@ export const getPolicyDetail = async (policyName) => {
     } else {
       console.error('요청 설정 에러:', error.message);
     }
-
-
   }
 };
-
 
 // 맞춤 정책 검색 (백엔드 API)
 export const searchCustomPolicies = async (searchWrd) => {
@@ -41,12 +32,8 @@ export const searchCustomPolicies = async (searchWrd) => {
     // params 옵션을 사용하여 자동 인코딩 처리
     const params = { searchWrd };
 
-    console.log('검색 API 요청 시작:', '/cheongsan/policies/search');
-    console.log('검색 파라미터:', params);
-
     const data = await request.get('/cheongsan/policies/search', { params });
 
-    console.log('검색 API 응답 성공:', data);
     return data;
   } catch (error) {
     console.error('맞춤 정책 검색 실패:', error);
@@ -75,8 +62,6 @@ export const getCustomPolicies = async () => {
     console.log('API 요청 시작:', '/cheongsan/policies/list');
 
     const data = await request.get('/cheongsan/policies/list');
-
-    console.log('API 응답 성공:', data);
     return data;
   } catch (error) {
     console.error('맞춤 지원 정책 목록 조회 실패:', error);
@@ -96,6 +81,5 @@ export const getCustomPolicies = async () => {
       // 요청 설정 중 에러가 발생한 경우
       console.error('요청 설정 에러:', error.message);
     }
-    
   }
 };

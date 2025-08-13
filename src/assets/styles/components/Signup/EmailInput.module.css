@@ -1,0 +1,60 @@
+.input-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.label {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--color-main);
+}
+
+.email-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+}
+
+.email-input {
+    flex: 1;
+    height: 51px;
+    width: 147px;
+    min-width: 0;
+    padding: 0 16px;
+    border: 1px solid var(--color-gray1);
+    background-color: white;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 16px;
+    color: var(--color-main);
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+    text-align: left; /* placeholder 왼쪽 정렬 */
+}
+
+.email-input:focus {
+    outline: none;
+    border-color: var(--color-main);
+}
+
+.email-input:disabled {
+    background-color: var(--color-gray2);
+    cursor: not-allowed;
+}
+
+.email-input::placeholder {
+    color: var(--color-gray0);
+    text-align: left; /* placeholder 왼쪽 정렬 */
+    padding-left: 0; /* 추가 여백 제거 */
+}
+
+.email-separator {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 18px;
+    color: var(--color-main);
+    flex-shrink: 0;
+}

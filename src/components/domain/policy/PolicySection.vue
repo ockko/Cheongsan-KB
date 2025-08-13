@@ -37,8 +37,6 @@ const loadCustomPolicies = async () => {
 
     const data = await getCustomPolicies();
     policies.value = data;
-    currentPage.value = 1; // 데이터 로드 시 첫 페이지로 초기화
-    console.log('맞춤 지원 정책 데이터 로드 완료:', data);
   } catch (error) {
     console.error('맞춤 지원 정책 데이터 로드 실패:', error);
     // 에러 발생 시 빈 배열로 설정
@@ -95,8 +93,6 @@ const openPolicyDetail = async (policy) => {
     const policyDetail = await getPolicyDetail(policy.policyName);
     selectedPolicyData.value = policyDetail;
     isModalVisible.value = true;
-
-    console.log('정책 상세 정보 로드 완료:', policyDetail);
   } catch (error) {
     console.error('정책 상세 정보 조회 실패:', error);
   } finally {
@@ -279,7 +275,7 @@ const goToNextPage = () => {
 const pageNumbers = computed(() => {
   const pages = [];
   const maxVisiblePages = 5;
-  
+
   if (totalPages.value <= maxVisiblePages) {
     // 전체 페이지가 5개 이하면 모든 페이지 표시
     for (let i = 1; i <= totalPages.value; i++) {
@@ -287,19 +283,22 @@ const pageNumbers = computed(() => {
     }
   } else {
     // 현재 페이지를 중심으로 최대 5개 페이지 표시
-    let start = Math.max(1, currentPage.value - Math.floor(maxVisiblePages / 2));
+    let start = Math.max(
+      1,
+      currentPage.value - Math.floor(maxVisiblePages / 2)
+    );
     let end = Math.min(totalPages.value, start + maxVisiblePages - 1);
-    
+
     // 끝에 도달했을 때 시작점 조정
     if (end === totalPages.value) {
       start = Math.max(1, end - maxVisiblePages + 1);
     }
-    
+
     for (let i = start; i <= end; i++) {
       pages.push(i);
     }
   }
-  
+
   return pages;
 });
 
@@ -496,7 +495,7 @@ onMounted(() => {
           :key="page"
           :class="[
             styles.pageNumber,
-            { [styles.activePage]: currentPage === page }
+            { [styles.activePage]: currentPage === page },
           ]"
           @click="changePage(page)"
         >

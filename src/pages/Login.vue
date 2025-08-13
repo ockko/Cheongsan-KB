@@ -1,7 +1,8 @@
 <script setup>
 import { useAuthStore } from '@/stores/auth';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import NaverAuthButton from '@/components/domain/Signup/NaverAuthButton.vue';
 import styles from '@/assets/styles/pages/Login.module.css';
 
 const router = useRouter();
@@ -25,46 +26,6 @@ if (route.query.error === 'session_expired') {
   errorMessage.value = '로그인이 필요한 서비스입니다.';
 }
 
-// 컴포넌트 마운트 시 네이버 콜백 처리
-onMounted(() => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const code = urlParams.get('code');
-  const state = urlParams.get('state');
-
-  // 네이버 OAuth 콜백인지 확인
-  if (code && state) {
-    handleNaverCallback(code);
-  }
-});
-
-// 네이버 OAuth 콜백 처리
-const handleNaverCallback = async (code) => {
-  isSubmitting.value = true;
-  errorMessage.value = '';
-
-  try {
-    console.log('네이버 인증코드 수신:', code);
-
-    // authStore의 naverLogin 함수 사용
-    await authStore.naverLogin(code);
-
-    console.log('네이버 로그인 성공');
-
-    // URL에서 파라미터 제거하고 홈으로 이동
-    window.history.replaceState({}, '', '/login');
-    router.push('/home');
-  } catch (error) {
-    console.error('네이버 로그인 처리 실패:', error);
-    errorMessage.value =
-      error.message || '네이버 로그인 중 오류가 발생했습니다.';
-
-    // URL 정리
-    window.history.replaceState({}, '', '/login');
-  } finally {
-    isSubmitting.value = false;
-  }
-};
-
 // 일반 로그인 처리
 const handleLogin = async () => {
   // 유효성 검사
@@ -82,10 +43,17 @@ const handleLogin = async () => {
   errorMessage.value = '';
 
   try {
-    await authStore.login(formData.value);
+    const result = await authStore.login(formData.value);
 
-    // 로그인 성공 시 홈으로 이동
-    router.push('/home');
+    const nickname = result.nickName;
+
+    if (nickname && nickname.trim() !== '') {
+      // 닉네임이 있는 경우, 홈으로
+      router.push('/home');
+    } else {
+      // 닉네임이 없는 최초 로그인 시, 초기 세팅 페이지로
+      router.push('/initialSetup/page1');
+    }
   } catch (error) {
     errorMessage.value = error.message;
   } finally {
@@ -93,31 +61,19 @@ const handleLogin = async () => {
   }
 };
 
-// 네이버 로그인 - OAuth 페이지로 리다이렉트 (환경변수 사용)
-const handleNaverLogin = () => {
-  if (isSubmitting.value) return;
-
-  // 환경변수에서 프론트엔드 URL과 네이버 클라이언트 ID 가져오기
-  const frontendUrl =
-    import.meta.env.VITE_FRONTEND_URL || window.location.origin;
-  const naverClientId = import.meta.env.VITE_NAVER_CLIENT_ID;
-  const redirectUri = `${frontendUrl}/login`;
-
-  // 네이버 OAuth URL
-  const naverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?client_id=${naverClientId}&redirect_uri=${redirectUri}&response_type=code&state=test123`;
-
-  console.log('네이버 로그인 시작...', {
-    frontendUrl,
-    redirectUri,
-    clientId: naverClientId,
-  });
-  window.location.href = naverAuthUrl;
+// 네이버 인증 이벤트 핸들러들
+const handleNaverAuthStart = () => {
+  console.log('네이버 로그인 시작');
+  errorMessage.value = ''; // 에러 메시지 초기화
 };
 
-// 회원가입 페이지로 이동
-const goToSignup = () => {
-  // 회원가입 페이지 구현 후 라우팅
-  console.log('회원가입 페이지로 이동 예정');
+const handleNaverAuthSuccess = () => {
+  console.log('네이버 로그인 성공');
+};
+
+const handleNaverAuthError = (error) => {
+  console.error('네이버 로그인 실패:', error);
+  errorMessage.value = error;
 };
 </script>
 
@@ -172,12 +128,13 @@ const goToSignup = () => {
         <span>SNS 계정 로그인</span>
       </div>
 
-      <img
-        @click="handleNaverLogin"
-        style="height: 44px; cursor: pointer"
+      <!-- 네이버 로그인 버튼 (컴포넌트 사용) -->
+      <NaverAuthButton
+        type="login"
         :disabled="isSubmitting"
-        src="/images/naver-btn.png"
-        alt="네이버 로그인 버튼"
+        @auth-start="handleNaverAuthStart"
+        @auth-success="handleNaverAuthSuccess"
+        @auth-error="handleNaverAuthError"
       />
 
       <!-- 하단 링크들 -->

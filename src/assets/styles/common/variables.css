@@ -25,6 +25,7 @@
   /* 브랜드 색상 */
   --color-naver: #03c75a;
   --color-red: #dc2121;
+  --color-red2: #8b0000;
 
   /* 폰트 패밀리 */
   --font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui,
@@ -36,7 +37,7 @@
   --font-size-base: 20px;
 
   /* 라인 높이 */
-  --line-height-base: 64px;
+  --line-height-base: 1.4;
 
   /* 레터 스페이싱 */
   --letter-spacing-negative: -0.25px;
