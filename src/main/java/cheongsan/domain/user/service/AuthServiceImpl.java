@@ -6,9 +6,11 @@ import cheongsan.common.security.util.JwtProcessor;
 import cheongsan.domain.auth.dto.SocialUserInfo;
 import cheongsan.domain.codef.dto.ConnectedIdRequestDTO;
 import cheongsan.domain.codef.service.CodefService;
+import cheongsan.domain.codef.service.CodefSyncService;
 import cheongsan.domain.user.dto.*;
 import cheongsan.domain.user.entity.User;
 import cheongsan.domain.user.mapper.UserMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,11 +27,13 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@RequiredArgsConstructor
 @Log4j2
 public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
     private final JavaMailSender mailSender;
     private final CodefService codefService;
+    private final CodefSyncService codefSyncService;
     private final JwtProcessor jwtProcessor;
     private final RedisTemplate<String, Object> redisTemplate;
     private final PasswordEncoder passwordEncoder;
@@ -40,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
     public AuthServiceImpl(
             UserMapper userMapper,
             JavaMailSender mailSender,
-            CodefService codefService,
+            CodefService codefService, CodefSyncService codefSyncService,
             JwtProcessor jwtProcessor,
             PasswordEncoder passwordEncoder,
             @Qualifier("redisTemplateForToken") RedisTemplate<String, Object> redisTemplate
@@ -48,6 +52,7 @@ public class AuthServiceImpl implements AuthService {
         this.userMapper = userMapper;
         this.mailSender = mailSender;
         this.codefService = codefService;
+        this.codefSyncService = codefSyncService;
         this.jwtProcessor = jwtProcessor;
         this.passwordEncoder = passwordEncoder;
         this.redisTemplate = redisTemplate;
@@ -78,6 +83,16 @@ public class AuthServiceImpl implements AuthService {
 
         log.info("signUp request: {}", user.getUserId());
         userMapper.save(user);
+
+        // 회원가입 완료 후 자동으로 CODEF 동기화 실행
+        try {
+            log.info("🚀 회원가입 완료 후 자동 CODEF 동기화 시작: userId={}", user.getId());
+            codefSyncService.syncUserAccountData(user.getId());
+            log.info("✅ 회원가입 완료 후 자동 CODEF 동기화 성공: userId={}", user.getId());
+        } catch (Exception e) {
+            // 동기화 실패해도 회원가입은 성공으로 처리
+            log.warn("⚠️ 회원가입 완료 후 CODEF 동기화 실패: userId={}, error={}", user.getId(), e.getMessage());
+        }
 
         return new SignUpResponseDTO(user.getId(), user.getUserId());
     }
