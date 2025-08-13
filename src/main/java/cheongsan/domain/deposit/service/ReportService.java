@@ -7,9 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ReportService {
-
-    WeeklyReportDTO createAndSaveLatestWeeklyReport(Long userId);
-    WeeklyReportDTO getLatestReportFromHistory(Long userId);
+    WeeklyReportDTO getDashboardWeeklyReport(Long userId);
     WeeklyReportDTO getReportByDate(Long userId, LocalDate date);
     List<WeeklyReportHistoryDTO> getReportHistoryList(Long userId);
 }

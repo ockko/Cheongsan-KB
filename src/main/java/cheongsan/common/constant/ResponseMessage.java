@@ -26,7 +26,8 @@ public enum ResponseMessage {
     FAILED_TO_SAVE_REPORT("리포트 저장 중 오류가 발생했습니다."),
     WEEKLY_REPORT_NOT_FOUND("저장된 주간 리포트가 없습니다."),
     WEEKLY_REPORT_NOT_FOUND_FOR_DATE("해당 주의 리포트가 존재하지 않습니다."),
-    FAILED_TO_CONVERT_REPORT_DATA("리포트 데이터 변환이 실패했습니다.");
+    FAILED_TO_CONVERT_REPORT_DATA("리포트 데이터 변환이 실패했습니다."),
+    REPORT_NOT_FOUND("리포트 데이터가 없습니다.");
 
     private final String message;
 

@@ -3,6 +3,7 @@ package cheongsan.domain.notification.scheduler;
 import cheongsan.domain.debt.dto.DelinquentLoanResponseDTO;
 import cheongsan.domain.debt.service.DebtService;
 import cheongsan.domain.deposit.dto.WeeklyReportDTO;
+import cheongsan.domain.deposit.service.ReportCreationService;
 import cheongsan.domain.deposit.service.ReportService;
 import cheongsan.domain.notification.dto.CreateNotificationDTO;
 import cheongsan.domain.notification.service.NotificationService;
@@ -24,7 +25,7 @@ public class NotificationScheduler {
     private final NotificationService notificationService;
     private final DebtService debtService;
     private final UserMapper userMapper;
-    private final ReportService reportService;
+    private final ReportCreationService reportCreationService;
 
     // 테스트를 위해 임시로 사용할 사용자 ID 목록
     private static final List<Long> TEST_USER_IDS = Arrays.asList(1L, 2L);
@@ -80,7 +81,7 @@ public class NotificationScheduler {
 
             for (Long userId : userIdList) {
                 // 1. 주간 리포트 생성
-                WeeklyReportDTO report = reportService.createAndSaveLatestWeeklyReport(userId);
+                WeeklyReportDTO report = reportCreationService.createAndSaveLatestWeeklyReport(userId);
 
                 User user = userMapper.findById(userId);
                 // 2. 이메일 발송
