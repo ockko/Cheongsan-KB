@@ -184,18 +184,9 @@
 
     <update id="updateDebt" parameterType="map">
         UPDATE debt_accounts
-        <set>
-            <if test="gracePeriodMonths != null">
-                grace_period_months = #{gracePeriodMonths},
-            </if>
-            <if test="repaymentMethod != null">
-                repayment_method = #{repaymentMethod},
-            </if>
-            <if test="nextPaymentDate != null">
-                next_payment_date = #{nextPaymentDate},
-            </if>
-            <!-- 기존 필드(account_name, amount, interest_rate 등도 비슷하게 추가 가능) -->
-        </set>
+        SET grace_period_months = #{gracePeriodMonths},
+            repayment_method    = #{repaymentMethod},
+            next_payment_date   = #{nextPaymentDate}
         WHERE id = #{debtAccountId}
     </update>
 
