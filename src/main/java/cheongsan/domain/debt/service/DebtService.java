@@ -9,6 +9,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface DebtService {
+    List<InitialDebtDTO> getUserInitialLoanList(Long userId);
+
     List<DebtInfoResponseDTO> getUserDebtList(Long userId);
 
     DebtDetailResponseDTO getLoanDetail(Long userId, Long loanId);
