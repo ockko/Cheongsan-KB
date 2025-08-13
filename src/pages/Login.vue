@@ -43,10 +43,17 @@ const handleLogin = async () => {
   errorMessage.value = '';
 
   try {
-    await authStore.login(formData.value);
+    const result = await authStore.login(formData.value);
 
-    // 로그인 성공 시 홈으로 이동
-    router.push('/home');
+    const nickname = result.nickName;
+
+    if (nickname && nickname.trim() !== '') {
+      // 닉네임이 있는 경우, 홈으로
+      router.push('/home');
+    } else {
+      // 닉네임이 없는 최초 로그인 시, 초기 세팅 페이지로
+      router.push('/initialSetup/page1');
+    }
   } catch (error) {
     errorMessage.value = error.message;
   } finally {
