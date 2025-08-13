@@ -11,4 +11,5 @@ public class AdminUser {
     private Long id;
     private String nickname;
     private LocalDate createdAt;
+    private String role;
 }

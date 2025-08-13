@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/cheongsan/admin")
+@PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
 @Slf4j
 public class AdminController {
@@ -29,19 +31,17 @@ public class AdminController {
         return adminService.getUserList();
     }
 
-    @DeleteMapping("/users")
-    public ResponseEntity<Map<String, Object>> deleteUser(
-            @AuthenticationPrincipal CustomUser customUser
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<Void> deleteUser(
+            @PathVariable Long userId,
+            @AuthenticationPrincipal CustomUser admin
     ) {
-        Long userId = customUser.getUser().getId();
+        Long me = admin.getUser().getId();
+        if (me.equals(userId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         adminService.deleteUser(userId);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", 200);
-        response.put("message", "회원이 정상적으로 삭제되었습니다.");
-        response.put("userId", userId);
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/sync/batch/all")
