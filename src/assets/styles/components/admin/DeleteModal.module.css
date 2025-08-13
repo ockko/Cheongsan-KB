@@ -10,7 +10,7 @@
 }
 
 /* 카드 */
-.modalContent {
+.modal-content {
   width: 300px;
   max-width: 90vw;
   background: #f3f4f7;
@@ -20,34 +20,35 @@
   text-align: center;
 }
 
-.modalTitle {
+.modal-title {
   font-size: 16px;
   font-weight: 700;
   color: #333;
   margin: 0 0 12px 0;
 }
 
-.modalText {
+.modal-text {
   font-size: 18px;
   color: #333;
   line-height: 1.5;
   margin: 8px 0 20px;
 }
+
 .highlight {
   font-weight: 800;
   font-size: 20px;
 }
 
 /* 액션 버튼 */
-.modalActions {
+.modal-actions {
   display: flex;
   gap: 14px;
   justify-content: center;
   margin-top: 8px;
 }
 
-.confirmBtn,
-.cancelBtn {
+.confirm-btn,
+.cancel-btn {
   appearance: none;
   border: none;
   padding: 10px 22px;
@@ -57,20 +58,22 @@
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
 }
 
-.confirmBtn {
+.confirm-btn {
   background: #a31219;
   color: #fff;
 }
-.cancelBtn {
+
+.cancel-btn {
   background: #5d686d;
   color: #fff;
 }
 
-.confirmBtn:hover,
-.cancelBtn:hover {
+.confirm-btn:hover,
+.cancel-btn:hover {
   filter: brightness(0.96);
 }
-.confirmBtn:active,
-.cancelBtn:active {
+
+.confirm-btn:active,
+.cancel-btn:active {
   transform: translateY(1px);
 }
