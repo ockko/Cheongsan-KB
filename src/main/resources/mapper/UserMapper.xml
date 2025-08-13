@@ -82,10 +82,11 @@
         WHERE id = #{id}
     </update>
 
-    <delete id="deleteById" parameterType="String">
+    ㅓㄹ
+    <delete id="deleteById" parameterType="Long">
         DELETE
         FROM user
-        WHERE user_id = #{userId}
+        WHERE id = #{id}
     </delete>
 
     <update id="updateConnectedId">
@@ -117,4 +118,16 @@
         FROM user
         WHERE naver_id = #{naverId}
     </select>
+
+    <update id="updateNickname">
+        UPDATE user
+        SET nickname = #{nickname}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateEmail">
+        UPDATE user
+        SET email = #{email}
+        WHERE id = #{id}
+    </update>
 </mapper>
