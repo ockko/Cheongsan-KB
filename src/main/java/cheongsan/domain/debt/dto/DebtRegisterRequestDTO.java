@@ -20,5 +20,7 @@ public class DebtRegisterRequestDTO {
     private BigDecimal currentBalance;
     private Long gracePeriodMonths;
     private String repaymentMethod;
+    private Long nextPaymentDay;    //다음 상환일
+
 
 }
