@@ -75,7 +75,7 @@ public class BudgetServiceImpl implements BudgetService {
             throw new IllegalArgumentException(ResponseMessage.BUDGET_LIMIT_EXCEEDED.getMessage());
         }
 
-        userMapper.updateDailyLimit(userId, new BigDecimal(finalDailyLimit), LocalDateTime.now());
+        userMapper.updateDailyLimitAndTimestamp(userId, new BigDecimal(finalDailyLimit), LocalDateTime.now());
     }
 
     @Override

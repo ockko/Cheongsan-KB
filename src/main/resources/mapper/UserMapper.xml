@@ -15,10 +15,16 @@
         WHERE id = #{id}
     </update>
 
-    <update id="updateDailyLimit">
+    <update id="updateDailyLimitAndTimestamp">
         UPDATE user
         SET daily_limit      = #{dailyLimit},
             daily_limit_date = #{dailyLimitDate}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateDailyLimitOnly">
+        UPDATE user
+        SET daily_limit = #{dailyLimit}
         WHERE id = #{id}
     </update>
 
@@ -38,12 +44,12 @@
     <!-- 유저 저장 -->
     <insert id="save" parameterType="cheongsan.domain.user.entity.User" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO user
-        (recommended_program_id, connected_id, nickname, user_id, password, email,
-         daily_limit, daily_limit_date, status, role,
-         naver_id, account_type)
-        VALUES (#{recommendedProgramId}, #{connectedId}, #{nickname}, #{userId}, #{password}, #{email},
-                #{dailyLimit}, #{dailyLimitDate}, #{status}, #{role},
-                #{naverId}, #{accountType})
+        (connected_id, user_id, password, email,
+         daily_limit_date, status,
+         account_type)
+        VALUES (#{connectedId}, #{userId}, #{password}, #{email},
+                #{dailyLimitDate}, #{status},
+                #{accountType})
     </insert>
 
     <select id="findByUserIdAndEmail" parameterType="String" resultType="cheongsan.domain.user.entity.User">

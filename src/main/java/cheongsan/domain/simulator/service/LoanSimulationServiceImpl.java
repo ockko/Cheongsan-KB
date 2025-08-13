@@ -6,6 +6,7 @@ import cheongsan.domain.debt.dto.DebtInfoResponseDTO;
 import cheongsan.domain.debt.service.DebtService;
 import cheongsan.domain.simulator.dto.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class LoanSimulationServiceImpl implements LoanSimulationService {
 
     private final LoanRepaymentCalculator calculator;
@@ -26,30 +28,44 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
     private static final BigDecimal DSR_LIMIT = new BigDecimal("0.4");
 
     @Override
-    public LoanAnalyzeResponseDTO analyze(LoanAnalyzeRequestDTO request) {
-        Long userId = 1L; // TODO: 로그인 연동 후 사용자 id 교체
-
-        if (request == null) {
-            throw new IllegalArgumentException("분석 요청(request)은 null일 수 없습니다.");
-        }
-        if (request.getAnnualIncome() == null || request.getAnnualIncome().compareTo(BigDecimal.ZERO) <= 0) {
+    public LoanAnalyzeResponseDTO analyze(LoanAnalyzeRequestDTO request, Long userId) {
+        if (request == null) throw new IllegalArgumentException("분석 요청(request)은 null일 수 없습니다.");
+        if (request.getAnnualIncome() == null || request.getAnnualIncome().compareTo(BigDecimal.ZERO) <= 0)
             throw new IllegalArgumentException("연소득은 0보다 커야 합니다.");
-        }
+        if (userId == null) throw new IllegalArgumentException("사용자 ID는 null일 수 없습니다.");
 
-        // 1. 새 대출 DTO 생성
+        // 1) 기간: '년' → '개월'
+        int months = Math.toIntExact(request.getLoanPeriod() * 12L);
+
         LocalDate startDate = LocalDate.now();
-        LocalDate endDate = startDate.plusMonths(request.getLoanPeriod());
+        LocalDate endDate = startDate.plusMonths(months);
 
+        // 2) 신규 대출 DTO
         LoanDTO newLoan = LoanDTO.builder()
                 .principal(request.getLoanAmount())
-                .interestRate(request.getInterestRate())
+                .interestRate(request.getInterestRate().divide(BigDecimal.valueOf(100))) // 연이율(%)
                 .startDate(startDate)
                 .endDate(endDate)
                 .repaymentType(request.getRepaymentType())
                 .paymentDate(startDate)
                 .build();
 
-        // 2. 기존 대출 조회 및 변환
+        // 디버그: 신규 대출만의 총상환액 확인
+        try {
+            PaymentResultDTO onlyNew = loanFacade.calculateByType(Scenario.NO_PREPAYMENT, newLoan, BigDecimal.ZERO);
+            log.info("[CHK] newLoanOnly total={}, principal={}, annualRate(%)={}, months={}, type={}, start={}, end={}",
+                    onlyNew.getTotalPayment(),
+                    newLoan.getPrincipal(),
+                    newLoan.getInterestRate(),
+                    months,
+                    newLoan.getRepaymentType(),
+                    newLoan.getStartDate(),
+                    newLoan.getEndDate());
+        } catch (Exception e) {
+            log.warn("[CHK] newLoanOnly calc failed: {}", e.getMessage(), e);
+        }
+
+        // 3) 기존 대출 조회 → LoanDTO 변환
         List<DebtInfoResponseDTO> existings = debtService.getUserDebtList(userId);
         List<LoanDTO> existingLoans = existings.stream()
                 .map(debt -> LoanDTO.builder()
@@ -62,7 +78,7 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
                         .build())
                 .toList();
 
-        // 3. 신규 대출 월 상환액 계산
+        // 4) 신규 대출 월 상환액 계산(추천/DSR 용)
         LoanCalculator.RepaymentMethod repaymentMethod = RepaymentTypeMapper.toMethod(request.getRepaymentType());
         BigDecimal monthlyRepayment = loanCalculator.calculateMonthlyPayment(
                 repaymentMethod,
@@ -73,26 +89,70 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
                 endDate
         );
 
-        // 4. DSR 계산
+        // 5) DSR 계산 및 한도 체크 (전체 DSR: 기존+신규)
         BigDecimal dsr = DsrCalculator.calculateDsr(existingLoans, monthlyRepayment, request.getAnnualIncome(), loanCalculator);
-
-        // 5. DSR 한도 초과 시 예외
         if (dsr.compareTo(DSR_LIMIT) > 0) {
             throw new IllegalArgumentException("DSR이 " + dsr.multiply(BigDecimal.valueOf(100)).setScale(1, RoundingMode.HALF_UP)
                     + "%로 허용 한도 40%를 초과합니다.");
         }
 
-        // 6. 비교 결과 생성
+        // 6) 비교 결과
         TotalComparisonResultDTO totalComparison = compareTotalRepaymentWithNewLoan(existingLoans, newLoan);
         InterestComparisonResultDTO interestComparison = compareInterestWithNewLoan(existingLoans, newLoan);
-        DebtRatioComparisonResultDTO debtRatioComparison = compareDebtRatioWithNewLoan(existingLoans, newLoan, request.getAnnualIncome());
 
-        // 7. 통합 결과 반환
+        // 7) 통합 결과 (dsr을 응답에 포함)
         return new LoanAnalyzeResponseDTO(
                 totalComparison,
                 interestComparison,
-                debtRatioComparison
+                dsr
         );
+    }
+
+    @Override
+    public BigDecimal computeDsr(Long userId, LoanRecommendationRequestDTO request) {
+        if (userId == null) throw new IllegalArgumentException("사용자 ID는 null일 수 없습니다.");
+        if (request == null) throw new IllegalArgumentException("요청은 null일 수 없습니다.");
+        if (request.getAnnualIncome() == null || request.getAnnualIncome().compareTo(BigDecimal.ZERO) <= 0)
+            throw new IllegalArgumentException("연소득은 0보다 커야 합니다.");
+
+        // 기간 환산
+        long months = request.getTerm() * 12L;
+        LocalDate start = LocalDate.now();
+        LocalDate end = start.plusMonths(months);
+
+        // 상환 방식 매핑 (문자열 → enum 매핑 적용되어 있다면 그대로 사용)
+        LoanCalculator.RepaymentMethod method = LoanCalculator.RepaymentMethod.EQUAL_PRINCIPAL_INTEREST;
+        try {
+            method = RepaymentTypeMapper.toMethod(RepaymentType.valueOf(request.getRepaymentType()));
+        } catch (Exception ignore) {
+            // 입력 문자열이 enum과 다를 수 있으니 기본값 방어
+        }
+
+        // 신규 대출 월 상환액
+        BigDecimal newMonthly = loanCalculator.calculateMonthlyPayment(
+                method,
+                request.getPrincipal(),
+                request.getPrincipal(),
+                request.getInterestRate(), // 연이율(%)
+                start,
+                end
+        );
+
+        // 기존 대출 조회
+        List<DebtInfoResponseDTO> existings = debtService.getUserDebtList(userId);
+        List<LoanDTO> existingLoans = existings.stream()
+                .map(d -> LoanDTO.builder()
+                        .principal(d.getCurrentBalance())
+                        .interestRate(d.getInterestRate())
+                        .startDate(d.getLoanStartDate())
+                        .endDate(d.getLoanEndDate())
+                        .repaymentType(d.getRepaymentType())
+                        .paymentDate(d.getLoanStartDate())
+                        .build())
+                .toList();
+
+        // 전체 DSR 계산(기존+신규)
+        return DsrCalculator.calculateDsr(existingLoans, newMonthly, request.getAnnualIncome(), loanCalculator);
     }
 
     @Override
@@ -138,33 +198,7 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
 
         return new InterestComparisonResultDTO(
                 existingInterest.setScale(0, RoundingMode.HALF_UP),
-                withNewLoanInterest.setScale(0, RoundingMode.HALF_UP),
-                increaseRate.multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP)
-        );
-    }
-
-    @Override
-    public DebtRatioComparisonResultDTO compareDebtRatioWithNewLoan(List<LoanDTO> existingLoans, LoanDTO newLoan, BigDecimal assetTotalAmount) {
-        BigDecimal existingDebtTotal = existingLoans.stream()
-                .map(LoanDTO::getPrincipal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal newDebtTotal = existingDebtTotal.add(newLoan.getPrincipal());
-
-        BigDecimal existingDebtRatio = existingDebtTotal.multiply(BigDecimal.valueOf(100))
-                .divide(assetTotalAmount, 2, RoundingMode.HALF_UP);
-        BigDecimal newDebtRatio = newDebtTotal.multiply(BigDecimal.valueOf(100))
-                .divide(assetTotalAmount, 2, RoundingMode.HALF_UP);
-        BigDecimal increaseAmount = newDebtRatio.subtract(existingDebtRatio);
-        BigDecimal increaseRate = existingDebtRatio.compareTo(BigDecimal.ZERO) == 0
-                ? BigDecimal.ZERO
-                : increaseAmount.multiply(BigDecimal.valueOf(100))
-                .divide(existingDebtRatio, 2, RoundingMode.HALF_UP);
-
-        return new DebtRatioComparisonResultDTO(
-                existingDebtRatio.setScale(2, RoundingMode.HALF_UP),
-                newDebtRatio.setScale(2, RoundingMode.HALF_UP),
-                increaseAmount.setScale(2, RoundingMode.HALF_UP),
-                increaseRate.setScale(2, RoundingMode.HALF_UP)
+                withNewLoanInterest.setScale(0, RoundingMode.HALF_UP)
         );
     }
 

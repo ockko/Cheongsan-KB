@@ -3,8 +3,10 @@ package cheongsan.domain.simulator.controller;
 import cheongsan.domain.simulator.dto.LoanAnalyzeRequestDTO;
 import cheongsan.domain.simulator.dto.LoanAnalyzeResponseDTO;
 import cheongsan.domain.simulator.service.LoanSimulationService;
+import cheongsan.domain.user.entity.CustomUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +20,12 @@ public class SimulationController {
     private final LoanSimulationService loanSimulationService;
 
     @PostMapping("/loan/analyze")
-    public ResponseEntity<LoanAnalyzeResponseDTO> analyzeLoan(@RequestBody LoanAnalyzeRequestDTO request) {
-        LoanAnalyzeResponseDTO response = loanSimulationService.analyze(request);
+    public ResponseEntity<LoanAnalyzeResponseDTO> analyzeLoan(
+            @AuthenticationPrincipal CustomUser customUser,
+            @RequestBody LoanAnalyzeRequestDTO request
+    ) {
+        Long userId = customUser.getUser().getId();
+        LoanAnalyzeResponseDTO response = loanSimulationService.analyze(request, userId);
         return ResponseEntity.ok(response);
     }
 }
