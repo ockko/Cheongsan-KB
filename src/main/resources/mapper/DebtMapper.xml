@@ -41,6 +41,15 @@
         WHERE id = #{loanId}
     </select>
 
+    <update id="updateDebtAccount" parameterType="cheongsan.domain.debt.entity.DebtAccount">
+        UPDATE debt_accounts
+        SET next_payment_date   = #{nextPaymentDate},
+            grace_period_months = #{gracePeriodMonths},
+            repayment_method    = #{repaymentMethod}
+        WHERE id = #{id}
+          AND user_id = #{userId}
+    </update>
+
     <select id="findDebtAccountById" parameterType="long" resultType="cheongsan.domain.debt.entity.DebtAccount">
         SELECT id,
                debt_name,

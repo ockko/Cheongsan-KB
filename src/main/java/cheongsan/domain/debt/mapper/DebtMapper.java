@@ -18,6 +18,8 @@ public interface DebtMapper {
 
     DebtAccount getDebtAccountById(Long loanId);
 
+    void updateDebtAccount(DebtAccount debtAccount);
+
     // 대출 상세 조회 (1)
     DebtAccount findDebtAccountById(@Param("userId") Long userId, @Param("loanId") Long loanId);
 

@@ -41,21 +41,12 @@ public class DebtServiceImpl implements DebtService {
                 .map(debt -> {
                     String organizationName = financialInstitutionMapper.findNameByCode(debt.getOrganizationCode());
                     return InitialDebtDTO.builder()
+                            .debtId(debt.getId())
                             .organizationName(organizationName)
                             .debtName(debt.getDebtName())
                             .build();
                 })
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public void updateInitialLoanInfo(Long userId, RepaymentInfoRequestDTO dto) {
-        DebtAccount debt = debtMapper.getDebtAccountById(dto.getDebtId());
-
-        debt.setNextPaymentDate(dto.getNextPaymentDate());
-        debt.setGracePeriodMonths(dto.getGracePeriod());
-
-        debtMapper.insertDebt(debt);
     }
 
     @Override
@@ -275,18 +266,18 @@ public class DebtServiceImpl implements DebtService {
     }
 
     @Override
-    public DebtUpdateResponseDTO updateDebtAccount(Long debtAccountId, DebtUpdateRequestDTO dto) {
-        DebtAccount account = debtMapper.getDebtAccountById(debtAccountId);
+    public DebtUpdateResponseDTO updateDebtAccount(Long debtId, DebtUpdateRequestDTO dto) {
+        DebtAccount account = debtMapper.getDebtAccountById(debtId);
         log.info(account);
 
         if (account == null) {
             throw new IllegalArgumentException("존재하지 않는 부채 계좌입니다.");
         }
 
-        debtMapper.updateDebt(dto.getGracePeriodMonths(), dto.getRepaymentMethod(), dto.getNextPaymentDate(), debtAccountId);
+        debtMapper.updateDebt(dto.getGracePeriodMonths(), dto.getRepaymentMethod(), dto.getNextPaymentDate(), debtId);
 
         return DebtUpdateResponseDTO.builder()
-                .debtId(debtAccountId)
+                .debtId(debtId)
                 .organizationCode(account.getOrganizationCode())
                 .debtName(account.getDebtName())
                 .currentBalance(account.getCurrentBalance())
