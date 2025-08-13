@@ -14,11 +14,6 @@ public interface UserService {
 
     MyInfoResponseDTO getMyInfo(Long Id);
 
-    NicknameResponseDTO submitNickname(NicknameRequestDTO nicknameRequestDTO);
-
-
-    UpdateMyProfileResponseDTO updateMyProfile(Long Id, UpdateMyProfileRequestDTO updateMyProfileRequestDTO);
-
     void changePassword(Long Id, ChangePasswordRequestDTO changePasswordRequestDTO);
 
     void deleteAccount(Long Id, DeleteAccountRequestDTO dto);
@@ -26,4 +21,10 @@ public interface UserService {
     List<UserDebtAccountResponseDTO> getUserDebtAccounts(Long Id);
 
     void logout(String userId);
+
+    void updateName(Long id, UpdateNicknameRequestDTO request);
+
+    void updateEmail(Long id, UpdateEmailRequestDTO request);
+
+    boolean verifyPassword(Long id, String oldPassword);
 }

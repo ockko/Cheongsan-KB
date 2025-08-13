@@ -63,34 +63,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public NicknameResponseDTO submitNickname(NicknameRequestDTO nicknameRequestDTO) {
-        // 1. 유저 존재 확인
-        User user = userMapper.findById(nicknameRequestDTO.getUserId());
-        if (user == null) {
-            throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
-        }
-        // 2. 닉네임 삽입
-        userMapper.submitNickname(user.getUserId(), nicknameRequestDTO.getNickname());
-        return new NicknameResponseDTO("닉네임이 성공적으로 반영되었습니다.", nicknameRequestDTO.getNickname());
-    }
-
-    public UpdateMyProfileResponseDTO updateMyProfile(Long id, UpdateMyProfileRequestDTO updateMyProfileRequestDTO) {
+    public boolean verifyPassword(Long id, String oldPassword) {
         User user = userMapper.findById(id);
         if (user == null) {
+            log.info("존재하지 않는 사용자입니다.");
             throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
         }
-        // 닉네임 길이 검사 (여기 ↓)
-        if (updateMyProfileRequestDTO.getNickname() != null && updateMyProfileRequestDTO.getNickname().length() > 10) {
-            throw new IllegalArgumentException("닉네임은 10자 이내로 입력하세요.");
-        }
 
-        userMapper.updateProfile(id, updateMyProfileRequestDTO.getNickname(), updateMyProfileRequestDTO.getEmail());
-        return UpdateMyProfileResponseDTO.builder()
-                .message("내 정보가 성공적으로 수정되었습니다.")
-                .nickname(updateMyProfileRequestDTO.getNickname())
-                .email(updateMyProfileRequestDTO.getEmail())
-                .build();
+        // 기존 비밀번호 일치 여부 반환
+        return passwordEncoder.matches(oldPassword, user.getPassword());
     }
+
 
     @Override
     public void changePassword(Long id, ChangePasswordRequestDTO changePasswordRequestDTO) {
@@ -100,25 +83,23 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
         }
 
-        // 2. 기존 비번 일치 확인
-        if (!passwordEncoder.matches(changePasswordRequestDTO.getOldPassword(), user.getPassword())) {
+        // verifyPassword 메서드로 기존 비밀번호 검증
+        if (!verifyPassword(id, changePasswordRequestDTO.getOldPassword())) {
             log.info("기존 비밀번호가 올바르지 않습니다.");
             throw new IllegalArgumentException("기존 비밀번호가 올바르지 않습니다.");
         }
 
-        // 3. 새 비밀번호 암호화 후 저장
+        // 새 비밀번호 암호화 후 저장
         String encodedNewPw = passwordEncoder.encode(changePasswordRequestDTO.getNewPassword());
         userMapper.updatePassword(id, encodedNewPw);
     }
 
+
     public void deleteAccount(Long id, DeleteAccountRequestDTO dto) {
-        User user = userMapper.findById(id);
-        if (user == null) {
-            throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
-        }
         // 비밀번호 일치 확인
-        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
+        if (!verifyPassword(id, dto.getPassword())) {
+            log.info("기존 비밀번호가 올바르지 않습니다.");
+            throw new IllegalArgumentException("기존 비밀번호가 올바르지 않습니다.");
         }
         // 회원 탈퇴(삭제)
         userMapper.deleteById(id);
@@ -147,5 +128,28 @@ public class UserServiceImpl implements UserService {
     public void logout(String userId) {
         redisTemplate.delete("RT:" + userId);
         SecurityContextHolder.clearContext();
+    }
+
+    @Transactional
+    public void updateName(Long id, UpdateNicknameRequestDTO request) {
+        if (request.getNickname() == null || request.getNickname().trim().isEmpty()) {
+            throw new IllegalArgumentException("닉네임은 필수 입력값입니다.");
+        }
+
+        userMapper.updateNickname(id, request.getNickname());
+
+    }
+
+    @Transactional
+    public void updateEmail(Long id, UpdateEmailRequestDTO request) {
+        if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+            throw new IllegalArgumentException("이메일은 필수 입력값입니다.");
+        }
+        if (!request.getEmail().contains("@")) {
+            throw new IllegalArgumentException("올바른 이메일 형식이 아닙니다.");
+        }
+
+        userMapper.updateEmail(id, request.getEmail());
+
     }
 }
