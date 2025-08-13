@@ -35,6 +35,22 @@ public class DebtServiceImpl implements DebtService {
     private final FinancialInstitutionMapper financialInstitutionMapper;
 
     @Override
+    public List<InitialDebtDTO> getUserInitialLoanList(Long userId) {
+        List<DebtAccount> debts = debtMapper.getUserDebtList(userId);
+
+        return debts.stream()
+                .map(debt -> {
+                    String organizationName = financialInstitutionMapper.findNameByCode(debt.getOrganizationCode());
+                    return InitialDebtDTO.builder()
+                            .debtId(debt.getId())
+                            .organizationName(organizationName)
+                            .debtName(debt.getDebtName())
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<DebtInfoResponseDTO> getUserDebtList(Long userId) {
         List<DebtAccount> debts = debtMapper.getUserDebtList(userId);
 
@@ -51,7 +67,7 @@ public class DebtServiceImpl implements DebtService {
 
                     String organizationName = financialInstitutionMapper.findNameByCode(debt.getOrganizationCode());
                     return DebtInfoResponseDTO.builder()
-                            .debtId(debt.getId()) // 필요 시 수정
+                            .debtId(debt.getId())
                             .debtName(debt.getDebtName())
                             .organizationName(organizationName)
                             .originalAmount(debt.getOriginalAmount())
@@ -285,18 +301,18 @@ public class DebtServiceImpl implements DebtService {
     }
 
     @Override
-    public DebtUpdateResponseDTO updateDebtAccount(Long debtAccountId, DebtUpdateRequestDTO dto) {
-        DebtAccount account = debtMapper.getDebtAccountById(debtAccountId);
+    public DebtUpdateResponseDTO updateDebtAccount(Long debtId, DebtUpdateRequestDTO dto) {
+        DebtAccount account = debtMapper.getDebtAccountById(debtId);
         log.info(account);
 
         if (account == null) {
             throw new IllegalArgumentException("존재하지 않는 부채 계좌입니다.");
         }
 
-        debtMapper.updateDebt(dto.getGracePeriodMonths(), dto.getRepaymentMethod(), dto.getNextPaymentDate(), debtAccountId);
+        debtMapper.updateDebt(dto.getGracePeriodMonths(), dto.getRepaymentMethod(), dto.getNextPaymentDate(), debtId);
 
         return DebtUpdateResponseDTO.builder()
-                .debtId(debtAccountId)
+                .debtId(debtId)
                 .organizationCode(account.getOrganizationCode())
                 .debtName(account.getDebtName())
                 .currentBalance(account.getCurrentBalance())
