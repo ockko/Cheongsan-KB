@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -77,6 +78,7 @@ public class DebtServiceImpl implements DebtService {
                             .loanEndDate(debt.getLoanEndDate())
                             .nextPaymentDate(debt.getNextPaymentDate())
                             .repaymentRate(repaymentRate)
+                            .gracePeriodMonths(debt.getGracePeriodMonths())
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -158,8 +160,41 @@ public class DebtServiceImpl implements DebtService {
         // 2. 만기일 계산
         LocalDate loanEndDate = dto.getLoanStartDate().plusMonths(dto.getTotalMonths());
 
-        // 3. 다음 상환일 계산 (예: 매달 1일 상환 기준이라면)
-        LocalDate nextPaymentDate = dto.getLoanStartDate().plusMonths(1); // 예시
+
+// 오늘 날짜 가져오기 (예시: LocalDate.now() 또는 전달된 날짜)
+        LocalDate today = LocalDate.now();
+        int nextPaymentDay = Math.toIntExact(dto.getNextPaymentDay());
+
+// 이번 달의 상환일을 구함
+        LocalDate thisMonthPaymentDate;
+        try {
+            thisMonthPaymentDate = today.withDayOfMonth(nextPaymentDay);
+        } catch (DateTimeException e) {
+            // 이번 달에 해당 일이 없으면 마지막 날로
+            thisMonthPaymentDate = today.withDayOfMonth(today.lengthOfMonth());
+        }
+
+// 만약 오늘이 상환일 이후(혹은 당일 포함)이면, 반드시 다음 달로 넘어가야 함
+        LocalDate baseDate;
+        if (!today.isBefore(thisMonthPaymentDate)) {
+            // 다음 달
+            baseDate = today.plusMonths(1).withDayOfMonth(1);
+        } else {
+            // 아직 다다르지 않은 경우 이번 달
+            baseDate = today.withDayOfMonth(1);
+        }
+
+// 다음 달 정보 계산
+        LocalDate nextMonth = baseDate;
+// 다음 달에 nextPaymentDay 존재 여부 확인
+        LocalDate nextPaymentDate;
+        try {
+            nextPaymentDate = nextMonth.withDayOfMonth(nextPaymentDay);
+        } catch (DateTimeException e) {
+            // 없는 경우(예: 2월 30일), 마지막 날로 처리
+            nextPaymentDate = nextMonth.withDayOfMonth(nextMonth.lengthOfMonth());
+        }
+
 
         // 4. DebtAccount 생성
         DebtAccount debt = DebtAccount.builder()
