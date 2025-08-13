@@ -7,7 +7,6 @@ import { request } from './index.js';
 export const getRepaymentRatio = async () => {
   try {
     const data = await request.get('/cheongsan/dashboard/loans/repaymentRatio');
-    console.log('대출 상환율 조회:', data);
     return data;
   } catch (error) {
     console.error('대출 상환율 조회 실패:', error);
@@ -67,7 +66,6 @@ export const getUserDebtList = async (sort = 'createdAtDesc') => {
     const data = await request.get('/cheongsan/dashboard/loans', {
       params: { sort },
     });
-    console.log('대출 목록 조회:', data);
     return data;
   } catch (error) {
     console.error('대출 목록 조회 실패:', error);
@@ -122,7 +120,6 @@ export const getDebtListData = async (sort = 'createdAtDesc') => {
 export const getRepaymentSummary = async () => {
   try {
     const data = await request.get('/cheongsan/dashboard/repaymentSummary');
-    console.log('상환 계획 요약 조회:', data);
     return data;
   } catch (error) {
     console.error('상환 계획 요약 조회 실패:', error);
@@ -280,8 +277,6 @@ export const registerDebt = async (loanData) => {
       repaymentMethod: loanData.repaymentMethod.trim(),
       nextPaymentDay: nextPaymentDay, // null 허용
     };
-
-    console.log('전송할 데이터:', debtRegisterData);
 
     const response = await request.post(
       '/cheongsan/dashboard/loans',

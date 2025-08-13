@@ -32,7 +32,6 @@ const loadCustomPolicies = async () => {
 
     const data = await getCustomPolicies();
     policies.value = data;
-    console.log('맞춤 지원 정책 데이터 로드 완료:', data);
   } catch (error) {
     console.error('맞춤 지원 정책 데이터 로드 실패:', error);
     // 에러 발생 시 빈 배열로 설정
@@ -87,8 +86,6 @@ const openPolicyDetail = async (policy) => {
     const policyDetail = await getPolicyDetail(policy.policyName);
     selectedPolicyData.value = policyDetail;
     isModalVisible.value = true;
-
-    console.log('정책 상세 정보 로드 완료:', policyDetail);
   } catch (error) {
     console.error('정책 상세 정보 조회 실패:', error);
   } finally {

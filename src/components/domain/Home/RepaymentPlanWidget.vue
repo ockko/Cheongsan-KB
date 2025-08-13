@@ -61,21 +61,11 @@ const goToSimulation = () => {
 const openPlanModal = () => {
   console.log('RepaymentPlanWidget openPlanModal 함수 호출됨');
   if (planData.value.strategyType) {
-    console.log('전략이 있음, 모달을 엽니다');
     isModalOpen.value = true;
-    console.log('isModalOpen.value를 true로 설정:', isModalOpen.value);
   } else {
     console.log('전략이 없음, 모달을 열 수 없습니다');
   }
 };
-
-// 모달 닫기 함수 (RepaymentSimulationResult.vue와 동일한 패턴 사용)
-// const closePlanModal = () => {
-//   console.log('RepaymentPlanWidget closePlanModal 함수 호출됨');
-//   console.log('닫기 전 isModalOpen.value:', isModalOpen.value);
-//   isModalOpen.value = false;
-//   console.log('닫기 후 isModalOpen.value:', isModalOpen.value);
-// };
 
 // 컴포넌트 마운트 시 데이터 로드
 onMounted(() => {
