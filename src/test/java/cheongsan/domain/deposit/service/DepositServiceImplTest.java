@@ -24,6 +24,9 @@ class DepositServiceImplTest {
     @Autowired
     private DepositServiceImpl depositService;
 
+    @Autowired
+    private DailySpendingService dailySpendingService;
+
     @Test
     @DisplayName("정기 소득 키워드가 포함된 거래내역의 합계를 정확히 계산해야 한다")
     void calculateRegularMonthlyTransfer_Success() {
@@ -95,7 +98,7 @@ class DepositServiceImplTest {
         Long userId = 1L;
 
         // when
-        DailySpendingDTO result = depositService.getDailySpendingStatus(userId);
+        DailySpendingDTO result = dailySpendingService.getDailySpendingStatus(userId);
 
         // then
         assertNotNull(result);
@@ -112,7 +115,7 @@ class DepositServiceImplTest {
         Long userId = 1L;
 
         // when
-        DailySpendingDTO result = depositService.getDailySpendingStatus(userId);
+        DailySpendingDTO result = dailySpendingService.getDailySpendingStatus(userId);
 
         // then
         assertNotNull(result);
@@ -130,7 +133,7 @@ class DepositServiceImplTest {
 
         // when & then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            depositService.getDailySpendingStatus(nonExistentUserId);
+            dailySpendingService.getDailySpendingStatus(nonExistentUserId);
         });
 
         assertEquals("일치하는 회원 정보가 없습니다.", exception.getMessage());

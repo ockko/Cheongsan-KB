@@ -1,13 +1,9 @@
 package cheongsan.domain.deposit.service;
 
-import cheongsan.common.constant.ResponseMessage;
-import cheongsan.domain.deposit.dto.DailySpendingDTO;
 import cheongsan.domain.deposit.dto.DailyTransactionDTO;
 import cheongsan.domain.deposit.dto.MonthlyTransactionDTO;
 import cheongsan.domain.deposit.entity.Transaction;
 import cheongsan.domain.deposit.mapper.DepositMapper;
-import cheongsan.domain.user.entity.User;
-import cheongsan.domain.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -24,8 +20,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class DepositServiceImpl implements DepositService {
-
-    private final UserMapper userMapper;
     private final DepositMapper depositMapper;
 
     private static final Set<String> SALARY_KEYWORDS = new HashSet<>(Arrays.asList(
@@ -62,7 +56,7 @@ public class DepositServiceImpl implements DepositService {
                 .collect(Collectors.toList());
 
         log.info("조회된 일별 거래 내역 수: {}", result.size());
-        for(DailyTransactionDTO dto : result){
+        for (DailyTransactionDTO dto : result) {
             log.info(dto.getResAccountDesc3());
         }
         return result;
@@ -86,19 +80,6 @@ public class DepositServiceImpl implements DepositService {
                 .filter(this::isFixedWithdraw)
                 .map(Transaction::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    @Override
-    public DailySpendingDTO getDailySpendingStatus(Long userId) {
-        User user = userMapper.findById(userId);
-        if (user == null) {
-            throw new IllegalArgumentException(ResponseMessage.USER_NOT_FOUND.getMessage());
-        }
-        int dailyLimit = (user.getDailyLimit() != null) ? user.getDailyLimit().intValue() : 0;
-
-        BigDecimal todaySpent = depositMapper.sumTodaySpendingByUserId(userId);
-
-        return DailySpendingDTO.getDailySpending(dailyLimit, todaySpent.intValue());
     }
 
     private boolean isSalary(Transaction transaction) {

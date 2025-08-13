@@ -34,7 +34,7 @@ class UserMapperTest {
         LocalDateTime newTimestamp = LocalDateTime.now();
 
         // when
-        userMapper.updateDailyLimit(userId, newLimit, newTimestamp);
+        userMapper.updateDailyLimitAndTimestamp(userId, newLimit, newTimestamp);
 
         // then
         User updatedUser = userMapper.findById(userId);

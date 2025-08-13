@@ -38,7 +38,7 @@ public class DebtController {
         return debtService.getLoanDetail(userId, loanId);
     }
 
-    @PostMapping(value = "/loans", consumes = "application/json")
+    @PostMapping(value = "/loans", consumes = "application/json", produces = "text/plain;charset=UTF-8")
     public ResponseEntity<String> registerDebt(
             @RequestBody DebtRegisterRequestDTO dto,
             @AuthenticationPrincipal CustomUser customUser
