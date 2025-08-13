@@ -1,0 +1,89 @@
+.container {
+  padding: 16px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.title {
+  flex: 1;
+  text-align: center;
+  font-size: 24px;
+}
+
+.section-title {
+  font-size: 16px;
+  color: var(--color-gray0);
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+/* 카드 리스트 아이템 */
+.card-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-bottom: 1px solid var(--color-gray4);
+  padding: 12px 0;
+}
+
+.card-row {
+  display: flex;
+  align-items: center; /* 수직 중앙 정렬 */
+  justify-content: space-between; /* 텍스트 왼쪽, 화살표 오른쪽 */
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* 텍스트 왼쪽 정렬 */
+}
+
+.card-title {
+  font-size: 16px;
+  color: var(--color-main);
+}
+
+.card-value {
+  font-size: 16px;
+  color: var(--color-gray0);
+  line-height: 1.2;
+  margin-top: 4px;
+}
+
+.card-arrow {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: var(--color-main);
+}
+
+/* 로그아웃 버튼 */
+.logout-button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 30px;
+  border: 1px solid var(--color-main);
+  background: none;
+  color: var(--color-main);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.logout-button:hover,
+.logout-button:active {
+  background-color: var(--color-main); /* 남색 배경 */
+  color: white; /* 흰색 글씨 */
+}

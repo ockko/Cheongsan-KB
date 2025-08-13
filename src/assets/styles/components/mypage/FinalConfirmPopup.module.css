@@ -1,0 +1,79 @@
+.popup-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.popup {
+  background: #f5f6f8;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  width: 283px; /* 원하는 고정 너비 */
+  min-height: 291px; /* 최소 높이 지정해서 너무 작아지는 것 방지 */
+  box-sizing: border-box; /* padding 포함해서 크기 계산 */
+}
+.icon {
+  font-size: 60px;
+  color: var(--color-main);
+  margin: 16px 0;
+}
+.icon i {
+  font-weight: 0;
+}
+.popup-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.btn-withdraw {
+  background: transparent;
+  color: var(--color-red2);
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--color-red2);
+  cursor: pointer;
+}
+.error-msg {
+  color: transparent;
+  margin: 10px 0;
+}
+.btn-cancel,
+.btn-close {
+  background: transparent;
+  color: var(--color-gray0);
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--color-gray0);
+  cursor: pointer;
+}
+.description {
+  font-size: 16px;
+}
+.btn-withdraw:hover {
+  background: var(--color-red2);
+  color: white;
+}
+.btn-cancel:hover,
+.btn-close:hover {
+  background: var(--color-gray0);
+  color: white;
+}
+.btn-complete {
+  background: transparent;
+  color: var(--color-main);
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--color-main);
+  cursor: pointer;
+}
+
+.btn-complete:hover {
+  background: var(--color-main);
+  color: white;
+}

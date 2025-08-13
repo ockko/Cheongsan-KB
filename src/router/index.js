@@ -1,123 +1,151 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory } from 'vue-router';
 
-import Home from "@/pages/Home.vue";
-import Policy from "@/pages/Policy.vue";
-import Calendar from "@/pages/Calendar.vue";
-import Simulation from "@/pages/Simulation.vue";
-import Study from "@/pages/Study.vue";
-import Diagnosis from "@/pages/Diagnosis.vue";
-import StudyDetail from "@/pages/StudyDetail.vue";
-import Login from "@/pages/Login.vue";
-import Signup from "@/pages/Signup.vue";
-import Onboarding from "@/pages/Onboarding.vue";
-import InitialSetup1 from "@/pages/InitialSetup/InitialSetup1.vue";
-import InitialSetup2 from "@/pages/InitialSetup/InitialSetup2.vue";
-import InitialSetup3 from "@/pages/InitialSetup/InitialSetup3.vue";
-import InitialSetup4 from "@/pages/InitialSetup/InitialSetup4.vue";
-import LoanAnalysisResult from "@/pages/LoanAnalysisResult.vue";
-import RepaymentSimulationResult from "@/pages/RepaymentSimulationResult.vue";
-import Admin from "@/pages/Admin.vue";
+import Home from '@/pages/Home.vue';
+import Policy from '@/pages/Policy.vue';
+import Calendar from '@/pages/Calendar.vue';
+import Simulation from '@/pages/Simulation.vue';
+import Study from '@/pages/Study.vue';
+import Diagnosis from '@/pages/Diagnosis.vue';
+import StudyDetail from '@/pages/StudyDetail.vue';
+import Login from '@/pages/Login.vue';
+import Onboarding from '@/pages/Onboarding.vue';
+import InitialSetup1 from '@/pages/InitialSetup/InitialSetup1.vue';
+import InitialSetup2 from '@/pages/InitialSetup/InitialSetup2.vue';
+import InitialSetup3 from '@/pages/InitialSetup/InitialSetup3.vue';
+import InitialSetup4 from '@/pages/InitialSetup/InitialSetup4.vue';
+import RepaymentSimulationResult from '@/pages/RepaymentSimulationResult.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/",
-      redirect: "/onboarding",
+      path: '/',
+      redirect: '/onboarding',
     },
     {
-      path: "/onboarding", // 온보딩 라우트 추가
-      name: "Onboarding",
+      path: '/onboarding', // 온보딩 라우트 추가
+      name: 'Onboarding',
       component: Onboarding,
     },
     {
-      path: "/login", // 로그인 라우트 추가
-      name: "Login",
+      path: '/login', // 로그인 라우트 추가
+      name: 'Login',
       component: Login,
     },
     {
-      path: "/signup",
-      name: "Signup",
+      path: '/signup',
+      name: 'Signup',
       component: Signup, // 회원가입 라우트 추가
     },
     {
-      path: "/home",
-      name: "Home",
+      path: '/home',
+      name: 'Home',
       component: Home,
       meta: { requiresAuth: true }, // 인증 필요
     },
     {
-      path: "/policy",
-      name: "Policy",
+      path: '/policy',
+      name: 'Policy',
       component: Policy,
       meta: { requiresAuth: true }, // 인증 필요
     },
     {
-      path: "/calendar",
-      name: "Calendar",
+      path: '/calendar',
+      name: 'Calendar',
       component: Calendar,
       meta: { requiresAuth: true }, // 인증 필요
     },
     {
-      path: "/study",
-      name: "Study",
+      path: '/study',
+      name: 'Study',
       component: Study,
       meta: { requiresAuth: true }, // 인증 필요
     },
     {
-      path: "/initialSetup/page1",
-      name: "InitialSetup1",
+      path: '/initialSetup/page1',
+      name: 'InitialSetup1',
       component: InitialSetup1,
       meta: { requiresAuth: true }, // 인증 필요
     },
     {
-      path: "/initialSetup/page2",
-      name: "InitialSetup2",
+      path: '/initialSetup/page2',
+      name: 'InitialSetup2',
       component: InitialSetup2,
       meta: { requiresAuth: true }, // 인증 필요
     },
     {
-      path: "/initialSetup/page3",
-      name: "InitialSetup3",
+      path: '/initialSetup/page3',
+      name: 'InitialSetup3',
       component: InitialSetup3,
       meta: { requiresAuth: true }, // 인증 필요
     },
     {
-      path: "/initialSetup/page4",
-      name: "InitialSetup4",
+      path: '/initialSetup/page4',
+      name: 'InitialSetup4',
       component: InitialSetup4,
       meta: { requiresAuth: true }, // 인증 필요
     },
     {
-      path: "/diagnosis",
-      name: "Diagnosis",
+      path: '/diagnosis',
+      name: 'Diagnosis',
       component: Diagnosis,
       meta: { requiresAuth: true }, // 인증 필요
     },
     {
       // path: /study/:id
-      path: "/study/detail",
-      name: "StudyDetail",
+      path: '/study/detail',
+      name: 'StudyDetail',
       component: StudyDetail,
       meta: { requiresAuth: true }, // 인증 필요
     },
     {
-      path: "/simulation",
-      name: "Simulation",
+      path: '/simulation',
+      name: 'Simulation',
       component: Simulation,
       meta: { requiresAuth: true }, // 인증 필요
     },
     {
-      path: "/repayment-simulation/result",
+      path: '/repayment-simulation/result',
       name: RepaymentSimulationResult,
       component: RepaymentSimulationResult,
+      meta: { requiresAuth: true }, // 인증 필요
     },
     {
-      path: "/simulation/loan",
+      path: '/mypage',
+      name: MyPage,
+      component: MyPage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/mypage/edit/name',
+      name: EditId,
+      component: EditId,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/mypage/edit/password',
+      name: EditPassword,
+      component: EditPassword,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/mypage/edit/email',
+      name: EditEmail,
+      component: EditEmail,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/mypage/withdraw',
+      name: 'MemberWithdraw',
+      component: MemberWithdraw,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/simulation/loan',
       component: LoanAnalysisResult,
     },
     {
-      path: "/admin/users",
+      path: '/admin/users',
       component: Admin,
       meta: { requiresAuth: true },
     },
@@ -129,11 +157,11 @@ router.beforeEach((to, from, next) => {
   // 인증이 필요한 페이지인지 확인
   if (to.meta.requiresAuth) {
     // localStorage에서 토큰 확인
-    const auth = localStorage.getItem("auth");
+    const auth = localStorage.getItem('auth');
 
     if (!auth) {
       // 토큰이 없으면 로그인 페이지로 리다이렉트
-      next("/login?error=login_required");
+      next('/login?error=login_required');
       return;
     }
 
@@ -141,14 +169,14 @@ router.beforeEach((to, from, next) => {
       const authData = JSON.parse(auth);
       if (!authData.accessToken) {
         // accessToken이 없으면 로그인 페이지로 리다이렉트
-        next("/login?error=login_required");
+        next('/login?error=login_required');
         return;
       }
     } catch (error) {
       // JSON 파싱 에러시 로그인 페이지로 리다이렉트
-      console.error("Auth data parsing error:", error);
-      localStorage.removeItem("auth");
-      next("/login?error=login_required");
+      console.error('Auth data parsing error:', error);
+      localStorage.removeItem('auth');
+      next('/login?error=login_required');
       return;
     }
   }
