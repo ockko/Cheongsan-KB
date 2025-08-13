@@ -1,39 +1,34 @@
 <script setup>
 import styles from '@/assets/styles/components/home/WeeklyReportWidget.module.css';
-import { defineProps, computed } from 'vue';
+import { computed, onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useReportStore } from '@/stores/report';
 
-// 부모 컴포넌트로부터 받을 데이터(props)를 정의합니다.
-const props = defineProps({
-  reportData: {
-    type: Object,
-    required: true,
-    default: () => ({
-      startDate: '2025-08-04',
-      endDate: '2025-08-10',
-      achievementRate: 57.0,
-      dailyLimit: 40000,
-      averageDailySpending: 34000,
-      spendingByDay: {
-        MON: 35000,
-        TUE: 45000,
-        WED: 45000,
-        THU: 35000,
-        FRI: 35000,
-        SAT: 45000,
-        SUN: 45000,
-      },
-    }),
-  },
+const reportStore = useReportStore();
+const { currentReport, reportHistory, isLoading } = storeToRefs(reportStore);
+
+onMounted(() => {
+  reportStore.fetchLatestReport();
+  reportStore.fetchReportHistoryList();
 });
 
 // "8월 2주차" 와 같은 텍스트를 계산
 const periodText = computed(() => {
-  if (!props.reportData.startDate) return '';
-  const date = new Date(props.reportData.startDate);
+  if (!currentReport.value?.startDate) return '리포트 로딩 중...';
+  const date = new Date(currentReport.value.startDate);
   const month = date.getMonth() + 1;
-  const weekOfMonth = Math.ceil(date.getDate() / 7);
+  const day = date.getDate();
+  const weekOfMonth = Math.ceil((day + 6 - date.getDay()) / 7);
   return `${month}월 ${weekOfMonth}주차`;
 });
+
+// 사용자가 드롭다운에서 특정 주차를 선택했을 때 실행될 메소드
+const handleWeekSelect = (event) => {
+  const selectedStartDate = event.target.value;
+  if (selectedStartDate) {
+    reportStore.fetchReportByDate(selectedStartDate);
+  }
+};
 
 // 숫자에 콤마를 찍어주는 헬퍼 함수
 const formatCurrency = (value) => {
@@ -41,17 +36,17 @@ const formatCurrency = (value) => {
 };
 
 const chartMetrics = computed(() => {
-  if (!props.reportData)
+  if (!currentReport.value)
     return {
-      yAxisLabels: [60000, 45000, 30000, 15000, 0],
+      yAxisLabels: [],
       chartData: [],
       limitLinePosition: 0,
+      yAxisTop: 0,
     };
 
-  const dailyLimit = props.reportData.dailyLimit;
-  const spendingValues = Object.values(props.reportData.spendingByDay);
-
-  const maxValue = Math.max(...spendingValues, dailyLimit);
+  const { dailyLimit, spendingByDay } = currentReport.value;
+  const spendingValues = Object.values(spendingByDay);
+  const maxValue = Math.max(...spendingValues, dailyLimit, 1);
 
   let yAxisTop = Math.ceil(maxValue / 15000) * 15000;
   if (yAxisTop === 0) yAxisTop = 60000;
@@ -65,13 +60,10 @@ const chartMetrics = computed(() => {
   const dayKeys = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
   const chartData = dayKeys.map((key, index) => {
-    const spentOnDay = props.reportData.spendingByDay[key] || 0;
+    const spentOnDay = spendingValues[index] || 0;
     return {
       day: dayLabels[index],
-      height:
-        yAxisTop > 0
-          ? (props.reportData.spendingByDay[key] / yAxisTop) * 100
-          : 0,
+      height: yAxisTop > 0 ? (spentOnDay / yAxisTop) * 100 : 0,
       isOverLimit: spentOnDay > dailyLimit,
     };
   });
@@ -88,11 +80,6 @@ const calculateLinePosition = (labelValue) => {
   }
   return 0;
 };
-
-const selectWeek = () => {
-  // TODO: 과거 리포트 목록을 보여주는 드롭다운 또는 모달을 띄우는 로직
-  console.log('주차 선택 기능 호출');
-};
 </script>
 
 <template>
@@ -101,17 +88,27 @@ const selectWeek = () => {
       <h3>주간 리포트</h3>
     </div>
 
-    <div :class="styles.widgetContent">
+    <div v-if="isLoading" :class="styles.loading">
+      리포트를 불러오는 중입니다...
+    </div>
+
+    <div v-else-if="currentReport" :class="styles.widgetContent">
       <div :class="styles.reportSummary">
         <div :class="styles.reportPeriod">
-          <button @click="selectWeek" :class="styles.periodSelector">
-            {{ periodText }} <span :class="styles.arrow">▼</span>
-          </button>
+          <select @change="handleWeekSelect" :class="styles.periodSelector">
+            <option
+              v-for="history in reportHistory"
+              :key="history.reportId"
+              :value="history.startDate"
+            >
+              {{ history.month }}월 {{ history.weekOfMonth }}주차
+            </option>
+          </select>
         </div>
         <div :class="styles.achievementRate">
           <p>목표 달성률</p>
           <p :class="styles.ratePercent">
-            {{ reportData.achievementRate.toFixed(2) }}%
+            {{ currentReport.achievementRate.toFixed(0) }}%
           </p>
         </div>
       </div>
@@ -156,17 +153,19 @@ const selectWeek = () => {
         <div :class="[styles.summaryItem, styles.average]">
           <p>일일 평균 지출</p>
           <p :class="styles.amount">
-            {{ formatCurrency(reportData.averageDailySpending) }} 원
+            {{ formatCurrency(currentReport.averageDailySpending) }} 원
           </p>
         </div>
         <div :class="styles.divider"></div>
         <div :class="styles.summaryItem">
           <p>지난 주 소비 한도</p>
           <p :class="[styles.amount, styles.highlight]">
-            {{ formatCurrency(reportData.dailyLimit) }} 원
+            {{ formatCurrency(currentReport.dailyLimit) }} 원
           </p>
         </div>
       </div>
     </div>
+
+    <div v-else :class="styles.noData">리포트 데이터가 없습니다.</div>
   </div>
 </template>
