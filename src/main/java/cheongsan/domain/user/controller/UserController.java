@@ -14,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/cheongsan/user")
 @RequiredArgsConstructor
@@ -88,43 +86,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO("서버 내부 오류가 발생했습니다."));
         }
 
-    }
-
-    @GetMapping("/debt-accounts")
-    public ResponseEntity<?> getMyDebt(@AuthenticationPrincipal CustomUser customUser) {
-        try {
-            Long id = customUser.getUser().getId();
-            List<UserDebtAccountResponseDTO> accounts = userService.getUserDebtAccounts(id);
-            if (accounts == null || accounts.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                        .body("해당 유저의 부채 계좌를 찾을 수 없습니다.");
-            }
-            return ResponseEntity.ok(accounts);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("서버 에러가 발생했습니다.");
-        }
-    }
-
-    @PatchMapping("/debt-accounts/{debtAccountId}")
-    public ResponseEntity<?> updateDebtAccount(
-            @RequestBody DebtUpdateRequestDTO requestDTO,
-            @PathVariable Long debtAccountId) {
-        try {
-            DebtUpdateResponseDTO responseDTO = debtService.updateDebtAccount(debtAccountId, requestDTO);
-            return ResponseEntity.ok(responseDTO);
-        } catch (IllegalArgumentException e) {
-            // 잘못된 id나 파라미터
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            // 의도하지 않은 서버 에러
-            log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("서버 내부 오류가 발생했습니다.");
-        }
     }
 
     @PostMapping("/nickname")
