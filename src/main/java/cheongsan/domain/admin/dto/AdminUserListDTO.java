@@ -12,12 +12,14 @@ public class AdminUserListDTO {
     private Long id;
     private String nickname;
     private LocalDate createdAt;
+    private String role;
 
     public static AdminUserListDTO fromEntity(AdminUser user) {
         return new AdminUserListDTO(
                 user.getId(),
                 user.getNickname(),
-                user.getCreatedAt()
+                user.getCreatedAt(),
+                user.getRole()
         );
     }
 }

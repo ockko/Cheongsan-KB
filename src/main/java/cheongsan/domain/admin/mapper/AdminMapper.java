@@ -9,5 +9,5 @@ import java.util.List;
 public interface AdminMapper {
     List<AdminUser> getAllUsers();
 
-    void deleteUserById(Long userId);
+    int deleteUserById(Long userId);
 }
