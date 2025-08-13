@@ -1,0 +1,102 @@
+/* 페이지 레이아웃 */
+.page {
+  min-height: 100vh;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* 헤더 */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.logoutBtn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.logoutBtn i {
+  font-size: 22px;
+  color: #003e65;
+}
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  flex: 1;
+}
+.headerSpacer {
+  width: 36px;
+} /* 타이틀 가운데 정렬용 */
+
+.tableContainer {
+  margin-top: 8px;
+}
+
+/* 테이블 */
+.memberTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+.memberTable thead th {
+  font-size: 16px;
+  font-weight: 700;
+  color: #444;
+  padding: 10px 8px;
+  border-bottom: 1px solid #e8eaee;
+}
+.thName {
+  width: 40%;
+  text-align: left;
+}
+.thDate {
+  width: 40%;
+  text-align: left;
+}
+.thAction {
+  width: 20%;
+}
+
+.memberTable tbody td {
+  padding: 14px 8px;
+  border-bottom: 1px solid #eeeeef;
+  font-size: 14px;
+  color: #222;
+}
+.tdName {
+  font-weight: 600;
+}
+.tdDate {
+  color: #666;
+}
+.tdAction {
+  text-align: right;
+}
+
+/* 삭제 버튼 – 빨간 알약 버튼 */
+.deleteBtn {
+  appearance: none;
+  border: 0;
+  background: #a31219;
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+}
+.deleteBtn:hover {
+  filter: brightness(0.95);
+}
+.deleteBtn:active {
+  transform: translateY(1px);
+}
