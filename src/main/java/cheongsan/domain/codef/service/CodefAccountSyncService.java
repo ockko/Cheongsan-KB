@@ -126,42 +126,6 @@ public class CodefAccountSyncService {
                 log.error("사용자 {}의 대출계좌 동기화 실패: account={}", userId, account.getResAccount(), e);
             }
         }
-
-//        for (AccountListResponseDTO.LoanAccount account : loanAccounts) {
-//            try {
-//                Long orgCodeLong = utilService.getOrCreateFinancialInstitution(organizationCode);
-//                boolean isExistingAccount = debtMapper.isDebtAccountExists(userId, account.getResAccount());
-//
-//                if (isExistingAccount) {
-//                    log.info("사용자 {}의 이미 존재하는 대출계좌: {}", userId, account.getResAccount());
-//                    // 대출계좌는 잔액 업데이트 로직이 없으므로 바로 거래내역 동기화
-//                    transactionSyncService.syncLoanTransactionHistory(userId, connectedId, organizationCode, account.getResAccount());
-//                } else {
-//                    log.info("사용자 {}의 새로운 대출계좌 저장: {}", userId, account.getResAccount());
-//                    createNewLoanAccount(userId, orgCodeLong, account, connectedId, organizationCode);
-//                }
-//
-//            } catch (Exception e) {
-//                log.error("사용자 {}의 대출계좌 동기화 실패: account={}", userId, account.getResAccount(), e);
-//            }
-//        }
-    }
-
-    /**
-     * ✅ 새로 추가: 기존 대출계좌 업데이트
-     */
-    private void updateExistingLoanAccount(Long userId, AccountListResponseDTO.LoanAccount account,
-                                           String connectedId, String organizationCode) {
-        // 대출계좌 잔액 업데이트
-        DebtAccount existingAccount = debtMapper.findByUserIdAndAccount(userId, account.getResAccount());
-        if (existingAccount != null) {
-            BigDecimal newBalance = new BigDecimal(account.getResAccountBalance() != null ? account.getResAccountBalance() : "0");
-            debtMapper.updateDebtBalance(existingAccount.getId(), newBalance);
-            log.info("사용자 {}의 대출계좌 {} 잔액 업데이트: {}", userId, account.getResAccount(), newBalance);
-        }
-
-        // 대출 거래내역 동기화
-        transactionSyncService.syncLoanTransactionHistory(userId, connectedId, organizationCode, account.getResAccount());
     }
 
     /**
