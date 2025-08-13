@@ -2,6 +2,7 @@
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
+import animation from '@/assets/styles/pages/InitialSetup/InitialSetup2.module.scss';
 import styles from '@/assets/styles/pages/InitialSetup/InitialSetup2.module.css';
 import ProgressHeader from '@/components/domain/InitialSetup/ProgressHeader.vue';
 
@@ -26,15 +27,12 @@ onMounted(() => {
         </p>
         <img src="/images/logo-blue.png" alt="로고" />
       </div>
-      <div :class="styles.pageScope">
-        <div :id="styles.container">
-          <div :class="styles.stick" v-for="n in 6" :key="n"></div>
+      <div :class="animation.pageScope">
+        <div :class="animation.container">
+          <div :class="animation.stick" v-for="n in 6" :key="n"></div>
+          <h1 :class="animation.h1">Loading...</h1>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<style lang="scss" module>
-@use '@/assets/styles/pages/InitialSetup/InitialSetup2.module.scss' as *;
-</style>
