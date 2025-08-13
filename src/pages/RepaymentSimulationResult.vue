@@ -22,7 +22,7 @@ const goBack = () => {
   <div :class="styles.simulator">
     <header :class="styles.simulatorHeader">
       <div :class="styles.backButton" @click="goBack">
-        <i class="fa fa-arrow-left"></i>
+        <i class="fa-solid fa-arrow-left"></i>
       </div>
       <p :class="styles.textRegular">상환 시뮬레이션</p>
     </header>
