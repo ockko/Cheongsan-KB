@@ -6,7 +6,7 @@
 <mapper namespace="cheongsan.domain.admin.mapper.AdminMapper">
 
     <select id="getAllUsers" resultType="cheongsan.domain.admin.entity.AdminUser">
-        SELECT id, nickname, created_at
+        SELECT id, nickname, created_at, role
         FROM user
         ORDER BY created_at DESC
     </select>
@@ -16,5 +16,5 @@
         FROM user
         WHERE id = #{userId}
     </delete>
-    
+
 </mapper>
