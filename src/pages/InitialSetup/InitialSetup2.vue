@@ -9,8 +9,8 @@ const router = useRouter();
 
 onMounted(() => {
   setTimeout(() => {
-    router.push('/initialSetup/page3'); // 다음 페이지 경로로 변경하세요
-  }, 3000); // 3000ms = 3초
+    router.push('/initialSetup/page3');
+  }, 3000);
 });
 </script>
 
@@ -26,15 +26,15 @@ onMounted(() => {
         </p>
         <img src="/images/logo-blue.png" alt="로고" />
       </div>
-
-      <div id="container">
-        <div class="stick" v-for="n in 6" :key="n"></div>
-        <h1>Loading...</h1>
+      <div :class="styles.pageScope">
+        <div :id="styles.container">
+          <div :class="styles.stick" v-for="n in 6" :key="n"></div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<style lang="scss">
-@use '@/assets/styles/pages/InitialSetup/InitialSetup2.module.scss';
+<style lang="scss" module>
+@use '@/assets/styles/pages/InitialSetup/InitialSetup2.module.scss' as *;
 </style>

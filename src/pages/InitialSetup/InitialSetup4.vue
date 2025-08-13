@@ -26,7 +26,7 @@ function handleAddLoan(loan) {
 }
 
 function goNext() {
-  router.push('/onboarding/complete');
+  router.push('/home');
 }
 </script>
 
