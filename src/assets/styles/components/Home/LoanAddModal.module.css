@@ -103,6 +103,15 @@ select {
 .detail-info {
   padding-top: 1rem;
 }
+
+.error-message {
+  color: #e74c3c;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  text-align: center;
+  font-weight: 500;
+}
+
 .buttonGroup {
   display: flex;
   gap: 10px;

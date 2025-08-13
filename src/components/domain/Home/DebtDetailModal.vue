@@ -21,11 +21,11 @@ const formatCurrency = (value) => {
 // 상환 방식 코드값을 한글로 변환하는 헬퍼 함수
 const formatRepaymentMethod = (method) => {
   switch (method) {
-    case 'EQUAL_PRINCIPAL_INTEREST':
+    case 'EQUAL_PAYMENT':
       return '원리금균등상환';
     case 'EQUAL_PRINCIPAL':
       return '원금균등상환';
-    case 'BULLET_REPAYMENT':
+    case 'LUMP_SUM':
       return '만기일시상환';
     default:
       return method;
@@ -38,14 +38,14 @@ const formatRepaymentMethod = (method) => {
     <div :class="styles.modalContent">
       <h3 :class="styles.debtTitle">{{ debtDetails.debtName }}</h3>
       <p :class="styles.organizationName">
-        <span :class="styles.icon">🏢</span> {{ debtDetails.organizationName }}
+        {{ debtDetails.organizationName }}
       </p>
 
       <ul :class="styles.detailsList">
         <li>
           <span :class="styles.label">
             <span>✔️</span>
-            <sapn>원금</sapn>
+            <span>원금</span>
           </span>
           <span :class="styles.value"
             >{{ formatCurrency(debtDetails.originalAmount) }} 원</span
@@ -54,7 +54,7 @@ const formatRepaymentMethod = (method) => {
         <li>
           <span :class="styles.label">
             <span>✔️</span>
-            <sapn>이자율</sapn>
+            <span>이자율</span>
           </span>
           <span :class="styles.value"
             >{{ debtDetails.interestRate.toFixed(2) }} %</span
@@ -63,14 +63,23 @@ const formatRepaymentMethod = (method) => {
         <li>
           <span :class="styles.label">
             <span>✔️</span>
-            <sapn>대출 시작일</sapn>
+            <span>대출 시작일</span>
           </span>
           <span :class="styles.value">{{ debtDetails.loanStartDate }}</span>
         </li>
         <li>
           <span :class="styles.label">
             <span>✔️</span>
-            <sapn>남은 상환액</sapn>
+            <span>다음 상환일</span>
+          </span>
+          <span :class="styles.value">{{
+            debtDetails.nextPaymentDate || '해당없음'
+          }}</span>
+        </li>
+        <li>
+          <span :class="styles.label">
+            <span>✔️</span>
+            <span>남은 상환액</span>
           </span>
           <span :class="styles.value"
             >{{ formatCurrency(debtDetails.currentBalance) }} 원</span
@@ -79,7 +88,7 @@ const formatRepaymentMethod = (method) => {
         <li>
           <span :class="styles.label">
             <span>✔️</span>
-            <sapn>거치기간</sapn>
+            <span>거치기간</span>
           </span>
           <span :class="styles.value"
             >{{ debtDetails.gracePeriodMonths }} 개월</span
@@ -88,10 +97,10 @@ const formatRepaymentMethod = (method) => {
         <li>
           <span :class="styles.label">
             <span>✔️</span>
-            <sapn>상환 방식</sapn>
+            <span>상환 방식</span>
           </span>
           <span :class="styles.value">{{
-            formatRepaymentMethod(debtDetails.repaymentMethod)
+            formatRepaymentMethod(debtDetails.repaymentType)
           }}</span>
         </li>
       </ul>

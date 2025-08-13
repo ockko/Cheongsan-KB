@@ -1,5 +1,5 @@
 <script setup>
-import styles from '@/assets/styles/components/home/LoanAddModal.module.css';
+import styles from '@/assets/styles/components/InitialSetup/initialLoanModal.module.css';
 import { ref, reactive, computed, watch, onMounted } from 'vue';
 import { defineEmits, defineProps } from 'vue';
 import { registerDebt } from '@/api/dashboard-bottomApi.js';

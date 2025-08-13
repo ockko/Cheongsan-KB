@@ -1,0 +1,128 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal {
+  background: white;
+  border-radius: 18px;
+  border-style: solid;
+  padding: 2rem 2rem;
+
+  width: 80%;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.loan-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+.loan-logo {
+  width: 36px;
+  height: 36px;
+  margin-left: -20px;
+  border-radius: 8px;
+}
+.loan-title {
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1.4;
+  max-width: 200px;
+  word-break: keep-all;
+  white-space: normal;
+  text-align: center;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: -14px;
+}
+.form-row img {
+  width: 10px;
+  height: 10px;
+}
+.form-label {
+  width: 60px;
+  text-align: left;
+  margin-left: 1rem;
+  font-weight: bold;
+  white-space: nowrap;
+  margin-right: 1rem;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.form-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  flex: 1;
+}
+.repayment-row {
+  justify-content: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+}
+.repayment-day-input {
+  margin-left: 6px;
+  width: 60px;
+  padding: 4px 6px;
+  border: none;
+  border-bottom: 1px solid #333;
+  text-align: center;
+  font-size: 15px;
+  background: transparent;
+}
+.repayment-day-input:focus {
+  outline: none;
+  border-bottom: 2px solid #00497a;
+}
+
+.repayment-select {
+  text-align: center;
+  margin-top: 4px;
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 12px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+}
+
+/* 버튼 그룹 */
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+.confirm-btn,
+.cancel-btn {
+  width: fit-content;
+  padding: 0 2rem;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+}
+.confirm-btn {
+  background-color: #00497a;
+  color: #fff;
+}
+.cancel-btn {
+  background-color: #e0e0e0;
+  color: #333;
+}

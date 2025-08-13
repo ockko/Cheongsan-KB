@@ -7,7 +7,7 @@ import { fetchUserLoans } from '@/api/initialSetup/initialSetup3.js';
 import styles from '@/assets/styles/pages/InitialSetup/InitialSetup3.module.css';
 import ProgressHeader from '@/components/domain/InitialSetup/ProgressHeader.vue';
 import LoanItem from '@/components/domain/InitialSetup/LoanItem.vue';
-import LoanModal from '@/components/domain/InitialSetup/LoanModal.vue';
+import LoanModal from '@/components/domain/InitialSetup/InitialLoanAddModal.vue';
 
 const router = useRouter();
 const authStore = useAuthStore();
