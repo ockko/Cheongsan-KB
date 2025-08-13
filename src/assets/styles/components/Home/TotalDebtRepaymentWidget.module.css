@@ -69,3 +69,49 @@
   font-weight: 600;
   color: var(--color-secondary);
 }
+
+/* 로딩 상태 스타일 */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1.3rem;
+  color: var(--color-gray0);
+  font-size: 0.9rem;
+  text-align: center;
+  min-height: 120px;
+}
+
+/* 에러 상태 스타일 */
+.error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1.3rem;
+  color: var(--color-red);
+  font-size: 0.9rem;
+  text-align: center;
+  min-height: 120px;
+  gap: 1rem;
+}
+
+/* 재시도 버튼 스타일 */
+.retryButton {
+  background-color: var(--color-main);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.retryButton:hover {
+  background-color: var(--color-secondary);
+}
+
+.retryButton:active {
+  transform: translateY(1px);
+}
