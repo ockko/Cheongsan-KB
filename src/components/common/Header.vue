@@ -49,8 +49,7 @@ const handleClickOutside = (event) => {
 // 내 정보 관리 (향후 구현)
 const goToMyInfo = () => {
   showUserPopup.value = false;
-  // TODO: 내 정보 관리 기능 구현
-  console.log('내 정보 관리 클릭');
+  router.push('/mypage');
 };
 
 // 로그아웃 처리
