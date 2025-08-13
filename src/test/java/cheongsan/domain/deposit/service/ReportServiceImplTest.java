@@ -32,6 +32,9 @@ class ReportServiceImplTest {
     private ReportServiceImpl reportService;
 
     @Autowired
+    private ReportCreationServiceImpl reportCreationService;
+
+    @Autowired
     private ReportMapper reportMapper;
 
     @Test
@@ -44,7 +47,7 @@ class ReportServiceImplTest {
         assertEquals(1, beforeSave.size(), "테스트 시작 전 리포트가 1건 있습니다.");
 
         // when
-        WeeklyReportDTO createdReport = reportService.createAndSaveLatestWeeklyReport(userId);
+        WeeklyReportDTO createdReport = reportCreationService.createAndSaveLatestWeeklyReport(userId);
 
         // then
         assertNotNull(createdReport);
@@ -60,7 +63,7 @@ class ReportServiceImplTest {
         Long userId = 1L;
 
         // when
-        WeeklyReportDTO latestReport = reportService.getLatestReportFromHistory(userId);
+        WeeklyReportDTO latestReport = reportService.getDashboardWeeklyReport(userId);
 
         // then
         LocalDate expectedStartDate = LocalDate.now().minusWeeks(1).with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));

@@ -1,5 +1,7 @@
 package cheongsan.domain.deposit.controller;
 
+import cheongsan.common.constant.ResponseMessage;
+import cheongsan.common.exception.ResponseDTO;
 import cheongsan.domain.deposit.dto.WeeklyReportDTO;
 import cheongsan.domain.deposit.dto.WeeklyReportHistoryDTO;
 import cheongsan.domain.deposit.service.ReportService;
@@ -22,11 +24,14 @@ public class ReportController {
     private final ReportService reportService;
 
     @GetMapping("/latest")
-    public ResponseEntity<WeeklyReportDTO> getLatestWeeklyReport(Principal principal) {
+    public ResponseEntity<?> getLatestWeeklyReport(Principal principal) {
         Authentication authentication = (Authentication) principal;
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
         Long userId = customUser.getUser().getId();
-        WeeklyReportDTO result = reportService.getLatestReportFromHistory(userId);
+        WeeklyReportDTO result = reportService.getDashboardWeeklyReport(userId);
+        if (result == null) {
+            return new ResponseEntity<>(ResponseMessage.REPORT_NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
