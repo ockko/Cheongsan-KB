@@ -30,9 +30,13 @@ const goNext = async () => {
   } catch (error) {
     console.error('API 호출 에러 전체:', error);
     console.error('응답 객체:', error.response);
+    console.error('에러 상태 코드:', error.response?.status);
+    console.error('에러 데이터:', error.response?.data);
 
     if (error.response && error.response.status === 404) {
       alert('해당 유저를 찾을 수 없습니다.');
+    } else if (error.response && error.response.status === 500) {
+      alert('서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
     } else {
       alert('닉네임 저장 중 오류가 발생했습니다.');
       console.error(error);
@@ -42,10 +46,10 @@ const goNext = async () => {
 </script>
 
 <template>
-  <div :class="styles.page">
+  <div :class="styles.initialSetup1Page">
     <ProgressHeader :current="1" :total="3" />
-    <div :class="styles.container">
-      <div :class="styles.titleBox">
+    <div :class="styles.initialSetup1Container">
+      <div :class="styles.initialSetup1TitleBox">
         <h2>닉네임 설정</h2>
         <p>
           티끌모아청산에서 사용하실<br />
@@ -53,16 +57,18 @@ const goNext = async () => {
         </p>
       </div>
 
-      <div :class="styles.input">
+      <div :class="styles.initialSetup1Input">
         <input
-          :class="styles.nicknameInput"
+          :class="styles.initialSetup1NicknameInput"
           v-model="nickname"
           maxlength="10"
           placeholder="닉네임을 입력하세요."
         />
-        <p :class="styles.textLimit">(최대 10자)</p>
+        <p :class="styles.initialSetup1TextLimit">(최대 10자)</p>
       </div>
-      <button :class="styles.nextButton" @click="goNext">다음</button>
+      <button :class="styles.initialSetup1NextButton" @click="goNext">
+        다음
+      </button>
     </div>
   </div>
 </template>

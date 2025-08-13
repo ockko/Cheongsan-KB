@@ -7,6 +7,8 @@ import { registerDebt } from '@/api/dashboard-bottomApi.js';
 const emit = defineEmits(['close', 'add-loan', 'refresh-debt-list']);
 const props = defineProps({
   visible: Boolean,
+  debtName: String,
+  institutionName: String,
 });
 
 const debtName = ref('');
@@ -168,91 +170,145 @@ const addLoan = async () => {
 </script>
 
 <template>
-  <div v-if="visible" :class="styles.modalOverlay" @click.self="closeModal">
-    <div :class="styles.modalContainer">
-      <form :class="styles.form" @submit.prevent="addLoan">
+  <div
+    v-if="visible"
+    :class="styles.initialLoanModalOverlay"
+    @click.self="closeModal"
+  >
+    <div :class="styles.initialLoanModalContainer">
+      <form :class="styles.initialLoanModalForm" @submit.prevent="addLoan">
         <!-- 기본 정보 -->
-        <div :class="styles.formRow">
-          <label :class="styles.titleLabel">대출명 :</label>
-          <div :class="styles.formControl">
-            <input v-model="debtName" type="text" :class="styles.textInput" />
+        <div :class="styles.initialLoanModalFormRow">
+          <div :class="styles.initialLoanModalFormLabelContainer">
+            <div :class="styles.initialLoanModalDot">
+              <img
+                src="/images/dot-icon.png"
+                alt="dot"
+                :class="styles.initialLoanModalDotIcon"
+              />
+            </div>
+            <div :class="styles.initialLoanModalFormLabel">대출 상품명</div>
           </div>
-        </div>
-        <div :class="styles.formRow">
-          <label :class="styles.subLabel">대출 기관명 :</label>
-          <div :class="styles.formControl">
+          <div :class="styles.initialLoanModalFormControlUp">
             <input
-              v-model="institutionName"
+              v-model="debtName"
               type="text"
-              :class="styles.textInput"
+              :class="styles.initialLoanModalTextInput"
             />
           </div>
         </div>
-        <div :class="styles.formRow">
-          <label :class="styles.subLabel">계좌 번호 :</label>
-          <div :class="styles.formControl">
-            <input v-model="resAccount" type="text" :class="styles.textInput" />
+        <div :class="styles.initialLoanModalFormRow">
+          <div :class="styles.initialLoanModalFormLabelContainer">
+            <div :class="styles.initialLoanModalDot">
+              <img
+                src="/images/dot-icon.png"
+                alt="dot"
+                :class="styles.initialLoanModalDotIcon"
+              />
+            </div>
+            <div :class="styles.initialLoanModalFormLabel">대출 기관명</div>
+          </div>
+          <div :class="styles.initialLoanModalFormControlUp">
+            <input
+              v-model="institutionName"
+              type="text"
+              :class="styles.initialLoanModalTextInput"
+            />
+          </div>
+        </div>
+        <div :class="styles.initialLoanModalFormRow">
+          <div :class="styles.initialLoanModalFormLabelContainer">
+            <div :class="styles.initialLoanModalDot">
+              <img
+                src="/images/dot-icon.png"
+                alt="dot"
+                :class="styles.initialLoanModalDotIcon"
+              />
+            </div>
+            <div :class="styles.initialLoanModalFormLabel">계좌번호</div>
+          </div>
+          <div :class="styles.initialLoanModalFormControlUp">
+            <input
+              v-model="resAccount"
+              type="text"
+              :class="styles.initialLoanModalTextInput"
+            />
           </div>
         </div>
 
         <!-- 상세 항목 -->
-        <div :class="styles.detailInfo">
+        <div :class="styles.initialLoanModalDetailInfo">
           <div
             v-for="(field, index) in fields"
             :key="index"
-            :class="styles.formRow"
+            :class="styles.initialLoanModalFormRow"
           >
-            <div :class="styles.formLabelContainer">
-              <div :class="styles.dot">
-                <img src="/images/dot-icon.png" alt="dot" />
+            <div :class="[styles.initialLoanModalFormLabelContainer]">
+              <div :class="styles.initialLoanModalDot">
+                <img
+                  src="/images/dot-icon.png"
+                  alt="dot"
+                  :class="styles.initialLoanModalDotIcon"
+                />
               </div>
-              <div :class="styles.formLabel">{{ field.label }}</div>
+              <div :class="styles.initialLoanModalFormLabel">
+                {{ field.label }}
+              </div>
             </div>
 
             <div
               v-if="field.model !== 'loanStartDate'"
-              :class="styles.formControl"
+              :class="styles.initialLoanModalFormControl"
             >
               <input
                 v-model="formData[field.model]"
                 type="number"
-                :class="styles.textInput"
+                :class="styles.initialLoanModalTextInput"
                 :min="field.model === 'interestRate' ? 0 : undefined"
                 :max="field.model === 'interestRate' ? 100 : undefined"
                 :step="field.model === 'interestRate' ? 0.01 : undefined"
               />
-              {{ field.unit }}
+              <span :class="styles.initialLoanModalUnit">{{ field.unit }}</span>
             </div>
 
-            <div v-else :class="styles.formControl">
+            <div v-else :class="styles.initialLoanModalFormControl">
               <input
                 v-model="formData.loanYear"
                 type="text"
-                :class="styles.yearInput"
+                :class="styles.initialLoanModalYearInput"
               />
-              년
+              <span :class="styles.initialLoanModalDateUnit">년</span>
               <input
                 v-model="formData.loanMonth"
                 type="text"
-                :class="styles.dateInput"
+                :class="styles.initialLoanModalDateInput"
               />
-              월
+              <span :class="styles.initialLoanModalDateUnit">월</span>
               <input
                 v-model="formData.loanDay"
                 type="text"
-                :class="styles.dateInput"
+                :class="styles.initialLoanModalDateInput"
               />
-              일
+              <span :class="styles.initialLoanModalDateUnit">일</span>
             </div>
           </div>
 
-          <div :class="styles.formRow">
-            <div :class="styles.formLabelContainer">
-              <img src="/images/dot-icon.png" alt="dot" />
-              <div :class="styles.formLabel">상환 방식</div>
+          <div :class="styles.initialLoanModalFormRow">
+            <div :class="[styles.initialLoanModalFormLabelContainer]">
+              <div :class="styles.initialLoanModalDot">
+                <img
+                  src="/images/dot-icon.png"
+                  alt="dot"
+                  :class="styles.initialLoanModalDotIcon"
+                />
+              </div>
+              <div :class="styles.initialLoanModalFormLabel">상환 방식</div>
             </div>
-            <div :class="styles.formControl">
-              <select v-model="repaymentMethod" :class="styles.repaymentSelect">
+            <div :class="styles.initialLoanModalFormControl">
+              <select
+                v-model="repaymentMethod"
+                :class="[styles.initialLoanModalRepaymentSelect]"
+              >
                 <option disabled value="">선택</option>
                 <option>원금균등상환</option>
                 <option>원리금균등상환</option>
@@ -264,15 +320,24 @@ const addLoan = async () => {
         </div>
 
         <!-- 제출 버튼 -->
-        <div :class="styles.buttonGroup">
+        <div :class="styles.initialLoanModalButtonGroup">
           <button
             type="button"
-            :class="[styles.button, styles.cancelButton]"
+            :class="[
+              styles.initialLoanModalButton,
+              styles.initialLoanModalCancelButton,
+            ]"
             @click="closeModal"
           >
             취소
           </button>
-          <button type="submit" :class="[styles.button, styles.submitBtn]">
+          <button
+            type="submit"
+            :class="[
+              styles.initialLoanModalButton,
+              styles.initialLoanModalSubmitButton,
+            ]"
+          >
             추가하기
           </button>
         </div>

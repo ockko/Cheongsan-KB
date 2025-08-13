@@ -125,12 +125,8 @@ const carouselRef = ref(null);
 
 // 슬라이드 위치를 computed로 변경하여 반응성 향상
 const slidePosition = computed(() => {
-  const position = -currentPolicyIndex.value * slideWidth.value;
-  console.log('슬라이드 위치 계산:', {
-    currentIndex: currentPolicyIndex.value,
-    slideWidth: slideWidth.value,
-    position: position
-  });
+  const position = -(currentPolicyIndex.value - 3) * slideWidth.value;
+
   return position;
 });
 
@@ -146,10 +142,10 @@ const handleTouchStart = (event) => {
 // 터치 이동 이벤트
 const handleTouchMove = (event) => {
   if (!touchStartX.value) return;
-  
+
   touchEndX.value = event.touches[0].clientX;
   const deltaX = touchEndX.value - touchStartX.value;
-  
+
   // 수평 스와이프가 수직 스와이프보다 클 때만 드래그로 인식
   if (Math.abs(deltaX) > 10) {
     isDragging.value = true;
@@ -159,10 +155,10 @@ const handleTouchMove = (event) => {
 // 터치 종료 이벤트
 const handleTouchEnd = () => {
   if (!isDragging.value) return;
-  
+
   const deltaX = touchEndX.value - touchStartX.value;
   const threshold = 50; // 스와이프 감지 임계값
-  
+
   if (Math.abs(deltaX) > threshold) {
     if (deltaX > 0) {
       // 오른쪽으로 스와이프 - 이전 정책 (왼쪽으로 이동)
@@ -172,7 +168,7 @@ const handleTouchEnd = () => {
       goToNextPolicy();
     }
   }
-  
+
   // 상태 초기화
   touchStartX.value = 0;
   touchEndX.value = 0;
@@ -188,10 +184,10 @@ const handleMouseDown = (event) => {
 
 const handleMouseMove = (event) => {
   if (!touchStartX.value) return;
-  
+
   touchEndX.value = event.clientX;
   const deltaX = touchEndX.value - touchStartX.value;
-  
+
   if (Math.abs(deltaX) > 10) {
     isDragging.value = true;
   }
@@ -199,10 +195,10 @@ const handleMouseMove = (event) => {
 
 const handleMouseUp = (event) => {
   if (!isDragging.value) return;
-  
+
   const deltaX = touchEndX.value - touchStartX.value;
   const threshold = 50;
-  
+
   if (Math.abs(deltaX) > threshold) {
     if (deltaX > 0) {
       // 오른쪽으로 드래그 - 이전 정책 (왼쪽으로 이동)
@@ -212,7 +208,7 @@ const handleMouseUp = (event) => {
       goToNextPolicy();
     }
   }
-  
+
   // 상태 초기화
   touchStartX.value = 0;
   touchEndX.value = 0;
@@ -223,15 +219,21 @@ const handleMouseUp = (event) => {
 const goToPreviousPolicy = () => {
   if (isTransitioning.value) return;
   isTransitioning.value = true;
-  
-  if (currentPolicyIndex.value === 1) { // 첫 번째 실제 카드
+
+  if (currentPolicyIndex.value === 1) {
+    // 첫 번째 실제 카드
     currentPolicyIndex.value = policies.length; // 마지막 실제 카드로 이동
   } else {
     currentPolicyIndex.value--;
   }
-  
-  console.log('이전 정책으로 이동:', currentPolicyIndex.value, '정책:', currentPolicy.value.programName);
-  
+
+  console.log(
+    '이전 정책으로 이동:',
+    currentPolicyIndex.value,
+    '정책:',
+    currentPolicy.value.programName
+  );
+
   // 트랜지션 완료 후 상태 초기화 (CSS 트랜지션 시간과 일치)
   setTimeout(() => {
     isTransitioning.value = false;
@@ -242,15 +244,21 @@ const goToPreviousPolicy = () => {
 const goToNextPolicy = () => {
   if (isTransitioning.value) return;
   isTransitioning.value = true;
-  
-  if (currentPolicyIndex.value === policies.length) { // 마지막 실제 카드
+
+  if (currentPolicyIndex.value === policies.length) {
+    // 마지막 실제 카드
     currentPolicyIndex.value = 1; // 첫 번째 실제 카드로 이동
   } else {
     currentPolicyIndex.value++;
   }
-  
-  console.log('다음 정책으로 이동:', currentPolicyIndex.value, '정책:', currentPolicy.value.programName);
-  
+
+  console.log(
+    '다음 정책으로 이동:',
+    currentPolicyIndex.value,
+    '정책:',
+    currentPolicy.value.programName
+  );
+
   // 트랜지션 완료 후 상태 초기화 (CSS 트랜지션 시간과 일치)
   setTimeout(() => {
     isTransitioning.value = false;
@@ -262,9 +270,14 @@ const goToPolicy = (index) => {
   if (isTransitioning.value) return;
   isTransitioning.value = true;
   currentPolicyIndex.value = index + 1; // 0-based index를 1-based로 변환
-  
-  console.log('특정 정책으로 이동:', currentPolicyIndex.value, '정책:', currentPolicy.value.programName);
-  
+
+  console.log(
+    '특정 정책으로 이동:',
+    currentPolicyIndex.value,
+    '정책:',
+    currentPolicy.value.programName
+  );
+
   // 트랜지션 완료 후 상태 초기화 (CSS 트랜지션 시간과 일치)
   setTimeout(() => {
     isTransitioning.value = false;
@@ -283,15 +296,15 @@ const handleResize = () => {
 onMounted(() => {
   // 슬라이드 너비 계산 (카드 너비 + 간격)
   slideWidth.value = 210 + 20; // 카드 너비(210px) + 간격(20px)
-  
+
   console.log('초기 슬라이드 너비 설정:', slideWidth.value);
-  
+
   // 초기 인덱스 설정 (슬라이드 너비가 설정된 후에)
   initializePolicyIndex();
-  
+
   console.log('초기 정책 인덱스 설정:', currentPolicyIndex.value);
   console.log('초기 슬라이드 위치:', slidePosition.value);
-  
+
   // 윈도우 크기 변경 시 슬라이드 너비 재계산
   window.addEventListener('resize', handleResize);
 });
@@ -349,7 +362,10 @@ const goToDiagnosis = () => {
 // 스와이프 진행률 표시
 const swipeProgress = computed(() => {
   if (isDragging.value && touchStartX.value && touchEndX.value) {
-    return `${Math.min(Math.abs(touchEndX.value - touchStartX.value) / 100 * 100, 100)}%`;
+    return `${Math.min(
+      (Math.abs(touchEndX.value - touchStartX.value) / 100) * 100,
+      100
+    )}%`;
   }
   return '0%';
 });
@@ -358,7 +374,7 @@ const swipeProgress = computed(() => {
 const pageIndicator = computed(() => {
   return policies.map((_, index) => ({
     index,
-    isActive: index === (currentPolicyIndex.value - 1), // 1-based를 0-based로 변환
+    isActive: index === currentPolicyIndex.value - 1, // 1-based를 0-based로 변환
   }));
 });
 
@@ -382,7 +398,7 @@ const pageIndicator = computed(() => {
     </div>
 
     <!-- 추천 정책 카드 -->
-    <div 
+    <div
       :class="[styles.cardSlider, { [styles.swiping]: isDragging }]"
       ref="carouselRef"
       @touchstart="handleTouchStart"
@@ -394,18 +410,23 @@ const pageIndicator = computed(() => {
       @mouseleave="handleMouseUp"
     >
       <!-- 카드 슬라이드 컨테이너 -->
-      <div 
+      <div
         :class="styles.slideContainer"
-        :style="{ 
+        :style="{
           transform: `translateX(${slidePosition}px)`,
-          transition: isTransitioning ? 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'none'
+          transition: isTransitioning
+            ? 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+            : 'none',
         }"
       >
         <!-- 모든 정책 카드들 -->
-        <div 
-          v-for="(policy, index) in policies" 
+        <div
+          v-for="(policy, index) in policies"
           :key="policy.id"
-          :class="[styles.resultCard, { [styles.activeCard]: index === currentPolicyIndex - 1 }]"
+          :class="[
+            styles.resultCard,
+            { [styles.activeCard]: index === currentPolicyIndex - 1 },
+          ]"
           @click="openModal"
         >
           <!-- 카드 헤더 -->
@@ -436,27 +457,45 @@ const pageIndicator = computed(() => {
       </div>
 
       <!-- 스와이프 방향 힌트 -->
-      <div :class="[styles.swipeHint, styles.swipeHintLeft, { [styles.show]: isDragging && touchEndX.value - touchStartX.value > 0 }]">
+      <div
+        :class="[
+          styles.swipeHint,
+          styles.swipeHintLeft,
+          {
+            [styles.show]:
+              isDragging && touchEndX.value - touchStartX.value > 0,
+          },
+        ]"
+      >
         ← 이전 정책
       </div>
-      <div :class="[styles.swipeHint, styles.swipeHintRight, { [styles.show]: isDragging && touchEndX.value - touchStartX.value < 0 }]">
+      <div
+        :class="[
+          styles.swipeHint,
+          styles.swipeHintRight,
+          {
+            [styles.show]:
+              isDragging && touchEndX.value - touchStartX.value < 0,
+          },
+        ]"
+      >
         다음 정책 →
       </div>
 
       <!-- 스와이프 진행률 표시 -->
       <div :class="styles.swipeProgress">
-        <div 
-          :class="styles.swipeProgressBar" 
-          :style="{ 
-            width: swipeProgress 
+        <div
+          :class="styles.swipeProgressBar"
+          :style="{
+            width: swipeProgress,
           }"
         ></div>
       </div>
 
       <!-- 페이지 인디케이터 -->
       <div :class="styles.pageIndicator">
-        <div 
-          v-for="(item, index) in pageIndicator" 
+        <div
+          v-for="(item, index) in pageIndicator"
           :key="item.index"
           :class="[styles.pageDot, { [styles.activeDot]: item.isActive }]"
           @click="() => goToPolicy(index)"
