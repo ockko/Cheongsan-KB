@@ -2,6 +2,7 @@
 import { onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useSimulationStore } from '@/stores/repayment-simulation';
+import BackHeader from '@/components/common/BackHeader.vue';
 import DebtChart from '@/components/domain/simulation/DebtChart.vue';
 import PlanModal from '@/components/domain/simulation/PlanModal.vue';
 import styles from '@/assets/styles/pages/simulation/RepaymentSimulationResult.module.css';
@@ -22,7 +23,7 @@ const goBack = () => {
   <div :class="styles.simulator">
     <header :class="styles.simulatorHeader">
       <div :class="styles.backButton" @click="goBack">
-        <i class="fa-solid fa-arrow-left"></i>
+        <i class="fa fa-arrow-left"></i>
       </div>
       <p :class="styles.textRegular">상환 시뮬레이션</p>
     </header>

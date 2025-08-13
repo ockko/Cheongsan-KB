@@ -1,0 +1,133 @@
+$text_color: navy;
+$stick_color: navy; // Changes the colour of all sticks
+$stick_length: 30px; // Changes length of all sticks
+$stick_distance: -8px; // Changes distance between sticks (will need editing after 30px)
+
+@import url('https://fonts.googleapis.com/css?family=Lato:100,300,700');
+
+.pageScope {
+  html {
+    background-color: white;
+  }
+
+  h1 {
+    font-family: 'Lato', sans-serif;
+    color: $text_color;
+    text-transform: uppercase;
+    font-size: 1.3em;
+    letter-spacing: 1.5px;
+    text-align: center;
+    width: 155px;
+    margin-top: 40px;
+    margin-left: 10px;
+    -webkit-animation: fade 2s infinite;
+    -moz-animation: fade 2s infinite;
+    animation: fade 2s infinite;
+  }
+
+  .container {
+    width: $stick_length * 6;
+    margin: auto;
+    margin-top: 30px;
+    vertical-align: middle;
+  }
+
+  .stick {
+    width: $stick_length;
+    height: 3px;
+    background: $stick_color;
+    display: inline-block;
+    margin-left: $stick_distance;
+  }
+
+  // nth-child(n)은 모든 자식이므로 불필요, 대신 모든 .stick에 기본 transform과 animation 줌
+  .stick {
+    transform: rotate(30deg);
+    -ms-transform: rotate(30deg); /* IE 9 */
+    -webkit-transform: rotate(30deg); /* Safari and Chrome */
+    -moz-transform: rotate(30deg);
+    -webkit-animation: fall 2s infinite;
+    -moz-animation: fall 2s infinite;
+    animation: fall 2s infinite;
+  }
+
+  // 짝수번째 자식은 rotate(-30deg)와 rise 애니메이션
+  .stick:nth-child(even) {
+    transform: rotate(-30deg);
+    -ms-transform: rotate(-30deg);
+    -webkit-transform: rotate(-30deg);
+    -moz-transform: rotate(-30deg);
+    -webkit-animation: rise 2s infinite;
+    -moz-animation: rise 2s infinite;
+    animation: rise 2s infinite;
+  }
+
+  @-webkit-keyframes rise {
+    50% {
+      transform: rotate(30deg);
+      -ms-transform: rotate(30deg);
+      -webkit-transform: rotate(30deg);
+      -moz-transform: rotate(30deg);
+    }
+  }
+  @-moz-keyframes rise {
+    50% {
+      transform: rotate(30deg);
+      -ms-transform: rotate(30deg);
+      -webkit-transform: rotate(30deg);
+      -moz-transform: rotate(30deg);
+    }
+  }
+  @keyframes rise {
+    50% {
+      transform: rotate(30deg);
+    }
+  }
+
+  @-webkit-keyframes fall {
+    50% {
+      transform: rotate(-30deg);
+      -ms-transform: rotate(-30deg);
+      -webkit-transform: rotate(-30deg);
+      -moz-transform: rotate(-30deg);
+    }
+  }
+  @-moz-keyframes fall {
+    50% {
+      transform: rotate(-30deg);
+      -ms-transform: rotate(-30deg);
+      -webkit-transform: rotate(-30deg);
+      -moz-transform: rotate(-30deg);
+    }
+  }
+  @keyframes fall {
+    50% {
+      transform: rotate(-30deg);
+    }
+  }
+
+  @-webkit-keyframes fade {
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @-moz-keyframes fade {
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes fade {
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+}

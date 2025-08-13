@@ -144,7 +144,6 @@ const openModal = async () => {
 
     // API 호출하여 상세 정보 가져오기
     const detailData = await getRecommendationDetail(policyId);
-    console.log(detailData);
     modalData.value = detailData;
 
     // 모달 열기

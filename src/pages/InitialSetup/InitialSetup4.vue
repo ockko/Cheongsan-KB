@@ -5,29 +5,29 @@ import { useRouter } from 'vue-router';
 import styles from '@/assets/styles/pages/InitialSetup/InitialSetup4.module.css';
 import ProgressHeader from '@/components/domain/InitialSetup/ProgressHeader.vue';
 import LoanItem from '@/components/domain/InitialSetup/LoanItem.vue';
-import LoanAddModal from '@/components/domain/Home/LoanAddModal.vue';
+import LoanAddModal from '@/components/domain/home/LoanAddModal.vue';
 
 const router = useRouter();
 
 const customLoans = ref([]);
 const isModalOpen = ref(false);
 
-function openModal() {
+const openModal = () => {
   isModalOpen.value = true;
-}
+};
 
-function closeModal() {
+const closeModal = () => {
   isModalOpen.value = false;
-}
+};
 
-function handleAddLoan(loan) {
+const handleAddLoan = (loan) => {
   customLoans.value.push(loan);
   isModalOpen.value = false;
-}
+};
 
-function goNext() {
-  router.push('/onboarding/complete');
-}
+const goNext = () => {
+  router.push('/home');
+};
 </script>
 
 <template>
@@ -48,7 +48,7 @@ function goNext() {
           :logoUrl="loan.logo"
           :institution="loan.institution"
           :loanName="loan.name"
-          :selected="true"
+          :selected="loan.selected"
         />
 
         <div :class="styles.addBox" @click="openModal">
@@ -65,12 +65,18 @@ function goNext() {
       <button :class="styles.nextButton" @click="goNext">
         티모청 시작하기
       </button>
-
       <LoanAddModal
-        v-if="isModalOpen"
+        v-show="isModalOpen"
+        :visible="isModalOpen"
         @close="closeModal"
-        @add-loan="handleAddLoan"
+        @add-loan="
+          (loan) => {
+            handleAddLoan(loan);
+            closeModal();
+          }
+        "
       />
+      <p v-if="isModalOpen">모달 상태 true</p>
     </div>
   </div>
 </template>

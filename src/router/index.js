@@ -14,11 +14,7 @@ import InitialSetup2 from '@/pages/InitialSetup/InitialSetup2.vue';
 import InitialSetup3 from '@/pages/InitialSetup/InitialSetup3.vue';
 import InitialSetup4 from '@/pages/InitialSetup/InitialSetup4.vue';
 import RepaymentSimulationResult from '@/pages/RepaymentSimulationResult.vue';
-import MyPage from '@/pages/MyPage.vue';
-import EditId from '@/pages/EditId.vue';
-import EditEmail from '@/pages/EditEmail.vue';
-import EditPassword from '@/pages/EditPassword.vue';
-import MemberWithdraw from '@/pages/MemberWithdraw.vue';
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -35,6 +31,11 @@ const router = createRouter({
       path: '/login', // 로그인 라우트 추가
       name: 'Login',
       component: Login,
+    },
+    {
+      path: '/signup',
+      name: 'Signup',
+      component: Signup, // 회원가입 라우트 추가
     },
     {
       path: '/home',
@@ -137,6 +138,15 @@ const router = createRouter({
       path: '/mypage/withdraw',
       name: 'MemberWithdraw',
       component: MemberWithdraw,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/simulation/loan',
+      component: LoanAnalysisResult,
+    },
+    {
+      path: '/admin/users',
+      component: Admin,
       meta: { requiresAuth: true },
     },
   ],
