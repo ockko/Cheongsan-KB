@@ -14,7 +14,11 @@ import InitialSetup2 from '@/pages/InitialSetup/InitialSetup2.vue';
 import InitialSetup3 from '@/pages/InitialSetup/InitialSetup3.vue';
 import InitialSetup4 from '@/pages/InitialSetup/InitialSetup4.vue';
 import RepaymentSimulationResult from '@/pages/RepaymentSimulationResult.vue';
-
+import MyPage from '@/pages/MyPage.vue';
+import EditId from '@/pages/EditId.vue';
+import EditEmail from '@/pages/EditEmail.vue';
+import EditPassword from '@/pages/EditPassword.vue';
+import MemberWithdraw from '@/pages/MemberWithdraw.vue';
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -103,6 +107,37 @@ const router = createRouter({
       path: '/repayment-simulation/result',
       name: RepaymentSimulationResult,
       component: RepaymentSimulationResult,
+      meta: { requiresAuth: true }, // 인증 필요
+    },
+    {
+      path: '/mypage',
+      name: MyPage,
+      component: MyPage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/mypage/edit/name',
+      name: EditId,
+      component: EditId,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/mypage/edit/password',
+      name: EditPassword,
+      component: EditPassword,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/mypage/edit/email',
+      name: EditEmail,
+      component: EditEmail,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/mypage/withdraw',
+      name: 'MemberWithdraw',
+      component: MemberWithdraw,
+      meta: { requiresAuth: true },
     },
   ],
 });
