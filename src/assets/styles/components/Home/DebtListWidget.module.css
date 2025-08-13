@@ -32,8 +32,10 @@
   background-color: white;
   border: 2px solid var(--color-main);
   border-radius: 10px;
-  padding: 0.4rem 1.1rem;
+  width: 10rem;
+  padding: 0.4rem 0.5rem;
   font-size: 0.8rem;
+  font-weight: 600;
   color: var(--color-main);
   cursor: pointer;
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
@@ -42,6 +44,7 @@
 .sort-select {
   border: none;
   font-size: 0.8rem;
+  font-weight: 600;
   color: var(--color-main);
   padding: 0.3rem 0 0.3rem 0.3rem;
 }
