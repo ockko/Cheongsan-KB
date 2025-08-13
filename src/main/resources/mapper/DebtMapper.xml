@@ -190,4 +190,11 @@
         WHERE id = #{debtAccountId}
     </update>
 
+    <!-- 대출계좌 잔액 업데이트 -->
+    <update id="updateDebtBalance">
+        UPDATE debt_accounts
+        SET current_balance = #{currentBalance},
+            updated_at      = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
 </mapper>
