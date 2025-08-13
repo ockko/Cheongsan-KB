@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
-import instance from "@/api/index";
+import request from "@/api/index";
 import ConfirmDeleteModal from "@/components/domain/admin/DeleteModal.vue";
 import styles from "@/assets/styles/pages/Admin.module.css";
 
@@ -15,7 +15,7 @@ const myId = computed(() => auth.state.user?.id ?? null);
 
 onMounted(async () => {
   try {
-    const { data } = await instance.get("/cheongsan/admin/users");
+    const { data } = await request.get("/cheongsan/admin/users");
     console.log("admin users raw:", data);
     members.value = data.filter((user) => user.role !== "ADMIN");
   } catch (e) {
@@ -33,16 +33,16 @@ const formatDate = (iso) => {
   return `${y}.${m}.${day}`;
 };
 
-function openDeleteModal(index) {
+const openDeleteModal = (index) => {
   selectedMember.value = members.value[index];
   showModal.value = !!selectedMember.value;
-}
+};
 
-async function confirmDelete() {
+const confirmDelete = async () => {
   if (!selectedMember.value) return;
   const userId = selectedMember.value.id;
   try {
-    await instance.delete(`/cheongsan/admin/users/${userId}`);
+    await request.delete(`/cheongsan/admin/users/${userId}`);
     members.value = members.value.filter((m) => m.id !== userId);
     showModal.value = false;
     selectedMember.value = null;
@@ -51,22 +51,20 @@ async function confirmDelete() {
     console.error("사용자 삭제 실패:", e);
     alert("사용자 삭제에 실패했습니다.");
   }
-}
+};
 
-function cancelDelete() {
+const cancelDelete = () => {
   showModal.value = false;
-}
+};
 
-const displayMemberName = computed(() =>
-  selectedMember.value && selectedMember.value.nickname
-    ? selectedMember.value.nickname
-    : "회원"
+const displayMemberName = computed(
+  () => selectedMember.value?.nickname || "회원"
 );
 
-async function logout() {
+const logout = async () => {
   try {
     if (auth.state.refreshToken) {
-      await instance.post("/cheongsan/auth/logout", {
+      await request.post("/cheongsan/auth/logout", {
         refreshToken: auth.state.refreshToken,
       });
     }
@@ -75,7 +73,7 @@ async function logout() {
     auth.logout();
     router.replace("/login");
   }
-}
+};
 </script>
 
 <template>
