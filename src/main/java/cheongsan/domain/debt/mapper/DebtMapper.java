@@ -9,6 +9,7 @@ import cheongsan.domain.debt.entity.FinancialInstitution;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -65,4 +66,8 @@ public interface DebtMapper {
                     @Param("debtAccountId") Long debtAccountId);
 
 
+    /**
+     * 대출계좌 잔액 업데이트
+     */
+    void updateDebtBalance(@Param("id") Long id, @Param("currentBalance") BigDecimal currentBalance);
 }
