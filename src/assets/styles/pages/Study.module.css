@@ -1,8 +1,12 @@
 .study-page {
   margin-bottom: 80px;
+  min-height: 100vh; /* 최소 화면 높이 확보 */
+  display: flex;
+  flex-direction: column;
 }
 .study-main {
   text-align: center;
+  padding-top: 1rem;
 }
 .page-title {
   margin: -10px 0 0 0;
@@ -39,12 +43,14 @@
   justify-content: center;
   overflow: hidden;
   margin: 0;
+  position: relative;
 }
 .carousel-image {
+  position: absolute;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 15%;
+  border-radius: 12%;
 }
 .arrow {
   background: none;
@@ -65,7 +71,6 @@
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin-bottom: 2rem;
 }
 .dot {
   width: 8px;
@@ -182,20 +187,52 @@
   margin-top: 1rem;
 }
 .category-tab {
-  flex: 1 0 calc(100% / 8);
-  text-align: center;
-  font-size: 13px;
-  background: none;
-  border: none;
-  padding: 0.5rem 0;
-  cursor: pointer;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 0 1rem;
+  margin-top: 1rem;
 }
 .category-tab.active {
   font-weight: 900;
 }
+
+.contentsList-wrapper{
+  min-height: 600px; /* 5개 리스트 영역 높이 직접 지정 */
+  padding: 0 2rem;  
+}
+
 .contentsList {
-  padding: 1rem 2rem;
+  margin-top: 8px;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.pagination {
+  margin-top: 8px;       /* 리스트와 약간 간격 */
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+
+}
+
+.pagination button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background-color: #007bff; /* 메인 색상 */
+  color: white;
+  border-color: #007bff;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
