@@ -1,9 +1,9 @@
 <script setup>
-import styles from '@/assets/styles/pages/Study.module.css'
+import styles from '@/assets/styles/pages/Study.module.css';
 import StudyContentItem from '@/components/domain/Study/StudyContentItem.vue';
 import { ref, onMounted } from 'vue';
 
-// 타이틀 
+// 타이틀
 const originalSlides = [
   {
     imageUrl: '/images/study-thumbnail-example.png',
@@ -70,6 +70,11 @@ const carouselContents = ref([]);
 const currentSlide = ref(1); // 실제 시작 위치
 const transitionEnabled = ref(true);
 
+// 스와이프 관련 변수들
+const touchStartX = ref(0);
+const touchEndX = ref(0);
+const minSwipeDistance = 50; // 최소 스와이프 거리
+
 onMounted(() => {
   carouselContents.value = [
     originalSlides[originalSlides.length - 1],
@@ -102,6 +107,29 @@ function prevSlide() {
 
 function goToSlide(index) {
   currentSlide.value = index + 1;
+}
+
+// 터치 이벤트 핸들러들
+function handleTouchStart(event) {
+  touchStartX.value = event.touches[0].clientX;
+}
+
+function handleTouchMove(event) {
+  touchEndX.value = event.touches[0].clientX;
+}
+
+function handleTouchEnd() {
+  const swipeDistance = touchStartX.value - touchEndX.value;
+
+  if (Math.abs(swipeDistance) > minSwipeDistance) {
+    if (swipeDistance > 0) {
+      // 왼쪽으로 스와이프 (다음 슬라이드)
+      nextSlide();
+    } else {
+      // 오른쪽으로 스와이프 (이전 슬라이드)
+      prevSlide();
+    }
+  }
 }
 
 const categories = ref([
@@ -142,6 +170,9 @@ function selectCategory(index) {
                   ? 'transform 0.3s ease-in-out'
                   : 'none',
               }"
+              @touchstart="handleTouchStart"
+              @touchmove="handleTouchMove"
+              @touchend="handleTouchEnd"
             >
               <div
                 v-for="(content, index) in carouselContents"
@@ -172,7 +203,10 @@ function selectCategory(index) {
         <button
           v-for="(_, index) in originalSlides"
           :key="index"
-          :class="[styles.dot, currentSlide === index + 1 ? 'bg-main' : 'bg-gray2']"
+          :class="[
+            styles.dot,
+            currentSlide === index + 1 ? 'bg-main' : 'bg-gray2',
+          ]"
           @click="goToSlide(index)"
         ></button>
       </div>
