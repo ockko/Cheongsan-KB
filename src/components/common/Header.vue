@@ -2,12 +2,17 @@
 import { computed, ref, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
-import request from '@/api/index';
+import { useNotificationStore } from '@/stores/notification';
+import { useWebSocketStore } from '@/stores/websocket';
+import { mydataApi } from '@/api/mydata';
+import { logout } from '@/api/mypage';
 import styles from '@/assets/styles/components/Header.module.css';
 
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+const notificationStore = useNotificationStore();
+const webSocketStore = useWebSocketStore();
 
 // 팝업 상태 관리
 const showUserPopup = ref(false);
@@ -15,15 +20,6 @@ const showNotificationPopup = ref(false);
 const userPopupRef = ref(null);
 const notificationPopupRef = ref(null);
 const isRefreshing = ref(false);
-
-// 알림 관련 상태
-const notifications = ref([]);
-const unreadCount = ref(0);
-const isLoadingNotifications = ref(false);
-
-// 웹소켓 관련 상태
-const websocket = ref(null);
-const isWebSocketConnected = ref(false);
 
 // 라우트 이름을 기반으로 헤더 타이틀 결정
 const headerTitle = computed(() => {
@@ -44,109 +40,6 @@ const headerTitle = computed(() => {
 const userName = computed(() => {
   return authStore.getUser()?.nickName || '사용자';
 });
-
-// 웹소켓 연결 함수
-const connectWebSocket = () => {
-  const user = authStore.getUser();
-  if (!user?.id) {
-    console.log('사용자 정보가 없어 WebSocket 연결을 건너뜁니다.');
-    return;
-  }
-
-  // 기존 연결이 있으면 종료
-  if (websocket.value) {
-    websocket.value.close();
-  }
-
-  // 환경에 따라 WebSocket URL 설정 (개발/운영 환경 고려)
-  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  const host = import.meta.env.VITE_API_BASE_URL
-    ? import.meta.env.VITE_API_BASE_URL.replace(/^https?:\/\//, '').replace(
-        /\/$/,
-        ''
-      )
-    : window.location.host;
-
-  const wsUrl = `${protocol}//${host}/ws/notifications?userId=${user.id}`;
-
-  console.log('WebSocket 연결 시도:', wsUrl);
-
-  websocket.value = new WebSocket(wsUrl);
-
-  websocket.value.onopen = () => {
-    console.log('✅ WebSocket 연결 성공');
-    isWebSocketConnected.value = true;
-  };
-
-  websocket.value.onmessage = (event) => {
-    try {
-      const data = JSON.parse(event.data);
-      console.log('📨 WebSocket 메시지 수신:', data);
-
-      if (data.type === 'notification') {
-        // 새 알림 수신
-        console.log('🔔 새 알림:', data.contents);
-
-        // 읽지 않은 알림 개수 업데이트
-        if (data.unreadCount !== undefined) {
-          unreadCount.value = data.unreadCount;
-        } else {
-          unreadCount.value = unreadCount.value + 1;
-        }
-
-        // 알림 팝업이 열려있으면 목록 새로고침
-        if (showNotificationPopup.value) {
-          fetchNotifications();
-        }
-
-        // 브라우저 알림 표시 (권한이 있는 경우)
-        if (Notification.permission === 'granted') {
-          new Notification('새 알림 도착!', {
-            body: data.contents,
-            icon: '/images/logo-blue.png',
-            tag: 'cheongsan-notification',
-          });
-        }
-      } else if (data.type === 'unreadCount') {
-        // 읽지 않은 알림 개수 업데이트
-        console.log('📊 읽지 않은 알림 개수 업데이트:', data.unreadCount);
-        unreadCount.value = data.unreadCount;
-      }
-    } catch (error) {
-      console.error('❌ WebSocket 메시지 파싱 실패:', error);
-    }
-  };
-
-  websocket.value.onerror = (error) => {
-    console.error('❌ WebSocket 오류:', error);
-    isWebSocketConnected.value = false;
-  };
-
-  websocket.value.onclose = (event) => {
-    console.log('🔌 WebSocket 연결 종료:', event.code, event.reason);
-    isWebSocketConnected.value = false;
-
-    // 정상적인 종료가 아니고 사용자가 로그인된 상태라면 재연결 시도
-    if (event.code !== 1000 && authStore.isLoggedIn()) {
-      console.log('⏰ 5초 후 WebSocket 재연결 시도...');
-      setTimeout(() => {
-        if (authStore.isLoggedIn()) {
-          connectWebSocket();
-        }
-      }, 5000);
-    }
-  };
-};
-
-// 웹소켓 연결 해제
-const disconnectWebSocket = () => {
-  if (websocket.value) {
-    console.log('🔌 WebSocket 연결 해제');
-    websocket.value.close();
-    websocket.value = null;
-    isWebSocketConnected.value = false;
-  }
-};
 
 // 사용자 아이콘 클릭 핸들러
 const toggleUserPopup = () => {
@@ -176,14 +69,17 @@ const goToMyInfo = () => {
   router.push('/mypage');
 };
 
-// 로그아웃 처리
+// 로그아웃 처리 - mypageApi 사용으로 수정
 const handleLogout = async () => {
   try {
     // 웹소켓 연결 해제
-    disconnectWebSocket();
+    webSocketStore.disconnect();
 
-    // 서버에 로그아웃 요청
-    await request.post('/cheongsan/user/logout');
+    // 알림 스토어 정리
+    notificationStore.cleanup();
+
+    // 서버에 로그아웃 요청 - mypageApi 사용
+    await logout();
   } catch (error) {
     console.error('로그아웃 요청 실패:', error);
   } finally {
@@ -204,9 +100,9 @@ const handleRefresh = async () => {
     console.log('계좌 데이터 동기화 시작...');
 
     // Codef 동기화 API 호출
-    const response = await request.post('/cheongsan/mydata/sync');
+    const response = await mydataApi.syncAccountData();
 
-    console.log('계좌 데이터 동기화 완료:', response.data);
+    console.log('계좌 데이터 동기화 완료:', response);
 
     // 동기화 완료 후 페이지 새로고침
     window.location.reload();
@@ -223,30 +119,6 @@ const handleRefresh = async () => {
   }
 };
 
-// 알림 관련 함수들
-// 읽지 않은 알림 개수 조회
-const fetchUnreadCount = async () => {
-  try {
-    const response = await request.get('/cheongsan/notifications/unread');
-    unreadCount.value = response.data.unreadCount;
-  } catch (error) {
-    console.error('읽지 않은 알림 개수 조회 실패:', error);
-  }
-};
-
-// 알림 목록 조회
-const fetchNotifications = async () => {
-  try {
-    isLoadingNotifications.value = true;
-    const response = await request.get('/cheongsan/notifications');
-    notifications.value = response.data;
-  } catch (error) {
-    console.error('알림 목록 조회 실패:', error);
-  } finally {
-    isLoadingNotifications.value = false;
-  }
-};
-
 // 알림 아이콘 클릭 핸들러
 const handleNotification = async () => {
   showNotificationPopup.value = !showNotificationPopup.value;
@@ -254,86 +126,50 @@ const handleNotification = async () => {
   // 사용자 팝업이 열려있으면 닫기
   if (showNotificationPopup.value) {
     showUserPopup.value = false;
-    await fetchNotifications();
+    await notificationStore.fetchNotifications();
   }
 };
 
-// 모든 알림 읽음 처리 (WebSocket을 통해 자동으로 개수 업데이트됨)
-const markAllAsRead = async () => {
+// 모든 알림 읽음 처리
+const handleMarkAllAsRead = async () => {
   try {
-    await request.patch('/cheongsan/notifications/readAll');
-
-    // WebSocket이 연결되어 있지 않은 경우에만 로컬 상태 업데이트
-    if (!isWebSocketConnected.value) {
-      unreadCount.value = 0;
-      // 알림 목록의 읽음 상태 업데이트
-      notifications.value = notifications.value.map((notification) => ({
-        ...notification,
-        isRead: true,
-      }));
-    }
+    await notificationStore.markAllAsRead();
   } catch (error) {
     console.error('알림 읽음 처리 실패:', error);
   }
 };
 
-// 날짜 포맷 함수
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffTime = Math.abs(now - date);
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 1) {
-    return '오늘';
-  } else if (diffDays === 2) {
-    return '어제';
-  } else {
-    return `${date.getMonth() + 1}. ${date.getDate()}. ${
-      ['일', '월', '화', '수', '목', '금', '토'][date.getDay()]
-    }`;
+// 알림 팝업에서 새로고침 핸들러 추가
+const handleNotificationRefresh = () => {
+  if (showNotificationPopup.value) {
+    notificationStore.fetchNotifications();
   }
 };
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside);
 
-  // 컴포넌트 마운트 시 읽지 않은 알림 개수 조회
-  fetchUnreadCount();
+  // 알림 스토어 초기화
+  notificationStore.initialize();
 
   // 웹소켓 연결
-  connectWebSocket();
+  webSocketStore.connect();
 
-  // 브라우저 알림 권한 요청
-  if (Notification.permission === 'default') {
-    Notification.requestPermission().then((permission) => {
-      if (permission === 'granted') {
-        console.log('✅ 브라우저 알림 권한 허용됨');
-      } else {
-        console.log('❌ 브라우저 알림 권한 거부됨');
-      }
-    });
-  }
-
-  // 주기적으로 읽지 않은 알림 개수 업데이트 (30초마다)
-  // WebSocket이 연결되어 있으면 폴링 간격을 늘림
-  const pollingInterval = isWebSocketConnected.value ? 60000 : 30000;
-  const interval = setInterval(() => {
-    // WebSocket이 연결되어 있지 않은 경우에만 폴링
-    if (!isWebSocketConnected.value) {
-      fetchUnreadCount();
-    }
-  }, pollingInterval);
-
-  onUnmounted(() => {
-    clearInterval(interval);
-    disconnectWebSocket();
-  });
+  // WebSocket에서 알림 팝업이 열려있을 때 새로고침 이벤트 처리
+  webSocketStore.on('notification', handleNotificationRefresh);
 });
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside);
-  disconnectWebSocket();
+
+  // 웹소켓 연결 해제
+  webSocketStore.disconnect();
+
+  // 알림 스토어 정리
+  notificationStore.cleanup();
+
+  // 이벤트 핸들러 제거
+  webSocketStore.off('notification', handleNotificationRefresh);
 });
 </script>
 
@@ -371,7 +207,7 @@ onUnmounted(() => {
           :class="styles.headerIconBtn"
           type="button"
           @click="handleNotification"
-          :title="`알림${isWebSocketConnected ? ' (실시간)' : ''}`"
+          :title="`알림${webSocketStore.isConnected ? ' (실시간)' : ''}`"
         >
           <div :class="styles.notificationIconWrapper">
             <img
@@ -380,8 +216,11 @@ onUnmounted(() => {
               :class="styles.headerIcon"
             />
             <!-- 알림 배지 -->
-            <span v-if="unreadCount > 0" :class="styles.notificationBadge">
-              {{ unreadCount > 99 ? '99+' : unreadCount }}
+            <span
+              v-if="notificationStore.hasUnreadNotifications"
+              :class="styles.notificationBadge"
+            >
+              {{ notificationStore.unreadBadgeText }}
             </span>
           </div>
         </button>
@@ -394,16 +233,16 @@ onUnmounted(() => {
               알림
               <!-- WebSocket 연결 상태 표시 (개발용) -->
               <span
-                v-if="!isWebSocketConnected"
+                v-if="!webSocketStore.isConnected"
                 style="color: orange; font-size: 12px"
               >
                 (오프라인)
               </span>
             </h3>
             <button
-              v-if="unreadCount > 0"
+              v-if="notificationStore.hasUnreadNotifications"
               :class="styles.markAllReadBtn"
-              @click="markAllAsRead"
+              @click="handleMarkAllAsRead"
             >
               모두 읽음
             </button>
@@ -412,13 +251,16 @@ onUnmounted(() => {
           <!-- 알림 목록 -->
           <div :class="styles.notificationList">
             <!-- 로딩 상태 -->
-            <div v-if="isLoadingNotifications" :class="styles.loadingMessage">
+            <div
+              v-if="notificationStore.isLoading"
+              :class="styles.loadingMessage"
+            >
               알림을 불러오는 중...
             </div>
 
             <!-- 알림이 없는 경우 -->
             <div
-              v-else-if="notifications.length === 0"
+              v-else-if="notificationStore.notifications.length === 0"
               :class="styles.emptyMessage"
             >
               새로운 알림이 없습니다.
@@ -427,7 +269,7 @@ onUnmounted(() => {
             <!-- 알림 목록 -->
             <div
               v-else
-              v-for="notification in notifications"
+              v-for="notification in notificationStore.notifications"
               :key="notification.id"
               :class="[
                 styles.notificationItem,
@@ -435,7 +277,7 @@ onUnmounted(() => {
               ]"
             >
               <div :class="styles.notificationDate">
-                {{ formatDate(notification.createdAt) }}
+                {{ notificationStore.formatDate(notification.createdAt) }}
               </div>
               <div :class="styles.notificationContent">
                 {{ notification.contents }}
