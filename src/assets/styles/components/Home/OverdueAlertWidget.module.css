@@ -41,3 +41,10 @@
   font-size: 0.9rem;
   margin-right: 0.5rem;
 }
+
+.loading {
+  padding: 30px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--color-gray0);
+}

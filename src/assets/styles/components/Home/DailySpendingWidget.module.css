@@ -80,3 +80,10 @@
   margin: 0.2rem 0.2rem 0 0;
   text-align: right;
 }
+
+.loading {
+  padding: 30px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--color-gray0);
+}
