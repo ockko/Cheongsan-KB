@@ -1,6 +1,5 @@
 package cheongsan.domain.user.service;
 
-
 import cheongsan.common.constant.ResponseMessage;
 import cheongsan.common.security.util.JwtProcessor;
 import cheongsan.domain.auth.dto.SocialUserInfo;
@@ -181,10 +180,20 @@ public class AuthServiceImpl implements AuthService {
         if (!passwordEncoder.matches(logInRequestDTO.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
         }
-        // JWT 사용 시 여기서 토큰을 발급해 응답에 포함하면 됨
-        return new LogInResponseDTO(1L, "nickName", "accessToken", "refreshToken");
-    }
 
+        String role = user.getRole();
+        if (role != null && role.startsWith("ROLE_")) {
+            role = role.substring(5);
+        }
+
+        return new LogInResponseDTO(
+                user.getId(),
+                user.getNickname(),
+                "accessToken",
+                "refreshToken",
+                role
+        );
+    }
 
     @Override
     public TokenRefreshResponseDTO reissueTokens(String refreshToken) {
@@ -250,11 +259,16 @@ public class AuthServiceImpl implements AuthService {
                 TimeUnit.SECONDS
         );
 
+        String role = user.getRole();
+        if (role == null || role.isBlank()) role = "USER";
+        if (role.startsWith("ROLE_")) role = role.substring(5);
+
         return new LogInResponseDTO(
                 user.getId(),
                 user.getNickname(),
                 accessToken,
-                refreshToken
+                refreshToken,
+                role
         );
     }
 
@@ -264,9 +278,6 @@ public class AuthServiceImpl implements AuthService {
         return user != null;
     }
 
-    /**
-     * 네이버 사용자 생성
-     */
     private User createNaverUser(SocialUserInfo socialUserInfo) {
         String dummyConnectedId = generateDummyConnectedId();
         String naverUserId = generateNaverUserId(socialUserInfo.getProviderId());

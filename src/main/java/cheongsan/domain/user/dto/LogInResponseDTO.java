@@ -10,4 +10,5 @@ public class LogInResponseDTO {
     private String nickName;
     private String accessToken;
     private String refreshToken;
+    private String role;
 }
