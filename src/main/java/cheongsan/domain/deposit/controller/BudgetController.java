@@ -1,10 +1,9 @@
 package cheongsan.domain.deposit.controller;
 
-import cheongsan.common.constant.ResponseMessage;
-import cheongsan.common.exception.ResponseDTO;
 import cheongsan.domain.deposit.dto.BudgetLimitDTO;
 import cheongsan.domain.deposit.dto.BudgetSettingStatusDTO;
 import cheongsan.domain.deposit.dto.DailyLimitRequestDTO;
+import cheongsan.domain.deposit.dto.DailySpendingDTO;
 import cheongsan.domain.deposit.service.BudgetService;
 import cheongsan.domain.user.entity.CustomUser;
 import lombok.RequiredArgsConstructor;
@@ -32,13 +31,12 @@ public class BudgetController {
     }
 
     @PatchMapping
-    public ResponseEntity<ResponseDTO> saveFinalDailyLimit(@RequestBody DailyLimitRequestDTO request, Principal principal) {
+    public ResponseEntity<DailySpendingDTO> saveFinalDailyLimit(@RequestBody DailyLimitRequestDTO request, Principal principal) {
         Authentication authentication = (Authentication) principal;
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
         Long userId = customUser.getUser().getId();
-        budgetService.saveFinalDailyLimit(userId, request.getDailyLimit());
-        ResponseDTO response = new ResponseDTO(ResponseMessage.BUDGET_LIMIT_SAVED.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        DailySpendingDTO updatedSpendingData = budgetService.saveFinalDailyLimit(userId, request.getDailyLimit());
+        return new ResponseEntity<>(updatedSpendingData, HttpStatus.OK);
     }
 
     @GetMapping("/status")

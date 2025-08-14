@@ -4,11 +4,14 @@ import cheongsan.common.constant.ResponseMessage;
 import cheongsan.domain.debt.service.DebtService;
 import cheongsan.domain.deposit.dto.BudgetLimitDTO;
 import cheongsan.domain.deposit.dto.BudgetSettingStatusDTO;
+import cheongsan.domain.deposit.dto.DailySpendingDTO;
+import cheongsan.domain.deposit.mapper.DepositMapper;
 import cheongsan.domain.user.entity.User;
 import cheongsan.domain.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -25,6 +28,7 @@ public class BudgetServiceImpl implements BudgetService {
     private final DepositService depositService;
     private final DebtService debtService;
     private final UserMapper userMapper;
+    private final DepositMapper depositMapper;
 
     private static final BigDecimal RECOMMENDATION_RATE = new BigDecimal("0.7");
     private static final int DAYS_IN_MONTH = 30;
@@ -60,7 +64,8 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    public void saveFinalDailyLimit(Long userId, int finalDailyLimit) {
+    @Transactional
+    public DailySpendingDTO saveFinalDailyLimit(Long userId, int finalDailyLimit) {
         User user = userMapper.findById(userId);
         if (user == null) {
             throw new IllegalArgumentException(ResponseMessage.USER_NOT_FOUND.getMessage());
@@ -76,6 +81,10 @@ public class BudgetServiceImpl implements BudgetService {
         }
 
         userMapper.updateDailyLimitAndTimestamp(userId, new BigDecimal(finalDailyLimit), LocalDateTime.now());
+
+        BigDecimal todaySpent = depositMapper.sumTodaySpendingByUserId(userId);
+
+        return DailySpendingDTO.getDailySpending(finalDailyLimit, todaySpent.intValue(), false);
     }
 
     @Override
