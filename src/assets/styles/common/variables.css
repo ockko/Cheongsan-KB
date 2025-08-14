@@ -37,7 +37,7 @@
   --font-size-base: 20px;
 
   /* 라인 높이 */
-  --line-height-base: 1.4;
+  --line-height-base: 64px;
 
   /* 레터 스페이싱 */
   --letter-spacing-negative: -0.25px;

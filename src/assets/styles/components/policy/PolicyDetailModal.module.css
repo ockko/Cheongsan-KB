@@ -1,5 +1,5 @@
 /* 모달 오버레이 */
-.modalOverlay {
+.policy-detail-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -13,17 +13,18 @@
 }
 
 /* 모달 컨텐츠 */
-.modalContent {
-  background-color: #ffffff;
-  border-radius: 20px;
-  width: 375px;
-  height: 812px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+.policy-detail-modal-content {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  width: 90%;
+  height: 80%;
+  max-width: 340px;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
+  line-height: 1.5;
 }
 
-.backButton {
+.policy-detail-back-button {
   background: none;
   border: none;
   font-size: 1.5rem;
@@ -40,7 +41,7 @@
 }
 
 /* 닫기 버튼 */
-.closeButton {
+.policy-detail-close-button {
   position: absolute;
   top: 24px;
   right: 24px;
@@ -53,21 +54,21 @@
 }
 
 /* 모달 본문 */
-.modalBody {
-  padding: 20px 16px 32px 16px;
-  height: 100%;
+.policy-detail-modal-body {
+  padding: 0px 8px 0 8px;
+  height: 90%;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
 /* 부처 정보 */
-.ministryInfo {
+.policy-detail-ministry-info {
   text-align: left;
   height: 50px;
 }
 
-.ministryText {
+.policy-detail-ministry-text {
   font-size: 18px;
   font-weight: 400;
   color: #003e65;
@@ -75,7 +76,7 @@
 }
 
 /* 정책 제목 */
-.policyTitle {
+.policy-detail-policy-title {
   font-size: 24px;
   font-weight: 600;
   color: #000000;
@@ -86,7 +87,7 @@
 }
 
 /* 태그 컨테이너 */
-.tagContainer {
+.policy-detail-tag-container {
   display: flex;
   gap: 6px;
   justify-content: left;
@@ -95,7 +96,7 @@
   flex-wrap: wrap;
 }
 
-.tag {
+.policy-detail-tag {
   background-color: transparent;
   border: 1px solid #003e65;
   border-radius: 4px;
@@ -112,7 +113,7 @@
 }
 
 /* 정책 요약 */
-.policySummary {
+.policy-detail-policy-summary {
   font-size: 16px;
   font-weight: 300;
   color: #202020;
@@ -123,11 +124,11 @@
 }
 
 /* 정보 섹션 */
-.infoSection {
+.policy-detail-info-section {
   margin: 12px 0;
 }
 
-.sectionTitle {
+.policy-detail-section-title {
   font-size: 16px;
   font-weight: 600;
   color: #202020;
@@ -138,7 +139,7 @@
   padding-left: 0;
 }
 
-.sectionContent {
+.policy-detail-section-content {
   font-size: 16px;
   font-weight: 400;
   color: #000000;
@@ -148,14 +149,14 @@
 }
 
 /* 문의 정보 */
-.contactInfo {
+.policy-detail-contact-info {
   display: flex;
   align-items: center;
   gap: 8px;
   line-height: 1.18;
 }
 
-.phoneIcon {
+.policy-detail-phone-icon {
   width: 16px;
   height: 16px;
   display: flex;
@@ -163,7 +164,7 @@
   justify-content: center;
 }
 
-.contactText {
+.policy-detail-contact-text {
   font-size: 16px;
   font-weight: 400;
   color: #41474f;
@@ -171,14 +172,13 @@
 }
 
 /* 신청하러 가기 버튼 */
-.applyButton {
-  position: absolute;
+.policy-detail-apply-button {
   bottom: 0;
   left: 0;
   width: 100%;
   height: 55px;
   background-color: #003e65;
-  border: none;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -187,18 +187,18 @@
   transition: background-color 0.2s ease;
 }
 
-.applyButton:hover {
+.policy-detail-apply-button:hover {
   background-color: #002d4a;
 }
 
-.applyText {
+.policy-detail-apply-text {
   font-size: 16px;
   font-weight: 600;
   color: #ffffff;
   letter-spacing: 1.6px;
 }
 
-.externalLinkIcon {
+.policy-detail-external-link-icon {
   width: 24px;
   height: 24px;
   display: flex;
@@ -208,13 +208,13 @@
 
 /* 반응형 디자인 */
 @media (max-width: 375px) {
-  .modalContent {
+  .policy-detail-modal-content {
     width: 100%;
     height: 100%;
     border-radius: 0;
   }
 
-  .modalBody {
+  .policy-detail-modal-body {
     padding: 108px 16px 32px 16px;
   }
 }

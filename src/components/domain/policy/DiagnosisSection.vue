@@ -15,23 +15,25 @@ const goToDiagnosis = () => {
 <template>
   <div :class="styles.diagnosisSectionContainer">
     <!-- 검색 아이콘 섹션 -->
-    <div :class="styles.searchSection">
-      <div :class="styles.searchIcon">
+    <div :class="styles.diagnosisSectionSearchSection">
+      <div :class="styles.diagnosisSectionSearchIcon">
         <img
           src="/images/policy-icon.png"
           alt="검색"
-          :class="styles.searchIconImg"
+          :class="styles.diagnosisSectionSearchIconImg"
         />
       </div>
-      <div :class="styles.searchText">
-        <h2 :class="styles.searchTitle">내게 맞는<br />채무 조정 제도 찾기</h2>
-        <p :class="styles.searchDescription">
+      <div :class="styles.diagnosisSectionSearchText">
+        <h2 :class="styles.diagnosisSectionSearchTitle">
+          내게 맞는<br />채무 조정 제도 찾기
+        </h2>
+        <p :class="styles.diagnosisSectionSearchDescription">
           {{ authStore.state.user.nickName }}님의 상황에 맞는<br />채무 조정
           제도를 알려드려요.
         </p>
       </div>
     </div>
-    <button @click="goToDiagnosis" :class="styles.searchButton">
+    <button @click="goToDiagnosis" :class="styles.diagnosisSectionSearchButton">
       제도 찾으러 가기
     </button>
   </div>

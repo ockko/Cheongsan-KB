@@ -46,6 +46,7 @@ const handleConfirm = async () => {
   }
 
   try {
+    // 백엔드 DTO 형식에 맞춰 데이터 전송
     await updateLoanRepaymentInfo(props.debtId, {
       gracePeriodMonths: Number(gracePeriodMonths.value),
       repaymentMethod: repaymentMethod.value,
@@ -111,9 +112,9 @@ const handleConfirm = async () => {
         <div :class="styles.formLabel">상환 방식</div>
         <div :class="styles.formControl">
           <select v-model="repaymentMethod" :class="styles.repaymentSelect">
-            <option>원금 균등 상환</option>
-            <option>원리금 균등 상환</option>
-            <option>만기 일시 상환</option>
+            <option>원금균등상환</option>
+            <option>원리금균등상환</option>
+            <option>만기일시상환</option>
           </select>
         </div>
       </div>
