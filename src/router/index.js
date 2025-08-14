@@ -100,7 +100,6 @@ const router = createRouter({
       meta: { requiresAuth: true }, // 인증 필요
     },
     {
-      // path: /study/:id
       path: '/study/detail',
       name: 'StudyDetail',
       component: StudyDetail,

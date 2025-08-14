@@ -1,17 +1,29 @@
 <script setup>
 import styles from '@/assets/styles/components/study/StudyContentItem.module.css';
+import { defineEmits, defineProps } from 'vue';
 
-defineProps({
+const props = defineProps({
   contents: {
     type: Array,
     required: true
   },
 });
+
+const emit = defineEmits(['clickContent']);
+
+const handleClick = (content, index) => {
+  emit('clickContent', content, index);
+};
 </script>
 
 <template>
   <div :class="styles.contentList">
-    <div v-for="(item, index) in contents" :key="index" :class="styles.contentItem">
+    <div
+      v-for="(item, index) in contents"
+      :key="index"
+      :class="styles.contentItem"
+      @click="handleClick(item, index)"
+    >
       <div
         :class="styles.thumbnail"
         :style="{ backgroundImage: `url(${item.thumbnailUrl})` }"

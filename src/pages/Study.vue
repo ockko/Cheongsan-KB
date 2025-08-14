@@ -2,6 +2,9 @@
 import styles from '@/assets/styles/pages/Study.module.css';
 import StudyContentItem from '@/components/domain/Study/StudyContentItem.vue';
 import { ref, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const categories = ref([
   '전체',
@@ -36,6 +39,16 @@ const originalSlides = [
     title: '경제 뉴스 읽는 법',
   },
 ];
+
+const handleContentClick = (content, index) => {
+  // 신용 카테고리이면서 첫 번째 게시글만 상세 페이지 이동
+  if (
+    categories.value[activeIndex.value] === '신용' &&
+    index === 0
+  ) {
+    router.push('/study/detail');
+  }
+};
 
 const studyContents = [
   {
@@ -234,7 +247,10 @@ const filteredContents = computed(() => {
 
     <!-- 컨텐츠 리스트 -->
       <div :class="styles.contentsList">
-        <StudyContentItem :contents="filteredContents" />
+        <StudyContentItem 
+          :contents="filteredContents" 
+          @clickContent="handleContentClick"
+        />
       </div>
     </div>
 </template>
