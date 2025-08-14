@@ -82,12 +82,11 @@ const handleRefresh = async () => {
 
   try {
     isRefreshing.value = true;
-    console.log('계좌 데이터 동기화 시작...');
 
     // Codef 동기화 API 호출
     const response = await mydataApi.syncAccountData();
 
-    console.log('계좌 데이터 동기화 완료:', response);
+    console.log('계좌 데이터 동기화 완료:');
 
     // 동기화 완료 후 페이지 새로고침
     window.location.reload();

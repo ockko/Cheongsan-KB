@@ -171,8 +171,6 @@ export const useNotificationStore = defineStore('notification', () => {
   const setupWebSocketHandlers = () => {
     // 새 알림 수신
     webSocketStore.on('notification', (data) => {
-      console.log('🔔 새 알림:', data.contents);
-
       // 읽지 않은 알림 개수 업데이트
       if (data.unreadCount !== undefined) {
         updateUnreadCount(data.unreadCount);
@@ -186,7 +184,6 @@ export const useNotificationStore = defineStore('notification', () => {
 
     // 읽지 않은 알림 개수 업데이트
     webSocketStore.on('unreadCount', (data) => {
-      console.log('📊 읽지 않은 알림 개수 업데이트:', data.unreadCount);
       updateUnreadCount(data.unreadCount);
     });
 
