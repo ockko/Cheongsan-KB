@@ -1,27 +1,33 @@
 <script setup>
 import styles from '@/assets/styles/components/home/DailySpendingWidget.module.css';
 import SettingsModal from '@/components/domain/home/SettingsModal.vue';
-import { ref, defineProps, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useSpendingStore } from '@/stores/spending';
+
+const props = defineProps({
+  class: {
+    type: String,
+    default: '',
+  },
+});
 
 const isModalOpen = ref(false);
 
-// 부모 컴포넌트로부터 받을 데이터(props)를 정의합니다.
-const props = defineProps({
-  spendingData: {
-    type: Object,
-    required: true,
-    // 데이터가 아직 로드되지 않았을 때를 대비한 기본값
-    default: () => ({ dailyLimit: 40000, spent: 32000, remaining: 8000 }),
-  },
+const spendingStore = useSpendingStore();
+const { spendingData, isLoading } = storeToRefs(spendingStore);
+
+onMounted(() => {
+  spendingStore.fetchDailySpending();
 });
 
 // 지출액이 한도를 초과했는지 여부를 계산하는 computed 속성
 const isOverLimit = computed(() => {
   // 한도가 0일 경우 초과로 보지 않음
-  if (props.spendingData.dailyLimit === 0) {
+  if (spendingData.value.dailyLimit === 0) {
     return false;
   }
-  return props.spendingData.spent > props.spendingData.dailyLimit;
+  return spendingData.value.spent > spendingData.value.dailyLimit;
 });
 
 // 숫자에 콤마(,)를 찍어주는 헬퍼 함수
@@ -32,12 +38,16 @@ const formatCurrency = (value) => {
 </script>
 
 <template>
-  <div :class="styles.widgetCard">
+  <div :class="[styles.widgetCard, props.class]">
     <div :class="styles.widgetHeader">
       <h3>오늘의 지출</h3>
     </div>
 
-    <div :class="styles.widgetContent">
+    <div v-if="isLoading" :class="styles.loading">
+      <p>데이터를 불러오는 중입니다...</p>
+    </div>
+
+    <div v-else :class="styles.widgetContent">
       <p :class="styles.spentAmount">
         {{ formatCurrency(spendingData.spent) }} 원
       </p>

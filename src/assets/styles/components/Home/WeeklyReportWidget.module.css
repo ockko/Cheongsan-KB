@@ -33,10 +33,6 @@
   cursor: pointer;
 }
 
-.arrow {
-  font-size: 1rem;
-}
-
 .achievement-rate {
   margin-top: 0.5rem;
 }
@@ -142,7 +138,7 @@
 }
 
 .average {
-  padding: 0 0.45rem;
+  padding: 0 0.23rem;
 }
 
 .summary-item .amount {
@@ -157,4 +153,12 @@
 
 .divider {
   border-left: 2px solid var(--color-gray1);
+}
+
+.loading,
+.noData {
+  padding: 40px;
+  text-align: center;
+  font-size: 1rem;
+  color: var(--color-gray0);
 }

@@ -3,6 +3,13 @@ import styles from '@/assets/styles/components/home/TotalDebtRepaymentWidget.mod
 import { ref, computed, onMounted } from 'vue';
 import { getTotalDebtRepaymentData } from '@/api/dashboard-bottomApi.js';
 
+const props = defineProps({
+  class: {
+    type: String,
+    default: '',
+  },
+});
+
 // 컴포넌트 내부에서 데이터를 관리
 const repaymentData = ref({
   totalDebt: 0,
@@ -55,7 +62,7 @@ const formatToManwon = (value) => {
 </script>
 
 <template>
-  <div :class="styles.widgetCard">
+  <div :class="[styles.widgetCard, props.class]">
     <div :class="styles.widgetHeader">
       <h3>총 부채 상환율</h3>
     </div>
