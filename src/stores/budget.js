@@ -5,6 +5,7 @@ import {
   saveDailyLimit,
   getBudgetStatus,
 } from '@/api/budget';
+import { useSpendingStore } from '@/stores/spending';
 import { ref } from 'vue';
 
 export const useBudgetStore = defineStore('budget', () => {
@@ -60,9 +61,11 @@ export const useBudgetStore = defineStore('budget', () => {
   // 최종 한도를 저장하는 액션
   async function saveFinalDailyLimit(newLimit) {
     const uiStore = useUiStore();
+    const spendingStore = useSpendingStore();
+
     try {
-      await saveDailyLimit(newLimit);
-      // 저장 성공 시, 현재 한도와 수정일을 즉시 업데이트
+      const updatedData = await saveDailyLimit(newLimit);
+      spendingStore.updateDailyLimit(updatedData.dailyLimit);
       currentLimit.value = newLimit;
       lastUpdatedAt.value = new Date().toISOString();
       isEditable.value = false; // 저장 후에는 수정 불가능으로 변경

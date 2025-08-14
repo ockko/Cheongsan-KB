@@ -26,8 +26,14 @@ export const useSpendingStore = defineStore('spending', () => {
     }
   }
 
+  function updateDailyLimit(newLimit) {
+    spendingData.value.dailyLimit = newLimit;
+    spendingData.value.remaining = newLimit - spendingData.value.spent;
+  }
+
   return {
     spendingData,
     fetchDailySpending,
+    updateDailyLimit,
   };
 });
