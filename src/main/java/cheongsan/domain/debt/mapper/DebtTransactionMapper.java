@@ -24,4 +24,9 @@ public interface DebtTransactionMapper {
             @Param("debtAccountId") Long debtAccountId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
+
+
+    List<DebtTransaction> findTransactionsByLoanAndPeriod(@Param("loanId") Long loanId,
+                                                          @Param("startDate") LocalDate startDate,
+                                                          @Param("endDate") LocalDate endDate);
 }

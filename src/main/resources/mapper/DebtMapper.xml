@@ -197,4 +197,22 @@
             updated_at      = CURRENT_TIMESTAMP
         WHERE id = #{id}
     </update>
+
+
+    <select id="findLoanIdByNameAndUser" parameterType="map" resultType="long">
+        SELECT id
+        FROM debt_accounts
+        WHERE user_id = #{userId}
+          AND debt_name = #{loanName}
+        LIMIT 1
+    </select>
+
+
+    <update id="updateNextPaymentDate" parameterType="map">
+        UPDATE debt_accounts
+        SET next_payment_date = #{nextPaymentDate},
+            updated_at        = CURRENT_TIMESTAMP
+        WHERE id = #{loanId}
+    </update>
+
 </mapper>

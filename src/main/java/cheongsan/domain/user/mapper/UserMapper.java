@@ -17,8 +17,8 @@ public interface UserMapper {
                        @Param("programId") Long programId);
 
     void updateDailyLimitAndTimestamp(@Param("id") Long id,
-                          @Param("dailyLimit") BigDecimal dailyLimit,
-                          @Param("dailyLimitDate") LocalDateTime dailyLimitDate);
+                                      @Param("dailyLimit") BigDecimal dailyLimit,
+                                      @Param("dailyLimitDate") LocalDateTime dailyLimitDate);
 
     void updateDailyLimitOnly(
             @Param("id") Long id,
@@ -70,6 +70,8 @@ public interface UserMapper {
     void updateNickname(@Param("id") Long id, @Param("nickname") String nickname);
 
     void updateEmail(@Param("id") Long id, @Param("email") String email);
+
+    String findStrategyByUserId(@Param("id") Long id);
 
 
 }
