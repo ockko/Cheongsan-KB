@@ -11,29 +11,29 @@
   z-index: 100;
 }
 
-.headerLeft {
+.header-left {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.headerLogo {
+.header-logo {
   width: 32px;
   height: 32px;
 }
 
-.headerTitle {
+.header-title {
   font-size: 18px;
   font-weight: 600;
 }
 
-.headerRight {
+.header-right {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.headerIconBtn {
+.header-icon-btn {
   width: 40px;
   height: 40px;
   display: flex;
@@ -46,11 +46,11 @@
   transition: background-color 0.2s ease;
 }
 
-.headerIconBtn:hover {
+.header-icon-btn:hover {
   background-color: #f3f4f6;
 }
 
-.headerIcon {
+.header-icon {
   width: 24px;
   height: 24px;
   transition: transform 0.2s ease;
@@ -71,17 +71,17 @@
 }
 
 /* 사용자 메뉴 컨테이너 */
-.userMenuContainer {
+.user-menu-container {
   position: relative;
 }
 
 /* 알림 컨테이너 */
-.notificationContainer {
+.notification-container {
   position: relative;
 }
 
 /* 알림 아이콘 래퍼 */
-.notificationIconWrapper {
+.notification-icon-wrapper {
   position: relative;
   display: flex;
   align-items: center;
@@ -89,16 +89,15 @@
 }
 
 /* 알림 배지 */
-.notificationBadge {
+.notification-badge {
   position: absolute;
   top: -6px;
   right: -6px;
-  background-color: #dc2626;
+  background-color: var(--color-secondary);
   color: white;
   font-size: 10px;
   font-weight: 600;
-  padding: 2px 6px;
-  border-radius: 10px;
+  border-radius: 100px;
   min-width: 16px;
   height: 16px;
   display: flex;
@@ -107,103 +106,119 @@
   line-height: 1;
 }
 
-/* 알림 팝업 */
-.notificationPopup {
+/* Notice 스타일 알림 팝업 */
+.notification-popup {
   position: absolute;
   top: calc(100% + 8px);
-  right: 0;
+  right: -46px; /* 기존 0에서 -16px로 변경 */
   width: 320px;
-  max-height: 400px;
+  max-height: 500px;
   background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   border: 1px solid #e5e7eb;
   z-index: 1000;
   overflow: hidden;
-  animation: popupFadeIn 0.2s ease-out;
+  animation: popup-fade-in 0.2s ease-out;
 }
 
-/* 알림 헤더 */
-.notificationHeader {
+/* Notice 헤더 */
+.notification-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 16px 20px;
-  border-bottom: 1px solid #e5e7eb;
-  background-color: #f9fafb;
+  padding: 20px 24px 16px 24px;
+  border-bottom: 2px solid #f1f3f5;
+  background-color: #ffffff;
 }
 
-.notificationTitle {
-  font-size: 18px;
-  font-weight: 600;
-  color: #003e65;
+.notification-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2c3e50;
   margin: 0;
+  text-align: center;
 }
 
-.markAllReadBtn {
+.mark-all-read-btn {
+  position: absolute;
+  right: 16px;
   background: none;
   border: none;
   color: #6b7280;
-  font-size: 12px;
+  font-size: 11px;
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: 6px 8px;
+  border-radius: 6px;
   transition: background-color 0.2s ease;
 }
 
-.markAllReadBtn:hover {
-  background-color: #e5e7eb;
+.mark-all-read-btn:hover {
+  background-color: #f3f4f6;
 }
 
-/* 알림 목록 */
-.notificationList {
-  max-height: 320px;
+/* Notice 목록 */
+.notification-list {
+  max-height: 420px;
   overflow-y: auto;
+  padding: 8px 0;
 }
 
-.loadingMessage,
-.emptyMessage {
-  padding: 40px 20px;
+.loading-message,
+.empty-message {
+  padding: 60px 24px;
   text-align: center;
-  color: #6b7280;
+  color: #9ca3af;
   font-size: 14px;
+  line-height: 1.5;
 }
 
-/* 알림 아이템 */
-.notificationItem {
-  padding: 16px 20px;
-  border-bottom: 1px solid #f3f4f6;
+/* Notice 아이템 */
+.notification-item {
+  padding: 16px 24px;
+  border-bottom: 1px solid #f8fafc;
   transition: background-color 0.2s ease;
+  cursor: pointer;
 }
 
-.notificationItem:hover {
-  background-color: #f9fafb;
+.notification-item:hover {
+  background-color: #f8fafc;
 }
 
-.notificationItem:last-child {
+.notification-item:last-child {
   border-bottom: none;
 }
 
-.notificationItem.unread {
-  background-color: #eff6ff;
-  border-left: 3px solid #2563eb;
+.notification-item.unread {
+  position: relative;
 }
 
-.notificationDate {
-  font-size: 12px;
-  color: #6b7280;
-  margin-bottom: 6px;
-  font-weight: 500;
+.notification-item.unread::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 8px;
+  height: 8px;
+  background-color: #3b82f6;
+  border-radius: 50%;
 }
 
-.notificationContent {
-  font-size: 14px;
+.notification-date {
+  font-size: 13px;
+  font-weight: 600;
   color: #374151;
-  line-height: 1.4;
+  letter-spacing: -0.02em;
+}
+
+.notification-content {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+  letter-spacing: -0.02em;
 }
 
 /* 사용자 팝업 메뉴 */
-.userPopup {
+.user-popup {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
@@ -213,10 +228,10 @@
   border: 1px solid #e5e7eb;
   z-index: 1000;
   overflow: hidden;
-  animation: popupFadeIn 0.2s ease-out;
+  animation: popup-fade-in 0.2s ease-out;
 }
 
-@keyframes popupFadeIn {
+@keyframes popup-fade-in {
   from {
     opacity: 0;
     transform: translateY(-8px);
@@ -228,12 +243,12 @@
 }
 
 /* 사용자 정보 영역 */
-.userInfo {
+.user-info {
   padding: 0 16px;
   background-color: #f9fafb;
 }
 
-.userName {
+.user-name {
   display: flex;
   align-items: center;
   font-size: 24px;
@@ -245,7 +260,7 @@
 }
 
 /* 구분선 */
-.popupDivider {
+.popup-divider {
   margin: 0 auto;
   border: none;
   width: 80%;
@@ -253,11 +268,11 @@
 }
 
 /* 메뉴 아이템들 */
-.menuItems {
+.menu-items {
   padding: 8px 0;
 }
 
-.menuItem {
+.menu-item {
   width: 100%;
   margin-left: 35px;
   margin-top: 8px;
@@ -274,7 +289,7 @@
 }
 
 /* 로그아웃 버튼 */
-.logoutButton {
+.logout-button {
   width: 100%;
   text-decoration: underline;
   background: none;
@@ -296,21 +311,21 @@
     height: 56px;
   }
 
-  .headerTitle {
+  .header-title {
     font-size: 16px;
   }
 
-  .headerIconBtn {
+  .header-icon-btn {
     width: 36px;
     height: 36px;
   }
 
-  .headerIcon {
+  .header-icon {
     width: 20px;
     height: 20px;
   }
 
-  .userPopup {
+  .user-popup {
     width: 180px;
   }
 }

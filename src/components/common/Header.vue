@@ -5,7 +5,7 @@ import { useAuthStore } from '@/stores/auth';
 import { useNotificationStore } from '@/stores/notification';
 import { useWebSocketStore } from '@/stores/websocket';
 import { mydataApi } from '@/api/mydata';
-import { logout } from '@/api/mypage';
+import { useMyPageStore } from '@/stores/mypage';
 import styles from '@/assets/styles/components/Header.module.css';
 
 const route = useRoute();
@@ -13,6 +13,7 @@ const router = useRouter();
 const authStore = useAuthStore();
 const notificationStore = useNotificationStore();
 const webSocketStore = useWebSocketStore();
+const store = useMyPageStore();
 
 // 팝업 상태 관리
 const showUserPopup = ref(false);
@@ -71,24 +72,8 @@ const goToMyInfo = () => {
 
 // 로그아웃 처리 - mypageApi 사용으로 수정
 const handleLogout = async () => {
-  try {
-    // 웹소켓 연결 해제
-    webSocketStore.disconnect();
-
-    // 알림 스토어 정리
-    notificationStore.cleanup();
-
-    // 서버에 로그아웃 요청 - mypageApi 사용
-    await logout();
-  } catch (error) {
-    console.error('로그아웃 요청 실패:', error);
-  } finally {
-    // 클라이언트 상태 정리
-    authStore.logout();
-    showUserPopup.value = false;
-    // 로그인 페이지로 리다이렉트
-    router.push('/login');
-  }
+  await store.logout();
+  router.push('/login'); // 로그아웃 후 로그인 페이지로 이동
 };
 
 // 새로고침 CODEF 핸들러
@@ -230,14 +215,14 @@ onUnmounted(() => {
           <!-- 알림 헤더 -->
           <div :class="styles.notificationHeader">
             <h3 :class="styles.notificationTitle">
-              알림
+              Notice
               <!-- WebSocket 연결 상태 표시 (개발용) -->
-              <span
+              <!-- <span
                 v-if="!webSocketStore.isConnected"
                 style="color: orange; font-size: 12px"
               >
                 (오프라인)
-              </span>
+              </span> -->
             </h3>
             <button
               v-if="notificationStore.hasUnreadNotifications"
