@@ -9,6 +9,7 @@ import {
   getPolicyDetail,
 } from '@/api/policy.js';
 import { useAuthStore } from '@/stores/auth';
+import { useModalStore } from '@/stores/modal';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -24,6 +25,10 @@ const isPoliciesLoading = ref(false);
 const searchKeyword = ref('');
 const isSearching = ref(false);
 const hasSearched = ref(false); // 검색 실행 여부 추적
+
+// 페이지네이션 상태 관리
+const currentPage = ref(1);
+const itemsPerPage = 5;
 
 // 맞춤 지원 정책 데이터 로드
 const loadCustomPolicies = async () => {
@@ -47,6 +52,7 @@ const handleSearch = async () => {
     isSearching.value = true;
     hasSearched.value = true; // 검색 실행 표시
     activeCategory.value = '전체'; // 검색 시 카테고리 초기화
+    currentPage.value = 1; // 검색 시 첫 페이지로 초기화
     console.log('검색 시작:', searchKeyword.value || '(빈 검색어)');
 
     // 검색 API 호출 (빈 검색어도 허용)
@@ -74,6 +80,7 @@ const clearSearch = async () => {
   searchKeyword.value = '';
   hasSearched.value = false; // 검색 상태 초기화
   activeCategory.value = '전체'; // 카테고리도 초기화
+  currentPage.value = 1; // 첫 페이지로 초기화
   await loadCustomPolicies();
 };
 
@@ -84,6 +91,7 @@ const openPolicyDetail = async (policy) => {
 
     // 정책 이름으로 상세 정보 조회
     const policyDetail = await getPolicyDetail(policy.policyName);
+    console.log('PolicySection - API 응답 데이터:', policyDetail);
     selectedPolicyData.value = policyDetail;
     isModalVisible.value = true;
   } catch (error) {
@@ -97,10 +105,26 @@ const openPolicyDetail = async (policy) => {
 const closeModal = () => {
   isModalVisible.value = false;
   selectedPolicyData.value = {};
+  // 모달 스토어 상태도 명시적으로 업데이트
+  const modalStore = useModalStore();
+  modalStore.closePolicyDetailModal();
 };
 
 const goToPolicyDetail = (policyId) => {
-  router.push(`/policy-detail/${policyId}`);
+  // policyId 유효성 검사
+  if (policyId && typeof policyId === 'string' && policyId !== 'undefined') {
+    try {
+      router.push(`/policy-detail/${policyId}`);
+    } catch (error) {
+      console.error('Policy detail navigation error:', error);
+      // 에러 발생 시 정책 목록 페이지로 이동
+      router.push('/policy');
+    }
+  } else {
+    console.error('Invalid policyId:', policyId);
+    // 잘못된 policyId일 경우 정책 목록 페이지로 이동
+    router.push('/policy');
+  }
 };
 
 // 카테고리 필터 상태 관리
@@ -208,6 +232,7 @@ const getMinisterLogo = (logoText) => {
 
 const selectCategory = (categoryId) => {
   activeCategory.value = categoryId;
+  currentPage.value = 1; // 카테고리 변경 시 첫 페이지로 이동
   // 카테고리 변경 시에는 검색 상태를 유지하고 클라이언트 사이드 필터링만 적용
   console.log('선택된 카테고리:', categoryId);
 };
@@ -225,6 +250,70 @@ const filteredPolicies = computed(() => {
   }
 
   return filtered;
+});
+
+// 페이지네이션된 정책 목록 계산
+const paginatedPolicies = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return filteredPolicies.value.slice(startIndex, endIndex);
+});
+
+// 전체 페이지 수 계산
+const totalPages = computed(() => {
+  return Math.ceil(filteredPolicies.value.length / itemsPerPage);
+});
+
+// 페이지 변경 함수
+const changePage = (page) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
+  }
+};
+
+// 이전 페이지로 이동
+const goToPreviousPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
+};
+
+// 다음 페이지로 이동
+const goToNextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+};
+
+// 페이지 번호 배열 생성 (최대 5개 표시)
+const pageNumbers = computed(() => {
+  const pages = [];
+  const maxVisiblePages = 5;
+
+  if (totalPages.value <= maxVisiblePages) {
+    // 전체 페이지가 5개 이하면 모든 페이지 표시
+    for (let i = 1; i <= totalPages.value; i++) {
+      pages.push(i);
+    }
+  } else {
+    // 현재 페이지를 중심으로 최대 5개 페이지 표시
+    let start = Math.max(
+      1,
+      currentPage.value - Math.floor(maxVisiblePages / 2)
+    );
+    let end = Math.min(totalPages.value, start + maxVisiblePages - 1);
+
+    // 끝에 도달했을 때 시작점 조정
+    if (end === totalPages.value) {
+      start = Math.max(1, end - maxVisiblePages + 1);
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+  }
+
+  return pages;
 });
 
 // 태그별 CSS 클래스 결정
@@ -267,59 +356,49 @@ onMounted(() => {
 <template>
   <div :class="styles.policySectionContainer">
     <!-- 제목 섹션 -->
-    <div :class="styles.titleSection">
-      <h2 :class="styles.sectionTitle">맞춤 지원 정책</h2>
+    <div :class="styles.policySectionTitleSection">
+      <h2 :class="styles.policySectionSectionTitle">맞춤 지원 정책</h2>
+      <div :class="styles.policySectionTitleLine"></div>
     </div>
 
     <!-- 검색창 -->
-    <div :class="styles.searchBox">
+    <div :class="styles.policySectionSearchBox">
       <input
         v-model="searchKeyword"
         type="text"
-        placeholder="원하시는 키워드로 정책을 찾아보세요."
-        :class="styles.searchInput"
+        placeholder="정책명, 키워드로 검색해보세요"
+        :class="styles.policySectionSearchInput"
         @keyup.enter="handleSearch"
       />
-      <div :class="styles.searchButtonIcon" @click="handleSearch">
-        <div :class="styles.searchIconContainer">
+      <div :class="styles.policySectionSearchButtonIcon" @click="handleSearch">
+        <div :class="styles.policySectionSearchIconInner">
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="45"
-            height="45"
-            viewBox="0 0 45 45"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
             fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <circle cx="22.5" cy="22.5" r="22.5" fill="#2E3134" />
+            <path
+              d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z"
+              stroke="#72787F"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
-          <div :class="styles.searchIconInner">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <circle cx="11" cy="11" r="7" stroke="#FFF1F1" stroke-width="2" />
-              <path
-                d="M20 20L17 17"
-                stroke="#FFF1F1"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-            </svg>
-          </div>
         </div>
       </div>
     </div>
 
     <!-- 카테고리 필터 -->
-    <div :class="styles.categoryFilter">
+    <div :class="styles.policySectionCategoryFilter">
       <button
         v-for="category in categories"
         :key="category.id"
         :class="[
-          styles.categoryBtn,
-          { [styles.active]: activeCategory === category.id },
+          styles.policySectionCategoryBtn,
+          { [styles.policySectionActive]: activeCategory === category.id },
         ]"
         @click="selectCategory(category.id)"
       >
@@ -328,66 +407,120 @@ onMounted(() => {
     </div>
 
     <!-- 정책 카드들 -->
-    <div :class="styles.policyCards">
+    <div :class="styles.policySectionPolicyCards">
       <!-- 로딩 상태 -->
-      <div
-        v-if="isPoliciesLoading || isSearching"
-        :class="styles.loadingMessage"
-      >
-        {{
-          isSearching ? '검색 중입니다...' : '정책 정보를 불러오는 중입니다...'
-        }}
+      <div v-if="isPoliciesLoading" :class="styles.policySectionLoadingMessage">
+        정책을 불러오는 중...
       </div>
 
-      <!-- 정책이 없을 때 -->
+      <!-- 검색 결과 없음 -->
       <div
-        v-else-if="filteredPolicies.length === 0"
-        :class="styles.noPoliciesMessage"
+        v-else-if="hasSearched && policies.length === 0"
+        :class="styles.policySectionNoPoliciesMessage"
       >
-        {{
-          searchKeyword.trim()
-            ? '검색 결과가 없습니다.'
-            : '조건에 맞는 정책이 없습니다.'
-        }}
+        검색 결과가 없습니다.
       </div>
 
       <!-- 정책 카드들 -->
       <div
-        v-for="policy in filteredPolicies"
-        :key="policy.policyId"
-        :class="styles.policyCard"
+        v-else
+        v-for="policy in paginatedPolicies"
+        :key="policy.id"
+        :class="styles.policySectionPolicyCard"
         @click="openPolicyDetail(policy)"
       >
-        <div :class="styles.cardHeader">
-          <div :class="styles.cardLogo">
-            <div :class="styles.cardDetailHeader">
-              <span :class="styles.supportCycle">{{
-                policy.supportCycle
+        <!-- 카드 헤더 -->
+        <div :class="styles.policySectionCardHeader">
+          <div :class="styles.policySectionCardLogo">
+            <div :class="styles.policySectionCardDetailHeader">
+              <span :class="styles.policySectionSupportCycle">{{
+                policy.supportCycle || '연중'
               }}</span>
-              <h3 :class="styles.cardTitle">{{ policy.policyName }}</h3>
             </div>
+            <h3 :class="styles.policySectionCardTitle">
+              {{ policy.policyName }}
+            </h3>
           </div>
         </div>
 
-        <div :class="styles.cardContent">
-          <div :class="styles.logoImage">
+        <!-- 카드 내용 -->
+        <div :class="styles.policySectionCardContent">
+          <div :class="styles.policySectionLogoImage">
             <img
               :src="getMinisterLogo(policy.ministryName)"
               :alt="policy.ministryName"
-              @error="(e) => (e.target.style.display = 'none')"
             />
           </div>
-          <span :class="styles.logoText">{{ policy.ministryName }}</span>
-        </div>
-        <div :class="styles.policyInfo">
-          <span :class="styles.policyOnline">{{
-            formatPolicyOnline(policy.policyOnline)
+          <span :class="styles.policySectionLogoText">{{
+            policy.ministryName
           }}</span>
-          <span :class="styles.policyDate">{{
-            formatPolicyDate(policy.policyDate)
+        </div>
+
+        <!-- 정책 정보 -->
+        <div :class="styles.policySectionPolicyInfo">
+          <span :class="styles.policySectionPolicyOnline">{{
+            policy.isOnlineApplyAvailable === 'Y' ? '온라인' : '오프라인'
+          }}</span>
+          <span :class="styles.policySectionPolicyDate">{{
+            formatPolicyDate(policy.registrationDate)
           }}</span>
         </div>
       </div>
+    </div>
+
+    <!-- 페이지네이션 -->
+    <div v-if="totalPages > 1" :class="styles.policySectionPaginationContainer">
+      <button
+        :disabled="currentPage === 1"
+        @click="goToPreviousPage"
+        :class="[
+          styles.policySectionPaginationBtn,
+          styles.policySectionPrevBtn,
+        ]"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M15 18L9 12L15 6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+
+      <div :class="styles.policySectionPageNumbers">
+        <button
+          v-for="page in pageNumbers"
+          :key="page"
+          :class="[
+            styles.policySectionPageNumber,
+            { [styles.policySectionActivePage]: currentPage === page },
+          ]"
+          @click="changePage(page)"
+        >
+          {{ page }}
+        </button>
+      </div>
+
+      <button
+        :disabled="currentPage === totalPages"
+        @click="goToNextPage"
+        :class="[
+          styles.policySectionPaginationBtn,
+          styles.policySectionNextBtn,
+        ]"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M9 18L15 12L9 6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
     </div>
 
     <!-- 정책 상세 모달 -->

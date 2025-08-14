@@ -37,6 +37,20 @@ export const useModalStore = defineStore('modal', () => {
       isPolicyDetailModalOpen.value || isDiagnosisStageModalOpen.value;
   };
 
+  // 모든 모달 닫기
+  const closeAllModals = () => {
+    isPolicyDetailModalOpen.value = false;
+    isDiagnosisStageModalOpen.value = false;
+    updateAnyModalOpen();
+  };
+
+  // 모달 상태 초기화
+  const resetModalState = () => {
+    isPolicyDetailModalOpen.value = false;
+    isDiagnosisStageModalOpen.value = false;
+    isAnyModalOpen.value = false;
+  };
+
   return {
     // 상태
     isPolicyDetailModalOpen,
@@ -48,5 +62,7 @@ export const useModalStore = defineStore('modal', () => {
     closePolicyDetailModal,
     openDiagnosisStageModal,
     closeDiagnosisStageModal,
+    closeAllModals,
+    resetModalState,
   };
 });

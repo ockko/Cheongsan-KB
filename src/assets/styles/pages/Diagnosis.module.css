@@ -1,5 +1,5 @@
 /* 자가진단 페이지 스타일 */
-.diagnosisPage {
+.diagnosis-page {
   min-height: 100vh;
   background: #ffffff;
   display: flex;
@@ -8,7 +8,7 @@
 }
 
 /* 헤더 영역 */
-.header {
+.diagnosis-header {
   background: #ffffff;
   padding: 1rem 1.5rem;
   display: flex;
@@ -18,7 +18,7 @@
   z-index: 100;
 }
 
-.backButton {
+.diagnosis-back-button {
   background: none;
   border: none;
   font-size: 1.5rem;
@@ -31,11 +31,11 @@
   z-index: 10;
 }
 
-.backButton:hover {
+.diagnosis-back-button:hover {
   background-color: #f0f4f8;
 }
 
-.title {
+.diagnosis-title {
   font-size: 1.25rem;
   font-weight: 600;
   color: #003e65;
@@ -48,7 +48,7 @@
 }
 
 /* 진행률 표시 - 점들이 선 위를 이동하는 형태 */
-.progressContainer {
+.diagnosis-progress-container {
   background: #ffffff;
   padding: 1rem 1.5rem;
   display: flex;
@@ -58,7 +58,7 @@
   z-index: 10;
 }
 
-.progressDots {
+.diagnosis-progress-dots {
   display: flex;
   align-items: center;
   position: relative;
@@ -66,7 +66,7 @@
 }
 
 /* 배경 연결선 */
-.progressDots::before {
+.diagnosis-progress-dots::before {
   content: '';
   position: absolute;
   top: 50%;
@@ -78,9 +78,8 @@
   z-index: 1;
 }
 
-
 /* 이동하는 점 */
-.progressDot {
+.diagnosis-progress-dot {
   width: 12px;
   height: 12px;
   border-radius: 50%;
@@ -94,76 +93,76 @@
   transform: translateY(-50%);
 }
 
-.progressDot.active {
+.diagnosis-progress-dot.active {
   background-color: #003e65;
   border-color: #003e65;
 }
 
 /* 점들의 기본 위치 */
-.progressDot:nth-child(1) {
+.diagnosis-progress-dot:nth-child(1) {
   left: 0;
 }
 
-.progressDot:nth-child(2) {
+.diagnosis-progress-dot:nth-child(2) {
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
-.progressDot:nth-child(3) {
+.diagnosis-progress-dot:nth-child(3) {
   right: 0;
   left: auto;
 }
 
 /* 1단계: 첫 번째 점이 중앙, 두 번째 점이 오른쪽 끝 */
-.progressDots.step-0 .progressDot:nth-child(1) {
+.diagnosis-progress-dots.step-0 .diagnosis-progress-dot:nth-child(1) {
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
-.progressDots.step-0 .progressDot:nth-child(2) {
+.diagnosis-progress-dots.step-0 .diagnosis-progress-dot:nth-child(2) {
   left: 100%;
   transform: translate(-100%, -50%);
 }
 
-.progressDots.step-0 .progressDot:nth-child(3) {
+.diagnosis-progress-dots.step-0 .diagnosis-progress-dot:nth-child(3) {
   left: 100%;
   transform: translate(-100%, -50%);
 }
 
 /* 2단계: 첫 번째 점이 왼쪽 끝, 두 번째 점이 중앙, 세 번째 점이 오른쪽 끝 */
-.progressDots.step-1 .progressDot:nth-child(1) {
+.diagnosis-progress-dots.step-1 .diagnosis-progress-dot:nth-child(1) {
   left: 0;
   transform: translateY(-50%);
 }
 
-.progressDots.step-1 .progressDot:nth-child(2) {
+.diagnosis-progress-dots.step-1 .diagnosis-progress-dot:nth-child(2) {
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
-.progressDots.step-1 .progressDot:nth-child(3) {
+.diagnosis-progress-dots.step-1 .diagnosis-progress-dot:nth-child(3) {
   left: 100%;
   transform: translate(-100%, -50%);
 }
 
 /* 3단계: 첫 번째, 두 번째 점이 왼쪽 끝, 세 번째 점이 중앙 */
-.progressDots.step-2 .progressDot:nth-child(1) {
+.diagnosis-progress-dots.step-2 .diagnosis-progress-dot:nth-child(1) {
   left: 0;
   transform: translateY(-50%);
 }
 
-.progressDots.step-2 .progressDot:nth-child(2) {
+.diagnosis-progress-dots.step-2 .diagnosis-progress-dot:nth-child(2) {
   left: 0;
   transform: translateY(-50%);
 }
 
-.progressDots.step-2 .progressDot:nth-child(3) {
+.diagnosis-progress-dots.step-2 .diagnosis-progress-dot:nth-child(3) {
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
 /* 메인 콘텐츠 */
-.mainContent {
+.diagnosis-main-content {
   flex: 1;
   padding: 1rem 1.5rem;
   max-width: 600px;
@@ -176,7 +175,7 @@
 }
 
 /* 진단 시작 페이지 스타일 */
-.startContainer {
+.diagnosis-start-container {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -186,7 +185,7 @@
   padding: 2rem 0.5rem;
 }
 
-.startContent {
+.diagnosis-start-content {
   background: #ffffff;
   text-align: center;
   max-width: 400px;
@@ -195,12 +194,12 @@
   margin: 0 auto;
 }
 
-.iconContainer {
+.diagnosis-icon-container {
   margin-bottom: 3rem;
   margin-top: 4rem;
 }
 
-.diagnosticIcon {
+.diagnosis-diagnostic-icon {
   width: 64px;
   height: 68px;
   display: block;
@@ -208,19 +207,19 @@
   object-fit: contain;
 }
 
-.startTextContainer {
+.diagnosis-start-text-container {
   margin-bottom: 4rem;
 }
 
-.startTitle {
-  font-size:15px;
+.diagnosis-start-title {
+  font-size: 15px;
   font-weight: 400;
   color: #000000;
   margin: 0 0 2rem 0;
   letter-spacing: 1.6px;
 }
 
-.startDescription {
+.diagnosis-start-description {
   font-size: 1rem;
   color: #72787f;
   margin: 0;
@@ -231,7 +230,7 @@
 
 /* 특징 섹션 제거 */
 
-.startButton {
+.diagnosis-start-button {
   background: #003e65;
   border: none;
   border-radius: 8px;
@@ -251,20 +250,20 @@
   margin: 0 auto !important;
 }
 
-.startButton:hover {
+.diagnosis-start-button:hover {
   background: #002a47;
 }
 
-.startButtonText {
+.diagnosis-start-button-text {
   position: relative;
   z-index: 1;
 }
 
-.startButtonIcon {
+.diagnosis-start-button-icon {
   display: none;
 }
 
-.stepContainer {
+.diagnosis-step-container {
   background: #ffffff;
   padding: 5px;
   width: 100%;
@@ -273,26 +272,26 @@
 }
 
 /* 단계 아이콘 */
-.stepIcon {
+.diagnosis-step-icon {
   display: flex;
   justify-content: center;
   margin-bottom: 2rem;
   margin-top: 1rem;
 }
 
-.diagnosisIcon {
+.diagnosis-diagnosis-icon {
   width: 76px;
   height: 72px;
   object-fit: contain;
 }
 
 /* 단계 헤더 */
-.stepHeader {
+.diagnosis-step-header {
   margin-bottom: 1rem;
   text-align: center;
 }
 
-.stepTitle {
+.diagnosis-step-title {
   font-size: 1.5rem;
   font-weight: 700;
   color: #003e65;
@@ -300,7 +299,7 @@
 }
 
 /* 구분선 */
-.divider {
+.diagnosis-divider {
   width: 100%;
   height: 1px;
   background-color: #e1e2e6;
@@ -308,7 +307,7 @@
 }
 
 /* 질문 영역 */
-.questionContainer {
+.diagnosis-question-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -316,7 +315,7 @@
   padding: 1rem 0 0 0;
 }
 
-.questionItem {
+.diagnosis-question-item {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -325,7 +324,7 @@
 }
 
 /* 선택 옵션 - 피그마 디자인 스타일 */
-.optionsContainer {
+.diagnosis-options-container {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -333,7 +332,7 @@
   max-width: 320px;
 }
 
-.optionLabel {
+.diagnosis-option-label {
   display: flex;
   align-items: center;
   padding: 1rem 1.5rem;
@@ -348,14 +347,14 @@
 
 /* 상단 바 제거 */
 
-.optionInput {
+.diagnosis-option-input {
   position: absolute;
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-.optionText {
+.diagnosis-option-text {
   font-size: 1rem;
   color: #000000;
   font-weight: 400;
@@ -368,7 +367,7 @@
   letter-spacing: 1.6px;
 }
 
-.optionText::before {
+.diagnosis-option-text::before {
   content: '';
   position: absolute;
   left: 0;
@@ -382,21 +381,21 @@
   transition: all 0.2s ease;
 }
 
-.optionLabel.selected .optionText::before {
+.diagnosis-option-label.selected .diagnosis-option-text::before {
   border-color: #003e65;
   background: #003e65;
   box-shadow: inset 0 0 0 3px #ffffff;
 }
 
 /* 하단 버튼 영역 */
-.footer {
+.diagnosis-footer {
   background: #ffffff;
   padding: 1rem 1.5rem;
   position: relative;
   z-index: 10;
 }
 
-.buttonContainer {
+.diagnosis-button-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -405,7 +404,7 @@
   gap: 1rem;
 }
 
-.button {
+.diagnosis-button {
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
@@ -421,34 +420,34 @@
 }
 
 /* 1단계에서만 다음 버튼이 전체 너비를 차지 */
-.nextButton.fullWidth {
+.diagnosis-next-button.full-width {
   width: 100%;
   max-width: 600px;
 }
 
-.prevButton {
+.diagnosis-prev-button {
   background: #f7fafc;
   color: #4a5568;
   border: 2px solid #e2e8f0;
 }
 
-.prevButton:hover {
+.diagnosis-prev-button:hover {
   background: #edf2f7;
   border-color: #cbd5e0;
 }
 
-.nextButton {
+.diagnosis-next-button {
   background: #003e65;
   color: #ffffff;
   font-weight: 700;
   font-family: 'Inter', 'Noto Sans KR', sans-serif;
 }
 
-.nextButton:hover:not(.disabled) {
+.diagnosis-next-button:hover:not(.disabled) {
   background: #002a47;
 }
 
-.nextButton.disabled {
+.diagnosis-next-button.disabled {
   background: #cbd5e0;
   color: #a0aec0;
   cursor: not-allowed;
@@ -456,73 +455,73 @@
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
-  .mainContent {
+  .diagnosis-main-content {
     padding: 1rem;
   }
 
-  .startContent {
+  .diagnosis-start-content {
     padding: 2.5rem 0.5rem;
     border-radius: 20px;
   }
 
-  .startTitle {
+  .diagnosis-start-title {
     font-size: 20px;
   }
 
-  .startDescription {
+  .diagnosis-start-description {
     font-size: 14px;
   }
 
-  .startFeatures {
+  .diagnosis-start-features {
     gap: 1rem;
   }
 
-  .startButton {
+  .diagnosis-start-button {
     font-size: 1rem;
     margin: 0 auto !important;
     padding: 12px 0;
     width: 283px;
   }
 
-  .title {
+  .diagnosis-title {
     text-align: center;
   }
 
-  .stepContainer {
+  .diagnosis-step-container {
     padding: 1rem;
     border-radius: 28px;
   }
 
-  .stepTitle {
+  .diagnosis-step-title {
     font-size: 1.375rem;
   }
 
-  .optionLabel {
+  .diagnosis-option-label {
     padding: 1.25rem 1.5rem;
     border-radius: 18px;
   }
 
-  .optionText {
+  .diagnosis-option-text {
     font-size: 1rem;
     padding-left: 2.75rem;
   }
 
-  .optionText::before {
+  .diagnosis-option-text::before {
     width: 24px;
     height: 24px;
   }
 
-  .optionText::after {
+  .diagnosis-option-text::after {
     font-size: 1.5rem;
     right: -1.75rem;
   }
 
-  .buttonContainer {
+  .diagnosis-button-container {
     flex-direction: row;
     gap: 1rem;
   }
 
-  .button {
+  .diagnosis-button {
     min-height: 40px;
     font-size: 1rem;
     width: 156px;
@@ -541,17 +540,17 @@
   }
 }
 
-.stepContainer {
+.diagnosis-step-container {
   animation: fadeIn 0.3s ease;
 }
 
 /* 접근성 */
-.button:focus,
-.optionLabel:focus {
+.diagnosis-button:focus,
+.diagnosis-option-label:focus {
   outline: 2px solid #4299e1;
   outline-offset: 2px;
 }
 
-.optionInput:focus + .optionText::before {
+.diagnosis-option-input:focus + .diagnosis-option-text::before {
   box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3);
 }
