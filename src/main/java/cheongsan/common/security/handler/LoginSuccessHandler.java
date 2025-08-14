@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -38,9 +39,11 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     private LogInResponseDTO makeLogInResponse(CustomUser user) {
         String userId = user.getUser().getUserId();
         String nickName = user.getUser().getNickname();
+
         String accessToken = jwtProcessor.generateAccessToken(userId);
         String refreshToken = jwtProcessor.generateRefreshToken(userId);
 
+        // RT 저장
         redisTemplate.opsForValue().set(
                 "RT:" + userId,
                 refreshToken,
@@ -48,12 +51,29 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                 TimeUnit.SECONDS
         );
 
-        return new LogInResponseDTO(user.getUser().getId(), nickName, accessToken, refreshToken);
+        String role = user.getUser().getRole();
+        if (role == null || role.isBlank()) {
+            role = user.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .findFirst()
+                    .orElse("ROLE_USER");
+        }
+        if (role.startsWith("ROLE_")) role = role.substring(5);
+
+        return new LogInResponseDTO(
+                user.getUser().getId(),
+                nickName,
+                accessToken,
+                refreshToken,
+                role
+        );
     }
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        Authentication authentication)
+            throws IOException, ServletException {
         CustomUser user = (CustomUser) authentication.getPrincipal();
         LogInResponseDTO result = makeLogInResponse(user);
         JsonResponse.send(response, result);
