@@ -33,4 +33,14 @@
           AND transaction_date BETWEEN #{startDate} AND #{endDate}
         ORDER BY transaction_date DESC
     </select>
+
+
+    <!-- loanId + 기간으로 거래 내역 조회 -->
+    <select id="findTransactionsByLoanAndPeriod" parameterType="map"
+            resultType="cheongsan.domain.debt.entity.DebtTransaction">
+        SELECT *
+        FROM debt_transactions
+        WHERE debt_account_id = #{loanId}
+          AND transaction_date BETWEEN #{startDate} AND #{endDate}
+    </select>
 </mapper>

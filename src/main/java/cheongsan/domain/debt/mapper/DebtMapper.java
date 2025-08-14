@@ -15,7 +15,7 @@ import java.util.List;
 
 @Mapper
 public interface DebtMapper {
-    List<DebtAccount> getUserDebtList(Long userId);
+    List<DebtAccount> getUserDebtList(@Param("userId") Long userId);
 
     DebtAccount getDebtAccountById(Long loanId);
 
@@ -70,4 +70,13 @@ public interface DebtMapper {
      * 대출계좌 잔액 업데이트
      */
     void updateDebtBalance(@Param("id") Long id, @Param("currentBalance") BigDecimal currentBalance);
+
+    // loanName + userId로 debt_account id 조회
+    Long findLoanIdByNameAndUser(@Param("loanName") String loanName,
+                                 @Param("userId") Long userId);
+
+
+    // next_payment_date 업데이트
+    int updateNextPaymentDate(@Param("loanId") Long loanId,
+                              @Param("nextPaymentDate") LocalDate nextPaymentDate);
 }
