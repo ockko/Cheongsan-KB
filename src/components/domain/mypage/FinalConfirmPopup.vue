@@ -1,5 +1,4 @@
 <script setup>
-import { defineProps, defineEmits } from 'vue';
 import { useRouter } from 'vue-router';
 import styles from '@/assets/styles/components/mypage/FinalConfirmPopup.module.css';
 const router = useRouter();

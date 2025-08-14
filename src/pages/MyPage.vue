@@ -76,7 +76,7 @@ const logout = async () => {
       :class="[styles.cardList, styles.clickable]"
       @click="goTo('/mypage/edit/password')"
     >
-      <div :class="styles.cardRow">
+      <div :class="[styles.cardRow, styles.singleLine]">
         <span :class="styles.cardTitle">비밀번호 변경</span>
         <span :class="styles.cardArrow">
           <i class="fa-solid fa-greater-than"></i>
@@ -85,11 +85,12 @@ const logout = async () => {
     </div>
 
     <!-- 회원탈퇴 -->
+
     <div
       :class="[styles.cardList, styles.clickable]"
       @click="goTo('/mypage/withdraw')"
     >
-      <div :class="styles.cardRow">
+      <div :class="[styles.cardRow, styles.singleLine]">
         <span :class="styles.cardTitle">회원탈퇴</span>
         <span :class="styles.cardArrow">
           <i class="fa-solid fa-greater-than"></i>
