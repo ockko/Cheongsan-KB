@@ -1,7 +1,18 @@
 <script setup>
 import styles from '@/assets/styles/pages/Study.module.css';
 import StudyContentItem from '@/components/domain/Study/StudyContentItem.vue';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+
+const categories = ref([
+  '전체',
+  '신용',
+  '카드',
+  '보험',
+  '대출',
+  '저축',
+  '세금',
+  '투자',
+]);
 
 const originalSlides = [
   {
@@ -29,38 +40,33 @@ const originalSlides = [
 const studyContents = [
   {
     thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['적금', '청년', '정부지원'],
+    tags: ['저축', '카드', '신용'],
     title: '2025 청년도약계좌: 목돈 마련 지름길',
   },
   {
     thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['투자', '재테크'],
+    tags: ['투자', '신용'],
     title: '투자 성공 비결 궁금해요? 궁금하면 500원',
   },
   {
     thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['투자', '재테크'],
+    tags: ['저축', '세금'],
     title: '근데 투자 성공 비결이 진짜로 궁금해요? 그러면 50000원',
   },
   {
     thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['신용', '회복', '금융상식'],
+    tags: ['신용', '카드', '보험'],
     title: '야, 너도! 신용불량자 탈출할 수 있어',
   },
   {
     thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['신용', '회복', '금융상식'],
+    tags: ['보험', '대출'],
     title: '야! 너도 진짜 신용불량자 탈출할 수 있어',
   },
   {
     thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['신용', '회복', '금융상식'],
+    tags: ['신용', '대출', '저축'],
     title: '야! 장난하냐? 기죽지마! 너도 신용불량자 탈출할 수 있어',
-  },
-  {
-    thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['신용', '회복', '금융상식'],
-    title: '야! 너도, 신용불량자 탈출할 수 있어',
   },
 ];
 
@@ -131,21 +137,17 @@ const handleTouchEnd = () => {
   }
 };
 
-const categories = ref([
-  '전체',
-  '신용',
-  '카드',
-  '보험',
-  '대출',
-  '예적금',
-  '세금',
-  '투자',
-]);
-
 const activeIndex = ref(0);
 const selectCategory = (index) => {
   activeIndex.value = index;
+  window.scrollTo({ top: 0, behavior: 'smooth' }); // 카테고리 클릭 시 스크롤 최상단
 };
+
+const filteredContents = computed(() => {
+  const activeCategory = categories.value[activeIndex.value];
+  if (activeCategory === '전체') return studyContents;
+  return studyContents.filter(content => content.tags.includes(activeCategory));
+});
 </script>
 
 <template>
@@ -154,6 +156,7 @@ const selectCategory = (index) => {
       <h1 :class="[styles.pageTitle, 'text-bold', 'color-main']">
         금융 지식을 학습해보세요.
       </h1>
+
       <div :class="styles.carousel">
         <button :class="styles.arrow" @click="prevSlide">
           <img src="/images/arrow-left.png" alt="왼쪽 화살표" />
@@ -213,23 +216,25 @@ const selectCategory = (index) => {
 
     <div :class="[styles.categoryDivider, 'color-gray0']"></div>
 
-    <div :class="styles.categoryTabs">
-      <button
-        v-for="(category, index) in categories"
-        :key="category"
-        :class="[
-          styles.categoryTab,
-          { active: activeIndex === index },
-          activeIndex === index ? 'color-main' : 'color-gray0',
-        ]"
-        @click="selectCategory(index)"
-      >
-        {{ category }}
-      </button>
-    </div>
+    <!-- 카테고리 탭 -->
+      <div :class="styles.categoryTabs">
+        <button
+          v-for="(category, index) in categories"
+          :key="category"
+          :class="[
+            styles.categoryTab,
+            { active: activeIndex === index },
+            activeIndex === index ? 'color-main' : 'color-gray0',
+          ]"
+          @click="selectCategory(index)"
+        >
+          {{ category }}
+        </button>
+      </div>
 
-    <div :class="styles.contentsList">
-      <StudyContentItem :contents="studyContents" />
+    <!-- 컨텐츠 리스트 -->
+      <div :class="styles.contentsList">
+        <StudyContentItem :contents="filteredContents" />
+      </div>
     </div>
-  </div>
 </template>
