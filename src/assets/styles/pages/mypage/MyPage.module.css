@@ -1,5 +1,5 @@
 .container {
-  padding: 16px;
+  padding: 16px 20px;
 }
 
 .header {
@@ -36,13 +36,17 @@
   flex-direction: column;
   width: 100%;
   border-bottom: 1px solid var(--color-gray4);
-  padding: 12px 0;
+  padding: 8px 0;
 }
+/* value 없는 카드 (단일 라인) */
 
+.card-row.single-line .card-title {
+  line-height: 3;
+}
 .card-row {
   display: flex;
-  align-items: center; /* 수직 중앙 정렬 */
-  justify-content: space-between; /* 텍스트 왼쪽, 화살표 오른쪽 */
+  align-items: center;
+  justify-content: space-between;
 }
 
 .card-content {
@@ -59,15 +63,16 @@
 .card-value {
   font-size: 16px;
   color: var(--color-gray0);
-  line-height: 1.2;
-  margin-top: 4px;
+  line-height: 0;
+  padding-bottom: 14px;
 }
 
 .card-arrow {
   display: flex;
   align-items: center;
-  font-size: 12px;
-  color: var(--color-main);
+  font-size: 18px;
+  color: var(--color-gray4);
+  transform: scaleX(0.5);
 }
 
 /* 로그아웃 버튼 */
