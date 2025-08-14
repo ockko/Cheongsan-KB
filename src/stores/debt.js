@@ -10,7 +10,7 @@ export const useDebtStore = defineStore('debt', () => {
   // --- Actions ---
 
   // 연체 대출 목록 데이터를 불러오는 액션
-  async function fetchOverdueLoans() {
+  const fetchOverdueLoans = async () => {
     isLoading.value = true;
     try {
       const data = await getOverdueLoans();
@@ -22,7 +22,7 @@ export const useDebtStore = defineStore('debt', () => {
     } finally {
       isLoading.value = false;
     }
-  }
+  };
 
   return {
     overdueLoans,

@@ -19,7 +19,7 @@ export const useBudgetStore = defineStore('budget', () => {
   // --- Actions ---
 
   // 추천/최대/현재 한도 정보를 불러오는 액션
-  async function fetchBudgetRecommendation() {
+  const fetchBudgetRecommendation = async () => {
     try {
       const data = await getBudgetRecommendation();
       recommendedLimit.value = data.recommendedDailyLimit;
@@ -28,10 +28,10 @@ export const useBudgetStore = defineStore('budget', () => {
     } catch (error) {
       console.error('스토어에서 추천 한도 정보 로딩 실패:', error);
     }
-  }
+  };
 
   // 수정 가능 여부를 확인하는 액션
-  async function fetchBudgetStatus() {
+  const fetchBudgetStatus = async () => {
     try {
       const data = await getBudgetStatus();
       lastUpdatedAt.value = data.dailyLimitDate;
@@ -56,10 +56,10 @@ export const useBudgetStore = defineStore('budget', () => {
     } catch (error) {
       console.error('스토어에서 예산 설정 상태 로딩 실패:', error);
     }
-  }
+  };
 
   // 최종 한도를 저장하는 액션
-  async function saveFinalDailyLimit(newLimit) {
+  const saveFinalDailyLimit = async (newLimit) => {
     const uiStore = useUiStore();
     const spendingStore = useSpendingStore();
 
@@ -81,7 +81,7 @@ export const useBudgetStore = defineStore('budget', () => {
         isError: true,
       });
     }
-  }
+  };
 
   return {
     recommendedLimit,

@@ -9,20 +9,20 @@ export const useUiStore = defineStore('ui', () => {
   const isErrorModal = ref(false); // 성공(파랑) / 에러(빨강) 모달 구분
 
   // --- Actions ---
-  function openModal({ title, message, isError = false }) {
+  const openModal = ({ title, message, isError = false }) => {
     modalTitle.value = title;
     modalMessage.value = message;
     isErrorModal.value = isError;
     isModalOpen.value = true;
-  }
+  };
 
-  function closeModal() {
+  const closeModal = () => {
     isModalOpen.value = false;
     // 모달이 닫힐 때 내용을 초기화
     modalTitle.value = '';
     modalMessage.value = '';
     isErrorModal.value = false;
-  }
+  };
 
   return {
     isModalOpen,

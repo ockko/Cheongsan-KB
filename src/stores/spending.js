@@ -14,7 +14,7 @@ export const useSpendingStore = defineStore('spending', () => {
   // --- Actions ---
 
   // 오늘의 지출 현황 데이터를 불러오는 액션
-  async function fetchDailySpending() {
+  const fetchDailySpending = async () => {
     isLoading.value = true;
     try {
       const data = await getDailySpending();
@@ -28,12 +28,12 @@ export const useSpendingStore = defineStore('spending', () => {
     } finally {
       isLoading.value = false;
     }
-  }
+  };
 
-  function updateDailyLimit(newLimit) {
+  const updateDailyLimit = (newLimit) => {
     spendingData.value.dailyLimit = newLimit;
     spendingData.value.remaining = newLimit - spendingData.value.spent;
-  }
+  };
 
   return {
     spendingData,

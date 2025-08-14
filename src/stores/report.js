@@ -15,7 +15,7 @@ export const useReportStore = defineStore('report', () => {
   // --- Actions ---
 
   // 가장 최신 리포트를 불러오는 액션
-  async function fetchLatestReport() {
+  const fetchLatestReport = async () => {
     isLoading.value = true;
     try {
       currentReport.value = await getLatestWeeklyReport();
@@ -24,10 +24,10 @@ export const useReportStore = defineStore('report', () => {
     } finally {
       isLoading.value = false;
     }
-  }
+  };
 
   // 특정 주의 리포트를 불러오는 액션
-  async function fetchReportByDate(date) {
+  const fetchReportByDate = async (date) => {
     isLoading.value = true;
     try {
       currentReport.value = await getWeeklyReportByDate(date);
@@ -36,16 +36,16 @@ export const useReportStore = defineStore('report', () => {
     } finally {
       isLoading.value = false;
     }
-  }
+  };
 
   // 과거 리포트 목록을 불러오는 액션
-  async function fetchReportHistoryList() {
+  const fetchReportHistoryList = async () => {
     try {
       reportHistory.value = await getWeeklyReportHistoryList();
     } catch (error) {
       console.error('스토어에서 과거 리포트 목록 로딩 실패:', error);
     }
-  }
+  };
 
   return {
     currentReport,
