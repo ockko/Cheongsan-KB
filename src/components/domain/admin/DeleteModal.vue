@@ -1,8 +1,7 @@
 <script setup>
-import { defineProps, defineEmits } from "vue";
 import styles from "@/assets/styles/components/admin/DeleteModal.module.css";
 
-defineProps({
+const props = defineProps({
   showModal: { type: Boolean, required: true },
   memberName: { type: String, required: true },
 });
@@ -11,11 +10,11 @@ const emit = defineEmits(["confirm", "cancel"]);
 
 <template>
   <teleport to="body">
-    <div v-if="showModal" :class="styles.modal">
+    <div v-if="props.showModal" :class="styles.modal">
       <div :class="styles.modalContent">
         <h2 :class="styles.modalTitle">회원 삭제</h2>
         <p :class="styles.modalText">
-          <strong :class="styles.highlight">{{ memberName }}</strong>
+          <strong :class="styles.highlight">{{ props.memberName }}</strong>
           님을<br />
           삭제하시겠습니까?
         </p>
