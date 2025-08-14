@@ -9,11 +9,13 @@ export const useSpendingStore = defineStore('spending', () => {
     spent: 0,
     remaining: 0,
   });
+  const isLoading = ref(true);
 
   // --- Actions ---
 
   // 오늘의 지출 현황 데이터를 불러오는 액션
   async function fetchDailySpending() {
+    isLoading.value = true;
     try {
       const data = await getDailySpending();
       spendingData.value = {
@@ -23,6 +25,8 @@ export const useSpendingStore = defineStore('spending', () => {
       };
     } catch (error) {
       console.error('스토어에서 지출 현황 로딩 실패:', error);
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -33,6 +37,7 @@ export const useSpendingStore = defineStore('spending', () => {
 
   return {
     spendingData,
+    isLoading,
     fetchDailySpending,
     updateDailyLimit,
   };

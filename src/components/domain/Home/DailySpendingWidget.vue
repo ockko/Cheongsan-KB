@@ -15,7 +15,7 @@ const props = defineProps({
 const isModalOpen = ref(false);
 
 const spendingStore = useSpendingStore();
-const { spendingData } = storeToRefs(spendingStore);
+const { spendingData, isLoading } = storeToRefs(spendingStore);
 
 onMounted(() => {
   spendingStore.fetchDailySpending();
@@ -43,7 +43,11 @@ const formatCurrency = (value) => {
       <h3>오늘의 지출</h3>
     </div>
 
-    <div :class="styles.widgetContent">
+    <div v-if="isLoading" :class="styles.loading">
+      <p>데이터를 불러오는 중입니다...</p>
+    </div>
+
+    <div v-else :class="styles.widgetContent">
       <p :class="styles.spentAmount">
         {{ formatCurrency(spendingData.spent) }} 원
       </p>

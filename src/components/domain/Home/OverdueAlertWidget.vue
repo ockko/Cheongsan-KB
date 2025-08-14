@@ -32,7 +32,14 @@ const getDdayIcon = (overdueDays) => {
 
 <template>
   <div :class="[styles.widgetCard, props.class]">
-    <div v-if="sortedOverdueLoans.length > 0" :class="styles.contentWrapper">
+    <div v-if="isLoading" :class="styles.loading">
+      <p>연체 정보를 불러오는 중...</p>
+    </div>
+
+    <div
+      v-else-if="sortedOverdueLoans.length > 0"
+      :class="styles.contentWrapper"
+    >
       <p :class="styles.title">
         ※ 연체 중인 대출이
         <span :class="styles.highlight">{{ sortedOverdueLoans.length }}</span
