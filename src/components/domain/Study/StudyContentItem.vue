@@ -1,6 +1,6 @@
 <script setup>
-import styles from '@/assets/styles/components/study/StudyContentItem.module.css';
 import { defineEmits, defineProps } from 'vue';
+import styles from '@/assets/styles/components/study/StudyContentItem.module.css';
 
 const props = defineProps({
   contents: {

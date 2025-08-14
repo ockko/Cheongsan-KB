@@ -1,22 +1,25 @@
 <script setup>
 import styles from '@/assets/styles/pages/StudyDetail.module.css'
 import StudyContentItem from '@/components/domain/Study/StudyContentItem.vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const studyContents = [
   {
-    thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['예적금', '청년'],
-    title: '2025 청년도약계좌: 목돈 마련 지름길',
+    thumbnailUrl: '/images/study-thumbnail-3.jpg',
+    tags: ['신용', '대출'],
+    title: '빚이 부담될 때 살펴보는 채무조정제도',
   },
   {
     thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['투자', '재테크'],
-    title: '투자 성공 비결 궁금해요? 궁금하면 500원',
+    tags: ['투자', '신용', '재테크'],
+    title: '앱테크로 100만원 벌 수 있을까? : 앱테크 성공 비결',
   },
   {
-    thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['신용', '회복'],
-    title: '야, 너도! 신용불량자 탈출할 수 있어',
+    thumbnailUrl: '/images/study-thumbnail-8.png',
+    tags: ['대출', '신용', '카드'],
+    title: '대출 이자 줄이는 3가지 방법',
   },
 ];
 
@@ -36,11 +39,16 @@ const contentSections = [
     text: '신용카드 결제일은 카드사 앱이나 홈페이지에서 바꿀 수 있어요. ‘결제 정보’ 또는 ‘결제일 변경’ 관련 메뉴에서 직접 변경할 수 있으니 확인해보세요.',
   }
 ]
+// 뒤로가기 핸들러
+const goBack = () => {
+  router.push('/study')
+}
 </script>
 
 <template>
   <div :class="styles.studyDetailPage">
-    <button :class="styles.arrow">
+      <!-- 왼쪽 화살표 클릭 시 /study로 이동 -->
+    <button :class="styles.arrow" @click="goBack">
       <img src="/images/arrow-left.png" alt="왼쪽 화살표" />
     </button>
 

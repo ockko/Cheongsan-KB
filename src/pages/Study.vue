@@ -23,20 +23,20 @@ const originalSlides = [
     title: '신용카드 결제일을 14일로 해야 하는 이유',
   },
   {
-    imageUrl: '/images/study-thumbnail-example.png',
-    title: '투자 초보자를 위한 가이드',
+    imageUrl: '/images/study-thumbnail-2.jpg',
+    title: '재테크의 정석, 금융 집짓기',
   },
   {
-    imageUrl: '/images/study-thumbnail-example.png',
-    title: '부동산 투자의 기본 원칙',
+    imageUrl: '/images/study-thumbnail-3.jpg',
+    title: '빚이 부담될 때 살펴보는 채무조정제도',
   },
   {
-    imageUrl: '/images/study-thumbnail-example.png',
-    title: '암호화폐 투자 전략',
+    imageUrl: '/images/study-thumbnail-4.png',
+    title: '2025 청년 목돈 마련 위한 정책 총정리',
   },
   {
-    imageUrl: '/images/study-thumbnail-example.png',
-    title: '경제 뉴스 읽는 법',
+    imageUrl: '/images/study-thumbnail-5.jpg',
+    title: '신용카드 한도, 어떻게 정해질까?',
   },
 ];
 
@@ -52,34 +52,44 @@ const handleContentClick = (content, index) => {
 
 const studyContents = [
   {
-    thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['저축', '카드', '신용'],
-    title: '2025 청년도약계좌: 목돈 마련 지름길',
+    thumbnailUrl: '/images/study-thumbnail-2.jpg',
+    tags: ['투자', '저축', '보험'],
+    title: '재테크의 정석, 금융 집짓기',
   },
   {
-    thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['투자', '신용'],
-    title: '투자 성공 비결 궁금해요? 궁금하면 500원',
+    thumbnailUrl: '/images/study-thumbnail-4.png',
+    tags: ['세금', '저축', '대출'],
+    title: '2025 청년 목돈 마련 위한 정책 총정리',
   },
   {
-    thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['저축', '세금'],
-    title: '근데 투자 성공 비결이 진짜로 궁금해요? 그러면 50000원',
+    thumbnailUrl: '/images/study-thumbnail-1.png',
+    tags: ['신용', '카드'],
+    title: '신용카드 결제일을 14일로 해야 하는 이유',
   },
   {
-    thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['신용', '카드', '보험'],
-    title: '야, 너도! 신용불량자 탈출할 수 있어',
+    thumbnailUrl: '/images/study-thumbnail-3.jpg',
+    tags: ['신용', '대출'],
+    title: '빚이 부담될 때 살펴보는 채무조정제도',
   },
   {
-    thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['보험', '대출'],
-    title: '야! 너도 진짜 신용불량자 탈출할 수 있어',
+    thumbnailUrl: '/images/study-thumbnail-6.jpg',
+    tags: ['신용', '대출'],
+    title: '대출 필수 용어 3가지: LTV, DTI, DSR',
   },
   {
-    thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['신용', '대출', '저축'],
-    title: '야! 장난하냐? 기죽지마! 너도 신용불량자 탈출할 수 있어',
+    thumbnailUrl: '/images/study-thumbnail-5.jpg',
+    tags: ['신용', '카드'],
+    title: '신용카드 한도, 어떻게 정해질까?',
+  },
+  {
+    thumbnailUrl: '/images/study-thumbnail-7.png',
+    tags: ['신용', '카드'],
+    title: '헬스장 회원권은 신용카드 할부로 결제하면 좋은 이유',
+  },
+  {
+    thumbnailUrl: '/images/study-thumbnail-8.png',
+    tags: ['대출', '신용', '카드'],
+    title: '대출 이자 줄이는 3가지 방법',
   },
 ];
 
