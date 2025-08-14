@@ -1,25 +1,27 @@
 <script setup>
 import styles from '@/assets/styles/components/home/WeeklyReportWidget.module.css';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useReportStore } from '@/stores/report';
 
 const reportStore = useReportStore();
 const { currentReport, reportHistory, isLoading } = storeToRefs(reportStore);
 
+const selectedStartDate = ref('');
+
+watch(
+  currentReport,
+  (newReport) => {
+    if (newReport) {
+      selectedStartDate.value = newReport.startDate;
+    }
+  },
+  { immediate: true }
+);
+
 onMounted(() => {
   reportStore.fetchLatestReport();
   reportStore.fetchReportHistoryList();
-});
-
-// "8월 2주차" 와 같은 텍스트를 계산
-const periodText = computed(() => {
-  if (!currentReport.value?.startDate) return '리포트 로딩 중...';
-  const date = new Date(currentReport.value.startDate);
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const weekOfMonth = Math.ceil((day + 6 - date.getDay()) / 7);
-  return `${month}월 ${weekOfMonth}주차`;
 });
 
 // 사용자가 드롭다운에서 특정 주차를 선택했을 때 실행될 메소드
@@ -95,7 +97,11 @@ const calculateLinePosition = (labelValue) => {
     <div v-else-if="currentReport" :class="styles.widgetContent">
       <div :class="styles.reportSummary">
         <div :class="styles.reportPeriod">
-          <select @change="handleWeekSelect" :class="styles.periodSelector">
+          <select
+            v-model="selectedStartDate"
+            @change="handleWeekSelect"
+            :class="styles.periodSelector"
+          >
             <option
               v-for="history in reportHistory"
               :key="history.reportId"
