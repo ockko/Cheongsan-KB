@@ -53,7 +53,6 @@ const handleSearch = async () => {
     hasSearched.value = true; // 검색 실행 표시
     activeCategory.value = '전체'; // 검색 시 카테고리 초기화
     currentPage.value = 1; // 검색 시 첫 페이지로 초기화
-    console.log('검색 시작:', searchKeyword.value || '(빈 검색어)');
 
     // 검색 API 호출 (빈 검색어도 허용)
     const searchResults = await searchCustomPolicies(
@@ -62,7 +61,6 @@ const handleSearch = async () => {
 
     if (searchResults && searchResults.length > 0) {
       policies.value = searchResults;
-      console.log('검색 결과:', searchResults);
     } else {
       policies.value = [];
       console.log('검색 결과가 없습니다.');
@@ -91,7 +89,6 @@ const openPolicyDetail = async (policy) => {
 
     // 정책 이름으로 상세 정보 조회
     const policyDetail = await getPolicyDetail(policy.policyName);
-    console.log('PolicySection - API 응답 데이터:', policyDetail);
     selectedPolicyData.value = policyDetail;
     isModalVisible.value = true;
   } catch (error) {
@@ -234,7 +231,6 @@ const selectCategory = (categoryId) => {
   activeCategory.value = categoryId;
   currentPage.value = 1; // 카테고리 변경 시 첫 페이지로 이동
   // 카테고리 변경 시에는 검색 상태를 유지하고 클라이언트 사이드 필터링만 적용
-  console.log('선택된 카테고리:', categoryId);
 };
 
 // 필터링된 정책 목록 계산

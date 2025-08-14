@@ -170,8 +170,8 @@
   width: 100%;
   position: relative;
   z-index: 10;
-  min-height: 50vh;
-  height: 80%;
+  min-height: 40vh;
+  height: 70%;
 }
 
 /* 진단 시작 페이지 스타일 */
@@ -275,7 +275,7 @@
 .diagnosis-step-icon {
   display: flex;
   justify-content: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   margin-top: 1rem;
 }
 
@@ -327,15 +327,16 @@
 .diagnosis-options-container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
   width: 100%;
   max-width: 320px;
+  min-height: 300px;
 }
 
 .diagnosis-option-label {
   display: flex;
   align-items: center;
-  padding: 1rem 1.5rem;
+  padding: 0.8rem 1.5rem;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -517,6 +518,7 @@
   }
 
   .diagnosis-button-container {
+    margin-top: 2rem;
     flex-direction: row;
     gap: 1rem;
   }
