@@ -83,7 +83,7 @@ onMounted(() => {
   ];
 });
 
-function nextSlide() {
+const nextSlide = () => {
   currentSlide.value++;
   transitionEnabled.value = true;
   if (currentSlide.value === carouselContents.value.length - 1) {
@@ -92,9 +92,9 @@ function nextSlide() {
       currentSlide.value = 1;
     }, 300);
   }
-}
+};
 
-function prevSlide() {
+const prevSlide = () => {
   currentSlide.value--;
   transitionEnabled.value = true;
   if (currentSlide.value === 0) {
@@ -103,22 +103,22 @@ function prevSlide() {
       currentSlide.value = carouselContents.value.length - 2;
     }, 300);
   }
-}
+};
 
-function goToSlide(index) {
+const goToSlide = (index) => {
   currentSlide.value = index + 1;
-}
+};
 
 // 터치 이벤트 핸들러들
-function handleTouchStart(event) {
+const handleTouchStart = (event) => {
   touchStartX.value = event.touches[0].clientX;
-}
+};
 
-function handleTouchMove(event) {
+const handleTouchMove = (event) => {
   touchEndX.value = event.touches[0].clientX;
-}
+};
 
-function handleTouchEnd() {
+const handleTouchEnd = () => {
   const swipeDistance = touchStartX.value - touchEndX.value;
 
   if (Math.abs(swipeDistance) > minSwipeDistance) {
@@ -130,7 +130,7 @@ function handleTouchEnd() {
       prevSlide();
     }
   }
-}
+};
 
 const categories = ref([
   '전체',
@@ -144,9 +144,9 @@ const categories = ref([
 ]);
 
 const activeIndex = ref(0);
-function selectCategory(index) {
+const selectCategory = (index) => {
   activeIndex.value = index;
-}
+};
 </script>
 
 <template>
