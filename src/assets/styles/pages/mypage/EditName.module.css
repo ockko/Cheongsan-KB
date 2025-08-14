@@ -15,12 +15,13 @@
   font-size: 16px;
   padding: 8px 32px 8px 8px; /* 위 오른쪽 아래 왼쪽 */
   border: none;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid var(--color-gray4);
   box-sizing: border-box;
 }
 
 .input-wrapper input:focus {
   outline: none;
+  border-bottom: 1px solid #000;
 }
 
 /* char-count는 input 텍스트와 수평 정렬 */

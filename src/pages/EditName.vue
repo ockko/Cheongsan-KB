@@ -3,7 +3,7 @@ import FullscreenModal from '@/components/domain/mypage/FullscreenModal.vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useMyPageStore } from '@/stores/mypage';
-import styles from '@/assets/styles/pages/mypage/EditId.module.css';
+import styles from '@/assets/styles/pages/mypage/EditName.module.css';
 
 const store = useMyPageStore();
 const router = useRouter();
