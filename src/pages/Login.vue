@@ -9,17 +9,23 @@ const router = useRouter();
 const route = useRoute();
 const authStore = useAuthStore();
 
+// 폼 데이터
 const formData = ref({ username: "", password: "" });
+
+// 에러 상태
 const errorMessage = ref("");
 const isSubmitting = ref(false);
 
+// URL 파라미터에서 에러 메시지 확인
 if (route.query.error === "session_expired") {
   errorMessage.value = "세션이 만료되었습니다. 다시 로그인해주세요.";
 } else if (route.query.error === "login_required") {
   errorMessage.value = "로그인이 필요한 서비스입니다.";
 }
 
+// 일반 로그인 처리
 const handleLogin = async () => {
+  // 유효성 검사
   if (!formData.value.username.trim()) {
     errorMessage.value = "아이디를 입력해주세요.";
     return;
@@ -33,14 +39,21 @@ const handleLogin = async () => {
   errorMessage.value = "";
 
   try {
-    // 로그인 (서버/스토어 구현에 따라 result에 사용자 정보 포함)
     const result = await authStore.login(formData.value);
 
-    // 1) 로그인 응답에서 role 사용
-    const role = result?.role ?? authStore.state.user?.role; // 둘 중 있는 값 사용
+    const rawRole = result?.role ?? authStore.state.user?.role ?? "";
+    const isAdmin = String(rawRole).toUpperCase().includes("ADMIN");
 
-    if (role === "ADMIN") {
+    const nick = (
+      result?.nickName ??
+      authStore.state.user?.nickName ??
+      ""
+    ).trim();
+
+    if (isAdmin) {
       router.push("/admin/users");
+    } else if (!nick) {
+      router.push("/initialSetup/page1");
     } else {
       router.push("/home");
     }
@@ -51,7 +64,7 @@ const handleLogin = async () => {
   }
 };
 
-// 네이버 로그인 핸들러
+// 네이버 인증 이벤트 핸들러
 const handleNaverAuthStart = () => {
   errorMessage.value = "";
 };
