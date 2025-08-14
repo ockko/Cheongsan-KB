@@ -72,25 +72,3 @@ export const getRecommendationDetail = async (diagnosisId) => {
     throw new Error('추천 제도 정보를 불러오는데 실패했습니다.');
   }
 };
-
-/**
- * 백엔드 추천 로직에 따른 제도 매핑
- * 백엔드에서 반환하는 ID 값에 따른 제도명 매핑
- */
-export const RECOMMENDATION_MAPPING = {
-  0: '예방적 상담',
-  1: '개인파산',
-  2: '개인회생',
-  3: '개인워크아웃',
-  4: '프리워크아웃',
-  5: '신속채무조정',
-};
-
-/**
- * 추천 ID를 한글 제도명으로 변환
- * @param {number} recommendationId - 백엔드에서 반환한 추천 ID
- * @returns {string} 한글 제도명
- */
-export const getRecommendationName = (recommendationId) => {
-  return RECOMMENDATION_MAPPING[recommendationId] || '알 수 없는 제도';
-};

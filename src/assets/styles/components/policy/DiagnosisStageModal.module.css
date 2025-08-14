@@ -1,5 +1,5 @@
 /* 모달 오버레이 */
-.modalOverlay {
+.diagnosis-stage-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -11,7 +11,7 @@
 }
 
 /* 모달 컨텐츠 */
-.modalContent {
+.diagnosis-stage-modal-content {
   width: 100%;
   min-height: 100vh;
   background-color: #f9f9fd;
@@ -22,7 +22,7 @@
 }
 
 /* 닫기 버튼 */
-.closeButton {
+.diagnosis-stage-close-button {
   position: absolute;
   top: 24px;
   right: 30px;
@@ -39,18 +39,18 @@
 }
 
 /* 모달 본문 */
-.modalBody {
+.diagnosis-stage-modal-body {
   padding: 0.2rem 1.5rem 1.5rem 1.5rem;
   position: relative;
 }
 
-.backButton {
+.diagnosis-stage-back-button {
   background: none;
   border: none;
   font-size: 1.5rem;
   color: #003e65;
   cursor: pointer;
-  padding: 0.5rem 0.5rem 2rem 0;
+  padding: 0.5rem 0.5rem 0.5rem 0;
   border-radius: 50%;
   transition: background-color 0.2s ease;
   position: relative;
@@ -61,18 +61,18 @@
 }
 
 /* 제목 섹션 */
-.titleSection {
+.diagnosis-stage-title-section {
   margin-bottom: 0;
 }
 
-.institutionInfo {
+.diagnosis-stage-institution-info {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-bottom: 12px;
 }
 
-.institutionIcon {
+.diagnosis-stage-institution-icon {
   width: 24px;
   height: 24px;
   display: flex;
@@ -83,7 +83,7 @@
   flex-shrink: 0;
 }
 
-.institutionIcon img {
+.diagnosis-stage-institution-icon img {
   width: 24px;
   height: 24px;
   object-fit: contain;
@@ -92,7 +92,7 @@
   max-height: 100%;
 }
 
-.institutionName {
+.diagnosis-stage-institution-name {
   font-family: 'Pretendard', sans-serif;
   font-size: 20px;
   font-weight: 600;
@@ -101,7 +101,7 @@
   line-height: 1;
 }
 
-.stageTitle {
+.diagnosis-stage-stage-title {
   font-family: 'Pretendard', sans-serif;
   font-size: 18px;
   font-weight: 600;
@@ -111,7 +111,7 @@
   line-height: 1;
 }
 
-.stageDescription {
+.diagnosis-stage-stage-description {
   font-family: 'Pretendard', sans-serif;
   font-size: 16px;
   font-weight: 300;
@@ -122,7 +122,7 @@
 }
 
 /* 구분선 */
-.divider {
+.diagnosis-stage-divider {
   width: calc(100% + 94px);
   height: 1px;
   background-color: #e1e2e6;
@@ -130,11 +130,11 @@
 }
 
 /* 섹션 */
-.section {
+.diagnosis-stage-section {
   margin-bottom: 0;
 }
 
-.sectionTitle {
+.diagnosis-stage-section-title {
   font-family: 'Pretendard', sans-serif;
   font-size: 18px;
   font-weight: 600;
@@ -144,16 +144,16 @@
   line-height: 1;
 }
 
-.sectionList {
+.diagnosis-stage-section-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
 /* 아이콘 스타일 */
-.checkIcon,
-.infoIcon,
-.warningIcon {
+.diagnosis-stage-check-icon,
+.diagnosis-stage-info-icon,
+.diagnosis-stage-warning-icon {
   width: 16px;
   height: 16px;
   flex-shrink: 0;
@@ -164,9 +164,9 @@
 }
 
 /* 리스트 컨텐츠 스타일 */
-.forListContent,
-.advantagesListContent,
-.warnListContent {
+.diagnosis-stage-for-list-content,
+.diagnosis-stage-advantages-list-content,
+.diagnosis-stage-warn-list-content {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -176,18 +176,18 @@
 }
 
 /* 리스트 아이템 간격 조정 */
-.listItem {
+.diagnosis-stage-list-item {
   display: flex;
   align-items: center;
   margin-bottom: 18px;
   padding: 0;
 }
 
-.listItem:last-child {
+.diagnosis-stage-list-item:last-child {
   margin-bottom: 0;
 }
 
-.listText {
+.diagnosis-stage-list-text {
   font-family: 'Pretendard', sans-serif;
   font-size: 16px;
   font-weight: 300;
@@ -200,31 +200,31 @@
 
 /* 반응형 디자인 */
 @media (max-width: 480px) {
-  .modalContent {
+  .diagnosis-stage-modal-content {
     padding: 16px;
   }
 
-  .modalBody {
+  .diagnosis-stage-modal-body {
     padding-top: 25px;
   }
 
-  .institutionName {
+  .diagnosis-stage-institution-name {
     font-size: 18px;
   }
 
-  .stageTitle {
+  .diagnosis-stage-stage-title {
     font-size: 16px;
   }
 
-  .stageDescription {
+  .diagnosis-stage-stage-description {
     font-size: 14px;
   }
 
-  .sectionTitle {
+  .diagnosis-stage-section-title {
     font-size: 16px;
   }
 
-  .listText {
+  .diagnosis-stage-list-text {
     font-size: 14px;
   }
 }

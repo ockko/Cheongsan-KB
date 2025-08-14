@@ -79,36 +79,36 @@ const handleNaverAuthError = (error) => {
 
 <template>
   <div :class="styles.loginPage">
-    <div :class="styles.container">
+    <div :class="styles.loginContainer">
       <!-- 타이틀 -->
-      <h1 :class="styles.title">로그인</h1>
-      <p :class="styles.subtitle">티끌모아 청산에 오신 걸 환영합니다.</p>
+      <h1 :class="styles.loginTitle">로그인</h1>
+      <p :class="styles.loginSubtitle">티끌모아 청산에 오신 걸 환영합니다.</p>
 
       <!-- 로그인 폼 -->
       <form @submit.prevent="handleLogin" :class="styles.loginForm">
         <!-- 에러 메시지 -->
-        <div v-if="errorMessage" :class="styles.errorMessage">
+        <div v-if="errorMessage" :class="styles.loginErrorMessage">
           {{ errorMessage }}
         </div>
 
         <!-- 아이디 입력 -->
-        <div :class="styles.inputGroup">
+        <div :class="styles.loginInputGroup">
           <input
             v-model="formData.username"
             type="text"
             placeholder="아이디"
-            :class="styles.input"
+            :class="styles.loginInput"
             :disabled="isSubmitting"
           />
         </div>
 
         <!-- 비밀번호 입력 -->
-        <div :class="styles.inputGroup">
+        <div :class="styles.loginInputGroup">
           <input
             v-model="formData.password"
             type="password"
             placeholder="비밀번호"
-            :class="styles.input"
+            :class="styles.loginInput"
             :disabled="isSubmitting"
           />
         </div>
@@ -124,7 +124,7 @@ const handleNaverAuthError = (error) => {
       </form>
 
       <!-- SNS 로그인 구분선 -->
-      <div :class="styles.divider">
+      <div :class="styles.loginDivider">
         <span>SNS 계정 로그인</span>
       </div>
 
@@ -138,10 +138,10 @@ const handleNaverAuthError = (error) => {
       />
 
       <!-- 하단 링크들 -->
-      <div :class="styles.footer">
-        <button :class="styles.linkButton">아이디 찾기</button>
-        <span :class="styles.separator">|</span>
-        <button :class="styles.linkButton">비밀번호 찾기</button>
+      <div :class="styles.loginFooter">
+        <button :class="styles.loginLinkButton">아이디 찾기</button>
+        <span :class="styles.loginSeparator">|</span>
+        <button :class="styles.loginLinkButton">비밀번호 찾기</button>
       </div>
     </div>
   </div>
