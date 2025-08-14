@@ -1,79 +1,63 @@
 <script setup>
-import { useAuthStore } from '@/stores/auth';
-import { ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import NaverAuthButton from '@/components/domain/Signup/NaverAuthButton.vue';
-import styles from '@/assets/styles/pages/Login.module.css';
+import { useAuthStore } from "@/stores/auth";
+import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import NaverAuthButton from "@/components/domain/Signup/NaverAuthButton.vue";
+import styles from "@/assets/styles/pages/Login.module.css";
 
 const router = useRouter();
 const route = useRoute();
 const authStore = useAuthStore();
 
-// 폼 데이터
-const formData = ref({
-  username: '',
-  password: '',
-});
-
-// 에러 상태
-const errorMessage = ref('');
+const formData = ref({ username: "", password: "" });
+const errorMessage = ref("");
 const isSubmitting = ref(false);
 
-// URL 파라미터에서 에러 메시지 확인
-if (route.query.error === 'session_expired') {
-  errorMessage.value = '세션이 만료되었습니다. 다시 로그인해주세요.';
-} else if (route.query.error === 'login_required') {
-  errorMessage.value = '로그인이 필요한 서비스입니다.';
+if (route.query.error === "session_expired") {
+  errorMessage.value = "세션이 만료되었습니다. 다시 로그인해주세요.";
+} else if (route.query.error === "login_required") {
+  errorMessage.value = "로그인이 필요한 서비스입니다.";
 }
 
-// 일반 로그인 처리
 const handleLogin = async () => {
-  // 유효성 검사
   if (!formData.value.username.trim()) {
-    errorMessage.value = '아이디를 입력해주세요.';
+    errorMessage.value = "아이디를 입력해주세요.";
     return;
   }
-
   if (!formData.value.password.trim()) {
-    errorMessage.value = '비밀번호를 입력해주세요.';
+    errorMessage.value = "비밀번호를 입력해주세요.";
     return;
   }
 
   isSubmitting.value = true;
-  errorMessage.value = '';
+  errorMessage.value = "";
 
   try {
+    // 로그인 (서버/스토어 구현에 따라 result에 사용자 정보 포함)
     const result = await authStore.login(formData.value);
 
-    const nickname = result.nickName;
+    // 1) 로그인 응답에서 role 사용
+    const role = result?.role ?? authStore.state.user?.role; // 둘 중 있는 값 사용
 
-    if (nickname && nickname.trim() !== '') {
-      // 닉네임이 있는 경우, 홈으로
-      router.push('/home');
+    if (role === "ADMIN") {
+      router.push("/admin/users");
     } else {
-      // 닉네임이 없는 최초 로그인 시, 초기 세팅 페이지로
-      router.push('/initialSetup/page1');
+      router.push("/home");
     }
   } catch (error) {
-    errorMessage.value = error.message;
+    errorMessage.value = error?.message ?? "로그인에 실패했습니다.";
   } finally {
     isSubmitting.value = false;
   }
 };
 
-// 네이버 인증 이벤트 핸들러들
+// 네이버 로그인 핸들러
 const handleNaverAuthStart = () => {
-  console.log('네이버 로그인 시작');
-  errorMessage.value = ''; // 에러 메시지 초기화
+  errorMessage.value = "";
 };
-
-const handleNaverAuthSuccess = () => {
-  console.log('네이버 로그인 성공');
-};
-
+const handleNaverAuthSuccess = () => {};
 const handleNaverAuthError = (error) => {
-  console.error('네이버 로그인 실패:', error);
-  errorMessage.value = error;
+  errorMessage.value = error?.message ?? String(error);
 };
 </script>
 
@@ -119,7 +103,7 @@ const handleNaverAuthError = (error) => {
           :class="[styles.loginButton, { [styles.loading]: isSubmitting }]"
           :disabled="isSubmitting"
         >
-          {{ isSubmitting ? '로그인 중...' : 'Login' }}
+          {{ isSubmitting ? "로그인 중..." : "Login" }}
         </button>
       </form>
 
