@@ -1,9 +1,16 @@
 <script setup>
 import styles from '@/assets/styles/components/home/RepaymentPlanWidget.module.css';
-import { ref, onMounted, watch, nextTick } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { getRepaymentPlanData } from '@/api/dashboard-bottomApi.js';
 import MyPlanModal from './MyPlanModal.vue';
+
+const props = defineProps({
+  class: {
+    type: String,
+    default: '',
+  },
+});
 
 // 컴포넌트 내부에서 데이터를 관리
 const planData = ref({
@@ -92,7 +99,11 @@ const formatDateToKorean = (dateString) => {
 
 <template>
   <div
-    :class="[styles.widgetCard, { [styles.disabled]: !planData.strategyType }]"
+    :class="[
+      styles.widgetCard,
+      { [styles.disabled]: !planData.strategyType },
+      props.class,
+    ]"
     @click="planData.strategyType ? openPlanModal() : null"
   >
     <div :class="styles.widgetHeader">

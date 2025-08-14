@@ -5,13 +5,20 @@ import { ref, computed, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useSpendingStore } from '@/stores/spending';
 
+const props = defineProps({
+  class: {
+    type: String,
+    default: '',
+  },
+});
+
 const isModalOpen = ref(false);
 
 const spendingStore = useSpendingStore();
 const { spendingData } = storeToRefs(spendingStore);
 
 onMounted(() => {
-    spendingStore.fetchDailySpending();
+  spendingStore.fetchDailySpending();
 });
 
 // 지출액이 한도를 초과했는지 여부를 계산하는 computed 속성
@@ -31,7 +38,7 @@ const formatCurrency = (value) => {
 </script>
 
 <template>
-  <div :class="styles.widgetCard">
+  <div :class="[styles.widgetCard, props.class]">
     <div :class="styles.widgetHeader">
       <h3>오늘의 지출</h3>
     </div>

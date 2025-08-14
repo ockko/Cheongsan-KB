@@ -4,6 +4,13 @@ import { computed, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useDebtStore } from '@/stores/debt';
 
+const props = defineProps({
+  class: {
+    type: String,
+    default: '',
+  },
+});
+
 const debtStore = useDebtStore();
 const { overdueLoans, isLoading } = storeToRefs(debtStore);
 
@@ -24,7 +31,7 @@ const getDdayIcon = (overdueDays) => {
 </script>
 
 <template>
-  <div :class="styles.widgetCard">
+  <div :class="[styles.widgetCard, props.class]">
     <div v-if="sortedOverdueLoans.length > 0" :class="styles.contentWrapper">
       <p :class="styles.title">
         ※ 연체 중인 대출이
