@@ -8,6 +8,7 @@ import cheongsan.domain.user.entity.CustomUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -25,9 +26,7 @@ public class RepaymentSimulationController {
     private final DebtService debtService;
 
     @PostMapping("/analyze")
-    public ResponseEntity<List<RepaymentResponseDTO>> simulate(@RequestParam("monthlyAvailableAmount") BigDecimal monthlyAvailableAmount, Principal principal) {
-        Authentication authentication = (Authentication) principal;
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+    public ResponseEntity<List<RepaymentResponseDTO>> simulate(@RequestParam("monthlyAvailableAmount") BigDecimal monthlyAvailableAmount, @AuthenticationPrincipal CustomUser customUser) {
         Long userId = customUser.getUser().getId();
 
         List<LoanDTO> loans = convertToLoanDTOList(debtService.getUserDebtList(userId));
@@ -38,9 +37,7 @@ public class RepaymentSimulationController {
     }
 
     @GetMapping("/result")
-    public ResponseEntity<RepaymentResultDTO> showSimulationMain(@RequestParam("monthlyAvailableAmount") BigDecimal monthlyAvailable, Principal principal) {
-        Authentication authentication = (Authentication) principal;
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+    public ResponseEntity<RepaymentResultDTO> showSimulationMain(@RequestParam("monthlyAvailableAmount") BigDecimal monthlyAvailable, @AuthenticationPrincipal CustomUser customUser) {
         Long userId = customUser.getUser().getId();
 
         List<RepaymentResponseDTO> strategies = List.of(
@@ -73,9 +70,7 @@ public class RepaymentSimulationController {
 
 
     @GetMapping("/detail")
-    public ResponseEntity<RepaymentResponseDTO> showStrategyDetail(@RequestParam("strategyType") StrategyType strategyType, Principal principal) {
-        Authentication authentication = (Authentication) principal;
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+    public ResponseEntity<RepaymentResponseDTO> showStrategyDetail(@RequestParam("strategyType") StrategyType strategyType, @AuthenticationPrincipal CustomUser customUser) {
         Long userId = customUser.getUser().getId();
         RepaymentResponseDTO strategyResult = simulationService.getStrategy(userId, strategyType);
         if (strategyResult == null) {
@@ -97,10 +92,8 @@ public class RepaymentSimulationController {
     @PutMapping("/apply")
     public ResponseEntity<String> applyStrategy(
             @RequestParam String strategyName,
-            Principal principal) {
+            @AuthenticationPrincipal CustomUser customUser) {
 
-        Authentication authentication = (Authentication) principal;
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
         Long userId = customUser.getUser().getId();
         simulationService.updateUserStrategy(userId, strategyName);
         return ResponseEntity.ok("전략이 적용되었습니다.");
