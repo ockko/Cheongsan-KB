@@ -197,7 +197,7 @@
   font-weight: 900;
 }
 
-.contentsListWrapper{
+.contentsList-wrapper{
   min-height: 600px; /* 5개 리스트 영역 높이 직접 지정 */
   padding: 0 2rem;  
 }
