@@ -1,5 +1,4 @@
 <script setup>
-import { computed } from 'vue';
 import styles from '@/assets/styles/components/simulation/PlanModal.module.css';
 import { applyPlan } from '@/api/repayment-simulation';
 const emit = defineEmits(['close']);
@@ -66,7 +65,7 @@ const getExtraAmount = (payment) => {
           <i class="far fa-lightbulb"></i> 상환 전략
         </h2>
         <p :class="styles.subtitle">
-          현재 적용된 전략은
+          현재 적용된 전략은<br />
           <span :class="styles.highlight">
             {{ mapStrategyLabel(strategy.strategyType) }}
           </span>
