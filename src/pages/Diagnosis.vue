@@ -162,11 +162,7 @@ const completeDiagnosis = async () => {
       q3: answers.value[3], // 소득 여부
     };
 
-    console.log('진단 데이터 전송:', diagnosisData);
-
     const result = await submitDiagnosis(diagnosisData);
-
-    console.log('백엔드 응답:', result);
 
     // 백엔드에서 받은 결과로 정책 페이지로 이동
     // API 응답 데이터 유효성 검사
@@ -310,33 +306,33 @@ const goHome = () => {
             </div>
           </div>
         </div>
+
+        <!-- 하단 버튼 영역 -->
+        <div :class="styles.diagnosisButtonContainer">
+          <button
+            v-if="currentStep > 0"
+            @click="prevStep"
+            :class="[styles.diagnosisButton, styles.diagnosisPrevButton]"
+          >
+            이전
+          </button>
+
+          <button
+            @click="nextStep"
+            :disabled="!isCurrentStepComplete"
+            :class="[
+              styles.diagnosisButton,
+              styles.diagnosisNextButton,
+              { [styles.disabled]: !isCurrentStepComplete },
+              { [styles.fullWidth]: currentStep === 0 },
+            ]"
+          >
+            {{
+              currentStep === diagnosisSteps.length - 1 ? '진단 완료' : '다음'
+            }}
+          </button>
+        </div>
       </div>
     </main>
-
-    <!-- 하단 버튼 영역 (진단 단계에서만 표시) -->
-    <footer v-if="!isStartPage" :class="styles.diagnosisFooter">
-      <div :class="styles.diagnosisButtonContainer">
-        <button
-          v-if="currentStep > 0"
-          @click="prevStep"
-          :class="[styles.diagnosisButton, styles.diagnosisPrevButton]"
-        >
-          이전
-        </button>
-
-        <button
-          @click="nextStep"
-          :disabled="!isCurrentStepComplete"
-          :class="[
-            styles.diagnosisButton,
-            styles.diagnosisNextButton,
-            { [styles.disabled]: !isCurrentStepComplete },
-            { [styles.fullWidth]: currentStep === 0 },
-          ]"
-        >
-          {{ currentStep === diagnosisSteps.length - 1 ? '진단 완료' : '다음' }}
-        </button>
-      </div>
-    </footer>
   </div>
 </template>
