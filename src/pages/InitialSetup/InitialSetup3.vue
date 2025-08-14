@@ -7,7 +7,7 @@ import { fetchUserLoans } from '@/api/initialSetup/initialSetup3.js';
 import styles from '@/assets/styles/pages/InitialSetup/InitialSetup3.module.css';
 import ProgressHeader from '@/components/domain/InitialSetup/ProgressHeader.vue';
 import LoanItem from '@/components/domain/InitialSetup/LoanItem.vue';
-import LoanModal from '@/components/domain/InitialSetup/InitialLoanAddModal.vue';
+import LoanModal from '@/components/domain/InitialSetup/LoanModal.vue';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -43,6 +43,7 @@ onMounted(() => {
 
 const handleLoanClick = (index) => {
   clickedIndex.value = index;
+  isModalOpen.value = true;
 
   const selectedLoan = loans.value[index];
   console.log('[Loan Click]', {
@@ -51,8 +52,6 @@ const handleLoanClick = (index) => {
     institution: selectedLoan?.institution,
     name: selectedLoan?.name,
   });
-
-  isModalOpen.value = true;
 };
 
 const confirmSelection = () => {
@@ -106,7 +105,7 @@ const goNext = () => {
         :logo="loans[clickedIndex]?.logo"
         :institution="loans[clickedIndex]?.institution"
         :name="loans[clickedIndex]?.name"
-        :loanId="loans[clickedIndex]?.id"
+        :debtId="loans[clickedIndex]?.id"
         @confirm="confirmSelection"
         @cancel="cancelSelection"
       />

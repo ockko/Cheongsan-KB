@@ -162,19 +162,25 @@ const completeDiagnosis = async () => {
       q3: answers.value[3], // 소득 여부
     };
 
-    console.log('진단 데이터 전송:', diagnosisData);
-
     const result = await submitDiagnosis(diagnosisData);
 
-    console.log('백엔드 응답:', result);
-
     // 백엔드에서 받은 결과로 정책 페이지로 이동
+    // API 응답 데이터 유효성 검사
+    const diagnosisId = result?.diagnosisId || result?.id;
+    const recommendationId = result?.recommendationId || result?.recommendation;
+
+    // 유효한 ID가 있는 경우에만 query 파라미터 추가
+    const query = {};
+    if (diagnosisId && diagnosisId !== 'undefined') {
+      query.diagnosisId = diagnosisId;
+    }
+    if (recommendationId && recommendationId !== 'undefined') {
+      query.recommendationId = recommendationId;
+    }
+
     router.push({
       path: '/policy',
-      query: {
-        diagnosisId: result.diagnosisId || result.id,
-        recommendationId: result.recommendationId || result.recommendation,
-      },
+      query,
     });
   } catch (error) {
     console.error('진단 완료 처리 실패:', error);
@@ -193,21 +199,21 @@ const goHome = () => {
 <template>
   <div :class="styles.diagnosisPage">
     <!-- 헤더 영역 -->
-    <header :class="styles.header">
-      <button @click="goHome" :class="styles.backButton">
+    <header :class="styles.diagnosisHeader">
+      <button @click="goHome" :class="styles.diagnosisBackButton">
         <i class="fa fa-arrow-left"></i>
       </button>
-      <h1 :class="styles.title">진단하기</h1>
+      <h1 :class="styles.diagnosisTitle">진단하기</h1>
     </header>
 
     <!-- 진행률 표시 (진단 시작 후에만 표시) -->
-    <div v-if="!isStartPage" :class="styles.progressContainer">
-      <div :class="[styles.progressDots, `step-${currentStep}`]">
+    <div v-if="!isStartPage" :class="styles.diagnosisProgressContainer">
+      <div :class="[styles.diagnosisProgressDots, `step-${currentStep}`]">
         <div
           v-for="(step, index) in diagnosisSteps"
           :key="index"
           :class="[
-            styles.progressDot,
+            styles.diagnosisProgressDot,
             { [styles.active]: index <= currentStep },
           ]"
         ></div>
@@ -215,72 +221,72 @@ const goHome = () => {
     </div>
 
     <!-- 메인 콘텐츠 -->
-    <main :class="styles.mainContent">
+    <main :class="styles.diagnosisMainContent">
       <!-- 진단 시작 페이지 -->
-      <div v-if="isStartPage" :class="styles.startContainer">
-        <div :class="styles.startContent">
-          <div :class="styles.iconContainer">
+      <div v-if="isStartPage" :class="styles.diagnosisStartContainer">
+        <div :class="styles.diagnosisStartContent">
+          <div :class="styles.diagnosisIconContainer">
             <img
               src="/images/diagnosis0.png"
               alt="진단 아이콘"
-              :class="styles.diagnosticIcon"
+              :class="styles.diagnosisDiagnosticIcon"
             />
           </div>
 
-          <div :class="styles.startTextContainer">
-            <h1 :class="styles.startTitle">
+          <div :class="styles.diagnosisStartTextContainer">
+            <h1 :class="styles.diagnosisStartTitle">
               {{ authStore.state.user.nickName }}님의 이야기를 알려주세요
             </h1>
-            <p :class="styles.startDescription">
+            <p :class="styles.diagnosisStartDescription">
               간단한 질문에 답하시면 현재 상황에 가장 적합한 공적 채무조정
               제도를 추천해드립니다.
             </p>
           </div>
 
-          <button @click="startDiagnosis" :class="styles.startButton">
-            <span :class="styles.startButtonText">시작하기</span>
+          <button @click="startDiagnosis" :class="styles.diagnosisStartButton">
+            <span :class="styles.diagnosisStartButtonText">시작하기</span>
           </button>
         </div>
       </div>
 
       <!-- 진단 단계 페이지 -->
-      <div v-else :class="styles.stepContainer">
+      <div v-else :class="styles.diagnosisStepContainer">
         <!-- 단계 아이콘 -->
-        <div :class="styles.stepIcon">
+        <div :class="styles.diagnosisStepIcon">
           <img
             :src="`/images/diagnosis${currentStep + 1}.png`"
             :alt="`진단 단계 ${currentStep + 1}`"
-            :class="styles.diagnosisIcon"
+            :class="styles.diagnosisDiagnosisIcon"
           />
         </div>
 
         <!-- 단계 제목 -->
-        <div :class="styles.stepHeader">
-          <h2 :class="styles.stepTitle">
+        <div :class="styles.diagnosisStepHeader">
+          <h2 :class="styles.diagnosisStepTitle">
             {{ diagnosisSteps[currentStep].title }}
           </h2>
         </div>
 
         <!-- 구분선 -->
-        <div :class="styles.divider"></div>
+        <div :class="styles.diagnosisDivider"></div>
 
         <!-- 질문 영역 -->
-        <div :class="styles.questionContainer">
+        <div :class="styles.diagnosisQuestionContainer">
           <div
             v-for="question in currentQuestions"
             :key="question.id"
-            :class="styles.questionItem"
+            :class="styles.diagnosisQuestionItem"
           >
             <!-- 선택형 질문 -->
             <div
               v-if="question.type === 'radio'"
-              :class="styles.optionsContainer"
+              :class="styles.diagnosisOptionsContainer"
             >
               <label
                 v-for="option in question.options"
                 :key="option.value"
                 :class="[
-                  styles.optionLabel,
+                  styles.diagnosisOptionLabel,
                   { [styles.selected]: answers[question.id] === option.value },
                 ]"
                 @click="selectAnswer(question.id, option.value)"
@@ -290,41 +296,43 @@ const goHome = () => {
                   :name="question.id"
                   :value="option.value"
                   :checked="answers[question.id] === option.value"
-                  :class="styles.optionInput"
+                  :class="styles.diagnosisOptionInput"
                   @change.stop
                 />
-                <span :class="styles.optionText">{{ option.label }}</span>
+                <span :class="styles.diagnosisOptionText">{{
+                  option.label
+                }}</span>
               </label>
             </div>
           </div>
         </div>
+
+        <!-- 하단 버튼 영역 -->
+        <div :class="styles.diagnosisButtonContainer">
+          <button
+            v-if="currentStep > 0"
+            @click="prevStep"
+            :class="[styles.diagnosisButton, styles.diagnosisPrevButton]"
+          >
+            이전
+          </button>
+
+          <button
+            @click="nextStep"
+            :disabled="!isCurrentStepComplete"
+            :class="[
+              styles.diagnosisButton,
+              styles.diagnosisNextButton,
+              { [styles.disabled]: !isCurrentStepComplete },
+              { [styles.fullWidth]: currentStep === 0 },
+            ]"
+          >
+            {{
+              currentStep === diagnosisSteps.length - 1 ? '진단 완료' : '다음'
+            }}
+          </button>
+        </div>
       </div>
     </main>
-
-    <!-- 하단 버튼 영역 (진단 단계에서만 표시) -->
-    <footer v-if="!isStartPage" :class="styles.footer">
-      <div :class="styles.buttonContainer">
-        <button
-          v-if="currentStep > 0"
-          @click="prevStep"
-          :class="[styles.button, styles.prevButton]"
-        >
-          이전
-        </button>
-
-        <button
-          @click="nextStep"
-          :disabled="!isCurrentStepComplete"
-          :class="[
-            styles.button,
-            styles.nextButton,
-            { [styles.disabled]: !isCurrentStepComplete },
-            { [styles.fullWidth]: currentStep === 0 },
-          ]"
-        >
-          {{ currentStep === diagnosisSteps.length - 1 ? '진단 완료' : '다음' }}
-        </button>
-      </div>
-    </footer>
   </div>
 </template>

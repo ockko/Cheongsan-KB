@@ -1,5 +1,5 @@
 /* 진단 결과 섹션 컨테이너 */
-.diagnosisResultContainer {
+.diagnosis-result-container {
   background-color: var(--color-main);
   min-height: 200px;
   padding: 30px 20px;
@@ -13,13 +13,13 @@
 }
 
 /* 상단 상태 텍스트 */
-.statusSection {
+.diagnosis-result-status-section {
   text-align: center;
   color: white;
   margin-bottom: 20px;
 }
 
-.userStatusText {
+.diagnosis-result-user-status-text {
   font-family: var(--font-family);
   font-size: 16px;
   font-weight: 400;
@@ -28,17 +28,17 @@
   line-height: 1.2;
 }
 
-.userName {
+.diagnosis-result-user-name {
   font-size: 24px;
   font-weight: 600;
 }
 
-.userSuffix {
+.diagnosis-result-user-suffix {
   font-size: 16px;
   font-weight: 400;
 }
 
-.diagnosisStageText {
+.diagnosis-result-diagnosis-stage-text {
   font-family: var(--font-family);
   font-size: 16px;
   font-weight: 600;
@@ -47,31 +47,51 @@
   line-height: 1.2;
 }
 
-.diagnosisStage {
+.diagnosis-result-diagnosis-stage {
   font-size: 24px;
   font-weight: 700;
 }
 
-.stageSuffix {
+.diagnosis-result-stage-suffix {
   font-size: 16px;
   font-weight: 500;
 }
 
 /* 카드 슬라이더 */
-.cardSlider {
+.diagnosis-result-card-slider {
   display: flex;
   background-color: #e0e6ee;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   border-radius: 20px;
   width: 100%;
   height: 220px;
   position: relative;
   overflow: hidden;
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* 슬라이드 컨테이너 */
+.diagnosis-result-slide-container {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  height: 100%;
+  padding-left: calc(80%); /* 카드 너비의 절반만큼 중앙에서 시작 */
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  touch-action: pan-y pinch-zoom;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateX(0);
 }
 
 /* 중앙 카드 */
-.resultCard {
+.diagnosis-result-result-card {
   background-color: var(--color-main);
   border-radius: 20px;
   padding: 0 15px 0 15px;
@@ -85,41 +105,30 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  flex-shrink: 0;
 }
 
-.resultCard:hover {
+.diagnosis-result-result-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
 }
 
-/* 사이드 카드 */
-.sideCard {
-  background-color: #2d6081;
-  border-radius: 20px;
-  width: 50px;
-  height: 180px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  z-index: 1;
-  backdrop-filter: blur(10px);
-  margin: 0 -30px;
-}
-
-.sideCard:hover {
-  background-color: #2d6081;
-  opacity: 0.8;
-  transform: translateY(-2px);
+/* 활성 카드 스타일 */
+.diagnosis-result-active-card {
+  transform: scale(1.05);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 /* 카드 헤더 */
-.cardHeader {
+.diagnosis-result-card-header {
   display: flex;
   align-items: center;
   height: 40px;
   gap: 6px;
 }
 
-.institutionIcon {
+.diagnosis-result-institution-icon {
   width: 13px;
   height: 13px;
   background-color: rgba(255, 255, 255, 0.2);
@@ -130,20 +139,20 @@
   flex-shrink: 0;
 }
 
-.institutionIcon img {
+.diagnosis-result-institution-icon img {
   width: 13px;
   height: 13px;
   object-fit: contain;
 }
 
-.institutionName {
+.diagnosis-result-institution-name {
   font-family: var(--font-family);
   font-size: 13px;
   color: white;
   font-weight: 400;
 }
 
-.policyName {
+.diagnosis-result-policy-name {
   font-family: var(--font-family);
   font-size: 16px;
   font-weight: 700;
@@ -153,11 +162,11 @@
 }
 
 /* 카드 내용 */
-.cardBody {
+.diagnosis-result-card-body {
   flex: 1;
 }
 
-.policyDescription {
+.diagnosis-result-policy-description {
   font-family: var(--font-family);
   font-size: 11.5px;
   line-height: 1;
@@ -168,12 +177,12 @@
 }
 
 /* 카드 푸터 */
-.cardFooter {
+.diagnosis-result-card-footer {
   text-align: center;
   margin-bottom: 10px;
 }
 
-.detailButton {
+.diagnosis-result-detail-button {
   background: none;
   border: none;
   color: white;
@@ -186,17 +195,17 @@
   margin-bottom: 10px;
 }
 
-.detailButton:hover {
+.diagnosis-result-detail-button:hover {
   opacity: 0.8;
 }
 
 /* 하단 버튼 */
-.bottomButton {
+.diagnosis-result-bottom-button {
   text-align: center;
   margin-top: 20px;
 }
 
-.rediagnosisButton {
+.diagnosis-result-rediagnosis-button {
   background: none;
   border: none;
   color: white;
@@ -209,12 +218,12 @@
   transition: opacity 0.2s ease;
 }
 
-.rediagnosisButton:hover {
+.diagnosis-result-rediagnosis-button:hover {
   opacity: 0.8;
 }
 
 /* 로딩 오버레이 */
-.loadingOverlay {
+.diagnosis-result-loading-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -227,7 +236,7 @@
   z-index: 9999;
 }
 
-.loadingSpinner {
+.diagnosis-result-loading-spinner {
   background-color: white;
   padding: 20px 40px;
   border-radius: 10px;
@@ -236,4 +245,91 @@
   font-weight: 500;
   color: var(--color-main);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* 스와이프 관련 스타일 */
+.diagnosis-result-card-slider.diagnosis-result-swiping {
+  cursor: grabbing;
+}
+
+.diagnosis-result-card-slider.diagnosis-result-swiping
+  .diagnosis-result-slide-container {
+  cursor: grabbing;
+}
+
+/* 스와이프 방향 힌트 */
+.diagnosis-result-swipe-hint {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  font-weight: 500;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.3s ease;
+}
+
+.diagnosis-result-swipe-hint-left {
+  left: 20px;
+  opacity: 0;
+}
+
+.diagnosis-result-swipe-hint-right {
+  right: 20px;
+  opacity: 0;
+}
+
+.diagnosis-result-swipe-hint.diagnosis-result-show {
+  opacity: 1;
+}
+
+/* 스와이프 진행률 표시 */
+.diagnosis-result-swipe-progress {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.diagnosis-result-swipe-progress-bar {
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 2px;
+  transition: width 0.1s ease;
+}
+
+/* 페이지 인디케이터 */
+.diagnosis-result-page-indicator {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 3;
+}
+
+.diagnosis-result-page-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.diagnosis-result-page-dot:hover {
+  background-color: rgba(255, 255, 255, 0.6);
+  transform: scale(1.2);
+}
+
+.diagnosis-result-active-dot {
+  background-color: rgba(255, 255, 255, 0.9);
+  transform: scale(1.3);
 }
