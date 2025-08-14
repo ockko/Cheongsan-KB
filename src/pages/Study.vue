@@ -191,8 +191,10 @@ const handleTouchEnd = () => {
 const activeIndex = ref(0);
 const selectCategory = (index) => {
   activeIndex.value = index;
+  currentPage.value = 1; // ← 추가
   window.scrollTo({ top: 0, behavior: 'smooth' }); // 카테고리 클릭 시 스크롤 최상단
 };
+
 
 const filteredContents = computed(() => {
   const activeCategory = categories.value[activeIndex.value];
