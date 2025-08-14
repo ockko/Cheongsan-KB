@@ -1,67 +1,123 @@
 <script setup>
 import styles from '@/assets/styles/pages/Study.module.css';
 import StudyContentItem from '@/components/domain/Study/StudyContentItem.vue';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
 
-// 타이틀
+const router = useRouter();
+
+const itemsPerPage = 5;
+const currentPage = ref(1);
+
+const categories = ref([
+  '전체',
+  '신용',
+  '카드',
+  '보험',
+  '대출',
+  '저축',
+  '세금',
+  '투자',
+]);
+
 const originalSlides = [
   {
-    imageUrl: '/images/study-thumbnail-example.png',
-    title: '앱테크로 100만원 벌 수 있을까?',
+    imageUrl: '/images/study-thumbnail-1.png',
+    title: '신용카드 결제일을 14일로 해야 하는 이유',
   },
   {
-    imageUrl: '/images/study-thumbnail-example.png',
-    title: '투자 초보자를 위한 가이드',
+    imageUrl: '/images/study-thumbnail-2.jpg',
+    title: '재테크의 정석, 금융 집짓기',
   },
   {
-    imageUrl: '/images/study-thumbnail-example.png',
-    title: '부동산 투자의 기본 원칙',
+    imageUrl: '/images/study-thumbnail-3.jpg',
+    title: '빚이 부담될 때 살펴보는 채무조정제도',
   },
   {
-    imageUrl: '/images/study-thumbnail-example.png',
-    title: '암호화폐 투자 전략',
+    imageUrl: '/images/study-thumbnail-4.png',
+    title: '2025 청년 목돈 마련 위한 정책 총정리',
   },
   {
-    imageUrl: '/images/study-thumbnail-example.png',
-    title: '경제 뉴스 읽는 법',
+    imageUrl: '/images/study-thumbnail-5.jpg',
+    title: '신용카드 한도, 어떻게 정해질까?',
   },
 ];
 
+const handleContentClick = (content, index) => {
+  // 신용 카테고리이면서 첫 번째 게시글만 상세 페이지 이동
+  if (
+    categories.value[activeIndex.value] === '신용' &&
+    index === 0
+  ) {
+    router.push('/study/detail');
+  }
+};
+
 const studyContents = [
   {
-    thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['적금', '청년', '정부지원'],
-    title: '2025 청년도약계좌: 목돈 마련 지름길',
+    thumbnailUrl: '/images/study-thumbnail-2.jpg',
+    tags: ['투자', '저축', '보험'],
+    title: '재테크의 정석, 금융 집짓기',
   },
   {
-    thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['투자', '재테크'],
-    title: '투자 성공 비결 궁금해요? 궁금하면 500원',
+    thumbnailUrl: '/images/study-thumbnail-4.png',
+    tags: ['세금', '저축', '대출'],
+    title: '2025 청년 목돈 마련 위한 정책 총정리',
   },
   {
-    thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['투자', '재테크'],
-    title: '근데 투자 성공 비결이 진짜로 궁금해요? 그러면 50000원',
+    thumbnailUrl: '/images/study-thumbnail-1.png',
+    tags: ['신용', '카드'],
+    title: '신용카드 결제일을 14일로 해야 하는 이유',
   },
   {
-    thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['신용', '회복', '금융상식'],
-    title: '야, 너도! 신용불량자 탈출할 수 있어',
+    thumbnailUrl: '/images/study-thumbnail-3.jpg',
+    tags: ['신용', '대출'],
+    title: '빚이 부담될 때 살펴보는 채무조정제도',
   },
   {
-    thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['신용', '회복', '금융상식'],
-    title: '야! 너도 진짜 신용불량자 탈출할 수 있어',
+    thumbnailUrl: '/images/study-thumbnail-6.jpg',
+    tags: ['신용', '대출'],
+    title: '대출 필수 용어 3가지: LTV, DTI, DSR',
   },
   {
-    thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['신용', '회복', '금융상식'],
-    title: '야! 장난하냐? 기죽지마! 너도 신용불량자 탈출할 수 있어',
+    thumbnailUrl: '/images/study-thumbnail-5.jpg',
+    tags: ['신용', '카드'],
+    title: '신용카드 한도, 어떻게 정해질까?',
   },
   {
-    thumbnailUrl: '/images/study-thumbnail-example.png',
-    tags: ['신용', '회복', '금융상식'],
-    title: '야! 너도, 신용불량자 탈출할 수 있어',
+    thumbnailUrl: '/images/study-thumbnail-7.png',
+    tags: ['신용', '카드'],
+    title: '헬스장 회원권은 신용카드 할부로 결제하면 좋은 이유',
+  },
+  {
+    thumbnailUrl: '/images/study-thumbnail-8.png',
+    tags: ['대출', '신용', '카드'],
+    title: '대출 이자 줄이는 3가지 방법',
+  },
+  {
+    thumbnailUrl: '/images/study-thumbnail-9.png',
+    tags: ['신용', '카드'],
+    title: '해외결제 취소 후 챙겨야 할 1가지',
+  },
+  {
+    thumbnailUrl: '/images/study-thumbnail-10.png',
+    tags: ['세금' , '저축'],
+    title: '중소기업 취업자라면 소득세 감면 혜택 꼭 챙기세요',
+  },
+  {
+    thumbnailUrl: '/images/study-thumbnail-11.png',
+    tags: ['저축','투자'],
+    title: '금테크의 모든 것: 왜 지금 금값이 오르고 있을까?',
+  },
+   {
+    thumbnailUrl: '/images/study-thumbnail-12.png',
+    tags: ['대출'],
+    title: '대출 관리 시작하기, 내가 받은 대출 파악하는 법',
+  },
+  {
+    thumbnailUrl: '/images/study-thumbnail-13.png',
+    tags: ['보험', '저축'],
+    title: '암보험에서 반드시 확인해야 할 두 가지는?',
   },
 ];
 
@@ -132,20 +188,32 @@ const handleTouchEnd = () => {
   }
 };
 
-const categories = ref([
-  '전체',
-  '신용',
-  '카드',
-  '보험',
-  '대출',
-  '예적금',
-  '세금',
-  '투자',
-]);
-
 const activeIndex = ref(0);
 const selectCategory = (index) => {
   activeIndex.value = index;
+  currentPage.value = 1; // ← 추가
+  window.scrollTo({ top: 0, behavior: 'smooth' }); // 카테고리 클릭 시 스크롤 최상단
+};
+
+
+const filteredContents = computed(() => {
+  const activeCategory = categories.value[activeIndex.value];
+  if (activeCategory === '전체') return studyContents;
+  return studyContents.filter(content => content.tags.includes(activeCategory));
+});
+
+// 현재 페이지에 맞는 콘텐츠 슬라이스
+const paginatedContents = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  return filteredContents.value.slice(start, start + itemsPerPage);
+});
+
+// 전체 페이지 수
+const totalPages = computed(() => Math.ceil(filteredContents.value.length / itemsPerPage));
+
+const goToPage = (page) => {
+  if (page < 1 || page > totalPages.value) return;
+  currentPage.value = page;
 };
 </script>
 
@@ -155,6 +223,7 @@ const selectCategory = (index) => {
       <h1 :class="[styles.pageTitle, 'text-bold', 'color-main']">
         금융 지식을 학습해보세요.
       </h1>
+
       <div :class="styles.carousel">
         <button :class="styles.arrow" @click="prevSlide">
           <img src="/images/arrow-left.png" alt="왼쪽 화살표" />
@@ -214,23 +283,54 @@ const selectCategory = (index) => {
 
     <div :class="[styles.categoryDivider, 'color-gray0']"></div>
 
-    <div :class="styles.categoryTabs">
-      <button
-        v-for="(category, index) in categories"
-        :key="category"
-        :class="[
-          styles.categoryTab,
-          { active: activeIndex === index },
-          activeIndex === index ? 'color-main' : 'color-gray0',
-        ]"
-        @click="selectCategory(index)"
-      >
-        {{ category }}
-      </button>
-    </div>
+    <!-- 카테고리 탭 -->
+      <div :class="styles.categoryTabs">
+        <button
+          v-for="(category, index) in categories"
+          :key="category"
+          :class="[
+            styles.categoryTab,
+            { active: activeIndex === index },
+            activeIndex === index ? 'color-main' : 'color-gray0',
+          ]"
+          @click="selectCategory(index)"
+        >
+          {{ category }}
+        </button>
+      </div>
 
-    <div :class="styles.contentsList">
-      <StudyContentItem :contents="studyContents" />
+      <div class="contentsListWrapper">
+          <div :class="styles.contentsList">
+            <StudyContentItem 
+            :contents="paginatedContents" 
+            @clickContent="handleContentClick"
+            />
+        
+          <div :class="styles.pagination">
+            <button 
+              @click="goToPage(currentPage - 1)" 
+              :disabled="currentPage === 1"
+            >
+              &lt;
+            </button>
+
+            <button
+              v-for="page in totalPages"
+              :key="page"
+              :class="{ active: currentPage === page }"
+              @click="goToPage(page)"
+            >
+              {{ page }}
+            </button>
+
+            <button 
+              @click="goToPage(currentPage + 1)" 
+              :disabled="currentPage === totalPages"
+            >
+              &gt;
+            </button>
+          </div>
+      </div>
     </div>
   </div>
 </template>
