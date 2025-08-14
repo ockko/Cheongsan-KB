@@ -57,7 +57,7 @@ onMounted(async () => {
 <template>
   <div :class="styles.policyPage">
     <!-- 메인 콘텐츠 -->
-    <main :class="styles.mainContent">
+    <main :class="styles.policyMainContent">
       <!-- 진단 여부에 따라 다른 섹션 렌더링 -->
       <DiagnosisResultSection
         v-if="hasDiagnosis"
@@ -65,7 +65,7 @@ onMounted(async () => {
       />
       <DiagnosisSection v-else />
 
-      <div :class="styles.titleLine"></div>
+      <div :class="styles.policyTitleLine"></div>
       <PolicySection />
     </main>
   </div>

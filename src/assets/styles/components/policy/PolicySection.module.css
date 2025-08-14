@@ -1,15 +1,15 @@
 /* 정책 섹션 컨테이너 */
-.policySectionContainer {
+.policy-section-container {
   /* 추가 스타일이 필요한 경우 여기에 */
 }
 
 /* 제목 섹션 */
-.titleSection {
+.policy-section-title-section {
   text-align: left;
   margin-top: 16px;
 }
 
-.sectionTitle {
+.policy-section-section-title {
   font-size: 20px;
   font-weight: 600;
   color: #000000;
@@ -17,7 +17,7 @@
   letter-spacing: 2px;
 }
 
-.titleLine {
+.policy-section-title-line {
   width: 100%;
   height: 2px;
   background-color: #e1e2e6;
@@ -25,12 +25,12 @@
 }
 
 /* 검색창 */
-.searchBox {
+.policy-section-search-box {
   position: relative;
   margin-bottom: 16px;
 }
 
-.searchInput {
+.policy-section-search-input {
   width: 100%;
   height: 64px;
   background-color: #edeef2;
@@ -43,12 +43,12 @@
   font-family: inherit;
 }
 
-.searchInput::placeholder {
+.policy-section-search-input::placeholder {
   color: #72787f;
   letter-spacing: 1.3px;
 }
 
-.searchButtonIcon {
+.policy-section-search-button-icon {
   position: absolute;
   right: 5px;
   top: 50%;
@@ -60,13 +60,13 @@
   justify-content: center;
 }
 
-.searchIconContainer {
+.policy-section-search-icon-container {
   position: relative;
   width: 45px;
   height: 45px;
 }
 
-.searchIconInner {
+.policy-section-search-icon-inner {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -79,7 +79,7 @@
 }
 
 /* 카테고리 필터 */
-.categoryFilter {
+.policy-section-category-filter {
   display: flex;
   gap: 8px;
   margin-bottom: 16px;
@@ -87,7 +87,7 @@
   padding: 0 4px;
 }
 
-.categoryBtn {
+.policy-section-category-btn {
   background-color: #f9f9fd;
   border: 1px solid #72787f;
   border-radius: 30px;
@@ -100,19 +100,19 @@
   font-family: inherit;
 }
 
-.categoryBtn.active {
+.policy-section-category-btn.policy-section-active {
   background-color: #72787f;
   color: #f9f9fd;
 }
 
 /* 정책 카드들 */
-.policyCards {
+.policy-section-policy-cards {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.policyCard {
+.policy-section-policy-card {
   border: 2px solid #72787f;
   border-radius: 20px;
   overflow: hidden;
@@ -122,13 +122,13 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.policyCard:hover {
+.policy-section-policy-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* 정책 카드 헤더 */
-.policyCard .cardHeader {
+.policy-section-policy-card .policy-section-card-header {
   padding: 10px;
   background-color: #ffffff;
   border-bottom: 1px solid #e1e2e6;
@@ -137,14 +137,14 @@
   align-items: center;
 }
 
-.cardLogo {
+.policy-section-card-logo {
   display: flex;
   align-items: center;
   gap: 12px;
   min-height: 60px; /* 최소 높이 보장 */
 }
 
-.logoImage {
+.policy-section-logo-image {
   width: 30px;
   height: 30px;
   display: flex;
@@ -158,7 +158,7 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.logoImage img {
+.policy-section-logo-image img {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -169,7 +169,7 @@
   transition: transform 0.2s ease;
 }
 
-.logoText {
+.policy-section-logo-text {
   font-size: 13px;
   font-weight: 600;
   color: #2c3e50;
@@ -184,7 +184,7 @@
   transition: all 0.2s ease;
 }
 
-.cardContent {
+.policy-section-card-content {
   padding: 10px 0 3px 10px;
   display: flex;
   align-items: center;
@@ -192,7 +192,7 @@
   border-radius: 12px;
 }
 
-.cardDetailHeader {
+.policy-section-card-detail-header {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -201,7 +201,7 @@
   margin-bottom: 4px;
 }
 
-.supportCycle {
+.policy-section-support-cycle {
   font-size: 11px;
   font-weight: 700;
   color: #003e65;
@@ -220,7 +220,7 @@
   align-items: center;
   justify-content: center;
 }
-.cardTitle {
+.policy-section-card-title {
   font-size: 15px;
   font-weight: 700;
   color: #000000;
@@ -236,7 +236,7 @@
 }
 
 /* 정책 요약 */
-.cardSummary {
+.policy-section-card-summary {
   font-size: 12px;
   color: #000000;
   font-weight: 500;
@@ -248,7 +248,7 @@
 }
 
 /* 정책 정보 (온라인/오프라인, 날짜) */
-.policyInfo {
+.policy-section-policy-info {
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -257,7 +257,7 @@
   gap: 8px;
 }
 
-.policyOnline {
+.policy-section-policy-online {
   font-size: 12px;
   font-weight: 600;
   display: flex;
@@ -265,7 +265,7 @@
   padding: 4px 4px;
 }
 
-.policyDate {
+.policy-section-policy-date {
   font-size: 12px;
   font-weight: 500;
   color: #000000;
@@ -276,8 +276,8 @@
 }
 
 /* 로딩 및 빈 상태 메시지 */
-.loadingMessage,
-.noPoliciesMessage {
+.policy-section-loading-message,
+.policy-section-no-policies-message {
   text-align: center;
   padding: 40px 20px;
   color: #72787f;
@@ -286,7 +286,7 @@
 }
 
 /* 검색 결과 헤더 */
-.searchResultHeader {
+.policy-section-search-result-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -295,14 +295,14 @@
   border-bottom: 1px solid #e1e2e6;
 }
 
-.searchResultHeader span {
+.policy-section-search-result-header span {
   font-size: 14px;
   font-weight: 600;
   color: #003e65;
   letter-spacing: 1.4px;
 }
 
-.clearSearchBtn {
+.policy-section-clear-search-btn {
   background: #f7fafc;
   border: 1px solid #e2e8f0;
   border-radius: 6px;
@@ -315,24 +315,24 @@
   letter-spacing: 1.2px;
 }
 
-.clearSearchBtn:hover {
+.policy-section-clear-search-btn:hover {
   background: #edf2f7;
   border-color: #cbd5e0;
 }
 
 /* 반응형 디자인 */
 @media (max-width: 375px) {
-  .titleLine {
+  .policy-section-title-line {
     width: 100%;
   }
 
-  .categoryFilter {
+  .policy-section-category-filter {
     padding: 0;
   }
 }
 
 /* 페이지네이션 스타일 */
-.paginationContainer {
+.policy-section-pagination-container {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -341,7 +341,7 @@
   padding: 16px 0;
 }
 
-.paginationBtn {
+.policy-section-pagination-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -355,29 +355,29 @@
   color: #72787f;
 }
 
-.paginationBtn:hover:not(:disabled) {
+.policy-section-pagination-btn:hover:not(:disabled) {
   background-color: #f8f9fa;
   border-color: #72787f;
   color: #000000;
 }
 
-.paginationBtn:disabled {
+.policy-section-pagination-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   background-color: #f8f9fa;
 }
 
-.prevBtn svg,
-.nextBtn svg {
+.policy-section-prev-btn svg,
+.policy-section-next-btn svg {
   color: inherit;
 }
 
-.pageNumbers {
+.policy-section-page-numbers {
   display: flex;
   gap: 4px;
 }
 
-.pageNumber {
+.policy-section-page-number {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -393,13 +393,13 @@
   font-weight: 500;
 }
 
-.pageNumber:hover {
+.policy-section-page-number:hover {
   background-color: #f8f9fa;
   border-color: #72787f;
   color: #000000;
 }
 
-.pageNumber.activePage {
+.policy-section-page-number.policy-section-active-page {
   background-color: #72787f;
   border-color: #72787f;
   color: #ffffff;
@@ -408,20 +408,20 @@
 
 /* 모바일 반응형 페이지네이션 */
 @media (max-width: 480px) {
-  .paginationContainer {
+  .policy-section-pagination-container {
     gap: 4px;
     margin-top: 20px;
     padding: 12px 0;
   }
 
-  .paginationBtn,
-  .pageNumber {
+  .policy-section-pagination-btn,
+  .policy-section-page-number {
     width: 36px;
     height: 36px;
     font-size: 13px;
   }
 
-  .pageNumbers {
+  .policy-section-page-numbers {
     gap: 2px;
   }
 }

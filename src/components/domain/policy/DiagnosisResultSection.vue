@@ -126,8 +126,12 @@ const carouselRef = ref(null);
 // 슬라이드 위치를 computed로 변경하여 반응성 향상
 const slidePosition = computed(() => {
   const position = -(currentPolicyIndex.value - 3) * slideWidth.value;
-
   return position;
+});
+
+// translateX 변수 추가 (템플릿에서 사용)
+const translateX = computed(() => {
+  return slidePosition.value;
 });
 
 // 슬라이드 위치 업데이트 함수 제거 (computed로 대체됨)
@@ -176,16 +180,26 @@ const handleTouchEnd = () => {
 };
 
 // 마우스 이벤트 (데스크톱 지원)
-const handleMouseDown = (event) => {
-  touchStartX.value = event.clientX;
-  touchEndX.value = event.clientX; // 초기값 설정
+const startDrag = (event) => {
+  if (event.type === 'mousedown') {
+    touchStartX.value = event.clientX;
+    touchEndX.value = event.clientX;
+  } else if (event.type === 'touchstart') {
+    touchStartX.value = event.touches[0].clientX;
+    touchEndX.value = event.touches[0].clientX;
+  }
   isDragging.value = false;
 };
 
-const handleMouseMove = (event) => {
+const onDrag = (event) => {
   if (!touchStartX.value) return;
 
-  touchEndX.value = event.clientX;
+  if (event.type === 'mousemove') {
+    touchEndX.value = event.clientX;
+  } else if (event.type === 'touchmove') {
+    touchEndX.value = event.touches[0].clientX;
+  }
+
   const deltaX = touchEndX.value - touchStartX.value;
 
   if (Math.abs(deltaX) > 10) {
@@ -193,7 +207,7 @@ const handleMouseMove = (event) => {
   }
 };
 
-const handleMouseUp = (event) => {
+const endDrag = (event) => {
   if (!isDragging.value) return;
 
   const deltaX = touchEndX.value - touchStartX.value;
@@ -378,148 +392,155 @@ const pageIndicator = computed(() => {
   }));
 });
 
+// 템플릿에서 사용하는 변수들
+const pageIndicatorItems = computed(() => {
+  return policies.map((_, index) => ({
+    page: index + 1,
+    isActive: index === currentPolicyIndex.value - 1,
+  }));
+});
+
+// 스와이프 힌트 표시
+const showLeftHint = computed(() => {
+  return currentPolicyIndex.value > 1;
+});
+
+const showRightHint = computed(() => {
+  return currentPolicyIndex.value < policies.length;
+});
+
+// 정책 선택 함수
+const selectPolicy = (index) => {
+  goToPolicy(index);
+};
+
+// 페이지 이동 함수
+const goToPage = (page) => {
+  goToPolicy(page);
+};
+
 // 트랜지션 종료 시 처리 함수 제거 (setTimeout으로 대체됨)
 </script>
 
 <template>
   <div :class="styles.diagnosisResultContainer">
     <!-- 상단 상태 텍스트 -->
-    <div :class="styles.statusSection">
-      <p :class="styles.userStatusText">
-        <span :class="styles.userName">{{ diagnosisResult.nickName }}</span>
-        <span :class="styles.userSuffix">님은</span>
+    <div :class="styles.diagnosisResultStatusSection">
+      <p :class="styles.diagnosisResultUserStatusText">
+        <span :class="styles.diagnosisResultUserName">{{
+          diagnosisResult.nickName
+        }}</span>
+        <span :class="styles.diagnosisResultUserSuffix">님은</span>
       </p>
-      <p :class="styles.diagnosisStageText">
-        <span :class="styles.diagnosisStage">{{
+      <p :class="styles.diagnosisResultDiagnosisStageText">
+        <span :class="styles.diagnosisResultDiagnosisStage">{{
           diagnosisResult.diagnosisStage
         }}</span>
-        <span :class="styles.stageSuffix">입니다</span>
+        <span :class="styles.diagnosisResultStageSuffix">입니다</span>
       </p>
     </div>
 
-    <!-- 추천 정책 카드 -->
+    <!-- 카드 슬라이더 -->
     <div
-      :class="[styles.cardSlider, { [styles.swiping]: isDragging }]"
-      ref="carouselRef"
-      @touchstart="handleTouchStart"
-      @touchmove="handleTouchMove"
-      @touchend="handleTouchEnd"
-      @mousedown="handleMouseDown"
-      @mousemove="handleMouseMove"
-      @mouseup="handleMouseUp"
-      @mouseleave="handleMouseUp"
+      :class="[
+        styles.diagnosisResultCardSlider,
+        { [styles.diagnosisResultSwiping]: isDragging },
+      ]"
+      @mousedown="startDrag"
+      @mousemove="onDrag"
+      @mouseup="endDrag"
+      @mouseleave="endDrag"
+      @touchstart="startDrag"
+      @touchmove="onDrag"
+      @touchend="endDrag"
     >
-      <!-- 카드 슬라이드 컨테이너 -->
+      <!-- 슬라이드 컨테이너 -->
       <div
-        :class="styles.slideContainer"
-        :style="{
-          transform: `translateX(${slidePosition}px)`,
-          transition: isTransitioning
-            ? 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-            : 'none',
-        }"
+        :class="styles.diagnosisResultSlideContainer"
+        :style="{ transform: `translateX(${translateX}px)` }"
       >
-        <!-- 모든 정책 카드들 -->
+        <!-- 정책 카드들 -->
         <div
           v-for="(policy, index) in policies"
           :key="policy.id"
           :class="[
-            styles.resultCard,
-            { [styles.activeCard]: index === currentPolicyIndex - 1 },
+            styles.diagnosisResultResultCard,
+            {
+              [styles.diagnosisResultActiveCard]:
+                index === currentPolicyIndex.value - 1,
+            },
           ]"
-          @click="openModal"
+          @click="selectPolicy(index + 1)"
         >
-          <!-- 카드 헤더 -->
-          <div :class="styles.cardHeader">
-            <span :class="styles.institutionIcon">
+          <div :class="styles.diagnosisResultCardHeader">
+            <span :class="styles.diagnosisResultInstitutionIcon">
               <img :src="policy.icon" :alt="policy.institution" />
             </span>
-            <span :class="styles.institutionName">{{
+            <span :class="styles.diagnosisResultInstitutionName">{{
               policy.institution
             }}</span>
           </div>
-          <h3 :class="styles.policyName">{{ policy.programName }}</h3>
-
-          <!-- 카드 내용 -->
-          <div :class="styles.cardBody">
-            <p :class="styles.policyDescription">
+          <h3 :class="styles.diagnosisResultPolicyName">
+            {{ policy.programName }}
+          </h3>
+          <div :class="styles.diagnosisResultCardBody">
+            <p :class="styles.diagnosisResultPolicyDescription">
               {{ policy.simpleDescription }}
             </p>
           </div>
-
-          <!-- 자세히 보기 버튼 -->
-          <div :class="styles.cardFooter">
-            <button :class="styles.detailButton" @click.stop="openModal">
+          <div :class="styles.diagnosisResultCardFooter">
+            <button
+              :class="styles.diagnosisResultDetailButton"
+              @click.stop="openModal"
+            >
               자세히 보기
             </button>
           </div>
         </div>
       </div>
 
-      <!-- 스와이프 방향 힌트 -->
-      <div
-        :class="[
-          styles.swipeHint,
-          styles.swipeHintLeft,
-          {
-            [styles.show]:
-              isDragging && touchEndX.value - touchStartX.value > 0,
-          },
-        ]"
-      >
-        ← 이전 정책
-      </div>
-      <div
-        :class="[
-          styles.swipeHint,
-          styles.swipeHintRight,
-          {
-            [styles.show]:
-              isDragging && touchEndX.value - touchStartX.value < 0,
-          },
-        ]"
-      >
-        다음 정책 →
-      </div>
-
       <!-- 스와이프 진행률 표시 -->
-      <div :class="styles.swipeProgress">
+      <div :class="styles.diagnosisResultSwipeProgress">
         <div
-          :class="styles.swipeProgressBar"
-          :style="{
-            width: swipeProgress,
-          }"
+          :class="styles.diagnosisResultSwipeProgressBar"
+          :style="{ width: `${swipeProgress}%` }"
         ></div>
       </div>
 
       <!-- 페이지 인디케이터 -->
-      <div :class="styles.pageIndicator">
+      <div :class="styles.diagnosisResultPageIndicator">
         <div
-          v-for="(item, index) in pageIndicator"
-          :key="item.index"
-          :class="[styles.pageDot, { [styles.activeDot]: item.isActive }]"
-          @click="() => goToPolicy(index)"
+          v-for="(item, index) in pageIndicatorItems"
+          :key="index"
+          :class="[
+            styles.diagnosisResultPageDot,
+            { [styles.diagnosisResultActiveDot]: item.isActive },
+          ]"
+          @click="goToPage(item.page)"
         ></div>
       </div>
     </div>
 
-    <!-- 하단 재진단 버튼 -->
-    <div :class="styles.bottomButton">
-      <button :class="styles.rediagnosisButton" @click="goToDiagnosis">
-        검사 다시 하기
+    <!-- 하단 버튼 -->
+    <div :class="styles.diagnosisResultBottomButton">
+      <button
+        :class="styles.diagnosisResultRediagnosisButton"
+        @click="goToDiagnosis"
+      >
+        다시 진단하기
       </button>
     </div>
-
-    <!-- 로딩 오버레이 -->
-    <div v-if="isLoading" :class="styles.loadingOverlay">
-      <div :class="styles.loadingSpinner">로딩 중...</div>
-    </div>
-
-    <!-- 진단 단계 모달 -->
-    <DiagnosisStageModal
-      :is-visible="isModalVisible"
-      :detail-data="modalData"
-      @close="closeModal"
-    />
   </div>
+
+  <!-- 로딩 오버레이 -->
+  <div v-if="isLoading" :class="styles.diagnosisResultLoadingOverlay">
+    <div :class="styles.diagnosisResultLoadingSpinner">로딩 중...</div>
+  </div>
+
+  <!-- 진단 단계 모달 -->
+  <DiagnosisStageModal
+    :is-visible="isModalVisible"
+    :detail-data="modalData"
+    @close="closeModal"
+  />
 </template>

@@ -59,15 +59,115 @@ watch(
   (newValue) => {
     if (newValue) {
       // 모달이 열릴 때 history에 상태 추가
-      window.history.pushState({ modal: 'diagnosisStage' }, '', window.location.href);
+      window.history.pushState(
+        { modal: 'diagnosisStage' },
+        '',
+        window.location.href
+      );
     } else {
       // 모달이 닫힐 때 history 상태 정리
-      if (window.history.state && window.history.state.modal === 'diagnosisStage') {
+      if (
+        window.history.state &&
+        window.history.state.modal === 'diagnosisStage'
+      ) {
         window.history.back();
       }
     }
   }
 );
+
+// 부처별 로고 매핑
+const getMinisterLogo = (logoText) => {
+  const logoMapping = {
+    // 고용노동부
+    고용노동부: '/minister-logos/moel.jpg',
+    MOEL: '/minister-logos/moel.jpg',
+
+    // 보건복지부
+    보건복지부: '/minister-logos/mohw.jpg',
+    MOHW: '/minister-logos/mohw.jpg',
+
+    // 산업통상자원부
+    산업통상자원부: '/minister-logos/motie.jpg',
+    MOTIE: '/minister-logos/motie.jpg',
+
+    // 여성가족부
+    여성가족부: '/minister-logos/mogef.jpg',
+    MOGEF: '/minister-logos/mogef.jpg',
+
+    // 교육부
+    교육부: '/minister-logos/moe.jpg',
+    MOE: '/minister-logos/moe.jpg',
+
+    // 통일부
+    통일부: '/minister-logos/mou.jpg',
+    MOU: '/minister-logos/mou.jpg',
+
+    // 문화체육관광부
+    문화체육관광부: '/minister-logos/mocst.jpg',
+    MOCST: '/minister-logos/mocst.jpg',
+
+    // 농림축산식품부
+    농림축산식품부: '/minister-logos/moafra.jpg',
+    MOAFRA: '/minister-logos/moafra.jpg',
+
+    // 금융위원회
+    금융위원회: '/minister-logos/fsc.jpg',
+    FSC: '/minister-logos/fsc.jpg',
+
+    // 국가보훈부
+    국가보훈부: '/minister-logos/mopva.jpg',
+    MOPVA: '/minister-logos/mopva.jpg',
+
+    // 행정안전부
+    행정안전부: '/minister-logos/mois.jpg',
+    MOIS: '/minister-logos/mois.jpg',
+
+    // 과학기술정보통신부
+    과학기술정보통신부: '/minister-logos/mosi.jpg',
+    MOSI: '/minister-logos/mosi.jpg',
+
+    // 해양수산부
+    해양수산부: '/minister-logos/moof.jpg',
+    MOOF: '/minister-logos/moof.jpg',
+
+    // 기획재정부
+    기획재정부: '/minister-logos/moef.jpg',
+    MOEF: '/minister-logos/moef.jpg',
+
+    // 산림청
+    산림청: '/minister-logos/kfs.jpg',
+    KFS: '/minister-logos/kfs.jpg',
+
+    // 중소벤처기업부
+    중소벤처기업부: '/minister-logos/moss.jpg',
+    MOSS: '/minister-logos/moss.jpg',
+
+    // 질병관리청
+    질병관리청: '/minister-logos/kdcpa.jpg',
+    KDCPA: '/minister-logos/kdcpa.jpg',
+
+    // 환경부
+    환경부: '/minister-logos/moen.jpg',
+    MOEN: '/minister-logos/moen.jpg',
+
+    // 국토교통부
+    국토교통부: '/minister-logos/molit.jpg',
+    MOLIT: '/minister-logos/molit.jpg',
+
+    // 기타 기관들
+    서민금융진흥원: '/images/smf-logo.png',
+    한국주택금융공사: '/images/hf-logo.png',
+    국민연금공단: '/images/nps-logo.png',
+    국민건강보험공단: '/images/nhis-logo.png',
+    중소기업진흥공단: '/images/sbc-logo.png',
+    한국산업기술진흥원: '/images/kiat-logo.png',
+    한국장애인고용공단: '/images/kead-logo.png',
+    한국여성가족재단: '/images/kwf-logo.png',
+  };
+
+  return logoMapping[logoText] || '/images/court.png';
+};
 
 // 이미지 에러 핸들링
 const handleImageError = (e) => {
@@ -137,119 +237,162 @@ const cautionsList = computed(() => {
 </script>
 
 <template>
-  <div v-if="isVisible" :class="styles.modalOverlay" @click="closeModal">
-    <div :class="styles.modalContent" @click.stop>
+  <div
+    v-if="isVisible"
+    :class="styles.diagnosisStageModalOverlay"
+    @click="closeModal"
+  >
+    <div :class="styles.diagnosisStageModalContent" @click.stop>
       <!-- 모달 내용 -->
-      <div :class="styles.modalBody">
-        <!-- 닫기 버튼 -->
-        <button @click="closeModal" :class="styles.backButton">
+      <div :class="styles.diagnosisStageModalBody">
+        <!-- 뒤로가기 버튼 -->
+        <button @click="closeModal" :class="styles.diagnosisStageBackButton">
           <i class="fa fa-arrow-left"></i>
         </button>
+
         <!-- 제목 섹션 -->
-        <div :class="styles.titleSection">
-          <div :class="styles.institutionInfo">
-            <div :class="styles.institutionIcon">
-              <img
-                src="/images/court2.png"
-                alt="법원"
-                @error="handleImageError"
-              />
+        <div :class="styles.diagnosisStageTitleSection">
+          <div :class="styles.diagnosisStageInstitutionInfo">
+            <div :class="styles.diagnosisStageInstitutionIcon">
+              <img src="/images/court.png" />
             </div>
-            <span :class="styles.institutionName">{{
-              detailData?.operatingEntity || '관련 기관'
+            <span :class="styles.diagnosisStageInstitutionName">{{
+              props.detailData?.institutionName
             }}</span>
           </div>
-          <h1 :class="styles.stageTitle">
-            {{ detailData?.programName || '제도명' }}
+          <h1 :class="styles.diagnosisStageStageTitle">
+            {{ props.detailData?.programName }}
           </h1>
-          <p :class="styles.stageDescription">
-            {{ detailData?.simpleDescription || '제도 설명' }}
+          <p :class="styles.diagnosisStageStageDescription">
+            {{ props.detailData?.description }}
           </p>
         </div>
 
         <!-- 대상자 섹션 -->
-        <div :class="styles.section">
-          <!-- 구분선 -->
-          <div :class="styles.divider"></div>
-          <h2 :class="styles.sectionTitle">대상자</h2>
-          <ul :class="styles.sectionList">
+        <div :class="styles.diagnosisStageSection">
+          <div :class="styles.diagnosisStageDivider"></div>
+          <h2 :class="styles.diagnosisStageSectionTitle">대상자</h2>
+          <ul :class="styles.diagnosisStageSectionList">
             <li
               v-for="(item, index) in targetList"
-              :key="index"
-              :class="styles.listItem"
+              :key="`target-${index}`"
+              :class="styles.diagnosisStageListItem"
             >
-              <div :class="styles.forListContent">
-                <span :class="styles.infoIcon">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <circle cx="8" cy="8" r="8" fill="#007BFF" />
+              <div :class="styles.diagnosisStageForListContent">
+                <span :class="styles.diagnosisStageInfoIcon">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="#003E65"
+                      stroke-width="2"
+                    />
                     <path
-                      d="M8 4V8M8 12H8.01"
-                      stroke="white"
-                      stroke-width="1.5"
+                      d="M12 16V12"
+                      stroke="#003E65"
+                      stroke-width="2"
                       stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M12 8H12.01"
+                      stroke="#003E65"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
                     />
                   </svg>
                 </span>
-                <span :class="styles.listText">{{ item }}</span>
+                <span :class="styles.diagnosisStageListText">{{ item }}</span>
               </div>
             </li>
           </ul>
         </div>
 
         <!-- 장점 섹션 -->
-        <div :class="styles.section">
-          <!-- 구분선 -->
-          <div :class="styles.divider"></div>
-          <h2 :class="styles.sectionTitle">장점</h2>
-          <ul :class="styles.sectionList">
+        <div :class="styles.diagnosisStageSection">
+          <div :class="styles.diagnosisStageDivider"></div>
+          <h2 :class="styles.diagnosisStageSectionTitle">장점</h2>
+          <ul :class="styles.diagnosisStageSectionList">
             <li
               v-for="(item, index) in advantagesList"
-              :key="index"
-              :class="styles.listItem"
+              :key="`advantage-${index}`"
+              :class="styles.diagnosisStageListItem"
             >
-              <div :class="styles.advantagesListContent">
-                <span :class="styles.checkIcon">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <circle cx="8" cy="8" r="8" fill="#28A745" />
+              <div :class="styles.diagnosisStageAdvantagesListContent">
+                <span :class="styles.diagnosisStageCheckIcon">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <path
-                      d="M6 8L7.5 9.5L10 7"
-                      stroke="white"
-                      stroke-width="1.5"
+                      d="M20 6L9 17L4 12"
+                      stroke="#003E65"
+                      stroke-width="2"
                       stroke-linecap="round"
                       stroke-linejoin="round"
                     />
                   </svg>
                 </span>
-                <span :class="styles.listText">{{ item }}</span>
+                <span :class="styles.diagnosisStageListText">{{ item }}</span>
               </div>
             </li>
           </ul>
         </div>
 
         <!-- 주의사항 섹션 -->
-        <div :class="styles.section">
-          <!-- 구분선 -->
-          <div :class="styles.divider"></div>
-          <h2 :class="styles.sectionTitle">주의사항</h2>
-          <ul :class="styles.sectionList">
+        <div :class="styles.diagnosisStageSection">
+          <div :class="styles.diagnosisStageDivider"></div>
+          <h2 :class="styles.diagnosisStageSectionTitle">주의사항</h2>
+          <ul :class="styles.diagnosisStageSectionList">
             <li
               v-for="(item, index) in cautionsList"
-              :key="index"
-              :class="styles.listItem"
+              :key="`warning-${index}`"
+              :class="styles.diagnosisStageListItem"
             >
-              <div :class="styles.warnListContent">
-                <span :class="styles.warningIcon">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M8 1L15 14H1L8 1Z" fill="#DC3545" />
+              <div :class="styles.diagnosisStageWarnListContent">
+                <span :class="styles.diagnosisStageWarningIcon">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <path
-                      d="M8 6V9M8 12H8.01"
-                      stroke="white"
-                      stroke-width="1.5"
+                      d="M10.29 3.86L1.82 18A2 2 0 0 0 3.54 21H20.46A2 2 0 0 0 22.18 18L13.71 3.86A2 2 0 0 0 10.29 3.86Z"
+                      stroke="#003E65"
+                      stroke-width="2"
                       stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M12 9V13"
+                      stroke="#003E65"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M12 17H12.01"
+                      stroke="#003E65"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
                     />
                   </svg>
                 </span>
-                <span :class="styles.listText">{{ item }}</span>
+                <span :class="styles.diagnosisStageListText">{{ item }}</span>
               </div>
             </li>
           </ul>

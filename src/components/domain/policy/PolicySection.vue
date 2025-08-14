@@ -91,6 +91,7 @@ const openPolicyDetail = async (policy) => {
 
     // 정책 이름으로 상세 정보 조회
     const policyDetail = await getPolicyDetail(policy.policyName);
+    console.log('PolicySection - API 응답 데이터:', policyDetail);
     selectedPolicyData.value = policyDetail;
     isModalVisible.value = true;
   } catch (error) {
@@ -110,7 +111,20 @@ const closeModal = () => {
 };
 
 const goToPolicyDetail = (policyId) => {
-  router.push(`/policy-detail/${policyId}`);
+  // policyId 유효성 검사
+  if (policyId && typeof policyId === 'string' && policyId !== 'undefined') {
+    try {
+      router.push(`/policy-detail/${policyId}`);
+    } catch (error) {
+      console.error('Policy detail navigation error:', error);
+      // 에러 발생 시 정책 목록 페이지로 이동
+      router.push('/policy');
+    }
+  } else {
+    console.error('Invalid policyId:', policyId);
+    // 잘못된 policyId일 경우 정책 목록 페이지로 이동
+    router.push('/policy');
+  }
 };
 
 // 카테고리 필터 상태 관리
@@ -342,59 +356,49 @@ onMounted(() => {
 <template>
   <div :class="styles.policySectionContainer">
     <!-- 제목 섹션 -->
-    <div :class="styles.titleSection">
-      <h2 :class="styles.sectionTitle">맞춤 지원 정책</h2>
+    <div :class="styles.policySectionTitleSection">
+      <h2 :class="styles.policySectionSectionTitle">맞춤 지원 정책</h2>
+      <div :class="styles.policySectionTitleLine"></div>
     </div>
 
     <!-- 검색창 -->
-    <div :class="styles.searchBox">
+    <div :class="styles.policySectionSearchBox">
       <input
         v-model="searchKeyword"
         type="text"
-        placeholder="원하시는 키워드로 정책을 찾아보세요."
-        :class="styles.searchInput"
+        placeholder="정책명, 키워드로 검색해보세요"
+        :class="styles.policySectionSearchInput"
         @keyup.enter="handleSearch"
       />
-      <div :class="styles.searchButtonIcon" @click="handleSearch">
-        <div :class="styles.searchIconContainer">
+      <div :class="styles.policySectionSearchButtonIcon" @click="handleSearch">
+        <div :class="styles.policySectionSearchIconInner">
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="45"
-            height="45"
-            viewBox="0 0 45 45"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
             fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <circle cx="22.5" cy="22.5" r="22.5" fill="#2E3134" />
+            <path
+              d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z"
+              stroke="#72787F"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
-          <div :class="styles.searchIconInner">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <circle cx="11" cy="11" r="7" stroke="#FFF1F1" stroke-width="2" />
-              <path
-                d="M20 20L17 17"
-                stroke="#FFF1F1"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-            </svg>
-          </div>
         </div>
       </div>
     </div>
 
     <!-- 카테고리 필터 -->
-    <div :class="styles.categoryFilter">
+    <div :class="styles.policySectionCategoryFilter">
       <button
         v-for="category in categories"
         :key="category.id"
         :class="[
-          styles.categoryBtn,
-          { [styles.active]: activeCategory === category.id },
+          styles.policySectionCategoryBtn,
+          { [styles.policySectionActive]: activeCategory === category.id },
         ]"
         @click="selectCategory(category.id)"
       >
@@ -403,99 +407,95 @@ onMounted(() => {
     </div>
 
     <!-- 정책 카드들 -->
-    <div :class="styles.policyCards">
+    <div :class="styles.policySectionPolicyCards">
       <!-- 로딩 상태 -->
-      <div
-        v-if="isPoliciesLoading || isSearching"
-        :class="styles.loadingMessage"
-      >
-        {{
-          isSearching ? '검색 중입니다...' : '정책 정보를 불러오는 중입니다...'
-        }}
+      <div v-if="isPoliciesLoading" :class="styles.policySectionLoadingMessage">
+        정책을 불러오는 중...
       </div>
 
-      <!-- 정책이 없을 때 -->
+      <!-- 검색 결과 없음 -->
       <div
-        v-else-if="filteredPolicies.length === 0"
-        :class="styles.noPoliciesMessage"
+        v-else-if="hasSearched && policies.length === 0"
+        :class="styles.policySectionNoPoliciesMessage"
       >
-        {{
-          searchKeyword.trim()
-            ? '검색 결과가 없습니다.'
-            : '조건에 맞는 정책이 없습니다.'
-        }}
+        검색 결과가 없습니다.
       </div>
 
       <!-- 정책 카드들 -->
       <div
+        v-else
         v-for="policy in paginatedPolicies"
-        :key="policy.policyId"
-        :class="styles.policyCard"
+        :key="policy.id"
+        :class="styles.policySectionPolicyCard"
         @click="openPolicyDetail(policy)"
       >
-        <div :class="styles.cardHeader">
-          <div :class="styles.cardLogo">
-            <div :class="styles.cardDetailHeader">
-              <span :class="styles.supportCycle">{{
-                policy.supportCycle
+        <!-- 카드 헤더 -->
+        <div :class="styles.policySectionCardHeader">
+          <div :class="styles.policySectionCardLogo">
+            <div :class="styles.policySectionCardDetailHeader">
+              <span :class="styles.policySectionSupportCycle">{{
+                policy.supportCycle || '연중'
               }}</span>
-              <h3 :class="styles.cardTitle">{{ policy.policyName }}</h3>
             </div>
+            <h3 :class="styles.policySectionCardTitle">
+              {{ policy.policyName }}
+            </h3>
           </div>
         </div>
 
-        <div :class="styles.cardContent">
-          <div :class="styles.logoImage">
+        <!-- 카드 내용 -->
+        <div :class="styles.policySectionCardContent">
+          <div :class="styles.policySectionLogoImage">
             <img
               :src="getMinisterLogo(policy.ministryName)"
               :alt="policy.ministryName"
-              @error="(e) => (e.target.style.display = 'none')"
             />
           </div>
-          <span :class="styles.logoText">{{ policy.ministryName }}</span>
-        </div>
-        <div :class="styles.policyInfo">
-          <span :class="styles.policyOnline">{{
-            formatPolicyOnline(policy.policyOnline)
+          <span :class="styles.policySectionLogoText">{{
+            policy.ministryName
           }}</span>
-          <span :class="styles.policyDate">{{
-            formatPolicyDate(policy.policyDate)
+        </div>
+
+        <!-- 정책 정보 -->
+        <div :class="styles.policySectionPolicyInfo">
+          <span :class="styles.policySectionPolicyOnline">{{
+            policy.isOnlineApplyAvailable === 'Y' ? '온라인' : '오프라인'
+          }}</span>
+          <span :class="styles.policySectionPolicyDate">{{
+            formatPolicyDate(policy.registrationDate)
           }}</span>
         </div>
       </div>
     </div>
 
     <!-- 페이지네이션 -->
-    <div v-if="totalPages > 1" :class="styles.paginationContainer">
-      <!-- 이전 페이지 버튼 -->
+    <div v-if="totalPages > 1" :class="styles.policySectionPaginationContainer">
       <button
-        :class="[styles.paginationBtn, styles.prevBtn]"
         :disabled="currentPage === 1"
         @click="goToPreviousPage"
+        :class="[
+          styles.policySectionPaginationBtn,
+          styles.policySectionPrevBtn,
+        ]"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <polyline points="15,18 9,12 15,6"></polyline>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M15 18L9 12L15 6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
       </button>
 
-      <!-- 페이지 번호들 -->
-      <div :class="styles.pageNumbers">
+      <div :class="styles.policySectionPageNumbers">
         <button
           v-for="page in pageNumbers"
           :key="page"
           :class="[
-            styles.pageNumber,
-            { [styles.activePage]: currentPage === page },
+            styles.policySectionPageNumber,
+            { [styles.policySectionActivePage]: currentPage === page },
           ]"
           @click="changePage(page)"
         >
@@ -503,24 +503,22 @@ onMounted(() => {
         </button>
       </div>
 
-      <!-- 다음 페이지 버튼 -->
       <button
-        :class="[styles.paginationBtn, styles.nextBtn]"
         :disabled="currentPage === totalPages"
         @click="goToNextPage"
+        :class="[
+          styles.policySectionPaginationBtn,
+          styles.policySectionNextBtn,
+        ]"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <polyline points="9,18 15,12 9,6"></polyline>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M9 18L15 12L9 6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
       </button>
     </div>
