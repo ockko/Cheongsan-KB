@@ -76,106 +76,6 @@ watch(
   }
 );
 
-// 부처별 로고 매핑
-const getMinisterLogo = (logoText) => {
-  const logoMapping = {
-    // 고용노동부
-    고용노동부: '/minister-logos/moel.jpg',
-    MOEL: '/minister-logos/moel.jpg',
-
-    // 보건복지부
-    보건복지부: '/minister-logos/mohw.jpg',
-    MOHW: '/minister-logos/mohw.jpg',
-
-    // 산업통상자원부
-    산업통상자원부: '/minister-logos/motie.jpg',
-    MOTIE: '/minister-logos/motie.jpg',
-
-    // 여성가족부
-    여성가족부: '/minister-logos/mogef.jpg',
-    MOGEF: '/minister-logos/mogef.jpg',
-
-    // 교육부
-    교육부: '/minister-logos/moe.jpg',
-    MOE: '/minister-logos/moe.jpg',
-
-    // 통일부
-    통일부: '/minister-logos/mou.jpg',
-    MOU: '/minister-logos/mou.jpg',
-
-    // 문화체육관광부
-    문화체육관광부: '/minister-logos/mocst.jpg',
-    MOCST: '/minister-logos/mocst.jpg',
-
-    // 농림축산식품부
-    농림축산식품부: '/minister-logos/moafra.jpg',
-    MOAFRA: '/minister-logos/moafra.jpg',
-
-    // 금융위원회
-    금융위원회: '/minister-logos/fsc.jpg',
-    FSC: '/minister-logos/fsc.jpg',
-
-    // 국가보훈부
-    국가보훈부: '/minister-logos/mopva.jpg',
-    MOPVA: '/minister-logos/mopva.jpg',
-
-    // 행정안전부
-    행정안전부: '/minister-logos/mois.jpg',
-    MOIS: '/minister-logos/mois.jpg',
-
-    // 과학기술정보통신부
-    과학기술정보통신부: '/minister-logos/mosi.jpg',
-    MOSI: '/minister-logos/mosi.jpg',
-
-    // 해양수산부
-    해양수산부: '/minister-logos/moof.jpg',
-    MOOF: '/minister-logos/moof.jpg',
-
-    // 기획재정부
-    기획재정부: '/minister-logos/moef.jpg',
-    MOEF: '/minister-logos/moef.jpg',
-
-    // 산림청
-    산림청: '/minister-logos/kfs.jpg',
-    KFS: '/minister-logos/kfs.jpg',
-
-    // 중소벤처기업부
-    중소벤처기업부: '/minister-logos/moss.jpg',
-    MOSS: '/minister-logos/moss.jpg',
-
-    // 질병관리청
-    질병관리청: '/minister-logos/kdcpa.jpg',
-    KDCPA: '/minister-logos/kdcpa.jpg',
-
-    // 환경부
-    환경부: '/minister-logos/moen.jpg',
-    MOEN: '/minister-logos/moen.jpg',
-
-    // 국토교통부
-    국토교통부: '/minister-logos/molit.jpg',
-    MOLIT: '/minister-logos/molit.jpg',
-
-    // 기타 기관들
-    서민금융진흥원: '/images/smf-logo.png',
-    한국주택금융공사: '/images/hf-logo.png',
-    국민연금공단: '/images/nps-logo.png',
-    국민건강보험공단: '/images/nhis-logo.png',
-    중소기업진흥공단: '/images/sbc-logo.png',
-    한국산업기술진흥원: '/images/kiat-logo.png',
-    한국장애인고용공단: '/images/kead-logo.png',
-    한국여성가족재단: '/images/kwf-logo.png',
-  };
-
-  return logoMapping[logoText] || '/images/court.png';
-};
-
-// 이미지 에러 핸들링
-const handleImageError = (e) => {
-  console.log('이미지 로드 실패:', e.target.src);
-  // 대체 이미지나 텍스트로 표시
-  e.target.style.display = 'none';
-};
-
 // 대상자 목록 생성 (eligibleDebtors와 eligibleDebts 결합)
 const targetList = computed(() => {
   const targets = [];
@@ -254,10 +154,10 @@ const cautionsList = computed(() => {
         <div :class="styles.diagnosisStageTitleSection">
           <div :class="styles.diagnosisStageInstitutionInfo">
             <div :class="styles.diagnosisStageInstitutionIcon">
-              <img src="/images/court.png" />
+              <img src="/images/court2.png" alt="기관 아이콘" />
             </div>
             <span :class="styles.diagnosisStageInstitutionName">{{
-              props.detailData?.institutionName
+              props.detailData?.institution || props.detailData?.operatingEntity
             }}</span>
           </div>
           <h1 :class="styles.diagnosisStageStageTitle">
