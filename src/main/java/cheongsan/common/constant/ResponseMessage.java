@@ -7,7 +7,6 @@ public enum ResponseMessage {
 
     // --- 성공 ---
     LOGOUT_SUCCESS("로그아웃 되었습니다."),
-    BUDGET_LIMIT_SAVED("일일 소비 한도가 성공적으로 저장되었습니다."),
 
     // --- 에러 ---
     INTERNAL_SERVER_ERROR("서버 내부 오류가 발생했습니다."),

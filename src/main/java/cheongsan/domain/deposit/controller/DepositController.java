@@ -11,11 +11,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -75,9 +73,7 @@ public class DepositController {
     }
 
     @GetMapping("/dashboard/daily-spending")
-    public ResponseEntity<DailySpendingDTO> getDailySpendingStatus(Principal principal) {
-        Authentication authentication = (Authentication) principal;
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+    public ResponseEntity<DailySpendingDTO> getDailySpendingStatus(@AuthenticationPrincipal CustomUser customUser) {
         Long userId = customUser.getUser().getId();
         DailySpendingDTO result = dailySpendingService.getDailySpendingStatus(userId);
         return new ResponseEntity<>(result, HttpStatus.OK);

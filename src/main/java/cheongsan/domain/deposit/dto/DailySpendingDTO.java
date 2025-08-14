@@ -15,8 +15,8 @@ public class DailySpendingDTO {
     private final boolean systemRecommended;
     private final int remaining;
 
-    public static DailySpendingDTO getDailySpending(int dailyLimit, int spent, boolean isSystemRecommended) {
+    public static DailySpendingDTO getDailySpending(int dailyLimit, int spent, boolean systemRecommended) {
         int remaining = dailyLimit - spent;
-        return new DailySpendingDTO(dailyLimit, spent, isSystemRecommended, remaining);
+        return new DailySpendingDTO(dailyLimit, spent, systemRecommended, remaining);
     }
 }
