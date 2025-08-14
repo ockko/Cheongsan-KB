@@ -17,7 +17,7 @@ import RepaymentSimulationResult from '@/pages/RepaymentSimulationResult.vue';
 import Signup from '@/pages/Signup.vue';
 import MyPage from '@/pages/MyPage.vue';
 import EditEmail from '@/pages/EditEmail.vue';
-import EditId from '@/pages/EditId.vue';
+import EditName from '@/pages/EditName.vue';
 import EditPassword from '@/pages/EditPassword.vue';
 import MemberWithdraw from '@/pages/MemberWithdraw.vue';
 import LoanAnalysisResult from '@/pages/LoanAnalysisResult.vue';
@@ -100,7 +100,6 @@ const router = createRouter({
       meta: { requiresAuth: true }, // 인증 필요
     },
     {
-      // path: /study/:id
       path: '/study/detail',
       name: 'StudyDetail',
       component: StudyDetail,
@@ -126,8 +125,8 @@ const router = createRouter({
     },
     {
       path: '/mypage/edit/name',
-      name: EditId,
-      component: EditId,
+      name: EditName,
+      component: EditName,
       meta: { requiresAuth: true },
     },
     {
