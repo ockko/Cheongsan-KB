@@ -6,6 +6,9 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
+const itemsPerPage = 5;
+const currentPage = ref(1);
+
 const categories = ref([
   '전체',
   '신용',
@@ -91,6 +94,31 @@ const studyContents = [
     tags: ['대출', '신용', '카드'],
     title: '대출 이자 줄이는 3가지 방법',
   },
+  {
+    thumbnailUrl: '/images/study-thumbnail-9.png',
+    tags: ['신용', '카드'],
+    title: '해외결제 취소 후 챙겨야 할 1가지',
+  },
+  {
+    thumbnailUrl: '/images/study-thumbnail-10.png',
+    tags: ['세금' , '저축'],
+    title: '중소기업 취업자라면 소득세 감면 혜택 꼭 챙기세요',
+  },
+  {
+    thumbnailUrl: '/images/study-thumbnail-11.png',
+    tags: ['저축','투자'],
+    title: '금테크의 모든 것: 왜 지금 금값이 오르고 있을까?',
+  },
+   {
+    thumbnailUrl: '/images/study-thumbnail-12.png',
+    tags: ['대출'],
+    title: '대출 관리 시작하기, 내가 받은 대출 파악하는 법',
+  },
+  {
+    thumbnailUrl: '/images/study-thumbnail-13.png',
+    tags: ['보험', '저축'],
+    title: '암보험에서 반드시 확인해야 할 두 가지는?',
+  },
 ];
 
 // 트릭 슬라이드를 위한 복제 포함 슬라이드 배열
@@ -171,6 +199,20 @@ const filteredContents = computed(() => {
   if (activeCategory === '전체') return studyContents;
   return studyContents.filter(content => content.tags.includes(activeCategory));
 });
+
+// 현재 페이지에 맞는 콘텐츠 슬라이스
+const paginatedContents = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  return filteredContents.value.slice(start, start + itemsPerPage);
+});
+
+// 전체 페이지 수
+const totalPages = computed(() => Math.ceil(filteredContents.value.length / itemsPerPage));
+
+const goToPage = (page) => {
+  if (page < 1 || page > totalPages.value) return;
+  currentPage.value = page;
+};
 </script>
 
 <template>
@@ -255,12 +297,38 @@ const filteredContents = computed(() => {
         </button>
       </div>
 
-    <!-- 컨텐츠 리스트 -->
-      <div :class="styles.contentsList">
-        <StudyContentItem 
-          :contents="filteredContents" 
-          @clickContent="handleContentClick"
-        />
+      <div class="contentsListWrapper">
+          <div :class="styles.contentsList">
+            <StudyContentItem 
+            :contents="paginatedContents" 
+            @clickContent="handleContentClick"
+            />
+        
+          <div :class="styles.pagination">
+            <button 
+              @click="goToPage(currentPage - 1)" 
+              :disabled="currentPage === 1"
+            >
+              &lt;
+            </button>
+
+            <button
+              v-for="page in totalPages"
+              :key="page"
+              :class="{ active: currentPage === page }"
+              @click="goToPage(page)"
+            >
+              {{ page }}
+            </button>
+
+            <button 
+              @click="goToPage(currentPage + 1)" 
+              :disabled="currentPage === totalPages"
+            >
+              &gt;
+            </button>
+          </div>
       </div>
     </div>
+  </div>
 </template>

@@ -196,7 +196,43 @@
 .category-tab.active {
   font-weight: 900;
 }
-.contentsList {
-  padding: 1rem 2rem;
+
+.contentsListWrapper{
+  min-height: 600px; /* 5개 리스트 영역 높이 직접 지정 */
+  padding: 0 2rem;  
 }
 
+.contentsList {
+  margin-top: 8px;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.pagination {
+  margin-top: 8px;       /* 리스트와 약간 간격 */
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+
+}
+
+.pagination button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background-color: #007bff; /* 메인 색상 */
+  color: white;
+  border-color: #007bff;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
