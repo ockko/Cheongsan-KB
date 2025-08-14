@@ -22,9 +22,9 @@ export const updateLoanRepaymentInfo = async (
     const day = String(repaymentDay).padStart(2, '0');
     const nextPaymentDate = `${yyyy}-${mm}-${day}`;
 
-    return await request.patch(`/cheongsan/initialSetup/loans/repaymentInfo`, {
-      debtId,
-      gracePeriodMonth: gracePeriodMonths,
+    // 백엔드 컨트롤러에 맞춰 엔드포인트와 데이터 형식 수정
+    return await request.patch(`/cheongsan/initialSetup/loans/${debtId}`, {
+      gracePeriodMonths: gracePeriodMonths,
       repaymentMethod: repaymentMethod,
       nextPaymentDate: nextPaymentDate,
     });

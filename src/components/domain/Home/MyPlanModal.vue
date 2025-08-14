@@ -74,17 +74,6 @@ const getExtraAmount = (payment) => {
     >
       <div :class="styles.modalContent">
         <!-- 풀모달 헤더 -->
-        <div :class="styles.fullModalHeader">
-          <h2 :class="styles.fullModalTitle">상환 전략 상세</h2>
-          <button
-            :class="styles.closeButton"
-            @click="handleClose"
-            type="button"
-            aria-label="모달 닫기"
-          >
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
 
         <div :class="styles.result">
           <h2 :class="styles.title">

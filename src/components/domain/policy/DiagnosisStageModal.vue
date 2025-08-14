@@ -1,5 +1,5 @@
 <script setup>
-import { computed, watch } from 'vue';
+import { computed, watch, onMounted, onUnmounted } from 'vue';
 import { useModalStore } from '@/stores/modal';
 import styles from '@/assets/styles/components/policy/DiagnosisStageModal.module.css';
 
@@ -28,19 +28,53 @@ watch(
     } else {
       modalStore.closeDiagnosisStageModal();
     }
-  }
+  },
+  { immediate: true }
 );
 
 const closeModal = () => {
   emit('close');
 };
 
-// 이미지 에러 핸들링
-const handleImageError = (e) => {
-  console.log('이미지 로드 실패:', e.target.src);
-  // 대체 이미지나 텍스트로 표시
-  e.target.style.display = 'none';
+// 뒤로가기 이벤트 처리
+const handlePopState = () => {
+  if (props.isVisible) {
+    closeModal();
+  }
 };
+
+// 컴포넌트 마운트 시 뒤로가기 이벤트 리스너 추가
+onMounted(() => {
+  window.addEventListener('popstate', handlePopState);
+});
+
+// 컴포넌트 언마운트 시 이벤트 리스너 제거
+onUnmounted(() => {
+  window.removeEventListener('popstate', handlePopState);
+});
+
+// 모달이 열릴 때와 닫힐 때 history 상태 관리
+watch(
+  () => props.isVisible,
+  (newValue) => {
+    if (newValue) {
+      // 모달이 열릴 때 history에 상태 추가
+      window.history.pushState(
+        { modal: 'diagnosisStage' },
+        '',
+        window.location.href
+      );
+    } else {
+      // 모달이 닫힐 때 history 상태 정리
+      if (
+        window.history.state &&
+        window.history.state.modal === 'diagnosisStage'
+      ) {
+        window.history.back();
+      }
+    }
+  }
+);
 
 // 대상자 목록 생성 (eligibleDebtors와 eligibleDebts 결합)
 const targetList = computed(() => {
@@ -103,119 +137,162 @@ const cautionsList = computed(() => {
 </script>
 
 <template>
-  <div v-if="isVisible" :class="styles.modalOverlay" @click="closeModal">
-    <div :class="styles.modalContent" @click.stop>
+  <div
+    v-if="isVisible"
+    :class="styles.diagnosisStageModalOverlay"
+    @click="closeModal"
+  >
+    <div :class="styles.diagnosisStageModalContent" @click.stop>
       <!-- 모달 내용 -->
-      <div :class="styles.modalBody">
-        <!-- 닫기 버튼 -->
-        <button @click="closeModal" :class="styles.backButton">
+      <div :class="styles.diagnosisStageModalBody">
+        <!-- 뒤로가기 버튼 -->
+        <button @click="closeModal" :class="styles.diagnosisStageBackButton">
           <i class="fa fa-arrow-left"></i>
         </button>
+
         <!-- 제목 섹션 -->
-        <div :class="styles.titleSection">
-          <div :class="styles.institutionInfo">
-            <div :class="styles.institutionIcon">
-              <img
-                src="/images/court2.png"
-                alt="법원"
-                @error="handleImageError"
-              />
+        <div :class="styles.diagnosisStageTitleSection">
+          <div :class="styles.diagnosisStageInstitutionInfo">
+            <div :class="styles.diagnosisStageInstitutionIcon">
+              <img src="/images/court2.png" alt="기관 아이콘" />
             </div>
-            <span :class="styles.institutionName">{{
-              detailData?.operatingEntity || '관련 기관'
+            <span :class="styles.diagnosisStageInstitutionName">{{
+              props.detailData?.institution || props.detailData?.operatingEntity
             }}</span>
           </div>
-          <h1 :class="styles.stageTitle">
-            {{ detailData?.programName || '제도명' }}
+          <h1 :class="styles.diagnosisStageStageTitle">
+            {{ props.detailData?.programName }}
           </h1>
-          <p :class="styles.stageDescription">
-            {{ detailData?.simpleDescription || '제도 설명' }}
+          <p :class="styles.diagnosisStageStageDescription">
+            {{ props.detailData?.description }}
           </p>
         </div>
 
         <!-- 대상자 섹션 -->
-        <div :class="styles.section">
-          <!-- 구분선 -->
-          <div :class="styles.divider"></div>
-          <h2 :class="styles.sectionTitle">대상자</h2>
-          <ul :class="styles.sectionList">
+        <div :class="styles.diagnosisStageSection">
+          <div :class="styles.diagnosisStageDivider"></div>
+          <h2 :class="styles.diagnosisStageSectionTitle">대상자</h2>
+          <ul :class="styles.diagnosisStageSectionList">
             <li
               v-for="(item, index) in targetList"
-              :key="index"
-              :class="styles.listItem"
+              :key="`target-${index}`"
+              :class="styles.diagnosisStageListItem"
             >
-              <div :class="styles.forListContent">
-                <span :class="styles.infoIcon">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <circle cx="8" cy="8" r="8" fill="#007BFF" />
+              <div :class="styles.diagnosisStageForListContent">
+                <span :class="styles.diagnosisStageInfoIcon">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="#003E65"
+                      stroke-width="2"
+                    />
                     <path
-                      d="M8 4V8M8 12H8.01"
-                      stroke="white"
-                      stroke-width="1.5"
+                      d="M12 16V12"
+                      stroke="#003E65"
+                      stroke-width="2"
                       stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M12 8H12.01"
+                      stroke="#003E65"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
                     />
                   </svg>
                 </span>
-                <span :class="styles.listText">{{ item }}</span>
+                <span :class="styles.diagnosisStageListText">{{ item }}</span>
               </div>
             </li>
           </ul>
         </div>
 
         <!-- 장점 섹션 -->
-        <div :class="styles.section">
-          <!-- 구분선 -->
-          <div :class="styles.divider"></div>
-          <h2 :class="styles.sectionTitle">장점</h2>
-          <ul :class="styles.sectionList">
+        <div :class="styles.diagnosisStageSection">
+          <div :class="styles.diagnosisStageDivider"></div>
+          <h2 :class="styles.diagnosisStageSectionTitle">장점</h2>
+          <ul :class="styles.diagnosisStageSectionList">
             <li
               v-for="(item, index) in advantagesList"
-              :key="index"
-              :class="styles.listItem"
+              :key="`advantage-${index}`"
+              :class="styles.diagnosisStageListItem"
             >
-              <div :class="styles.advantagesListContent">
-                <span :class="styles.checkIcon">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <circle cx="8" cy="8" r="8" fill="#28A745" />
+              <div :class="styles.diagnosisStageAdvantagesListContent">
+                <span :class="styles.diagnosisStageCheckIcon">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <path
-                      d="M6 8L7.5 9.5L10 7"
-                      stroke="white"
-                      stroke-width="1.5"
+                      d="M20 6L9 17L4 12"
+                      stroke="#003E65"
+                      stroke-width="2"
                       stroke-linecap="round"
                       stroke-linejoin="round"
                     />
                   </svg>
                 </span>
-                <span :class="styles.listText">{{ item }}</span>
+                <span :class="styles.diagnosisStageListText">{{ item }}</span>
               </div>
             </li>
           </ul>
         </div>
 
         <!-- 주의사항 섹션 -->
-        <div :class="styles.section">
-          <!-- 구분선 -->
-          <div :class="styles.divider"></div>
-          <h2 :class="styles.sectionTitle">주의사항</h2>
-          <ul :class="styles.sectionList">
+        <div :class="styles.diagnosisStageSection">
+          <div :class="styles.diagnosisStageDivider"></div>
+          <h2 :class="styles.diagnosisStageSectionTitle">주의사항</h2>
+          <ul :class="styles.diagnosisStageSectionList">
             <li
               v-for="(item, index) in cautionsList"
-              :key="index"
-              :class="styles.listItem"
+              :key="`warning-${index}`"
+              :class="styles.diagnosisStageListItem"
             >
-              <div :class="styles.warnListContent">
-                <span :class="styles.warningIcon">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M8 1L15 14H1L8 1Z" fill="#DC3545" />
+              <div :class="styles.diagnosisStageWarnListContent">
+                <span :class="styles.diagnosisStageWarningIcon">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <path
-                      d="M8 6V9M8 12H8.01"
-                      stroke="white"
-                      stroke-width="1.5"
+                      d="M10.29 3.86L1.82 18A2 2 0 0 0 3.54 21H20.46A2 2 0 0 0 22.18 18L13.71 3.86A2 2 0 0 0 10.29 3.86Z"
+                      stroke="#003E65"
+                      stroke-width="2"
                       stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M12 9V13"
+                      stroke="#003E65"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M12 17H12.01"
+                      stroke="#003E65"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
                     />
                   </svg>
                 </span>
-                <span :class="styles.listText">{{ item }}</span>
+                <span :class="styles.diagnosisStageListText">{{ item }}</span>
               </div>
             </li>
           </ul>

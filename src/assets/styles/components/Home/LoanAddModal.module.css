@@ -1,4 +1,4 @@
-.modal-overlay {
+.loan-add-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -11,7 +11,7 @@
   z-index: 2000;
 }
 
-.modal-container {
+.loan-add-modal-container {
   background-color: white;
   padding: 1.5rem 1.2rem;
   border-radius: 10px;
@@ -23,88 +23,127 @@
   flex-direction: column;
 }
 
-.form {
+.loan-add-modal-form {
   display: flex;
   flex-direction: column;
   padding: 0 0.8rem 0.5rem;
 }
 
-.form-row img {
+.loan-add-modal-form-row img {
   width: 10px;
   height: 10px;
 }
 
-.form-row {
+.loan-add-modal-form-row {
   display: flex;
   align-items: center;
   margin-top: 0.8rem;
   justify-content: space-between;
 }
 
-.form-label-container {
+.loan-add-modal-form-label-container {
   display: flex;
   gap: 0.2rem;
   align-items: center;
 }
 
-.form-label {
+.loan-add-modal-form-label {
   margin-left: 1rem;
   font-weight: 700;
   font-size: 1rem;
 }
 
-.title-label {
+.loan-add-modal-title-label {
   font-weight: 700;
   font-size: 20px;
 }
 
-.sub-label {
+.loan-add-modal-sub-label {
   font-weight: 700;
   font-size: 18px;
   color: var(--color-thrid);
 }
 
-.form-control {
+.loan-add-modal-form-control {
   display: flex;
   align-items: center;
   gap: 6px;
   font-size: 0.875rem;
   color: var(--color-gray0);
   width: 155px;
+  border-bottom: 1px solid var(--color-black);
+  padding-bottom: 4px;
+  justify-content: flex-end;
 }
 
-.text-input {
-  width: 60px;
-  border-bottom: 1px solid var(--color-black);
-  text-align: center;
+.loan-add-modal-form-control-up {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 0.875rem;
+  color: var(--color-gray0);
+  width: 155px;
+  border-bottom: 1px solid var(--color-black);
+  padding-bottom: 4px;
+  justify-content: center;
 }
 
-input,
-select {
+.loan-add-modal-form-control:focus-within {
+  border-bottom: 2px solid var(--color-main);
+}
+
+.loan-add-modal-text-input {
   border: none;
-  border-bottom: 1px solid var(--color-black);
-  padding: 4px;
+  padding: 4px 0;
+  outline: none;
+  font-size: 0.875rem;
+  text-align: center;
+  background: transparent;
+  width: 80%;
+  min-width: 50px;
+}
+
+.loan-add-modal-input,
+.loan-add-modal-select {
+  border: none;
+  padding: 4px 0;
   flex: 1;
   outline: none;
   font-size: 0.875rem;
   text-align: center;
+  background: transparent;
 }
 
-.year-input {
+.loan-add-modal-input:focus,
+.loan-add-modal-select:focus {
+  border-bottom: 2px solid var(--color-main);
+}
+
+.loan-add-modal-year-input {
   width: 40px;
-  text-align: right;
+  text-align: center;
+  border: none;
+  padding: 4px 0;
+  outline: none;
+  font-size: 0.875rem;
+  background: transparent;
 }
 
-.date-input {
+.loan-add-modal-date-input {
   width: 18px;
-  text-align: right;
+  text-align: center;
+  border: none;
+  padding: 4px 0;
+  outline: none;
+  font-size: 0.875rem;
+  background: transparent;
 }
-.detail-info {
+
+.loan-add-modal-detail-info {
   padding-top: 1rem;
 }
 
-.error-message {
+.loan-add-modal-error-message {
   color: #e74c3c;
   font-size: 0.75rem;
   margin-top: 0.25rem;
@@ -112,13 +151,13 @@ select {
   font-weight: 500;
 }
 
-.buttonGroup {
+.loan-add-modal-button-group {
   display: flex;
   gap: 10px;
   padding-top: 2.6rem;
 }
 
-.button {
+.loan-add-modal-button {
   flex: 1;
   padding: 0.7rem;
   border-radius: 8px;
@@ -127,18 +166,39 @@ select {
   font-weight: 600;
   cursor: pointer;
 }
-.cancelButton {
+
+.loan-add-modal-cancel-button {
   background-color: white;
   border: 2px solid var(--color-main);
   color: var(--color-main);
 }
 
-.submit-btn {
+.loan-add-modal-submit-btn {
   background-color: var(--color-main);
   color: white;
   transition: background-color 0.2s, color 0.2s;
 }
 
-.submit-btn:hover {
+.loan-add-modal-submit-btn:hover {
   background: #004b6e;
+}
+
+.loan-add-modal-dot {
+  display: flex;
+  align-items: center;
+}
+
+.loan-add-modal-repayment-select {
+  border: none;
+  padding: 4px 0;
+  flex: 1;
+  outline: none;
+  font-size: 0.875rem;
+  text-align: center;
+  background: transparent;
+  cursor: pointer;
+}
+
+.loan-add-modal-repayment-select:focus {
+  border-bottom: 2px solid var(--color-main);
 }

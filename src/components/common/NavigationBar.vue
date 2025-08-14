@@ -50,7 +50,20 @@ const getIcon = (item) => {
 };
 
 const navigateTo = (route) => {
-  router.push(route);
+  // route가 유효한지 확인
+  if (route && typeof route === 'string' && route !== 'undefined') {
+    try {
+      router.push(route);
+    } catch (error) {
+      console.error('Navigation error:', error);
+      // 에러 발생 시 홈으로 이동
+      router.push('/home');
+    }
+  } else {
+    console.error('Invalid route:', route);
+    // 잘못된 경로일 경우 홈으로 이동
+    router.push('/home');
+  }
 };
 </script>
 
