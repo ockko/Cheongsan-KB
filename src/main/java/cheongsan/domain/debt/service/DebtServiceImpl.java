@@ -8,6 +8,7 @@ import cheongsan.domain.debt.entity.DelinquentLoan;
 import cheongsan.domain.debt.entity.FinancialInstitution;
 import cheongsan.domain.debt.mapper.DebtMapper;
 import cheongsan.domain.debt.mapper.FinancialInstitutionMapper;
+import cheongsan.domain.simulator.dto.LoanDTO;
 import cheongsan.domain.simulator.dto.RepaymentType;
 import cheongsan.domain.user.dto.DebtUpdateRequestDTO;
 import cheongsan.domain.user.dto.DebtUpdateResponseDTO;
@@ -88,10 +89,22 @@ public class DebtServiceImpl implements DebtService {
         if (list == null || list.isEmpty() || sort == null) {
             return list;
         }
-
-        List<DebtInfoResponseDTO> sortedList = new ArrayList<>(list); // 원본 불변
+        List<DebtInfoResponseDTO> sortedList = new ArrayList<>(list);
 
         switch (sort) {
+            case "startedAtAsc": // 오래된 순
+                sortedList.sort(Comparator.comparing(
+                        DebtInfoResponseDTO::getLoanStartDate, Comparator.nullsLast(LocalDate::compareTo)
+                ));
+                break;
+
+            case "createdAtDesc": // 최신 순 == startedAt 내림차순
+            default:
+                sortedList.sort(Comparator.comparing(
+                        DebtInfoResponseDTO::getLoanStartDate, Comparator.nullsLast(LocalDate::compareTo)
+                ).reversed());
+                break;
+
             case "interestRateDesc":
                 sortedList.sort(Comparator.comparing(
                         DebtInfoResponseDTO::getInterestRate, Comparator.nullsLast(BigDecimal::compareTo)
@@ -104,24 +117,25 @@ public class DebtServiceImpl implements DebtService {
                 ).reversed());
                 break;
 
-            case "startedAtAsc":
-                sortedList.sort(Comparator.comparing(
-                        DebtInfoResponseDTO::getLoanStartDate, Comparator.nullsLast(LocalDate::compareTo)
-                ));
-                break;
-
-            case "startedAtDesc":
-                sortedList.sort(Comparator.comparing(
-                        DebtInfoResponseDTO::getLoanStartDate, Comparator.nullsLast(LocalDate::compareTo)
-                ).reversed());
-                break;
-
-            default:
+            case "recommended":
+                sortedList.sort(
+                        Comparator.comparing((DebtInfoResponseDTO d) -> !isPrivateDebt(d))                       // 사금융 false이 먼저
+                                .thenComparing(DebtInfoResponseDTO::getInterestRate, Comparator.reverseOrder())       // 이자율 내림차순
+                );
                 break;
         }
-
         return sortedList;
     }
+
+    private boolean isPrivateDebt(DebtInfoResponseDTO debt) {
+        String debtOrganizationName = debt.getOrganizationName();
+        String type=debtMapper.findInstitutionTypeByOrganizationName(debtOrganizationName);
+        return List.of("사금융", "카드론", "대부업", "P2P","기타").stream()
+                .anyMatch(type::contains);  // 부분 문자열 검사
+    }
+
+
+
 
     @Override
     public DebtDetailResponseDTO getLoanDetail(Long userId, Long loanId) {

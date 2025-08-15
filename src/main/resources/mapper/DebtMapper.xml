@@ -215,4 +215,10 @@
         WHERE id = #{loanId}
     </update>
 
+    <select id="findInstitutionTypeByOrganizationName" resultType="String">
+        SELECT institution_type
+        FROM financial_institutions
+        WHERE organization_name = #{organizationName}
+        LIMIT 1
+    </select>
 </mapper>

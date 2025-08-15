@@ -79,4 +79,6 @@ public interface DebtMapper {
     // next_payment_date 업데이트
     int updateNextPaymentDate(@Param("loanId") Long loanId,
                               @Param("nextPaymentDate") LocalDate nextPaymentDate);
+
+    String findInstitutionTypeByOrganizationName(@Param("organizationName") String organizationName);
 }
