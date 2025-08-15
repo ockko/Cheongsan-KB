@@ -12,6 +12,7 @@ public interface DebtService {
     List<InitialDebtDTO> getUserInitialLoanList(Long userId);
 
     List<DebtInfoResponseDTO> getUserDebtList(Long userId);
+    List<DebtInfoResponseDTO> sortDebtInfoList(List<cheongsan.domain.debt.dto.DebtInfoResponseDTO> list, String sort);
 
     DebtDetailResponseDTO getLoanDetail(Long userId, Long loanId);
 

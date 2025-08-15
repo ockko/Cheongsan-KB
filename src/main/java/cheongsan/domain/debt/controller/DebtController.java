@@ -4,6 +4,8 @@ import cheongsan.domain.debt.dto.*;
 import cheongsan.domain.debt.service.DebtService;
 import cheongsan.domain.user.entity.CustomUser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Log4j2
 @RestController
 @RequestMapping("/cheongsan/dashboard")
 @RequiredArgsConstructor
@@ -19,14 +22,16 @@ public class DebtController {
     private final DebtService debtService;
 
     @GetMapping("/loans")
-    public List<DebtInfoResponseDTO> getUserDebtList(
+    public ResponseEntity<List<DebtInfoResponseDTO>> getUserDebtList(
             @RequestParam(required = false, defaultValue = "createdAtDesc") String sort,
             @AuthenticationPrincipal CustomUser customUser
     ) {
         Long userId = customUser.getUser().getId();
 
-        return debtService.getUserDebtList(userId);
+        List<DebtInfoResponseDTO> debts = debtService.getUserDebtList(userId);
+        return ResponseEntity.ok(debtService.sortDebtInfoList(debts, sort));
     }
+
 
     @GetMapping("/loans/{loanId}")
     public DebtDetailResponseDTO getLoanDetail(
