@@ -74,14 +74,6 @@ public class CodefTransactionSyncServiceImpl implements CodefTransactionSyncServ
             log.info("사용자 {}의 거래내역 동기화 완료: account={} -> {}건 저장, {}건 중복 스킵",
                     userId, accountNumber, savedCount, duplicateCount);
 
-        } catch (RuntimeException e) {
-            // CODEF API 에러 처리 개선
-            if (e.getMessage() != null && e.getMessage().contains("CF-12040")) {
-                log.warn("사용자 {}의 계좌 {}는 거래내역 조회가 지원되지 않는 상품입니다. 스킵합니다.",
-                        userId, accountNumber);
-                return;
-            }
-            log.error("사용자 {}의 거래내역 동기화 실패: account={}", userId, accountNumber, e);
         } catch (Exception e) {
             log.error("사용자 {}의 거래내역 동기화 실패: account={}", userId, accountNumber, e);
         }
