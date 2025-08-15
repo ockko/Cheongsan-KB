@@ -207,6 +207,57 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
         );
     }
 
+    @Override
+    public List<MonthlyInterestComparisonDTO> getMonthlyInterestComparison(
+            Long userId,
+            LoanAnalyzeRequestDTO request,
+            Scenario scenario,
+            BigDecimal monthlyPrepayment
+    ) {
+        // 기존 대출
+        List<LoanDTO> existingLoans = convertToLoanDTOList(debtService.getUserDebtList(userId));
+        List<MonthlyPaymentDetailDTO> existingPayments = calculateCombinedMonthlyPayments(
+                existingLoans, scenario, monthlyPrepayment
+        );
+
+        // 신규 대출 포함
+        List<LoanDTO> allLoans = new ArrayList<>(existingLoans);
+        LoanDTO newLoan = fromAnalyzeRequest(request);
+        allLoans.add(newLoan);
+        List<MonthlyPaymentDetailDTO> afterAddingPayments = calculateCombinedMonthlyPayments(
+                allLoans, scenario, monthlyPrepayment
+        );
+
+        // 월별 합계 Map 생성
+        Map<YearMonth, MonthlyInterestComparisonDTO> monthlyMap = new LinkedHashMap<>();
+
+        // 기존 대출 합산
+        for (MonthlyPaymentDetailDTO existing : existingPayments) {
+            YearMonth ym = YearMonth.from(existing.getPaymentDate());
+            monthlyMap.computeIfAbsent(ym, k -> new MonthlyInterestComparisonDTO(
+                    k.atEndOfMonth(), // 월말 날짜
+                    BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO
+            ));
+            MonthlyInterestComparisonDTO dto = monthlyMap.get(ym);
+            dto.setExistingInterest(dto.getExistingInterest().add(existing.getInterest()));
+            dto.setExistingPayment(dto.getExistingPayment().add(existing.getTotalPayment()));
+        }
+
+        // 신규 대출 포함 합산
+        for (MonthlyPaymentDetailDTO after : afterAddingPayments) {
+            YearMonth ym = YearMonth.from(after.getPaymentDate());
+            monthlyMap.computeIfAbsent(ym, k -> new MonthlyInterestComparisonDTO(
+                    k.atEndOfMonth(),
+                    BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO
+            ));
+            MonthlyInterestComparisonDTO dto = monthlyMap.get(ym);
+            dto.setAfterAddingInterest(dto.getAfterAddingInterest().add(after.getInterest()));
+            dto.setAfterAddingPayment(dto.getAfterAddingPayment().add(after.getTotalPayment()));
+        }
+
+        return new ArrayList<>(monthlyMap.values());
+    }
+
     private BigDecimal calculateTotalRepayment(List<LoanDTO> loans) {
         BigDecimal totalRepayment = BigDecimal.ZERO;
         for (LoanDTO loan : loans) {
@@ -297,59 +348,8 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
                 .orElse(BigDecimal.ZERO);
     }
 
-    @Override
-    public List<MonthlyInterestComparisonDTO> getMonthlyInterestComparison(
-            Long userId,
-            LoanAnalyzeRequestDTO request,
-            Scenario scenario,
-            BigDecimal monthlyPrepayment
-    ) {
-        // 기존 대출
-        List<LoanDTO> existingLoans = convertToLoanDTOList(debtService.getUserDebtList(userId));
-        List<MonthlyPaymentDetailDTO> existingPayments = calculateCombinedMonthlyPayments(
-                existingLoans, scenario, monthlyPrepayment
-        );
 
-        // 신규 대출 포함
-        List<LoanDTO> allLoans = new ArrayList<>(existingLoans);
-        LoanDTO newLoan = fromAnalyzeRequest(request);
-        allLoans.add(newLoan);
-        List<MonthlyPaymentDetailDTO> afterAddingPayments = calculateCombinedMonthlyPayments(
-                allLoans, scenario, monthlyPrepayment
-        );
-
-        // 월별 합계 Map 생성
-        Map<YearMonth, MonthlyInterestComparisonDTO> monthlyMap = new LinkedHashMap<>();
-
-        // 기존 대출 합산
-        for (MonthlyPaymentDetailDTO existing : existingPayments) {
-            YearMonth ym = YearMonth.from(existing.getPaymentDate());
-            monthlyMap.computeIfAbsent(ym, k -> new MonthlyInterestComparisonDTO(
-                    k.atEndOfMonth(), // 월말 날짜
-                    BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO
-            ));
-            MonthlyInterestComparisonDTO dto = monthlyMap.get(ym);
-            dto.setExistingInterest(dto.getExistingInterest().add(existing.getInterest()));
-            dto.setExistingPayment(dto.getExistingPayment().add(existing.getTotalPayment()));
-        }
-
-        // 신규 대출 포함 합산
-        for (MonthlyPaymentDetailDTO after : afterAddingPayments) {
-            YearMonth ym = YearMonth.from(after.getPaymentDate());
-            monthlyMap.computeIfAbsent(ym, k -> new MonthlyInterestComparisonDTO(
-                    k.atEndOfMonth(),
-                    BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO
-            ));
-            MonthlyInterestComparisonDTO dto = monthlyMap.get(ym);
-            dto.setAfterAddingInterest(dto.getAfterAddingInterest().add(after.getInterest()));
-            dto.setAfterAddingPayment(dto.getAfterAddingPayment().add(after.getTotalPayment()));
-        }
-
-        return new ArrayList<>(monthlyMap.values());
-    }
-
-
-    private static List<LoanDTO> convertToLoanDTOList(List<DebtInfoResponseDTO> debtInfoList) {
+    private List<LoanDTO> convertToLoanDTOList(List<DebtInfoResponseDTO> debtInfoList) {
         return debtInfoList.stream()
                 .map(debt -> LoanDTO.builder()
                         .id(debt.getDebtId())
@@ -366,7 +366,7 @@ public class LoanSimulationServiceImpl implements LoanSimulationService {
                 .collect(Collectors.toList());
     }
 
-    public static LoanDTO fromAnalyzeRequest(LoanAnalyzeRequestDTO request) {
+    private LoanDTO fromAnalyzeRequest(LoanAnalyzeRequestDTO request) {
         LocalDate start = LocalDate.now();
 
         return LoanDTO.builder()
