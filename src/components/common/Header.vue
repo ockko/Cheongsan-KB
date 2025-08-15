@@ -111,6 +111,7 @@ const handleNotification = async () => {
   if (showNotificationPopup.value) {
     showUserPopup.value = false;
     await notificationStore.fetchNotifications();
+    await notificationStore.fetchUnreadCount();
   }
 };
 
