@@ -1,5 +1,6 @@
 package cheongsan.domain.simulator.service;
 
+import cheongsan.domain.policy.dto.MonthlyInterestComparisonDTO;
 import cheongsan.domain.simulator.dto.*;
 
 import java.math.BigDecimal;
@@ -14,4 +15,8 @@ public interface LoanSimulationService {
 
     InterestComparisonResultDTO compareInterestWithNewLoan(List<LoanDTO> existingLoans, LoanDTO newLoan);
 
+    List<MonthlyInterestComparisonDTO> getMonthlyInterestComparison(Long userId,
+                                                                    LoanAnalyzeRequestDTO newLoan,
+                                                                    Scenario scenario,
+                                                                    BigDecimal monthlyPrepayment);
 }
