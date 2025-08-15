@@ -364,6 +364,7 @@
   width: 100%;
   background-color: #fff;
   padding: 16px;
+  border-bottom: 1px solid #d1d5db;
 }
 
 .alert {
@@ -389,6 +390,4 @@
 .chart {
   width: 100%;
   height: 400px; /* 충분히 세로 확보 */
-  padding: 16px 0;
-  border-bottom: 1px solid #d1d5db;
 }
