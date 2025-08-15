@@ -141,7 +141,10 @@ watch(
   <div :class="styles.areaChartContainer">
     <div :class="styles.alert">
       <i class="fas fa-bell" :class="styles.faBell"></i>
-      <span> 기존 대출과 신규 대출을 포함한 월별 이자 추이입니다. </span>
+      <span>
+        기존 대출과 신규 대출을 포함한
+        <span :class="styles.highlight">월별 이자 추이</span>입니다.
+      </span>
     </div>
 
     <div ref="chartRef" :class="styles.chart"></div>
