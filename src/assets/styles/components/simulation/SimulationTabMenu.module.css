@@ -18,6 +18,7 @@
 }
 .tab-content {
   padding: 1rem;
+  margin-bottom: 80px;
 }
 .tab + .tab {
   margin-left: 24px; /* 탭 사이에 공간 부여 */
