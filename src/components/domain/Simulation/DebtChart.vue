@@ -106,6 +106,10 @@ const mapStrategyLabel = (type) => {
       return type;
   }
 };
+const getColor = (index) => {
+  const colors = ['#003e65', '#98cbfd', '#dc2121', '#4e6073'];
+  return colors[index % colors.length];
+};
 watch(
   sourceRepayments,
   (repayments) => {
@@ -259,10 +263,6 @@ const chartOptions = computed(() => {
     },
   };
 });
-const getColor = (index) => {
-  const colors = ['#003e65', '#98cbfd', '#dc2121', '#4e6073'];
-  return colors[index % colors.length];
-};
 </script>
 <template>
   <div :class="styles.debtChartWrapper">
