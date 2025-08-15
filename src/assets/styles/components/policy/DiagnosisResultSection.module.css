@@ -284,30 +284,11 @@
   opacity: 1;
 }
 
-/* 스와이프 진행률 표시 */
-.diagnosis-result-swipe-progress {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 4px;
-  background-color: rgba(255, 255, 255, 0.3);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.diagnosis-result-swipe-progress-bar {
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 2px;
-  transition: width 0.1s ease;
-}
 
 /* 페이지 인디케이터 */
 .diagnosis-result-page-indicator {
   position: absolute;
-  bottom: 15px;
+  bottom: 8px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;

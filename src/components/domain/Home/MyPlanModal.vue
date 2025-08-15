@@ -80,7 +80,7 @@ const getExtraAmount = (payment) => {
             <i class="far fa-lightbulb"></i> 상환 전략
           </h2>
           <p :class="styles.subtitle">
-            현재 적용된 전략은
+            현재 적용된 전략은<br />
             <span :class="styles.highlight">
               {{ mapStrategyLabel(strategy?.strategyType) }}
             </span>
@@ -212,6 +212,9 @@ const getExtraAmount = (payment) => {
               :class="styles.divider2"
             ></div>
           </div>
+        </div>
+        <div :class="styles.actions">
+          <button :class="styles.cancel" @click.self="handleClose">닫기</button>
         </div>
       </div>
     </div>

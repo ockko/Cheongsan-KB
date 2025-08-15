@@ -499,13 +499,7 @@ const goToPage = (page) => {
         </div>
       </div>
 
-      <!-- 스와이프 진행률 표시 -->
-      <div :class="styles.diagnosisResultSwipeProgress">
-        <div
-          :class="styles.diagnosisResultSwipeProgressBar"
-          :style="{ width: `${swipeProgress}%` }"
-        ></div>
-      </div>
+
 
       <!-- 페이지 인디케이터 -->
       <div :class="styles.diagnosisResultPageIndicator">

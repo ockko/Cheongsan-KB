@@ -17,10 +17,11 @@
 
 .modal-content {
   background-color: white;
-  border-radius: 1rem;
-  width: 100%;
-  max-width: 420px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  width: 90%;
+  max-width: 340px;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
+  line-height: 1.5;
   max-height: 90vh;
   overflow-y: auto;
 }
@@ -32,19 +33,18 @@
 }
 
 .divider2 {
-  margin: 1rem 0;
+  margin: 1.3rem 0;
   border-bottom: 1px solid var(--color-gray-unnamed);
 }
 
 .title {
   font-size: 22px;
   color: white;
-  padding: 1rem 2rem 0.5rem 2rem;
+  padding: 1.7rem 2rem 1.2rem 2rem;
 }
 
 .subtitle {
-  font-size: 16px;
-  margin-bottom: 1rem;
+  font-size: 1rem;
   color: white;
   padding: 0 2rem;
 }
@@ -54,25 +54,25 @@
   width: 100%;
   color: white;
   margin-bottom: 1rem;
+  padding-bottom: 1.7rem;
+}
+
+.info {
+  margin: 1.5rem 0;
 }
 
 .info-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
-  padding: 0 2rem;
-}
-
-.repayment-order {
-  padding: 1rem 0 4rem 0;
+  margin-bottom: 1rem;
+  padding: 0 1.5rem;
 }
 
 .loan-card-list {
   display: flex;
   flex-direction: column;
-  padding: 0 2rem;
-  gap: 12px;
+  padding: 0 1.5rem;
 }
 
 .repayment-card1 {
@@ -82,7 +82,6 @@
 .repayment-main {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
 }
 
 .card-icon {
@@ -90,37 +89,35 @@
   height: 50px;
   background-color: var(--color-main);
   color: #fff;
-  border-radius: 10px;
+  border-radius: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: bold;
-  font-size: 14px;
 }
 
 .d-day {
   user-select: none;
+  font-size: 1rem;
 }
 
 .loan-name-top {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: bold;
   color: var(--color-gray5);
+  margin: 0 0 0.7rem 0.2rem;
 }
 
 .card-info {
-  margin-left: 12px;
+  display: flex;
+  margin-left: 1rem;
   flex-direction: column;
-  justify-content: center;
-  flex: 1;
-  margin-bottom: 2px;
 }
 
 .repayment-date {
   font-size: 14px;
   color: var(--color-gray0);
-  margin-top: 10px;
-  line-height: 0;
+  margin-top: 0.3rem;
 }
 
 .repayment-amount-wrapper {
@@ -132,6 +129,7 @@
   font-size: 18px;
   font-weight: bold;
   color: #333;
+  margin-bottom: 1rem;
 }
 
 .extra-payment {
@@ -140,7 +138,6 @@
   color: #e74c3c;
   white-space: nowrap;
   margin-left: 6px;
-  line-height: 2;
 }
 
 .fee-label {
@@ -148,32 +145,26 @@
   font-size: 12px;
   color: #e74c3c;
   margin-left: 6px;
-  margin-top: 0;
-  padding-top: 0;
-  line-height: 0;
 }
 
 .highlight {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: bold;
   color: white;
-  margin: 0 4px;
+  margin-right: 4px;
 }
 
 .label {
-  color: var(--color-main);
   font-weight: 500;
-  font-size: 16px;
+  font-size: 1rem;
   margin-left: 5px;
   flex: 1;
   text-align: left;
 }
 
 .content {
-  color: var(--color-main);
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.6;
-  text-align: left;
   flex-shrink: 0;
 }
 
@@ -184,14 +175,14 @@
 }
 
 .section-title {
-  margin: 1rem 0 0.5rem 0.5rem;
+  margin: 1.5rem 0;
   font-weight: bold;
 }
 
 .actions {
   display: flex;
   justify-content: flex-end;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 
 .actions .cancel {
@@ -203,17 +194,5 @@
   border: 1.5px solid var(--color-main);
   border-radius: 8px;
   cursor: pointer;
-  margin: 16px 0px;
-}
-
-.actions .apply {
-  background-color: var(--color-main);
-  color: white;
-  font-size: 14px;
-  width: 88px;
-  height: 36px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  margin: 16px 16px;
+  margin: 1.5rem;
 }
