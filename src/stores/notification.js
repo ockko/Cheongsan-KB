@@ -205,28 +205,27 @@ export const useNotificationStore = defineStore('notification', () => {
   /**
    * 스마트 폴링 시작
    */
-  const startPolling = (customInterval) => {
+  const startPolling = (interval = 15000) => {
     if (isPolling.value) return;
 
-    const interval = customInterval || getPollingInterval('default');
+    if (webSocketStore.isConnected) {
+      console.log('⚠️ WebSocket 연결됨 - 폴링 불필요');
+      return;
+    }
 
     isPolling.value = true;
     pollingInterval.value = setInterval(() => {
-      // 페이지가 숨겨져 있으면 폴링 스킵
-      if (!isPageVisible) {
+      if (webSocketStore.isConnected) {
+        console.log('✅ WebSocket 재연결 - 폴링 중지');
+        stopPolling();
         return;
       }
 
-      // 웹소켓이 연결되어 있으면 폴링 스킵 (테스트 모드 제외)
-      if (webSocketStore.isConnected && !testModeActive) {
-        return;
-      }
-
+      console.log('📡 백업 폴링 실행');
       fetchUnreadCount();
     }, interval);
 
-    const intervalSec = interval / 1000;
-    const mode = testModeActive ? '(테스트 모드)' : '';
+    console.log(`📡 백업 폴링 시작: ${interval / 1000}초 간격`);
   };
 
   /**
@@ -268,36 +267,28 @@ export const useNotificationStore = defineStore('notification', () => {
    * 최적화된 WebSocket 이벤트 핸들러들
    */
   const setupWebSocketHandlers = () => {
-    // 새 알림 수신
     webSocketStore.on('notification', (data) => {
       if (data.unreadCount !== undefined) {
         updateUnreadCount(data.unreadCount);
       } else {
         updateUnreadCount(unreadCount.value + 1);
       }
-
-      // 브라우저 알림 표시
       showBrowserNotification('새 알림 도착!', data.contents);
     });
 
-    // 읽지 않은 알림 개수 업데이트
     webSocketStore.on('unreadCount', (data) => {
       updateUnreadCount(data.unreadCount);
     });
 
-    // WebSocket 연결 시 - 폴링 최소화
     webSocketStore.on('connect', () => {
-      if (isPolling.value && !testModeActive) {
-        stopPolling();
-        startPolling(getPollingInterval('websocket-connected'));
-      }
+      console.log('✅ WebSocket 연결 - 폴링 중지');
+      stopPolling();
     });
 
-    // WebSocket 연결 해제 시 - 폴링 활성화
     webSocketStore.on('disconnect', () => {
-      if (isPolling.value && !testModeActive) {
-        stopPolling();
-        startPolling(getPollingInterval('default'));
+      console.log('❌ WebSocket 끊김 - 폴링 시작');
+      if (!isPolling.value) {
+        startPolling();
       }
     });
   };
@@ -309,32 +300,13 @@ export const useNotificationStore = defineStore('notification', () => {
    * 초기화
    */
   const initialize = async () => {
-    // 브라우저 알림 권한 요청
     await requestNotificationPermission();
-
-    // WebSocket 이벤트 핸들러 설정
     setupWebSocketHandlers();
-
-    // 페이지 가시성 핸들러 설정
-    cleanupVisibility = setupVisibilityHandler();
-
-    // 초기 데이터 로딩
     await fetchUnreadCount();
 
-    // 스마트 폴링 시작
-    startPolling();
-
-    // 개발 환경에서 전역 함수 노출
-    if (import.meta.env.DEV) {
-      window.enableTestMode = enableTestMode;
-      window.disableTestMode = disableTestMode;
-      window.notificationStore = {
-        enableTestMode,
-        disableTestMode,
-        fetchUnreadCount,
-        unreadCount: () => unreadCount.value,
-        isConnected: () => webSocketStore.isConnected,
-      };
+    // 웹소켓 상태에 따른 조건부 폴링
+    if (!webSocketStore.isConnected) {
+      startPolling();
     }
   };
 
