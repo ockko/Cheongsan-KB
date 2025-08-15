@@ -53,32 +53,6 @@ const refreshDebtList = async () => {
   await loadDebtData();
 };
 
-// 선택된 정렬 옵션에 따라 부채 목록을 동적으로 정렬하는 computed 속성
-const sortedDebts = computed(() => {
-  const debtsCopy = [...debts.value];
-
-  switch (sortOption.value) {
-    case 'repaymentRateDesc': // 상환율 높은 순
-      return debtsCopy.sort((a, b) => b.repaymentRate - a.repaymentRate);
-    case 'startedAtAsc': // 오래된 순
-      // 날짜 비교를 위해 Date 객체로 변환하여 비교
-      return debtsCopy.sort(
-        (a, b) => new Date(a.loanStartDate) - new Date(b.loanStartDate)
-      );
-    case 'startedAtDesc': // 최신 순
-      return debtsCopy.sort(
-        (a, b) => new Date(b.loanStartDate) - new Date(a.loanStartDate)
-      );
-    case 'interestRateDesc': // 이자율 높은 순
-      return debtsCopy.sort((a, b) => b.interestRate - a.interestRate);
-    case 'recommended': // 우리 앱 추천 순
-    default:
-      return debtsCopy.sort(
-        (a, b) => new Date(b.loanStartDate) - new Date(a.loanStartDate)
-      );
-  }
-});
-
 // 컴포넌트 마운트 시 데이터 로드
 onMounted(() => {
   loadDebtData();
@@ -126,7 +100,7 @@ onMounted(() => {
         </div>
         <ul>
           <li
-            v-for="debt in sortedDebts"
+            v-for="debt in debts"
             :key="debt.debtId"
             :class="styles.debtItem"
             @click="openDetailModal(debt)"
