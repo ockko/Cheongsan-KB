@@ -2,6 +2,7 @@ package cheongsan.domain.simulator.controller;
 
 import cheongsan.common.util.LoanCalculator;
 import cheongsan.common.util.RepaymentTypeMapper;
+import cheongsan.domain.policy.dto.MonthlyInterestComparisonDTO;
 import cheongsan.domain.simulator.dto.*;
 import cheongsan.domain.simulator.service.LoanRecommendationService;
 import cheongsan.domain.simulator.service.LoanSimulationService;
@@ -78,14 +79,17 @@ public class LoanSimulatorController {
                 new GraphDTO("신규 포함 상환액", analysis.getTotalComparison().getNewLoanTotal())
         );
 
+        List<MonthlyInterestComparisonDTO> comparisons = loanSimulationService.getMonthlyInterestComparison(userId, request, Scenario.NO_PREPAYMENT, BigDecimal.ZERO);
         // 7) 응답 (★ dsr에 퍼센트 값 넣기)
         LoanResultDTO result = new LoanResultDTO(
                 analysis.getTotalComparison(),
                 analysis.getInterestComparison(),
                 rec.getItems(),
                 repaymentGraph,
+                comparisons,
                 dsrPercent
         );
+
 
         return ResponseEntity.ok(result);
     }
