@@ -42,13 +42,15 @@ public class WebSocketManager {
         // 세션 등록
         sessions.put(session.getId(), session);
         sessionUserMap.put(session.getId(), userId);
+        log.info("✅ 새 WebSocket 세션 등록: userId={}", userId);
     }
 
     // 세션 정보 제거
     public void unregisterSession(WebSocketSession session) {
+        Long userId = sessionUserMap.get(session.getId());
         sessions.remove(session.getId());
         sessionUserMap.remove(session.getId());
-        log.info("WebSocket 세션 제거: sessionId={}", session.getId());
+        log.info("🗑️ WebSocket 세션 제거: userId={}", userId);
     }
 
     // userId에 해당하는 웹소켓 세션 반환 (열려 있는 웹소켓 세션이 없는 경우 null 반환)
@@ -60,21 +62,35 @@ public class WebSocketManager {
                 .findFirst()
                 .orElse(null);
     }
-    
-    // userId에 연결된 세션에 JSON 메시지 전송
-    public void sendRawMessageToUser(Long userId, String jsonMessage) {
-        sessions.entrySet().stream()
-                .filter(entry -> userId.equals(sessionUserMap.get(entry.getKey())))
-                .forEach(entry -> {
-                    WebSocketSession session = entry.getValue();
-                    if (session != null && session.isOpen()) {
-                        try {
-                            session.sendMessage(new TextMessage(jsonMessage));
-                            log.info("WebSocket JSON 메시지 전송 성공: userId={}, sessionId={}", userId, entry.getKey());
-                        } catch (Exception e) {
-                            log.error("WebSocket JSON 메시지 전송 실패: userId={}, sessionId={}", userId, entry.getKey(), e);
-                        }
-                    }
-                });
+
+    /**
+     * 특정 사용자에게 메시지 전송
+     * @return 전송 성공 여부
+     */
+    public boolean sendRawMessageToUser(Long userId, String message) {
+        WebSocketSession session = getSession(userId);
+
+        if (session == null) {
+            log.warn("📱 사용자 오프라인: userId={}", userId);
+            return false;
+        }
+
+        try {
+            synchronized (session) {
+                if (session.isOpen()) {
+                    session.sendMessage(new TextMessage(message));
+                    log.debug("📤 WebSocket 메시지 전송 성공: userId={}", userId);
+                    return true;
+                } else {
+                    log.warn("🔌 WebSocket 세션이 닫혀있음: userId={}", userId);
+                    unregisterSession(session);
+                    return false;
+                }
+            }
+        } catch (IOException e) {
+            log.error("❌ WebSocket 메시지 전송 실패: userId={}", userId, e);
+            unregisterSession(session);
+            return false;
+        }
     }
 }
