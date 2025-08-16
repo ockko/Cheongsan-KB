@@ -13,10 +13,22 @@ export const useNotificationStore = defineStore('notification', () => {
   // WebSocket 스토어
   const webSocketStore = useWebSocketStore();
 
+  // 성능 최적화를 위한 상태
+  let lastFetchTime = 0;
+  let isPageVisible = true;
+  let testModeActive = false;
+  const FETCH_THROTTLE_MS = 1000; // 1초 내 중복 요청 방지
+
   /**
-   * 읽지 않은 알림 개수 조회
+   * Throttled 읽지 않은 알림 개수 조회 (중복 요청 방지)
    */
   const fetchUnreadCount = async () => {
+    const now = Date.now();
+    if (now - lastFetchTime < FETCH_THROTTLE_MS) {
+      return;
+    }
+    lastFetchTime = now;
+
     try {
       const data = await notificationApi.getUnreadCount();
       unreadCount.value = data.unreadCount;
@@ -63,13 +75,11 @@ export const useNotificationStore = defineStore('notification', () => {
 
   /**
    * 특정 알림을 읽음으로 처리
-   * @param {number} notificationId - 알림 ID
    */
   const markAsRead = async (notificationId) => {
     try {
       await notificationApi.markAsRead(notificationId);
 
-      // WebSocket이 연결되어 있지 않은 경우에만 로컬 상태 업데이트
       if (!webSocketStore.isConnected) {
         const notification = notifications.value.find(
           (n) => n.id === notificationId
@@ -87,7 +97,6 @@ export const useNotificationStore = defineStore('notification', () => {
 
   /**
    * 새 알림 추가 (WebSocket을 통한 실시간 알림)
-   * @param {Object} notification - 새 알림 데이터
    */
   const addNotification = (notification) => {
     notifications.value.unshift(notification);
@@ -95,30 +104,39 @@ export const useNotificationStore = defineStore('notification', () => {
   };
 
   /**
-   * 읽지 않은 알림 개수 업데이트
-   * @param {number} count - 새로운 읽지 않은 알림 개수
+   * 읽지 않은 알림 개수 업데이트 (중복 방지)
    */
   const updateUnreadCount = (count) => {
-    unreadCount.value = count;
+    if (unreadCount.value !== count) {
+      unreadCount.value = count;
+      console.log(`🔄 unreadCount 변경: ${count}`);
+    }
   };
 
   /**
-   * 브라우저 알림 표시
-   * @param {string} title - 알림 제목
-   * @param {string} body - 알림 내용
-   * @param {string} icon - 알림 아이콘
+   * 브라우저 알림 표시 (사용자 설정 고려)
    */
   const showBrowserNotification = (
     title,
     body,
     icon = '/images/logo-blue.png'
   ) => {
+    // 페이지가 포커스되어 있으면 브라우저 알림 표시 안함
+    if (!document.hidden) {
+      return;
+    }
+
     if (Notification.permission === 'granted') {
-      new Notification(title, {
+      const notification = new Notification(title, {
         body,
         icon,
         tag: 'cheongsan-notification',
+        silent: false,
+        requireInteraction: false,
       });
+
+      // 5초 후 자동으로 닫기
+      setTimeout(() => notification.close(), 5000);
     }
   };
 
@@ -139,19 +157,75 @@ export const useNotificationStore = defineStore('notification', () => {
   };
 
   /**
-   * 폴링 시작 (WebSocket이 연결되지 않았을 때 사용)
-   * @param {number} interval - 폴링 간격 (밀리초)
+   * 최적화된 폴링 간격 설정
    */
-  const startPolling = (interval = 30000) => {
+  const getPollingInterval = (type = 'default') => {
+    const isDev = import.meta.env.DEV;
+
+    if (testModeActive) {
+      return 5000; // 테스트 모드: 5초
+    }
+
+    if (type === 'websocket-connected') {
+      // 웹소켓 연결 시 폴링을 거의 안 함
+      return isDev ? 120000 : 300000; // 개발: 2분, 운영: 5분
+    } else {
+      // 웹소켓 끊어진 경우
+      return isDev ? 15000 : 30000; // 개발: 15초, 운영: 30초
+    }
+  };
+
+  /**
+   * 테스트 모드 제어
+   */
+  const enableTestMode = () => {
+    testModeActive = true;
+    console.log('🧪 테스트 모드 활성화 - 5초 폴링 (2분간)');
+
+    if (isPolling.value) {
+      stopPolling();
+      startPolling();
+    }
+
+    // 2분 후 자동 해제
+    setTimeout(() => {
+      disableTestMode();
+    }, 120000);
+  };
+
+  const disableTestMode = () => {
+    testModeActive = false;
+
+    if (isPolling.value) {
+      stopPolling();
+      startPolling();
+    }
+  };
+
+  /**
+   * 스마트 폴링 시작
+   */
+  const startPolling = (interval = 15000) => {
     if (isPolling.value) return;
+
+    if (webSocketStore.isConnected) {
+      console.log('⚠️ WebSocket 연결됨 - 폴링 불필요');
+      return;
+    }
 
     isPolling.value = true;
     pollingInterval.value = setInterval(() => {
-      // WebSocket이 연결되어 있지 않은 경우에만 폴링
-      if (!webSocketStore.isConnected) {
-        fetchUnreadCount();
+      if (webSocketStore.isConnected) {
+        console.log('✅ WebSocket 재연결 - 폴링 중지');
+        stopPolling();
+        return;
       }
+
+      console.log('📡 백업 폴링 실행');
+      fetchUnreadCount();
     }, interval);
+
+    console.log(`📡 백업 폴링 시작: ${interval / 1000}초 간격`);
   };
 
   /**
@@ -166,61 +240,74 @@ export const useNotificationStore = defineStore('notification', () => {
   };
 
   /**
-   * WebSocket 이벤트 핸들러들
+   * 페이지 가시성 변화 처리
+   */
+  const setupVisibilityHandler = () => {
+    const handleVisibilityChange = () => {
+      isPageVisible = !document.hidden;
+
+      if (isPageVisible) {
+        // 페이지가 보이면 즉시 한 번 체크 (WebSocket 없을 때만)
+        if (!webSocketStore.isConnected) {
+          setTimeout(fetchUnreadCount, 500); // 약간의 지연
+        }
+      } else {
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // cleanup 함수에서 제거할 수 있도록 반환
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  };
+
+  /**
+   * 최적화된 WebSocket 이벤트 핸들러들
    */
   const setupWebSocketHandlers = () => {
-    // 새 알림 수신
     webSocketStore.on('notification', (data) => {
-      // 읽지 않은 알림 개수 업데이트
       if (data.unreadCount !== undefined) {
         updateUnreadCount(data.unreadCount);
       } else {
         updateUnreadCount(unreadCount.value + 1);
       }
-
-      // 브라우저 알림 표시
       showBrowserNotification('새 알림 도착!', data.contents);
     });
 
-    // 읽지 않은 알림 개수 업데이트
     webSocketStore.on('unreadCount', (data) => {
       updateUnreadCount(data.unreadCount);
     });
 
-    // WebSocket 연결 시
     webSocketStore.on('connect', () => {
-      // 폴링 간격 조정 (WebSocket 연결 시 폴링 빈도 줄임)
-      if (isPolling.value) {
-        stopPolling();
-        startPolling(60000); // 1분 간격으로 변경
-      }
+      console.log('✅ WebSocket 연결 - 폴링 중지');
+      stopPolling();
     });
 
-    // WebSocket 연결 해제 시
     webSocketStore.on('disconnect', () => {
-      // 폴링 간격 조정 (WebSocket 연결 해제 시 폴링 빈도 늘림)
-      if (isPolling.value) {
-        stopPolling();
-        startPolling(30000); // 30초 간격으로 변경
+      console.log('❌ WebSocket 끊김 - 폴링 시작');
+      if (!isPolling.value) {
+        startPolling();
       }
     });
   };
+
+  // cleanup 함수들을 저장
+  let cleanupVisibility = null;
 
   /**
    * 초기화
    */
   const initialize = async () => {
-    // 브라우저 알림 권한 요청
     await requestNotificationPermission();
-
-    // WebSocket 이벤트 핸들러 설정
     setupWebSocketHandlers();
-
-    // 초기 데이터 로딩
     await fetchUnreadCount();
 
-    // 폴링 시작
-    startPolling();
+    // 웹소켓 상태에 따른 조건부 폴링
+    if (!webSocketStore.isConnected) {
+      startPolling();
+    }
   };
 
   /**
@@ -228,12 +315,23 @@ export const useNotificationStore = defineStore('notification', () => {
    */
   const cleanup = () => {
     stopPolling();
+
+    // 페이지 가시성 이벤트 리스너 제거
+    if (cleanupVisibility) {
+      cleanupVisibility();
+      cleanupVisibility = null;
+    }
+
+    // 개발 환경 전역 변수 정리
+    if (import.meta.env.DEV && window.notificationStore) {
+      delete window.notificationStore;
+      delete window.enableTestMode;
+      delete window.disableTestMode;
+    }
   };
 
   /**
    * 날짜 포맷팅
-   * @param {string} dateString - 날짜 문자열
-   * @returns {string} 포맷된 날짜
    */
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -283,5 +381,9 @@ export const useNotificationStore = defineStore('notification', () => {
     initialize,
     cleanup,
     formatDate,
+
+    // 테스트용 함수들
+    enableTestMode,
+    disableTestMode,
   };
 });
