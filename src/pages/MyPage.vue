@@ -19,11 +19,20 @@ const logout = async () => {
   await store.logout();
   router.push('/login'); // 로그아웃 후 로그인 페이지로 이동
 };
+
+const goBack = () => {
+  router.back();
+};
 </script>
 
 <template>
   <div :class="styles.container">
     <header :class="styles.header">
+      <i
+        class="fa-solid fa-arrow-left"
+        @click="goBack"
+        :class="styles.arrowBack"
+      ></i>
       <h1 :class="styles.title" class="text-light">내 정보</h1>
     </header>
 
