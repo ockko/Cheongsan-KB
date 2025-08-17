@@ -10,6 +10,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Log4j2
 @Service
@@ -18,6 +20,10 @@ public class DailySpendingServiceImpl implements DailySpendingService {
     private final UserMapper userMapper;
     private final DepositMapper depositMapper;
     private final BudgetService budgetService;
+    LocalDate today = LocalDate.now();
+    LocalDate tomorrow = today.plusDays(1);
+    LocalDateTime startOfToday = today.atStartOfDay();      // 2025-08-18T00:00:00
+    LocalDateTime startOfTomorrow = tomorrow.atStartOfDay(); // 2025-08-19T00:00:00
 
     @Override
     public DailySpendingDTO getDailySpendingStatus(Long userId) {
@@ -33,11 +39,11 @@ public class DailySpendingServiceImpl implements DailySpendingService {
             dailyLimit = user.getDailyLimit().intValue();
             isRecommended = false;
         } else {
-            dailyLimit = budgetService.getBudgetLimits(userId).getRecommendedDailyLimit();
+            dailyLimit = budgetService.getBudgetLimitForDailySpending(user).getRecommendedDailyLimit();
             isRecommended = true;
         }
 
-        BigDecimal todaySpent = depositMapper.sumTodaySpendingByUserId(userId);
+        BigDecimal todaySpent = depositMapper.sumTodaySpendingByUserIdAndDate(userId,startOfToday,startOfTomorrow);
 
         return DailySpendingDTO.getDailySpending(dailyLimit, todaySpent.intValue(), isRecommended);
     }

@@ -62,6 +62,34 @@ public class BudgetServiceImpl implements BudgetService {
                 currentDailyLimit
         );
     }
+    @Override
+    public BudgetLimitDTO getBudgetLimitForDailySpending(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException(ResponseMessage.USER_NOT_FOUND.getMessage());
+        }
+        int currentDailyLimit = (user.getDailyLimit() != null) ? user.getDailyLimit().intValue() : 0;
+
+        BigDecimal availableMonthlySpending = calculateAvailableMonthlySpending(user.getId());
+
+        BigDecimal maximumDailyLimit = availableMonthlySpending.divide(
+                new BigDecimal(DAYS_IN_MONTH), 0, RoundingMode.DOWN
+        );
+
+        BigDecimal recommendedDailyLimit = maximumDailyLimit
+                .multiply(RECOMMENDATION_RATE)
+                .setScale(0, RoundingMode.DOWN);
+
+        // --- 계산된 값들을 500원 단위로 내림 처리 ---
+        int roundedMaximumLimit = roundDownToUnit(maximumDailyLimit, ROUNDING_UNIT);
+        int roundedRecommendedLimit = roundDownToUnit(recommendedDailyLimit, ROUNDING_UNIT);
+
+        return new BudgetLimitDTO(
+                roundedRecommendedLimit,
+                roundedMaximumLimit,
+                currentDailyLimit
+        );
+    }
+
 
     @Override
     @Transactional

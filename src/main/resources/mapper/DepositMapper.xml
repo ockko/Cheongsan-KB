@@ -83,6 +83,15 @@
           AND DATE(transaction_time) = CURDATE()
     </select>
 
+    <select id="sumTodaySpendingByUserIdAndDate" parameterType="map" resultType="java.math.BigDecimal"><![CDATA[
+        SELECT COALESCE(SUM(amount), 0)
+        FROM transactions
+        WHERE user_id = #{userId}
+        AND type = 'WITHDRAW'
+        AND transaction_time >= #{startDate}
+        AND transaction_time <  #{endDate}
+    ]]></select>
+
     <select id="findWithdrawTransactionsByPeriod" resultType="cheongsan.domain.deposit.entity.Transaction">
         SELECT *
         FROM transactions
