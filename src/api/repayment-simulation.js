@@ -1,24 +1,27 @@
 import { request } from '@/api/index';
 import { useSimulationStore } from '@/stores/repayment-simulation';
+import { useUiStore } from '@/stores/ui';
 export const analyze = async (rawValue, router) => {
-  alert(
-    rawValue.value === ''
-      ? '추가 상환 가능액: 없음'
-      : `추가 상환 가능액: ${Number(rawValue.value).toLocaleString()}원`
-  );
+  const uiStore = useUiStore();
 
   const amount = rawValue.value === '' ? 0 : Number(rawValue.value);
 
-  await request.post(`/cheongsan/simulation/repayments/analyze`, null, {
-    params: { monthlyAvailableAmount: amount },
-  });
+  try {
+    await request.post(`/cheongsan/simulation/repayments/analyze`, null, {
+      params: { monthlyAvailableAmount: amount },
+    });
 
-  router.push({
-    path: '/repayment-simulation/result',
-    query: {
-      monthlyAvailableAmount: amount,
-    },
-  });
+    router.push({
+      path: '/repayment-simulation/result',
+      query: { monthlyAvailableAmount: amount },
+    });
+  } catch (error) {
+    uiStore.openModal({
+      title: '오류',
+      message: '상세 정보를 불러오지 못했습니다.',
+      isError: true,
+    });
+  }
 };
 
 export const fetchAnalyzeResult = async (route) => {
