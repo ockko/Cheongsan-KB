@@ -1,16 +1,45 @@
+/* 홈 페이지 메인 컨테이너 */
 .page {
-  margin: 0 24px 70px 24px;
+  margin: 0 var(--spacing-lg) 4.375rem var(--spacing-lg); /* 0 24px 70px 24px → 0 1.5rem 4.375rem 1.5rem */
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: 1.1rem; /* 17.6px → 1.1rem (약간의 조정) */
 }
 
+/* 위젯 컨테이너 (2열 그리드) */
 .widgets-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: var(--spacing-md); /* 16px → 1rem */
 }
 
+/* 개별 위젯 */
 .widget {
   flex: 1;
+}
+
+/* 반응형 처리 - 작은 화면 */
+@media (max-width: 23.375rem) {
+  /* 374px ÷ 16px = 23.375rem */
+  .page {
+    margin: 0 var(--spacing-md) 4rem var(--spacing-md); /* 작은 화면에서 여백 줄임 */
+    gap: var(--spacing-md);
+  }
+
+  .widgets-container {
+    gap: 0.75rem; /* 작은 화면에서 위젯 간격 줄임 */
+  }
+}
+
+/* 반응형 처리 - 태블릿 이상 */
+@media (min-width: 48rem) {
+  /* 768px ÷ 16px = 48rem */
+  .page {
+    margin: 0 var(--spacing-xl) 5rem var(--spacing-xl); /* 태블릿에서 여백 증가 */
+    gap: 1.25rem;
+  }
+
+  .widgets-container {
+    gap: var(--spacing-lg); /* 태블릿에서 위젯 간격 증가 */
+  }
 }

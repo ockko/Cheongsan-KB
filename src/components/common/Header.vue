@@ -37,6 +37,31 @@ const headerTitle = computed(() => {
   return 'Home';
 });
 
+// 로고 클릭 시 페이지 상단으로 스크롤하는 함수
+const scrollToTop = () => {
+  // 여러 방법을 시도해서 확실하게 스크롤
+
+  // 방법 1: window.scrollTo 사용
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: 'smooth',
+  });
+
+  // 방법 2: document.documentElement.scrollTop 사용 (백업)
+  setTimeout(() => {
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0; // Safari 호환성
+  }, 100);
+
+  // 방법 3: Vue Router의 scrollBehavior 트리거 (백업의 백업)
+  setTimeout(() => {
+    if (window.scrollY > 0) {
+      window.scrollTo(0, 0);
+    }
+  }, 200);
+};
+
 // 사용자 이름 가져오기
 const userName = computed(() => {
   return authStore.getUser()?.nickName || '사용자';
@@ -166,6 +191,8 @@ onUnmounted(() => {
         src="/images/logo-blue.png"
         alt="티끌모아 청산 로고"
         :class="styles.headerLogo"
+        @click="scrollToTop"
+        style="cursor: pointer"
       />
       <span :class="[styles.headerTitle, 'text-bold']">{{ headerTitle }}</span>
     </div>

@@ -1,30 +1,36 @@
+/* 사용자 아이디 입력 그룹 */
 .user-id-input-group {
   display: flex;
   flex-direction: column;
+  gap: var(--spacing-sm); /* 8px → 0.5rem */
 }
 
+/* 사용자 아이디 라벨 */
 .user-id-input-label {
   font-family: var(--font-family);
   font-weight: 500;
-  font-size: 16px;
+  font-size: var(--font-size-base); /* 16px → 1rem */
   color: var(--color-main);
 }
 
+/* 사용자 아이디 입력 행 */
 .user-id-input-row {
   display: flex;
-  gap: 8px;
+  gap: var(--spacing-sm); /* 8px → 0.5rem */
   align-items: center;
 }
 
+/* 사용자 아이디 입력 필드 */
 .user-id-input-field {
   flex: 1;
-  height: 48px;
-  padding: 0 16px;
+  height: 3rem; /* 48px ÷ 16px = 3rem */
+  padding: var(--spacing-md); /* 0 16px → 0 1rem */
+  width: 10rem;
   border: 1px solid var(--color-gray1);
   background-color: white;
   font-family: var(--font-family);
   font-weight: 400;
-  font-size: 16px;
+  font-size: var(--font-size-base); /* 16px → 1rem */
   color: var(--color-main);
   transition: border-color 0.2s ease;
   box-sizing: border-box;
@@ -43,20 +49,21 @@
 
 .user-id-input-field::placeholder {
   color: var(--color-gray0);
-  text-align: left; /* placeholder 왼쪽 정렬 */
-  padding-left: 0; /* 추가 여백 제거 */
+  text-align: left;
+  padding-left: 0;
 }
 
+/* 사용자 아이디 중복 확인 버튼 */
 .user-id-input-check-button {
-  height: 48px;
-  padding: 0 16px;
+  height: 3rem; /* 48px ÷ 16px = 3rem */
+  padding: 0 var(--spacing-md); /* 0 16px → 0 1rem */
   background-color: var(--color-gray2);
   color: var(--color-main);
   border: 1px solid var(--color-gray1);
-  border-radius: 8px;
+  border-radius: var(--spacing-sm); /* 8px → 0.5rem */
   font-family: var(--font-family);
   font-weight: 500;
-  font-size: 14px;
+  font-size: var(--font-size-sm); /* 14px → 0.875rem */
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
@@ -72,4 +79,35 @@
   background-color: var(--color-gray1);
   color: var(--color-gray0);
   cursor: not-allowed;
+}
+
+/* 반응형 처리 - 작은 화면 */
+@media (max-width: 23.375rem) {
+  /* 374px ÷ 16px = 23.375rem */
+  .user-id-input-field,
+  .user-id-input-check-button {
+    height: 2.75rem; /* 작은 화면에서 높이 줄임 */
+  }
+
+  .user-id-input-field {
+    font-size: var(--font-size-sm);
+  }
+
+  .user-id-input-check-button {
+    font-size: var(--font-size-xs);
+    padding: 0 0.75rem;
+  }
+}
+
+/* 반응형 처리 - 태블릿 이상 */
+@media (min-width: 48rem) {
+  /* 768px ÷ 16px = 48rem */
+  .user-id-input-field,
+  .user-id-input-check-button {
+    height: 3.5rem; /* 태블릿에서 높이 증가 */
+  }
+
+  .user-id-input-check-button {
+    font-size: var(--font-size-base);
+  }
 }

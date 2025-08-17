@@ -22,6 +22,19 @@
 .header-logo {
   width: 2.8rem;
   height: 2.8rem;
+  cursor: pointer; /* 클릭 가능 표시 */
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* 헤더 로고 호버 효과 */
+.header-logo:hover {
+  transform: scale(1.05); /* 살짝 확대 */
+  opacity: 0.8;
+}
+
+/* 헤더 로고 활성 상태 */
+.header-logo:active {
+  transform: scale(0.95); /* 클릭 시 살짝 축소 */
 }
 
 /* 헤더 타이틀 */
