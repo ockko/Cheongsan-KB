@@ -2,6 +2,11 @@
 @import './styles/common/typography.css';
 @import './styles/common/variables.css';
 
+/* 루트 폰트 크기 설정 - 표준 브라우저 기본값 */
+html {
+  font-size: 16px; /* 1rem = 16px 기준 (브라우저 표준) */
+}
+
 /* 모든 여백 제거 */
 body,
 h1,
@@ -25,7 +30,7 @@ ol {
   box-sizing: border-box;
 }
 
-/* PWA 기본 설정 - 375px 기준 */
+/* PWA 기본 설정 - 23.4375rem (375px) 기준 */
 html,
 body {
   width: 100%;
@@ -36,7 +41,7 @@ body {
 /* 기본 body 색상 설정 */
 body {
   color: var(--color-main);
-  max-width: 375px;
+  max-width: 23.4375rem; /* 375px → 375/16 = 23.4375rem */
   margin: 0 auto;
   position: relative;
 }
@@ -44,13 +49,13 @@ body {
 /* 앱 컨테이너 */
 #app {
   width: 100%;
-  max-width: 375px;
+  max-width: 23.4375rem; /* 375px → 375/16 = 23.4375rem */
   margin: 0 auto;
   min-height: 100vh;
   background-color: var(--color-gray3);
 }
 
-/* 유틸리티 클래스들 */
+/* 유틸리티 클래스들 - 색상은 그대로 유지 */
 .color-main {
   color: var(--color-main);
 }
@@ -129,7 +134,8 @@ body {
 }
 
 /* 반응형 처리 - 작은 화면에서의 조정 */
-@media (max-width: 374px) {
+@media (max-width: 23.375rem) {
+  /* 374px → 374/16 = 23.375rem */
   body,
   #app {
     max-width: 100vw;
@@ -137,9 +143,25 @@ body {
 }
 
 /* 큰 화면에서의 중앙 정렬 유지 */
-@media (min-width: 376px) {
+@media (min-width: 23.5rem) {
+  /* 376px → 376/16 = 23.5rem */
   body {
     border-left: 1px solid var(--color-gray1);
     border-right: 1px solid var(--color-gray1);
+  }
+}
+
+/* 태블릿과 데스크톱에서 반응형 폰트 스케일링 */
+@media (min-width: 48rem) {
+  /* 768px → 768/16 = 48rem */
+  html {
+    font-size: 18px; /* 1rem = 18px로 약간 크게 */
+  }
+}
+
+@media (min-width: 64rem) {
+  /* 1024px → 1024/16 = 64rem */
+  html {
+    font-size: 20px; /* 1rem = 20px로 더 크게 */
   }
 }

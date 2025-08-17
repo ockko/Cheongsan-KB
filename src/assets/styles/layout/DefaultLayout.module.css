@@ -1,24 +1,63 @@
+/* 메인 레이아웃 컨테이너 */
 .layout {
-  width: 375px;
+  width: 23.4375rem; /* 375px ÷ 16px = 23.4375rem */
   min-height: 100vh;
   margin: 0 auto;
   position: relative;
   background-color: #fff;
 }
 
+/* 메인 콘텐츠 영역 */
 .main-content {
   box-sizing: border-box;
   min-height: 100vh;
 }
 
+/* 헤더가 있는 경우 상단 패딩 */
 .main-content.with-header {
-  padding-top: 76px; /* 헤더 높이 + 여백 */
+  padding-top: 4.75rem; /* 76px ÷ 16px = 4.75rem */
 }
 
+/* 네비게이션 바가 있는 경우 하단 패딩 */
 .main-content.with-navigation {
-  padding-bottom: 96px; /* 네비게이션 바 높이 + 여백 */
+  padding-bottom: 6rem; /* 96px ÷ 16px = 6rem */
 }
 
+/* 헤더와 네비게이션이 모두 있는 경우 */
 .main-content.with-header.with-navigation {
-  padding-top: 0px;
+  padding-top: 0; /* 헤더 패딩 제거 */
+}
+
+/* 반응형 처리 - 작은 화면 */
+@media (max-width: 23.375rem) {
+  /* 374px ÷ 16px = 23.375rem */
+  .layout {
+    width: 100vw;
+  }
+}
+
+/* 큰 화면에서 중앙 정렬 유지 */
+@media (min-width: 23.5rem) {
+  /* 376px ÷ 16px = 23.5rem */
+  .layout {
+    border-left: 1px solid var(--color-gray1);
+    border-right: 1px solid var(--color-gray1);
+  }
+}
+
+/* 태블릿 이상에서 레이아웃 조정 */
+@media (min-width: 48rem) {
+  /* 768px ÷ 16px = 48rem */
+  .layout {
+    /* 태블릿에서는 최대 너비를 유지하면서 중앙 정렬 */
+    max-width: 23.4375rem;
+  }
+
+  .main-content.with-header {
+    padding-top: 4.5rem; /* 태블릿에서 헤더 패딩 조정 */
+  }
+
+  .main-content.with-navigation {
+    padding-bottom: 5.5rem; /* 태블릿에서 네비게이션 패딩 조정 */
+  }
 }
