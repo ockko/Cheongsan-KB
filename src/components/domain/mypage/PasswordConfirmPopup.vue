@@ -46,7 +46,7 @@ const onPopupClick = (event) => {
 <template>
   <div :class="styles.popupBackdrop" @click="onBackdropClick">
     <div :class="styles.popup" @click="onPopupClick">
-      <h3 class="text-light">비밀번호 확인</h3>
+      <h3 class="text-regular" style="color: black">비밀번호 확인</h3>
       <input
         type="password"
         v-model="password"

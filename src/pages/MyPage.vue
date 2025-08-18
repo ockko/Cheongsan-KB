@@ -56,11 +56,13 @@ const goBack = () => {
       <div :class="styles.cardRow">
         <div :class="styles.cardContent">
           <span :class="styles.cardTitle">이름</span>
-          <span :class="styles.cardValue">{{ store.nickname }}</span>
+          <span :class="styles.cardValue"
+            >{{ store.nickname }}
+            <span :class="styles.cardArrow">
+              <i class="fa-solid fa-greater-than"></i>
+            </span>
+          </span>
         </div>
-        <span :class="styles.cardArrow">
-          <i class="fa-solid fa-greater-than"></i>
-        </span>
       </div>
     </div>
 
@@ -72,11 +74,13 @@ const goBack = () => {
       <div :class="styles.cardRow">
         <div :class="styles.cardContent">
           <span :class="styles.cardTitle">이메일</span>
-          <span :class="styles.cardValue">{{ store.email }}</span>
+          <span :class="styles.cardValue"
+            >{{ store.email }}
+            <span :class="styles.cardArrow">
+              <i class="fa-solid fa-greater-than"></i>
+            </span>
+          </span>
         </div>
-        <span :class="styles.cardArrow">
-          <i class="fa-solid fa-greater-than"></i>
-        </span>
       </div>
     </div>
 
@@ -85,11 +89,15 @@ const goBack = () => {
       :class="[styles.cardList, styles.clickable]"
       @click="goTo('/mypage/edit/password')"
     >
-      <div :class="[styles.cardRow, styles.singleLine]">
-        <span :class="styles.cardTitle">비밀번호 변경</span>
-        <span :class="styles.cardArrow">
-          <i class="fa-solid fa-greater-than"></i>
-        </span>
+      <div :class="styles.cardRow">
+        <div :class="styles.cardContent">
+          <span :class="styles.cardTitle">비밀번호 변경</span>
+          <span :class="styles.cardValue" style="flex-direction: row-reverse">
+            <span :class="styles.cardArrow">
+              <i class="fa-solid fa-greater-than"></i>
+            </span>
+          </span>
+        </div>
       </div>
     </div>
 
@@ -99,15 +107,21 @@ const goBack = () => {
       :class="[styles.cardList, styles.clickable]"
       @click="goTo('/mypage/withdraw')"
     >
-      <div :class="[styles.cardRow, styles.singleLine]">
-        <span :class="styles.cardTitle">회원탈퇴</span>
-        <span :class="styles.cardArrow">
-          <i class="fa-solid fa-greater-than"></i>
-        </span>
+      <div :class="styles.cardRow">
+        <div :class="styles.cardContent">
+          <span :class="styles.cardTitle">회원탈퇴</span>
+          <span :class="styles.cardValue" style="flex-direction: row-reverse">
+            <span :class="styles.cardArrow">
+              <i class="fa-solid fa-greater-than"></i>
+            </span>
+          </span>
+        </div>
       </div>
     </div>
 
     <!-- 로그아웃 -->
-    <button :class="styles.logoutButton" @click="logout">로그아웃</button>
+    <div style="display: flex; justify-content: center; align-items: center">
+      <button :class="styles.logoutButton" @click="logout">로그아웃</button>
+    </div>
   </div>
 </template>
