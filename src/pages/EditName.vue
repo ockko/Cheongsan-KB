@@ -78,7 +78,7 @@ const onClose = () => {
         ref="footerRef"
       >
         <button @click="save" :disabled="!inputValue.trim().length">
-          저장하기
+          확인
         </button>
       </div>
     </template>

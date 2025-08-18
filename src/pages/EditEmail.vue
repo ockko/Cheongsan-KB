@@ -47,12 +47,12 @@ const onClose = () => {
 <template>
   <FullscreenModal title="이메일 변경" @close="onClose">
     <template #description>
-      <p :class="styles.description">이메일을 입력해 주세요.</p>
+      <p :class="styles.description">변경할 이메일 주소를 입력해주세요.</p>
     </template>
 
     <template #input>
       <div :class="styles.inputWrapper">
-        <input v-model="inputValue" type="text" placeholder="새 이메일 입력" />
+        <input v-model="inputValue" type="text" placeholder="이메일 주소" />
         <i
           :class="[styles.clearBtn, 'fa-solid', 'fa-circle-xmark']"
           v-if="inputValue.length > 0"

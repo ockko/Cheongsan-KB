@@ -5,22 +5,23 @@
 
 .weekdaysHeader {
   display: grid;
-  height: 45px;
+  height: 2.8125rem;
   grid-template-columns: repeat(7, 1fr);
   position: relative;
   z-index: 1;
+  margin-bottom: var(--spacing-xs);
 }
 
 .weekday {
-  padding: 4px 8px;
-  height: 45px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  height: 2.8125rem;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   font-weight: 500;
-  color: #666;
+  color: var(--color-gray0);
 }
 
 .calendarGrid {
@@ -28,4 +29,6 @@
   grid-template-columns: repeat(7, 1fr);
   position: relative;
   z-index: 1;
+  gap: 0.125rem;
+  padding: 0 var(--spacing-sm); /* 좌우 패딩 추가 */
 }

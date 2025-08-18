@@ -1,36 +1,49 @@
 .description {
-  font-size: 15px;
-  margin-bottom: 24px;
+  font-size: var(--font-size-sm);
+  color: black;
+  margin-bottom: var(--spacing-lg);
   text-align: center;
+  line-height: var(--line-height-normal);
 }
 
 .input-wrapper {
   position: relative;
-  margin-bottom: 24px;
+  margin-bottom: var(--spacing-lg);
+  background-color: white;
+  border-radius: var(--spacing-sm);
+  padding: var(--spacing-md);
 }
 
 /* input 왼쪽/오른쪽 padding 맞추기 */
 .input-wrapper input {
   width: 100%;
-  font-size: 16px;
-  padding: 8px 32px 8px 8px; /* 위 오른쪽 아래 왼쪽 */
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
+  padding: var(--spacing-sm) 2rem var(--spacing-sm) var(--spacing-sm);
   border: none;
-  border-bottom: 1px solid var(--color-gray4);
+  border-bottom: 2px solid black;
   box-sizing: border-box;
+  background: transparent;
+  color: var(--color-black);
+  transition: border-bottom-color 0.2s ease;
 }
 
 .input-wrapper input:focus {
   outline: none;
-  border-bottom: 1px solid #000;
+  border-bottom-color: var(--color-main);
+}
+
+.input-wrapper input::placeholder {
+  color: var(--color-gray0);
 }
 
 /* char-count는 input 텍스트와 수평 정렬 */
 .char-count {
   position: absolute;
-  right: 8px; /* input 오른쪽 padding과 동일 */
-  bottom: -20px; /* input 아래 */
-  font-size: 12px;
-  color: #aaa;
+  right: var(--spacing-sm);
+  bottom: -1.25rem;
+  font-size: var(--font-size-xs);
+  color: var(--color-gray0);
   line-height: 1;
 }
 
@@ -39,11 +52,11 @@
   left: 50%;
   bottom: 0;
   transform: translateX(-50%);
-  width: 375px;
-  background: var(--color-gray4); /* 기본 회색 */
-  padding: 0 16px;
+  width: 23.4375rem;
+  background: var(--color-gray4);
+  padding: 0 var(--spacing-md);
   box-sizing: border-box;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease;
   z-index: 1100;
 }
 
@@ -53,30 +66,35 @@
 
 .custom-footer button {
   width: 100%;
-  padding: 16px;
+  padding: var(--spacing-md);
   border: none;
-  font-size: 16px;
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
+  font-weight: 600;
   background: transparent;
-  color: #fff;
+  color: white;
   cursor: pointer;
+  transition: opacity 0.2s ease;
 }
 
 .custom-footer button:disabled {
   cursor: not-allowed;
+  opacity: 0.7;
 }
 
 .clear-btn {
   position: absolute;
   top: 50%;
-  right: 8px; /* input 안쪽 오른쪽 끝에서 8px 떨어짐 */
+  right: var(--spacing-sm);
   transform: translateY(-50%);
-  font-size: 16px;
-  color: #999;
+  font-size: var(--font-size-base);
+  color: var(--color-gray0);
   cursor: pointer;
   user-select: none;
-  transition: color 0.2s;
+  transition: color 0.2s ease;
+  padding: 0.125rem;
 }
 
 .clear-btn:hover {
-  color: #333;
+  color: var(--color-black);
 }

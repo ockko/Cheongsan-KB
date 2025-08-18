@@ -1,79 +1,123 @@
-/* 반투명 배경 */
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.4);
   display: grid;
   place-items: center;
-  padding: 24px;
+  padding: var(--spacing-lg);
   z-index: 9999;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* 카드 */
 .modal-content {
-  width: 300px;
+  width: 18.75rem;
   max-width: 90vw;
-  background: #f3f4f7;
-  border-radius: 20px;
-  padding: 28px 24px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  background: white;
+  border-radius: 1.25rem;
+  padding: 1.75rem var(--spacing-lg);
+  box-shadow: 0 0.5rem 1.875rem rgba(0, 0, 0, 0.15);
   text-align: center;
+  animation: slideUp 0.3s ease-out;
+  border: 0.125rem solid var(--color-red2);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(1.25rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .modal-title {
-  font-size: 16px;
+  font-size: var(--font-size-base);
   font-weight: 700;
-  color: #333;
-  margin: 0 0 12px 0;
+  color: var(--color-black);
+  margin: 0 0 0.75rem 0;
+}
+
+.modal-title::before {
+  content: '⚠️';
+  margin-right: var(--spacing-sm);
+  font-size: var(--font-size-lg);
 }
 
 .modal-text {
-  font-size: 18px;
-  color: #333;
-  line-height: 1.5;
-  margin: 8px 0 20px;
+  font-size: var(--font-size-md);
+  color: var(--color-black);
+  line-height: var(--line-height-normal);
+  margin: var(--spacing-sm) 0 var(--spacing-lg);
 }
 
 .highlight {
   font-weight: 800;
-  font-size: 20px;
+  font-size: var(--font-size-lg);
+  color: var(--color-red);
 }
 
 /* 액션 버튼 */
 .modal-actions {
   display: flex;
-  gap: 14px;
+  gap: 0.875rem;
   justify-content: center;
-  margin-top: 8px;
+  margin-top: var(--spacing-sm);
 }
 
 .confirm-btn,
 .cancel-btn {
   appearance: none;
   border: none;
-  padding: 10px 22px;
-  border-radius: 15px;
-  font-weight: 800;
+  padding: 0.75rem 1.375rem;
+  border-radius: 0.9375rem;
+  font-weight: 700;
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
   cursor: pointer;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
+  min-width: 4.375rem;
 }
 
 .confirm-btn {
-  background: #a31219;
-  color: #fff;
+  background: var(--color-red);
+  color: white;
+  box-shadow: 0 0.125rem 0.25rem rgba(163, 18, 25, 0.3);
 }
 
 .cancel-btn {
-  background: #5d686d;
-  color: #fff;
+  background: var(--color-gray0);
+  color: white;
+  box-shadow: 0 0.125rem 0.25rem rgba(93, 104, 109, 0.3);
 }
 
 .confirm-btn:hover,
 .cancel-btn:hover {
-  filter: brightness(0.96);
+  transform: translateY(-0.0625rem);
+  filter: brightness(0.95);
+}
+
+.confirm-btn:hover {
+  box-shadow: 0 0.25rem 0.5rem rgba(163, 18, 25, 0.4);
+}
+
+.cancel-btn:hover {
+  box-shadow: 0 0.25rem 0.5rem rgba(93, 104, 109, 0.4);
 }
 
 .confirm-btn:active,
 .cancel-btn:active {
-  transform: translateY(1px);
+  transform: translateY(0.0625rem);
+  filter: brightness(0.9);
 }

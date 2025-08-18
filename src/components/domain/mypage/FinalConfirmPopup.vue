@@ -42,7 +42,7 @@ const onCompleteConfirm = async () => {
       <h3 v-else>탈퇴 완료</h3>
 
       <div :class="styles.icon">
-        <i :class="['fa-solid', 'fa-arrow-right-from-bracket']"></i>
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
       </div>
 
       <div v-if="!isWithdrawn" :class="styles.description">

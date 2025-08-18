@@ -1,98 +1,123 @@
 .container {
-  padding: 16px 20px;
+  width: 100%;
+  min-height: 100vh;
+  padding: 0.25rem;
+  box-sizing: border-box;
 }
 
 .header {
   display: flex;
   align-items: center;
-  margin-bottom: 16px;
+  padding: var(--spacing-lg) var(--spacing-md);
+  position: relative;
+  background-color: white;
 }
 
-.back-button {
+.arrow-back {
+  position: absolute;
+  left: var(--spacing-md);
+  top: 50%;
+  transform: translateY(-50%);
   background: none;
   border: none;
-  font-size: 18px;
+  font-size: var(--font-size-lg);
+  color: var(--color-main);
   cursor: pointer;
+  padding: var(--spacing-sm);
+  border-radius: var(--spacing-xs);
+  transition: background-color 0.2s ease;
+}
+
+.arrow-back:hover {
+  background-color: var(--color-gray2);
 }
 
 .title {
-  flex: 1;
+  width: 100%;
   text-align: center;
-  font-size: 24px;
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: black;
+  margin: 0;
 }
 
 .section-title {
-  font-size: 16px;
+  font-size: var(--font-size-base);
+  font-weight: 500;
   color: var(--color-gray0);
+  margin: var(--spacing-lg) var(--spacing-md) 2.18rem var(--spacing-md);
 }
 
-.clickable {
+.card-list {
+  background-color: white;
+  margin: 0 var(--spacing-md) var(--spacing-xs) var(--spacing-md);
+  border-bottom: 0.0625rem solid #72787f;
+  transition: all 0.2s ease;
+  margin-bottom: 1.56rem;
+}
+
+.card-list.clickable {
   cursor: pointer;
 }
 
-/* 카드 리스트 아이템 */
-.card-list {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  border-bottom: 1px solid var(--color-gray4);
-  padding: 8px 0;
-}
-/* value 없는 카드 (단일 라인) */
-
-.card-row.single-line .card-title {
-  line-height: 3;
-}
 .card-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  min-height: 3.75rem;
 }
 
 .card-content {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* 텍스트 왼쪽 정렬 */
+  gap: var(--spacing-xs);
+  flex: 1;
 }
 
 .card-title {
-  font-size: 16px;
-  color: var(--color-main);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-black);
 }
 
 .card-value {
-  font-size: 16px;
-  color: var(--color-gray0);
-  line-height: 0;
-  padding-bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-base);
+  font-weight: 400;
+  color: #72787f;
+  word-break: break-all;
 }
 
 .card-arrow {
-  display: flex;
-  align-items: center;
-  font-size: 18px;
-  color: var(--color-gray4);
-  transform: scaleX(0.5);
+  color: var(--color-gray0);
+  font-size: var(--font-size-xs);
+  margin-left: var(--spacing-sm);
 }
 
-/* 로그아웃 버튼 */
-.logout-button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 30px;
-  border: 1px solid var(--color-main);
-  background: none;
+.logoutButton {
+  width: 11.5rem;
+  height: 2.5rem;
+  margin: var(--spacing-xl) auto var(--spacing-lg) auto; /* 중앙 정렬 */
+  padding: 0;
+  background-color: white;
   color: var(--color-main);
-  border-radius: 8px;
+  border: 2px solid var(--color-main);
+  border-radius: 0.5rem;
+  font-size: var(--font-size-base);
+  font-weight: 500;
   cursor: pointer;
+  transition: all 0.2s ease;
+  display: block;
 }
 
-.logout-button:hover,
-.logout-button:active {
-  background-color: var(--color-main); /* 남색 배경 */
-  color: white; /* 흰색 글씨 */
+.logoutButton:hover {
+  background-color: var(--color-main);
+  color: white;
+  transform: translateY(-0.0625rem);
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 62, 101, 0.2);
 }
 
-.arrow-back {
-  cursor: pointer; /* 마우스 올리면 포인터로 변경 */
+.logoutButton:active {
+  transform: translateY(0);
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 62, 101, 0.1);
 }
