@@ -4,9 +4,11 @@ import ProgressHeader from '@/components/domain/InitialSetup/ProgressHeader.vue'
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { saveNickname } from '@/api/initialSetup/initialSetup1.js';
+import { useAuthStore } from '@/stores/auth.js';
 
 const nickname = ref('');
 const router = useRouter();
+const authStore = useAuthStore();
 
 const nicknameRegex = /^[가-힣a-zA-Z0-9_]{2,10}$/;
 
@@ -22,6 +24,9 @@ const goNext = async () => {
 
   try {
     const response = await saveNickname(nicknameValue);
+
+    authStore.state.user.nickName = nicknameValue;
+    localStorage.setItem('auth', JSON.stringify(authStore.state));
 
     alert(response.message || '닉네임이 저장되었습니다.');
 
@@ -64,7 +69,9 @@ const goNext = async () => {
           maxlength="10"
           placeholder="닉네임을 입력하세요."
         />
-        <p :class="styles.initialSetup1TextLimit">(최대 10자)</p>
+        <p :class="styles.initialSetup1TextLimit">
+          (한글, 영문, 숫자, 밑줄(_) 포함 2~10자)
+        </p>
       </div>
       <button :class="styles.initialSetup1NextButton" @click="goNext">
         다음
