@@ -1,27 +1,27 @@
 .description {
-  font-size: var(--font-size-sm); /* 15px → 0.875rem */
+  font-size: var(--font-size-sm);
   color: black;
-  margin-bottom: var(--spacing-lg); /* 24px → 1.5rem */
+  margin-bottom: var(--spacing-lg);
   text-align: center;
   line-height: var(--line-height-normal);
 }
 
 .input-wrapper {
   position: relative;
-  margin-bottom: var(--spacing-lg); /* 24px → 1.5rem */
+  margin-bottom: var(--spacing-lg);
   background-color: white;
-  border-radius: var(--spacing-sm); /* 8px → 0.5rem */
-  padding: var(--spacing-md); /* 16px → 1rem */
+  border-radius: var(--spacing-sm);
+  padding: var(--spacing-md);
 }
 
 /* input 왼쪽/오른쪽 padding 맞추기 */
 .input-wrapper input {
   width: 100%;
-  font-size: var(--font-size-base); /* 16px → 1rem */
+  font-size: var(--font-size-base);
   font-family: var(--font-family);
-  padding: var(--spacing-sm) 2rem var(--spacing-sm) var(--spacing-sm); /* 8px 32px 8px 8px → 0.5rem 2rem 0.5rem 0.5rem */
+  padding: var(--spacing-sm) 2rem var(--spacing-sm) var(--spacing-sm);
   border: none;
-  border-bottom: 2px solid black; /* 1px → 0.0625rem */
+  border-bottom: 2px solid black;
   box-sizing: border-box;
   background: transparent;
   color: var(--color-black);
@@ -41,9 +41,9 @@
 .input-wrapper input[type='email'] {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236f797a' class='bi bi-envelope' viewBox='0 0 16 16'%3E%3Cpath d='M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: left 0.5rem center; /* 8px → 0.5rem */
-  background-size: 1rem; /* 16px → 1rem */
-  padding-left: 2.25rem; /* 36px → 2.25rem - 아이콘 공간 확보 */
+  background-position: left 0.5rem center;
+  background-size: 1rem;
+  padding-left: 2.25rem;
 }
 
 /* 이메일 유효성 상태 표시 */
@@ -57,9 +57,9 @@
 
 .validation-message {
   position: absolute;
-  left: var(--spacing-sm); /* 8px → 0.5rem */
-  bottom: -1.5rem; /* -24px → -1.5rem */
-  font-size: var(--font-size-xs); /* 12px → 0.75rem */
+  left: var(--spacing-sm);
+  bottom: -1.5rem;
+  font-size: var(--font-size-xs);
   line-height: 1;
 }
 
@@ -74,9 +74,9 @@
 /* char-count는 input 텍스트와 수평 정렬 */
 .char-count {
   position: absolute;
-  right: var(--spacing-sm); /* 8px → 0.5rem - input 오른쪽 padding과 동일 */
-  bottom: -1.25rem; /* -20px → -1.25rem - input 아래 */
-  font-size: var(--font-size-xs); /* 12px → 0.75rem */
+  right: var(--spacing-sm);
+  bottom: -1.25rem;
+  font-size: var(--font-size-xs);
   color: var(--color-gray0);
   line-height: 1;
 }
@@ -86,23 +86,23 @@
   left: 50%;
   bottom: 0;
   transform: translateX(-50%);
-  width: 23.4375rem; /* 375px → 23.4375rem */
-  background: var(--color-gray4); /* 기본 회색 */
-  padding: 0 var(--spacing-md); /* 0 16px → 0 1rem */
+  width: 23.4375rem;
+  background: var(--color-gray4);
+  padding: 0 var(--spacing-md);
   box-sizing: border-box;
   transition: background-color 0.3s ease;
   z-index: 1100;
 }
 
 .custom-footer.active {
-  background: var(--color-main); /* 활성 시 파란색 */
+  background: var(--color-main);
 }
 
 .custom-footer button {
   width: 100%;
-  padding: var(--spacing-md); /* 16px → 1rem */
+  padding: var(--spacing-md);
   border: none;
-  font-size: var(--font-size-base); /* 16px → 1rem */
+  font-size: var(--font-size-base);
   font-family: var(--font-family);
   font-weight: 600;
   background: transparent;
@@ -119,16 +119,14 @@
 .clear-btn {
   position: absolute;
   top: 50%;
-  right: var(
-    --spacing-sm
-  ); /* 8px → 0.5rem - input 안쪽 오른쪽 끝에서 8px 떨어짐 */
+  right: var(--spacing-sm);
   transform: translateY(-50%);
-  font-size: var(--font-size-base); /* 16px → 1rem */
+  font-size: var(--font-size-base);
   color: var(--color-gray0);
   cursor: pointer;
   user-select: none;
   transition: color 0.2s ease;
-  padding: 0.125rem; /* 2px → 0.125rem - 클릭 영역 확보 */
+  padding: 0.125rem;
 }
 
 .clear-btn:hover {
@@ -138,18 +136,18 @@
 /* 이메일 형식 힌트 */
 .email-hint {
   background-color: var(--color-light2);
-  border: 0.0625rem solid var(--color-light1); /* 1px → 0.0625rem */
-  border-radius: var(--spacing-sm); /* 8px → 0.5rem */
-  padding: var(--spacing-sm); /* 8px → 0.5rem */
-  margin-top: var(--spacing-sm); /* 8px → 0.5rem */
-  font-size: var(--font-size-xs); /* 12px → 0.75rem */
+  border: 0.0625rem solid var(--color-light1);
+  border-radius: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+  font-size: var(--font-size-xs);
   color: var(--color-main);
   text-align: left;
 }
 
 .email-hint::before {
   content: '💡';
-  margin-right: var(--spacing-xs); /* 4px → 0.25rem */
+  margin-right: var(--spacing-xs);
 }
 
 /* 자동완성 도메인 제안 */
@@ -159,19 +157,19 @@
   left: 0;
   right: 0;
   background: white;
-  border: 0.0625rem solid var(--color-gray1); /* 1px → 0.0625rem */
+  border: 0.0625rem solid var(--color-gray1);
   border-top: none;
-  border-radius: 0 0 var(--spacing-sm) var(--spacing-sm); /* 0 0 8px 8px → 0 0 0.5rem 0.5rem */
-  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* 0 4px 8px */
+  border-radius: 0 0 var(--spacing-sm) var(--spacing-sm);
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
   z-index: 10;
-  max-height: 12.5rem; /* 200px → 12.5rem */
+  max-height: 12.5rem;
   overflow-y: auto;
 }
 
 .domain-suggestion {
-  padding: var(--spacing-sm) var(--spacing-md); /* 8px 16px → 0.5rem 1rem */
+  padding: var(--spacing-sm) var(--spacing-md);
   cursor: pointer;
-  font-size: var(--font-size-sm); /* 14px → 0.875rem */
+  font-size: var(--font-size-sm);
   color: var(--color-black);
   transition: background-color 0.2s ease;
 }

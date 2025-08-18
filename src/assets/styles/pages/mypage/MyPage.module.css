@@ -8,23 +8,23 @@
 .header {
   display: flex;
   align-items: center;
-  padding: var(--spacing-lg) var(--spacing-md); /* 24px 16px → 1.5rem 1rem */
+  padding: var(--spacing-lg) var(--spacing-md);
   position: relative;
   background-color: white;
 }
 
 .arrow-back {
   position: absolute;
-  left: var(--spacing-md); /* 16px → 1rem */
+  left: var(--spacing-md);
   top: 50%;
   transform: translateY(-50%);
   background: none;
   border: none;
-  font-size: var(--font-size-lg); /* 20px → 1.25rem */
+  font-size: var(--font-size-lg);
   color: var(--color-main);
   cursor: pointer;
-  padding: var(--spacing-sm); /* 8px → 0.5rem */
-  border-radius: var(--spacing-xs); /* 4px → 0.25rem */
+  padding: var(--spacing-sm);
+  border-radius: var(--spacing-xs);
   transition: background-color 0.2s ease;
 }
 
@@ -35,14 +35,14 @@
 .title {
   width: 100%;
   text-align: center;
-  font-size: var(--font-size-xl); /* 24px → 1.5rem */
+  font-size: var(--font-size-xl);
   font-weight: 600;
   color: black;
   margin: 0;
 }
 
 .section-title {
-  font-size: var(--font-size-base); /* 16px → 1rem */
+  font-size: var(--font-size-base);
   font-weight: 500;
   color: var(--color-gray0);
   margin: var(--spacing-lg) var(--spacing-md) 2.18rem var(--spacing-md);
@@ -50,7 +50,7 @@
 
 .card-list {
   background-color: white;
-  margin: 0 var(--spacing-md) var(--spacing-xs) var(--spacing-md); /* 0 16px 4px 16px → 0 1rem 0.25rem 1rem */
+  margin: 0 var(--spacing-md) var(--spacing-xs) var(--spacing-md);
   border-bottom: 0.0625rem solid #72787f;
   transition: all 0.2s ease;
   margin-bottom: 1.56rem;
@@ -63,18 +63,18 @@
 .card-row {
   display: flex;
   align-items: center;
-  min-height: 3.75rem; /* 60px → 3.75rem */
+  min-height: 3.75rem;
 }
 
 .card-content {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs); /* 4px → 0.25rem */
+  gap: var(--spacing-xs);
   flex: 1;
 }
 
 .card-title {
-  font-size: var(--font-size-sm); /* 14px → 0.875rem */
+  font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--color-black);
 }
@@ -82,7 +82,7 @@
 .card-value {
   display: flex;
   justify-content: space-between;
-  font-size: var(--font-size-base); /* 16px → 1rem */
+  font-size: var(--font-size-base);
   font-weight: 400;
   color: #72787f;
   word-break: break-all;
@@ -90,34 +90,34 @@
 
 .card-arrow {
   color: var(--color-gray0);
-  font-size: var(--font-size-xs); /* 12px → 0.75rem */
-  margin-left: var(--spacing-sm); /* 8px → 0.5rem */
+  font-size: var(--font-size-xs);
+  margin-left: var(--spacing-sm);
 }
 
 .logoutButton {
-  width: 11.5rem; /* 184px → 11.5rem - 고정 너비 */
-  height: 2.5rem; /* 40px → 2.5rem - 고정 높이 */
+  width: 11.5rem;
+  height: 2.5rem;
   margin: var(--spacing-xl) auto var(--spacing-lg) auto; /* 중앙 정렬 */
   padding: 0;
   background-color: white;
   color: var(--color-main);
   border: 2px solid var(--color-main);
   border-radius: 0.5rem;
-  font-size: var(--font-size-base); /* 16px → 1rem */
+  font-size: var(--font-size-base);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  display: block; /* 중앙 정렬을 위해 */
+  display: block;
 }
 
 .logoutButton:hover {
   background-color: var(--color-main);
   color: white;
-  transform: translateY(-0.0625rem); /* -1px → -0.0625rem */
-  box-shadow: 0 0.25rem 0.5rem rgba(0, 62, 101, 0.2); /* 0 4px 8px */
+  transform: translateY(-0.0625rem);
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 62, 101, 0.2);
 }
 
 .logoutButton:active {
   transform: translateY(0);
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 62, 101, 0.1); /* 0 2px 4px */
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 62, 101, 0.1);
 }

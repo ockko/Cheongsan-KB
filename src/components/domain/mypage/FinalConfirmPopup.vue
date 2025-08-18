@@ -42,11 +42,7 @@ const onCompleteConfirm = async () => {
       <h3 v-else>탈퇴 완료</h3>
 
       <div :class="styles.icon">
-        <img
-          src="/images/delete.png"
-          alt="삭제이미지"
-          style="width: 5.12rem; height: 5.12rem"
-        />
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
       </div>
 
       <div v-if="!isWithdrawn" :class="styles.description">

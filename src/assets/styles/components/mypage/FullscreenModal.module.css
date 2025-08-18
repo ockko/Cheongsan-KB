@@ -9,8 +9,8 @@
 }
 
 .modal-container {
-  width: 23.4375rem; /* 375px → 23.4375rem */
-  max-width: 23.4375rem; /* 375px → 23.4375rem */
+  width: 23.4375rem;
+  max-width: 23.4375rem;
   background: white;
   display: flex;
   flex-direction: column;
@@ -48,21 +48,21 @@
   padding: 1.5rem;
   position: relative;
   background-color: white;
-  min-height: 3.5rem; /* 56px → 3.5rem */
+  min-height: 3.5rem;
 }
 
 .back-btn {
   position: absolute;
-  left: var(--spacing-md); /* 16px → 1rem */
+  left: var(--spacing-md);
   top: 50%;
   transform: translateY(-50%);
   background: none;
   border: none;
-  font-size: var(--font-size-lg); /* 20px → 1.25rem */
+  font-size: var(--font-size-lg);
   color: var(--color-main);
   cursor: pointer;
-  padding: var(--spacing-sm); /* 8px → 0.5rem */
-  border-radius: var(--spacing-xs); /* 4px → 0.25rem */
+  padding: var(--spacing-sm);
+  border-radius: var(--spacing-xs);
   transition: background-color 0.2s ease;
 }
 
@@ -73,7 +73,7 @@
 .modal-title {
   width: 100%;
   text-align: center;
-  font-size: var(--font-size-xl); /* 24px → 1.5rem */
+  font-size: var(--font-size-xl);
   font-weight: 600;
   color: black;
   margin: 0;
@@ -82,13 +82,13 @@
 /* Body */
 .modal-body {
   flex: 1;
-  padding: var(--spacing-lg) var(--spacing-md); /* 24px 16px → 1.5rem 1rem */
+  padding: var(--spacing-lg) var(--spacing-md);
   overflow-y: auto;
 }
 
 /* Footer */
 .modal-footer {
-  padding: 0 var(--spacing-md); /* 0 16px → 0 1rem */
+  padding: 0 var(--spacing-md);
   box-sizing: border-box;
   z-index: 1100;
   background-color: white;
