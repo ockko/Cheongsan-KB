@@ -52,14 +52,11 @@ const handleLogin = async () => {
 
     if (isAdmin) {
       router.push('/admin/users');
-    } else {
+    } else if (!nick) {
       router.push('/initialSetup/page1');
+    } else {
+      router.push('/home');
     }
-    // else if (!nick) {
-    //   router.push("/initialSetup/page1");
-    // } else {
-    //   router.push("/home");
-    // }
   } catch (error) {
     errorMessage.value = error?.message ?? '로그인에 실패했습니다.';
   } finally {
