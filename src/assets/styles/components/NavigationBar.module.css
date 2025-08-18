@@ -1,52 +1,84 @@
+/* 네비게이션 바 메인 컨테이너 */
 .navigationBar {
   position: fixed;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 375px;
-  height: 60px;
+  width: 23.4375rem; /* 375px ÷ 16px = 23.4375rem */
+  height: 3.75rem; /* 60px ÷ 16px = 3.75rem */
   background-color: white;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 8px 16px;
+  padding: var(--spacing-sm) var(--spacing-md); /* 8px 16px → 0.5rem 1rem */
   box-sizing: border-box;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  box-shadow: 0 -4px 16px rgba(0, 62, 101, 0.1);
+  border-top-left-radius: var(--spacing-md); /* 16px → 1rem */
+  border-top-right-radius: var(--spacing-md); /* 16px → 1rem */
+  box-shadow: 0 -0.25rem 1rem rgba(0, 62, 101, 0.1); /* 0 -4px 16px */
   z-index: 1000;
 }
 
+/* 네비게이션 아이템 */
 .navItem {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: var(--spacing-xs); /* 4px → 0.25rem */
   background: none;
   border: none;
   cursor: pointer;
-  padding: 8px 4px;
-  border-radius: 8px;
+  padding: var(--spacing-sm) var(--spacing-xs); /* 8px 4px → 0.5rem 0.25rem */
+  border-radius: var(--spacing-sm); /* 8px → 0.5rem */
   transition: all 0.2s ease;
   flex: 1;
-  max-width: 60px;
+  max-width: 3.75rem; /* 60px ÷ 16px = 3.75rem */
 }
 
+/* 네비게이션 아이콘 */
 .navIcon {
-  width: 24px;
-  height: 24px;
+  width: 2rem;
+  height: 2rem;
   object-fit: contain;
 }
 
+/* 네비게이션 라벨 */
 .navLabel {
   font-family: var(--font-family);
-  font-size: 10px;
+  font-size: 0.625rem; /* 10px ÷ 16px = 0.625rem */
   font-weight: 400;
   color: var(--color-gray0);
   text-align: center;
+  line-height: var(--line-height-tight); /* 1.25 */
 }
 
+/* 활성 상태 네비게이션 라벨 */
 .navItemActive .navLabel {
   color: var(--color-main);
   font-weight: 500;
+}
+
+/* 반응형 처리 - 작은 화면 */
+@media (max-width: 23.375rem) {
+  /* 374px ÷ 16px = 23.375rem */
+  .navigationBar {
+    width: 100vw;
+  }
+}
+
+/* 반응형 처리 - 태블릿 이상 */
+@media (min-width: 48rem) {
+  /* 768px ÷ 16px = 48rem */
+  .navigationBar {
+    /* 태블릿에서는 고정 너비 유지 */
+    max-width: 23.4375rem;
+  }
+
+  .navIcon {
+    width: 1.75rem; /* 태블릿에서 아이콘 크기 증가 */
+    height: 1.75rem;
+  }
+
+  .navLabel {
+    font-size: 0.75rem; /* 태블릿에서 라벨 크기 증가 */
+  }
 }

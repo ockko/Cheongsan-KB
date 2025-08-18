@@ -1,60 +1,87 @@
+/* 이메일 입력 그룹 */
 .input-group {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: var(--spacing-sm); /* 8px → 0.5rem */
 }
 
+/* 이메일 라벨 */
 .label {
-    font-family: var(--font-family);
-    font-weight: 500;
-    font-size: 16px;
-    color: var(--color-main);
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: var(--font-size-base); /* 16px → 1rem */
+  color: var(--color-main);
 }
 
+/* 이메일 입력 행 */
 .email-row {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  gap: var(--spacing-sm); /* 8px → 0.5rem */
+  align-items: center;
+  width: 100%;
 }
 
+/* 이메일 입력 필드 */
 .email-input {
-    flex: 1;
-    height: 51px;
-    width: 147px;
-    min-width: 0;
-    padding: 0 16px;
-    border: 1px solid var(--color-gray1);
-    background-color: white;
-    font-family: var(--font-family);
-    font-weight: 400;
-    font-size: 16px;
-    color: var(--color-main);
-    transition: border-color 0.2s ease;
-    box-sizing: border-box;
-    text-align: left; /* placeholder 왼쪽 정렬 */
+  flex: 1;
+  height: 3.1875rem; /* 51px ÷ 16px = 3.1875rem */
+  width: 9.1875rem; /* 147px ÷ 16px = 9.1875rem */
+  min-width: 0;
+  padding: 0 var(--spacing-md); /* 0 16px → 0 1rem */
+  border: 1px solid var(--color-gray1);
+  background-color: white;
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: var(--font-size-base); /* 16px → 1rem */
+  color: var(--color-main);
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+  text-align: left;
 }
 
 .email-input:focus {
-    outline: none;
-    border-color: var(--color-main);
+  outline: none;
+  border-color: var(--color-main);
 }
 
 .email-input:disabled {
-    background-color: var(--color-gray2);
-    cursor: not-allowed;
+  background-color: var(--color-gray2);
+  cursor: not-allowed;
 }
 
 .email-input::placeholder {
-    color: var(--color-gray0);
-    text-align: left; /* placeholder 왼쪽 정렬 */
-    padding-left: 0; /* 추가 여백 제거 */
+  color: var(--color-gray0);
+  text-align: left;
+  padding-left: 0;
 }
 
+/* 이메일 구분자 (@) */
 .email-separator {
-    font-family: var(--font-family);
-    font-weight: 500;
-    font-size: 18px;
-    color: var(--color-main);
-    flex-shrink: 0;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: var(--font-size-md); /* 18px → 1.125rem */
+  color: var(--color-main);
+  flex-shrink: 0;
+}
+
+/* 반응형 처리 - 작은 화면 */
+@media (max-width: 23.375rem) {
+  /* 374px ÷ 16px = 23.375rem */
+  .email-input {
+    height: 2.75rem; /* 작은 화면에서 높이 줄임 */
+    font-size: var(--font-size-sm);
+  }
+
+  .email-separator {
+    font-size: var(--font-size-base);
+  }
+}
+
+/* 반응형 처리 - 태블릿 이상 */
+@media (min-width: 48rem) {
+  /* 768px ÷ 16px = 48rem */
+  .email-input {
+    height: 3.5rem; /* 태블릿에서 높이 증가 */
+  }
 }
