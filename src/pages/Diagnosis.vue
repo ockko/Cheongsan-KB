@@ -4,9 +4,10 @@ import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { submitDiagnosis } from '@/api/diagnosis.js';
 import { useAuthStore } from '@/stores/auth';
-
+import { useUiStore } from '@/stores/ui';
 const router = useRouter();
 const authStore = useAuthStore();
+const uiStore = useUiStore();
 
 // 현재 단계 관리 (-1: 시작 페이지, 0~2: 진단 단계)
 const currentStep = ref(-1);
@@ -165,11 +166,9 @@ const completeDiagnosis = async () => {
     const result = await submitDiagnosis(diagnosisData);
 
     // 백엔드에서 받은 결과로 정책 페이지로 이동
-    // API 응답 데이터 유효성 검사
     const diagnosisId = result?.diagnosisId || result?.id;
     const recommendationId = result?.recommendationId || result?.recommendation;
 
-    // 유효한 ID가 있는 경우에만 query 파라미터 추가
     const query = {};
     if (diagnosisId && diagnosisId !== 'undefined') {
       query.diagnosisId = diagnosisId;
@@ -185,8 +184,11 @@ const completeDiagnosis = async () => {
   } catch (error) {
     console.error('진단 완료 처리 실패:', error);
 
-    // 사용자에게 에러 메시지 표시
-    alert('진단 결과를 저장하는데 문제가 발생했습니다. 다시 시도해주세요.');
+    uiStore.openModal({
+      title: '오류 발생',
+      message: '진단 결과를 저장하는데 문제가 발생했습니다. 다시 시도해주세요.',
+      isError: true,
+    });
   }
 };
 

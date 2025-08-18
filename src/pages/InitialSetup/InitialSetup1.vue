@@ -16,9 +16,12 @@ const goNext = async () => {
   const nicknameValue = nickname.value.trim();
 
   if (!nicknameRegex.test(nicknameValue)) {
-    alert(
-      '닉네임은 한글, 영문, 숫자, 밑줄(_)만 사용 가능하며 2~10자 이내여야 합니다.'
-    );
+    uiStore.openModal({
+      title: '입력 오류',
+      message:
+        '닉네임은 한글, 영문, 숫자, 밑줄(_)만 사용 가능하며 2~10자 이내여야 합니다.',
+      isError: true,
+    });
     return;
   }
 
@@ -28,24 +31,36 @@ const goNext = async () => {
     authStore.state.user.nickName = nicknameValue;
     localStorage.setItem('auth', JSON.stringify(authStore.state));
 
-    alert(response.message || '닉네임이 저장되었습니다.');
+    authStore.state.user.nickName = nicknameValue;
+    localStorage.setItem('auth', JSON.stringify(authStore.state));
 
-    // 성공 시 다음 페이지로 이동
-    router.push('/initialSetup/page2');
+    uiStore.openModal({
+      title: '닉네임 저장 완료',
+      message: response.message || '닉네임이 저장되었습니다.',
+      isError: false,
+      onConfirmCallback: () => {
+        // 성공 시 다음 페이지로 이동
+        router.push('/initialSetup/page2');
+      },
+    });
   } catch (error) {
     console.error('API 호출 에러 전체:', error);
     console.error('응답 객체:', error.response);
     console.error('에러 상태 코드:', error.response?.status);
     console.error('에러 데이터:', error.response?.data);
 
-    if (error.response && error.response.status === 404) {
-      alert('해당 유저를 찾을 수 없습니다.');
-    } else if (error.response && error.response.status === 500) {
-      alert('서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
-    } else {
-      alert('닉네임 저장 중 오류가 발생했습니다.');
-      console.error(error);
+    let message = '닉네임 저장 중 오류가 발생했습니다.';
+    if (error.response?.status === 404) {
+      message = '해당 유저를 찾을 수 없습니다.';
+    } else if (error.response?.status === 500) {
+      message = '서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
     }
+
+    uiStore.openModal({
+      title: '저장 실패',
+      message,
+      isError: true,
+    });
   }
 };
 </script>

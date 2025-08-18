@@ -70,7 +70,11 @@ export const useSimulationStore = defineStore('simulation', () => {
       selectedStrategy.value = detail;
       isModalOpen.value = true;
     } else {
-      alert('상세 정보를 불러오지 못했습니다.');
+      uiStore.openModal({
+        title: '오류',
+        message: '상세 정보를 불러오지 못했습니다.',
+        isError: true,
+      });
     }
   };
 

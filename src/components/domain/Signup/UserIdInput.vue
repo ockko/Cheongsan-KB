@@ -3,6 +3,7 @@ import { ref, defineEmits, defineProps } from 'vue';
 import axios from 'axios';
 import { getApiBaseUrl } from '@/config/url';
 import styles from '@/assets/styles/components/Signup/UserIdInput.module.css';
+import { useUiStore } from '@/stores/ui';
 
 const props = defineProps({
   modelValue: String,
@@ -26,8 +27,14 @@ const updateValue = (event) => {
 };
 
 const checkUserId = async () => {
+  const uiStore = useUiStore();
+
   if (!props.modelValue) {
-    alert('아이디를 입력해주세요.');
+    uiStore.openModal({
+      title: '입력 오류',
+      message: '아이디를 입력해주세요.',
+      isError: true,
+    });
     return;
   }
 
@@ -42,10 +49,18 @@ const checkUserId = async () => {
     const isDuplicate = response.data;
 
     if (isDuplicate) {
-      alert('이미 사용 중인 아이디입니다.');
+      uiStore.openModal({
+        title: '사용 불가',
+        message: '이미 사용 중인 아이디입니다.',
+        isError: true,
+      });
       isAvailable.value = false;
     } else {
-      alert('사용 가능한 아이디입니다.');
+      uiStore.openModal({
+        title: '사용 가능',
+        message: '사용 가능한 아이디입니다.',
+        isError: false,
+      });
       isAvailable.value = true;
     }
 
@@ -56,7 +71,11 @@ const checkUserId = async () => {
     });
   } catch (error) {
     console.error('아이디 중복 확인 실패:', error);
-    alert('아이디 중복 확인에 실패했습니다. 다시 시도해주세요.');
+    uiStore.openModal({
+      title: '오류 발생',
+      message: '아이디 중복 확인에 실패했습니다. 다시 시도해주세요.',
+      isError: true,
+    });
   } finally {
     isChecking.value = false;
   }
