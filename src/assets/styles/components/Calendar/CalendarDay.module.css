@@ -1,21 +1,22 @@
 .dayCell {
-  min-height: 80px;
-  margin-left: 10px;
+  min-height: 5rem; /* 80px → 5rem */
+  margin-left: 0.625rem; /* 10px → 0.625rem */
   position: relative;
   display: flex;
   flex-direction: column;
   background-color: transparent;
   transition: background-color 0.2s ease, min-height 0.3s ease; /* height 전환 애니메이션 추가 */
   overflow: hidden; /* 내용이 넘치지 않도록 */
+  border-radius: var(--spacing-xs); /* 4px → 0.25rem - 둥근 모서리 추가 */
 }
 
 .otherMonth {
-  opacity: 0.5;
+  opacity: 0.3; /* 더 흐리게 표시 */
 }
 
 .selected .dateNumber {
-  color: var(--color-main);
-  font-weight: 1000;
+  color: var(--color-red);
+  font-weight: 700; /* 1000에서 700으로 조정 */
 }
 
 .clickable {
@@ -23,45 +24,51 @@
 }
 
 .clickable:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(
+    0,
+    62,
+    101,
+    0.05
+  ); /* var(--color-main) 기반 호버 효과 */
 }
 
 .dateNumber {
-  font-size: 14px;
+  font-size: var(--font-size-sm); /* 14px → 0.875rem */
   font-weight: 500;
-  color: #333;
-  margin-bottom: 2px;
-  width: 24px;
-  height: 24px;
+  color: var(--color-black);
+  margin-bottom: 0.125rem; /* 2px → 0.125rem */
+  width: 1.5rem; /* 24px → 1.5rem */
+  height: 1.5rem; /* 24px → 1.5rem */
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0; /* 크기 고정 */
+  transition: all 0.2s ease;
 }
 
 /* 컴팩트 모드 스타일 */
 .compact {
-  min-height: 50px; /* 기본 80px에서 50px로 줄임 */
+  min-height: 3.125rem; /* 50px → 3.125rem - 기본 80px에서 50px로 줄임 */
   transition: min-height 0.3s ease; /* 부드러운 애니메이션 */
 }
 
 .compact .dateNumber {
-  margin-bottom: 4px; /* 동그라미와의 간격 조정 */
+  margin-bottom: 0.25rem; /* 4px → 0.25rem - 동그라미와의 간격 조정 */
 }
 
 /* 컴팩트 모드의 동그라미 인디케이터 */
 .compactIndicators {
   display: flex;
   flex-wrap: wrap;
-  gap: 2px;
-  margin-top: 2px;
+  gap: 0.125rem; /* 2px → 0.125rem */
+  margin-top: 0.125rem; /* 2px → 0.125rem */
   align-items: flex-start;
   align-content: flex-start;
 }
 
 .indicator {
-  width: 8px;
-  height: 8px;
+  width: 0.5rem; /* 8px → 0.5rem */
+  height: 0.5rem; /* 8px → 0.5rem */
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -81,13 +88,13 @@
 .transactions {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 0.0625rem; /* 1px → 0.0625rem */
   flex: 1;
   min-height: 0; /* flexbox 줄어들기 허용 */
 }
 
 .amount {
-  font-size: 8px;
+  font-size: 0.5rem; /* 8px → 0.5rem */
   font-weight: 500;
   line-height: 1.1;
   word-break: break-all;
@@ -104,21 +111,21 @@
 .loanContainer {
   display: flex;
   flex-direction: column;
-  gap: 1px;
-  max-height: 50px; /* 최대 높이 제한 */
+  gap: 0.0625rem; /* 1px → 0.0625rem */
+  max-height: 3.125rem; /* 50px → 3.125rem - 최대 높이 제한 */
   overflow: hidden;
 }
 
 .loanTag {
   background-color: #ff9800;
   color: white;
-  font-size: 7px;
+  font-size: 0.4375rem; /* 7px → 0.4375rem */
   font-weight: 500;
-  padding: 1px 3px;
-  border-radius: 6px;
+  padding: 0.0625rem 0.1875rem; /* 1px 3px → 0.0625rem 0.1875rem */
+  border-radius: 0.375rem; /* 6px → 0.375rem */
   text-align: center;
-  width: 30px;
-  height: 12px;
+  width: 1.875rem; /* 30px → 1.875rem */
+  height: 0.75rem; /* 12px → 0.75rem */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -131,7 +138,14 @@
 }
 
 .moreTag {
-  background-color: #757575; /* 회색 배경 */
-  font-size: 6px;
+  background-color: var(--color-gray0); /* 회색 배경 */
+  font-size: 0.375rem; /* 6px → 0.375rem */
   font-weight: 600;
+}
+
+/* Today 표시 스타일 추가 */
+.today .dateNumber {
+  background-color: var(--color-main);
+  color: white;
+  border-radius: 50%;
 }

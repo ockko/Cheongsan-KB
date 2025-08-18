@@ -3,20 +3,28 @@
   text-align: center;
   position: relative;
   z-index: 1;
+  padding: var(--spacing-lg) 0 var(--spacing-md) 0; /* 24px 0 16px 0 → 1.5rem 0 1rem 0 */
+}
+
+.yearDisplay {
+  font-size: var(--font-size-base); /* 16px → 1rem */
+  font-weight: 400;
+  color: var(--color-main);
+  margin-bottom: var(--spacing-xs); /* 4px → 0.25rem */
 }
 
 .monthNavigation {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 80px;
-  margin-bottom: 10px;
+  gap: 5rem; /* 80px → 5rem */
+  margin-bottom: 0.625rem; /* 10px → 0.625rem */
 }
 
 .navButton {
   background: none;
   border: none;
-  padding: 8px;
+  padding: var(--spacing-sm); /* 8px → 0.5rem */
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -34,22 +42,22 @@
 }
 
 .arrow {
-  width: 10px;
-  height: 20px;
+  width: 0.625rem; /* 10px → 0.625rem */
+  height: 1.25rem; /* 20px → 1.25rem */
 }
 
 .monthDisplayContainer {
   position: relative;
-  min-width: 60px;
-  height: 32px; /* 높이 고정으로 레이아웃 안정성 확보 */
+  min-width: 3.75rem; /* 60px → 3.75rem */
+  height: 2rem; /* 32px → 2rem - 높이 고정으로 레이아웃 안정성 확보 */
   overflow: hidden;
 }
 
 .monthDisplay {
-  font-size: 24px;
+  font-size: var(--font-size-xl); /* 24px → 1.5rem */
   font-weight: 600;
-  color: #333;
-  min-width: 60px;
+  color: var(--color-main);
+  min-width: 3.75rem; /* 60px → 3.75rem */
   position: absolute;
   top: 50%;
   left: 50%;
@@ -65,12 +73,12 @@
 
 .slide-left-enter-from {
   opacity: 0;
-  transform: translate(20px, -50%);
+  transform: translate(1.25rem, -50%); /* 20px → 1.25rem */
 }
 
 .slide-left-leave-to {
   opacity: 0;
-  transform: translate(-20px, -50%);
+  transform: translate(-1.25rem, -50%); /* -20px → -1.25rem */
 }
 
 .slide-left-enter-to,
@@ -87,12 +95,12 @@
 
 .slide-right-enter-from {
   opacity: 0;
-  transform: translate(-20px, -50%);
+  transform: translate(-1.25rem, -50%); /* -20px → -1.25rem */
 }
 
 .slide-right-leave-to {
   opacity: 0;
-  transform: translate(20px, -50%);
+  transform: translate(1.25rem, -50%); /* 20px → 1.25rem */
 }
 
 .slide-right-enter-to,
