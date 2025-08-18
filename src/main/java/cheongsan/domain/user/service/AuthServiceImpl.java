@@ -223,35 +223,75 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LogInResponseDTO naverSignUpOrLogin(SocialUserInfo socialUserInfo) {
-        log.info("네이버 로그인/회원가입 처리 시작: naverId={}", socialUserInfo.getProviderId());
+        log.info("네이버 로그인/회원가입 처리 시작: naverId={}, email={}",
+                socialUserInfo.getProviderId(), socialUserInfo.getEmail());
 
-        // 1. 기존 네이버 사용자 조회
-        User existingUser = userMapper.findByNaverId(socialUserInfo.getProviderId());
+        // 🔍 디버깅: 네이버 ID로 사용자 조회 시도
+        log.info("DB에서 naverId로 사용자 조회 시도: {}", socialUserInfo.getProviderId());
+        User existingNaverUser = userMapper.findByNaverId(socialUserInfo.getProviderId());
 
-        User user;
-        if (existingUser != null) {
-            // 기존 사용자 로그인
-            log.info("기존 네이버 사용자 로그인: userId={}", existingUser.getUserId());
-            user = existingUser;
+        if (existingNaverUser != null) {
+            log.info("✅ 기존 네이버 사용자 발견: userId={}, email={}",
+                    existingNaverUser.getUserId(), existingNaverUser.getEmail());
         } else {
-            // 신규 사용자 회원가입
-            log.info("신규 네이버 사용자 회원가입 진행");
-
-            // 이메일 중복 확인
-            if (userMapper.findByEmail(socialUserInfo.getEmail()) != null) {
-                throw new IllegalArgumentException("이미 사용 중인 이메일입니다. 다른 방법으로 로그인해주세요.");
-            }
-
-            user = createNaverUser(socialUserInfo);
-            userMapper.save(user);
-            log.info("네이버 사용자 회원가입 완료: userId={}", user.getUserId());
+            log.warn("❌ naverId로 사용자를 찾을 수 없음: {}", socialUserInfo.getProviderId());
         }
 
-        // 2. JWT 토큰 생성
+        // 🔍 디버깅: 이메일로도 조회해보기
+        log.info("DB에서 이메일로 사용자 조회 시도: {}", socialUserInfo.getEmail());
+        User existingEmailUser = userMapper.findByEmail(socialUserInfo.getEmail());
+
+        if (existingEmailUser != null) {
+            log.info("✅ 이메일로 사용자 발견: userId={}, naverId={}, accountType={}",
+                    existingEmailUser.getUserId(), existingEmailUser.getNaverId(), existingEmailUser.getAccountType());
+        } else {
+            log.warn("❌ 이메일로도 사용자를 찾을 수 없음: {}", socialUserInfo.getEmail());
+        }
+
+        User user;
+        if (existingNaverUser != null) {
+            // 기존 사용자 로그인
+            log.info("기존 네이버 사용자 로그인: userId={}", existingNaverUser.getUserId());
+            user = existingNaverUser;
+        } else if (existingEmailUser != null && "NAVER".equals(existingEmailUser.getAccountType())) {
+            // 네이버 계정인데 naver_id가 NULL인 경우 (데이터 불일치 복구)
+            log.warn("🔧 네이버 계정 데이터 복구 필요: naver_id가 NULL인 계정 발견");
+            log.info("복구 대상: userId={}, email={}", existingEmailUser.getUserId(), existingEmailUser.getEmail());
+
+            // naver_id 업데이트 시도
+            try {
+                userMapper.updateNaverId(existingEmailUser.getId(), socialUserInfo.getProviderId());
+                log.info("✅ naver_id 업데이트 완료: userId={}, naverId={}",
+                        existingEmailUser.getUserId(), socialUserInfo.getProviderId());
+
+                // 업데이트된 사용자 정보 다시 조회
+                user = userMapper.findById(existingEmailUser.getId());
+                if (user != null) {
+                    log.info("✅ 업데이트된 사용자 조회 성공: naverId={}", user.getNaverId());
+                }
+            } catch (Exception e) {
+                log.error("❌ naver_id 업데이트 실패", e);
+                throw new RuntimeException("사용자 데이터 업데이트에 실패했습니다.");
+            }
+
+            user = existingEmailUser;
+        } else if (existingEmailUser != null) {
+            // 일반 계정이 있는 경우
+            throw new IllegalArgumentException("해당 이메일로 이미 가입된 일반 계정이 있습니다. 일반 로그인을 이용해주세요.");
+        } else {
+            // 완전히 새로운 사용자 회원가입
+            log.info("신규 네이버 사용자 회원가입 진행: email={}", socialUserInfo.getEmail());
+            user = createNaverUser(socialUserInfo);
+            userMapper.save(user);
+            log.info("네이버 사용자 회원가입 완료: userId={}, naverId={}",
+                    user.getUserId(), user.getNaverId());
+        }
+
+        // JWT 토큰 생성
         String accessToken = jwtProcessor.generateAccessToken(user.getUserId());
         String refreshToken = jwtProcessor.generateRefreshToken(user.getUserId());
 
-        // 3. Refresh Token을 Redis에 저장
+        // Refresh Token을 Redis에 저장
         redisTemplate.opsForValue().set(
                 "RT:" + user.getUserId(),
                 refreshToken,
@@ -262,6 +302,8 @@ public class AuthServiceImpl implements AuthService {
         String role = user.getRole();
         if (role == null || role.isBlank()) role = "USER";
         if (role.startsWith("ROLE_")) role = role.substring(5);
+
+        log.info("✅ 네이버 로그인 최종 성공: userId={}, role={}", user.getUserId(), role);
 
         return new LogInResponseDTO(
                 user.getId(),
