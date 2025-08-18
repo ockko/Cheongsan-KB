@@ -2,7 +2,6 @@ import { request } from '@/api/index';
 import { useSimulationStore } from '@/stores/repayment-simulation';
 import { useUiStore } from '@/stores/ui';
 
-const uiStore = useUiStore();
 export const analyze = async (rawValue, router) => {
   const uiStore = useUiStore();
 
@@ -54,6 +53,7 @@ export const fetchStrategyDetail = async (strategyType) => {
 };
 
 export const applyPlan = async (strategyType) => {
+  const uiStore = useUiStore();
   try {
     await request.put('/cheongsan/simulation/repayments/apply', null, {
       params: { strategyName: strategyType },
