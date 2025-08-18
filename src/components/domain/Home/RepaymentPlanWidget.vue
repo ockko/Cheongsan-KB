@@ -3,7 +3,7 @@ import styles from '@/assets/styles/components/home/RepaymentPlanWidget.module.c
 import { ref, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { getRepaymentPlanData } from '@/api/dashboard-bottomApi.js';
-import MyPlanModal from './MyPlanModal.vue';
+import MyPlanModal from '@/components/domain/home/MyPlanModal.vue';
 
 const props = defineProps({
   class: {
@@ -166,7 +166,7 @@ const formatDateToKorean = (dateString) => {
 
         <!-- 데이터가 없는 경우 시뮬레이션 안내 -->
         <div v-else :class="styles.noDataMessage">
-          <div :class="styles.noDataTitle">상환 계획이<br />없습니다</div>
+          <div :class="styles.noDataTitle">상환 계획이<br />없습니다.</div>
           <button @click.stop="goToSimulation" :class="styles.simulationButton">
             시뮬레이션<br />
             시작하기
