@@ -336,10 +336,17 @@ onUnmounted(() => {
           <hr :class="styles.popupDivider" />
 
           <div :class="styles.menuItems">
-            <div :class="styles.greeting" style="margin-left: 27px">
+            <div
+              :class="styles.greeting"
+              style="margin-left: 12px; font-weight: 700"
+            >
               마이페이지
             </div>
-            <button :class="styles.menuItem" @click="goToMyInfo">
+            <button
+              :class="styles.menuItem"
+              @click="goToMyInfo"
+              style="margin-left: 20px"
+            >
               내 정보 관리
             </button>
 
