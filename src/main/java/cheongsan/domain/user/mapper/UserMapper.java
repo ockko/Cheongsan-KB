@@ -64,6 +64,8 @@ public interface UserMapper {
     void updateStrategy(@Param("id") Long id,
                         @Param("strategyName") String strategyName);
 
+    void updateNaverId(@Param("id") Long id, @Param("naverId") String naverId);
+
     // 네이버 로그인 관련 메서드
     User findByNaverId(@Param("naverId") String naverId);
 
