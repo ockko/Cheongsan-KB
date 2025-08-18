@@ -1,20 +1,23 @@
 <script setup>
-import { ref } from "vue";
-import styles from "@/assets/styles/components/LoanSimulation.module.css";
-import { useRouter } from "vue-router";
-import { loanApi } from "@/api/loanApi";
+import { ref } from 'vue';
+import styles from '@/assets/styles/components/LoanSimulation.module.css';
+import { useRouter } from 'vue-router';
+import { loanApi } from '@/api/loanApi';
+import { useUiStore } from '@/stores/ui';
+import { use } from 'echarts';
 
-const principal = ref("");
-const interestRate = ref("");
-const loanPeriod = ref("");
-const income = ref("");
-const repaymentMethod = ref("원리금균등분할방식");
+const principal = ref('');
+const interestRate = ref('');
+const loanPeriod = ref('');
+const income = ref('');
+const repaymentMethod = ref('원리금균등분할방식');
 const router = useRouter();
+const uiStore = useUiStore();
 
 const formatNumber = (value) =>
-  !value ? "" : value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  !value ? '' : value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 const handleNumberInput = (value, setter) =>
-  setter(value.replace(/[^0-9]/g, ""));
+  setter(value.replace(/[^0-9]/g, ''));
 const validate = () => {
   if (
     !principal.value ||
@@ -22,7 +25,11 @@ const validate = () => {
     !loanPeriod.value ||
     !income.value
   ) {
-    alert("모든 항목을 입력해주세요.");
+    uiStore.openModal({
+      title: '입력 오류',
+      message: '모든 항목을 입력해주세요.',
+      isError: true,
+    });
     return false;
   }
   return true;
@@ -30,19 +37,20 @@ const validate = () => {
 
 const mapRepaymentType = (method) => {
   switch (method) {
-    case "원리금균등분할방식":
-      return "EQUAL_PAYMENT";
-    case "원금균등분할방식":
-      return "EQUAL_PRINCIPAL";
-    case "만기일시상환방식":
-      return "LUMP_SUM";
+    case '원리금균등분할방식':
+      return 'EQUAL_PAYMENT';
+    case '원금균등분할방식':
+      return 'EQUAL_PRINCIPAL';
+    case '만기일시상환방식':
+      return 'LUMP_SUM';
     default:
-      return "EQUAL_PAYMENT";
+      return 'EQUAL_PAYMENT';
   }
 };
 
 const simulateLoan = async () => {
   if (!validate()) return;
+
   try {
     const requestData = {
       loanAmount: Number(principal.value),
@@ -53,30 +61,44 @@ const simulateLoan = async () => {
     };
 
     const data = await loanApi.analyzeLoan(requestData);
+
     if (!data || Object.keys(data).length === 0) {
-      alert("응답이 비어 있습니다.");
+      uiStore.openModal({
+        title: '오류',
+        message: '응답이 비어 있습니다.',
+        isError: true,
+      });
       return;
     }
 
-    sessionStorage.setItem("analysisData", JSON.stringify(data));
-    await router.push({ path: "/simulation/loan", state: { result: data } });
+    sessionStorage.setItem('analysisData', JSON.stringify(data));
+    await router.push({ path: '/simulation/loan', state: { result: data } });
   } catch (e) {
-    console.error("시뮬레이션 요청 실패:", e);
+    console.error('시뮬레이션 요청 실패:', e);
 
     const data = e.response?.data;
     const code = data?.code ?? data?.errorCode ?? data?.error?.code;
     const message =
-      data?.message ?? data?.errorMessage ?? data?.error?.message ?? "";
+      data?.message ?? data?.errorMessage ?? data?.error?.message ?? '';
 
     if (
-      code === "DSR_EXCEEDED" ||
-      message.includes("DSR") ||
-      message.includes("40%")
+      code === 'DSR_EXCEEDED' ||
+      message.includes('DSR') ||
+      message.includes('40%')
     ) {
-      alert("고객님의 DSR이 40%가 넘었습니다. 값을 재조정 해주세요.");
+      uiStore.openModal({
+        title: 'DSR 초과',
+        message: '고객님의 DSR이 40%가 넘었습니다. 값을 재조정 해주세요.',
+        isError: true,
+      });
       return;
     }
-    alert("시뮬레이션 중 오류가 발생했습니다.");
+
+    uiStore.openModal({
+      title: '오류',
+      message: '시뮬레이션 중 오류가 발생했습니다.',
+      isError: true,
+    });
   }
 };
 </script>

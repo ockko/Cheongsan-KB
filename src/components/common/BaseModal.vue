@@ -16,7 +16,7 @@ const uiStore = useUiStore();
         {{ uiStore.modalTitle }}
       </h3>
       <p :class="styles.modalMessage">{{ uiStore.modalMessage }}</p>
-      <button :class="styles.closeButton" @click="uiStore.closeModal">
+      <button :class="styles.closeButton" @click="uiStore.confirmModal">
         확인
       </button>
     </div>
