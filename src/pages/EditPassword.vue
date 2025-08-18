@@ -3,10 +3,12 @@ import FullscreenModal from '@/components/domain/mypage/FullscreenModal.vue';
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useMyPageStore } from '@/stores/mypage';
+import { useUiStore } from '@/stores/ui';
 import styles from '@/assets/styles/pages/mypage/EditPassword.module.css';
 
 const store = useMyPageStore();
 const router = useRouter();
+const uiStore = useUiStore();
 
 const step = ref(1);
 const descriptionText = ref('현재 비밀번호를 입력해주세요.');
@@ -20,17 +22,24 @@ const inputPlaceholder = computed(() => {
   if (step.value === 3) return '변경할 비밀번호 확인 입력';
   return '';
 });
-
 const save = async () => {
   if (step.value === 1) {
     if (!inputValue.value) {
-      alert('현재 비밀번호를 입력해주세요.');
+      uiStore.openModal({
+        title: '입력 오류',
+        message: '현재 비밀번호를 입력해주세요.',
+        isError: true,
+      });
       return;
     }
     try {
       const isValid = await store.verifyPassword(inputValue.value);
       if (!isValid) {
-        alert('현재 비밀번호가 올바르지 않습니다. 다시 입력해주세요.');
+        uiStore.openModal({
+          title: '인증 실패',
+          message: '현재 비밀번호가 올바르지 않습니다. 다시 입력해주세요.',
+          isError: true,
+        });
         inputValue.value = '';
         return;
       }
@@ -39,11 +48,19 @@ const save = async () => {
       step.value = 2;
       inputValue.value = '';
     } catch (error) {
-      alert('비밀번호 검증 실패: ' + (error.message || '알 수 없는 오류'));
+      uiStore.openModal({
+        title: '오류',
+        message: '비밀번호 검증 실패: ' + (error.message || '알 수 없는 오류'),
+        isError: true,
+      });
     }
   } else if (step.value === 2) {
     if (inputValue.value.length < 8) {
-      alert('비밀번호는 8자 이상이어야 합니다.');
+      uiStore.openModal({
+        title: '입력 오류',
+        message: '비밀번호는 8자 이상이어야 합니다.',
+        isError: true,
+      });
       return;
     }
     newPassword.value = inputValue.value;
@@ -52,7 +69,11 @@ const save = async () => {
     inputValue.value = '';
   } else if (step.value === 3) {
     if (inputValue.value !== newPassword.value) {
-      alert('비밀번호가 일치하지 않습니다.');
+      uiStore.openModal({
+        title: '입력 오류',
+        message: '비밀번호가 일치하지 않습니다.',
+        isError: true,
+      });
       inputValue.value = '';
       return;
     }
@@ -62,13 +83,22 @@ const save = async () => {
         oldPassword: oldPassword.value,
         newPassword: newPassword.value,
       });
-      alert('비밀번호가 성공적으로 변경되었습니다.');
-      router.back();
+      uiStore.openModal({
+        title: '변경 완료',
+        message: '비밀번호가 성공적으로 변경되었습니다.',
+        isError: false,
+        onConfirmCallback: () => {
+          router.back(); // 확인 버튼 누른 후 이전 페이지로 이동
+        },
+      });
     } catch (error) {
-      alert(
-        '비밀번호 변경 실패: ' +
-          (error.response?.data?.message || error.message || '알 수 없는 오류')
-      );
+      uiStore.openModal({
+        title: '변경 실패',
+        message:
+          '비밀번호 변경 실패: ' +
+          (error.response?.data?.message || error.message || '알 수 없는 오류'),
+        isError: true,
+      });
     }
   }
 };

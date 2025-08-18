@@ -7,7 +7,7 @@ import { useWebSocketStore } from '@/stores/websocket';
 import { mydataApi } from '@/api/mydata';
 import { useMyPageStore } from '@/stores/mypage';
 import styles from '@/assets/styles/components/Header.module.css';
-
+import { useUiStore } from '@/stores/ui';
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
@@ -77,8 +77,12 @@ const handleLogout = async () => {
 };
 
 // 새로고침 CODEF 핸들러
+
+// 새로고침 CODEF 핸들러
 const handleRefresh = async () => {
   if (isRefreshing.value) return; // 이미 진행 중이면 중복 실행 방지
+
+  const uiStore = useUiStore();
 
   try {
     isRefreshing.value = true;
@@ -93,8 +97,12 @@ const handleRefresh = async () => {
   } catch (error) {
     console.error('계좌 데이터 동기화 실패:', error);
 
-    // 에러 메시지 표시 (선택사항)
-    alert('계좌 데이터 동기화에 실패했습니다. 페이지를 새로고침합니다.');
+    // 에러 모달 표시
+    uiStore.openModal({
+      title: '계좌 동기화 실패',
+      message: '계좌 데이터 동기화에 실패했습니다. 페이지를 새로고침합니다.',
+      isError: true,
+    });
 
     // 에러가 발생해도 페이지는 새로고침
     window.location.reload();

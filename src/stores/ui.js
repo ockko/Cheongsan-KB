@@ -7,12 +7,19 @@ export const useUiStore = defineStore('ui', () => {
   const modalTitle = ref('');
   const modalMessage = ref('');
   const isErrorModal = ref(false); // 성공(파랑) / 에러(빨강) 모달 구분
+  const onConfirm = ref(null);
 
   // --- Actions ---
-  const openModal = ({ title, message, isError = false }) => {
+  const openModal = ({
+    title,
+    message,
+    isError = false,
+    onConfirmCallback = null,
+  }) => {
     modalTitle.value = title;
     modalMessage.value = message;
     isErrorModal.value = isError;
+    onConfirm.value = onConfirmCallback; // 확인 버튼 클릭 시 실행
     isModalOpen.value = true;
   };
 
@@ -22,14 +29,23 @@ export const useUiStore = defineStore('ui', () => {
     modalTitle.value = '';
     modalMessage.value = '';
     isErrorModal.value = false;
+    onConfirm.value = null;
   };
 
+  const confirmModal = () => {
+    if (typeof onConfirm.value === 'function') {
+      onConfirm.value();
+    }
+    closeModal();
+  };
   return {
     isModalOpen,
     modalTitle,
     modalMessage,
     isErrorModal,
+    onConfirm,
     openModal,
     closeModal,
+    confirmModal,
   };
 });

@@ -2,9 +2,9 @@
 import styles from '@/assets/styles/components/InitialSetup/LoanModal.module.css';
 import { ref, nextTick, watchEffect, computed } from 'vue';
 import { updateLoanRepaymentInfo } from '@/api/initialSetup/initialSetup3.js';
-
+import { useUiStore } from '@/stores/ui';
 const emit = defineEmits(['confirm', 'cancel']);
-
+const uiStore = useUiStore();
 const props = defineProps({
   institution: String,
   name: String,
@@ -41,7 +41,11 @@ const isFormValid = computed(() => {
 
 const handleConfirm = async () => {
   if (!isFormValid.value) {
-    alert('모든 필드를 입력해 주세요.');
+    uiStore.openModal({
+      title: '입력 오류',
+      message: '모든 필드를 입력해 주세요.',
+      isError: true,
+    });
     return;
   }
 
@@ -53,10 +57,19 @@ const handleConfirm = async () => {
       repaymentDay: Number(repaymentDay.value),
     });
 
-    alert('상환정보가 저장되었습니다.');
+    uiStore.openModal({
+      title: '저장 완료',
+      message: '상환정보가 저장되었습니다.',
+      isError: false,
+    });
+
     emit('confirm');
   } catch (error) {
-    alert(error.message || '상환정보 저장에 실패했습니다.');
+    uiStore.openModal({
+      title: '저장 실패',
+      message: error.message || '상환정보 저장에 실패했습니다.',
+      isError: true,
+    });
   }
 };
 </script>
