@@ -1,51 +1,139 @@
+/* 온보딩 페이지 컨테이너 */
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 100vh;
+  padding: var(--spacing-md);
+  box-sizing: border-box;
 }
 
+/* 로고 이미지 - 인라인 스타일을 클래스로 대체 가능 */
+.logo {
+  width: 10.375rem; /* 166px ÷ 16px = 10.375rem */
+  height: 10.375rem; /* 166px ÷ 16px = 10.375rem */
+  margin-top: 10.25rem; /* 164px ÷ 16px = 10.25rem */
+}
+
+/* 타이틀 */
 .title {
   font-family: var(--font-family);
-  font-weight: 600; /* SemiBold */
-  font-size: 28px;
-  line-height: 1.2;
-  letter-spacing: -0.5px;
-  margin: 0 0 38px 0;
+  font-weight: 600;
+  font-size: 1.75rem; /* 28px ÷ 16px = 1.75rem */
+  line-height: var(--line-height-tight); /* 1.2 */
+  letter-spacing: var(--letter-spacing-negative);
+  margin: 0 0 2.375rem 0; /* 0 0 38px 0 → 0 0 2.375rem 0 */
+  text-align: center;
 }
 
+/* 설명 텍스트 */
 .description {
   font-family: var(--font-family);
-  font-weight: 500; /* Regular */
-  font-size: 16px;
-  line-height: 1.4;
-  letter-spacing: -0.25px;
-  margin: 0 0 22px 0;
+  font-weight: 500;
+  font-size: var(--font-size-base); /* 16px → 1rem */
+  line-height: var(--line-height-normal); /* 1.4 */
+  letter-spacing: var(--letter-spacing-negative);
+  margin: 0 0 1.375rem 0; /* 0 0 22px 0 → 0 0 1.375rem 0 */
+  text-align: center;
 }
 
-.buttonContainer {
+/* 버튼 컨테이너 */
+.button-container {
   display: flex;
   justify-content: space-evenly;
   width: 100%;
+  gap: var(--spacing-md); /* 버튼 간 간격 추가 */
+  padding-bottom: var(--spacing-xl); /* 하단 여백 */
 }
 
+/* 기본 버튼 스타일 */
 .button {
-  width: 136px;
-  height: 43px;
-  border-radius: 8px;
+  width: 8.5rem; /* 136px ÷ 16px = 8.5rem */
+  height: 2.6875rem; /* 43px ÷ 16px = 2.6875rem */
+  border-radius: var(--spacing-sm); /* 8px → 0.5rem */
   border: none;
   font-family: var(--font-family);
-  font-weight: 700; /* SemiBold */
-  font-size: 20px;
-  letter-spacing: -0.25px;
+  font-weight: 700;
+  font-size: var(--font-size-lg); /* 20px → 1.25rem */
+  letter-spacing: var(--letter-spacing-negative);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.loginButton {
+/* 로그인 버튼 */
+.login-button {
   background-color: var(--color-light2);
+  color: var(--color-main);
 }
 
-.signupButton {
+.login-button:hover {
+  background-color: var(--color-light1);
+  transform: translateY(-1px);
+}
+
+/* 회원가입 버튼 */
+.signup-button {
   background-color: var(--color-main);
   color: white;
+}
+
+.signup-button:hover {
+  background-color: #002a4a;
+  transform: translateY(-1px);
+}
+
+/* 반응형 처리 */
+@media (max-width: 23.375rem) {
+  /* 374px ÷ 16px = 23.375rem */
+  .container {
+    padding: var(--spacing-sm);
+  }
+
+  .logo {
+    width: 8rem; /* 작은 화면에서 로고 크기 줄임 */
+    height: 8rem;
+    margin-top: 6rem;
+  }
+
+  .title {
+    font-size: 1.5rem; /* 작은 화면에서 타이틀 크기 줄임 */
+    margin-bottom: 1.5rem;
+  }
+
+  .description {
+    font-size: var(--font-size-sm); /* 작은 화면에서 설명 크기 줄임 */
+    margin-bottom: 1rem;
+  }
+
+  .button {
+    width: 7rem; /* 작은 화면에서 버튼 크기 줄임 */
+    height: 2.5rem;
+    font-size: var(--font-size-base);
+  }
+
+  .button-container {
+    gap: var(--spacing-sm);
+  }
+}
+
+/* 태블릿 이상 */
+@media (min-width: 48rem) {
+  /* 768px ÷ 16px = 48rem */
+  .container {
+    max-width: 30rem; /* 태블릿에서 최대 너비 제한 */
+    margin: 0 auto;
+  }
+
+  .title {
+    font-size: 2rem; /* 태블릿에서 타이틀 크기 증가 */
+  }
+
+  .description {
+    font-size: var(--font-size-md); /* 태블릿에서 설명 크기 증가 */
+  }
+
+  .button {
+    width: 10rem; /* 태블릿에서 버튼 크기 증가 */
+    height: 3rem;
+  }
 }

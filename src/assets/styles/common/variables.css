@@ -33,13 +33,31 @@
     'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
     sans-serif;
 
-  /* 폰트 사이즈 */
-  --font-size-base: 20px;
+  /* 폰트 사이즈 - rem 기반 (16px = 1rem 기준) */
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-base: 1rem; /* 16px - 브라우저 기본값 */
+  --font-size-md: 1.125rem; /* 18px */
+  --font-size-lg: 1.25rem; /* 20px - 기존 base 크기 */
+  --font-size-xl: 1.5rem; /* 24px */
+  --font-size-2xl: 1.875rem; /* 30px */
+  --font-size-3xl: 2.25rem; /* 36px */
 
-  /* 라인 높이 */
-  --line-height-base: 64px;
+  /* 라인 높이 - 더 읽기 좋은 비율로 조정 */
+  --line-height-tight: 1.25; /* 125% */
+  --line-height-normal: 1.5; /* 150% */
+  --line-height-relaxed: 1.75; /* 175% */
+  --line-height-base: 1.6; /* 160% - 기존 64px는 너무 크므로 조정 */
+
+  /* 스페이싱 - rem 기반 */
+  --spacing-xs: 0.25rem; /* 4px */
+  --spacing-sm: 0.5rem; /* 8px */
+  --spacing-md: 1rem; /* 16px */
+  --spacing-lg: 1.5rem; /* 24px */
+  --spacing-xl: 2rem; /* 32px */
+  --spacing-2xl: 3rem; /* 48px */
 
   /* 레터 스페이싱 */
-  --letter-spacing-negative: -0.25px;
-  --letter-spacing-none: 0px;
+  --letter-spacing-negative: -0.025em; /* -0.25px를 em 단위로 */
+  --letter-spacing-none: 0;
 }
