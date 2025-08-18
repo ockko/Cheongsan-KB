@@ -117,7 +117,6 @@
         WHERE id = #{id}
     </update>
 
-    <!-- UserMapper.xml에 추가할 쿼리 -->
     <update id="updateNaverId">
         UPDATE user
         SET naver_id = #{naverId}
