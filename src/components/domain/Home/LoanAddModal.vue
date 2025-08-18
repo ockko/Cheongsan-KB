@@ -3,8 +3,10 @@ import styles from '@/assets/styles/components/home/LoanAddModal.module.css';
 import { ref, reactive, computed, watch, onMounted } from 'vue';
 import { defineEmits, defineProps } from 'vue';
 import { registerDebt } from '@/api/dashboard-bottomApi.js';
+import { useUiStore } from '@/stores/ui';
 
 const emit = defineEmits(['close', 'add-loan', 'refresh-debt-list']);
+const uiStore = useUiStore();
 const props = defineProps({
   visible: Boolean,
 });
@@ -62,7 +64,7 @@ const isFormComplete = computed(() => {
 });
 
 // 폼 초기화 함수
-function resetForm() {
+const resetForm = () => {
   debtName.value = '';
   institutionName.value = '';
   resAccount.value = '';
@@ -76,8 +78,7 @@ function resetForm() {
   formData.nextPaymentDay = '';
   formData.remainingAmount = '';
   formData.gracePeriod = '';
-}
-
+};
 // 모달이 열릴 때마다 폼 초기화
 watch(
   () => props.visible,
@@ -87,20 +88,28 @@ watch(
 );
 
 // 닫기 함수
-function closeModal() {
+const closeModal = () => {
   resetForm();
   emit('close');
-}
+};
 
-async function addLoan() {
+const addLoan = async () => {
   if (!isFormComplete.value) {
-    alert('모든 항목을 입력해주세요.');
+    uiStore.openModal({
+      title: '입력 오류',
+      message: '모든 항목을 입력해주세요.',
+      isError: true,
+    });
     return;
   }
 
   // 이자율 유효값 추가 검증
   if (!isInterestRateValid.value) {
-    alert('이자율은 0% ~ 100% 사이의 값이어야 합니다.');
+    uiStore.openModal({
+      title: '입력 오류',
+      message: '이자율은 0% ~ 100% 사이의 값이어야 합니다.',
+      isError: true,
+    });
     return;
   }
 
@@ -118,7 +127,11 @@ async function addLoan() {
     isNaN(remainingAmount) ||
     isNaN(gracePeriod)
   ) {
-    alert('숫자 필드에 유효하지 않은 값이 포함되어 있습니다.');
+    uiStore.openModal({
+      title: '입력 오류',
+      message: '숫자 필드에 유효하지 않은 값이 포함되어 있습니다.',
+      isError: true,
+    });
     return;
   }
 
@@ -128,7 +141,11 @@ async function addLoan() {
     !formData.loanMonth.trim() ||
     !formData.loanDay.trim()
   ) {
-    alert('대출 시작일을 올바르게 입력해주세요.');
+    uiStore.openModal({
+      title: '입력 오류',
+      message: '대출 시작일을 올바르게 입력해주세요.',
+      isError: true,
+    });
     return;
   }
 
@@ -154,17 +171,26 @@ async function addLoan() {
     // 백엔드 서버에 대출 상품 등록 요청
     const result = await registerDebt(newLoan);
 
-    // 성공 시 모달 닫기 및 부모 컴포넌트에 알림
-    alert(result.message);
+    // 성공 시 모달 알림 + 부모 컴포넌트 이벤트
+    uiStore.openModal({
+      title: '등록 완료',
+      message: result.message,
+      isError: false,
+    });
+
     emit('add-loan', newLoan);
     emit('refresh-debt-list'); // 대출 목록 새로고침 신호
     closeModal();
   } catch (error) {
     // 에러 발생 시 사용자에게 알림
-    alert(error.message);
+    uiStore.openModal({
+      title: '등록 실패',
+      message: error.message || '대출 상품 등록 중 오류가 발생했습니다.',
+      isError: true,
+    });
     console.error('대출 상품 등록 실패:', error);
   }
-}
+};
 </script>
 
 <template>

@@ -1,12 +1,16 @@
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 import animation from '@/assets/styles/pages/InitialSetup/InitialSetup2.module.scss';
 import styles from '@/assets/styles/pages/InitialSetup/InitialSetup2.module.css';
 import ProgressHeader from '@/components/domain/InitialSetup/ProgressHeader.vue';
+import { useAuthStore } from '@/stores/auth.js';
 
 const router = useRouter();
+const authStore = useAuthStore();
+
+const nickname = computed(() => authStore.getUser().nickName || '000'); // 없으면 fallback
 
 onMounted(() => {
   setTimeout(() => {
@@ -22,7 +26,8 @@ onMounted(() => {
       <div :class="styles.titleBox">
         <h2>마이데이터<br />연동 중</h2>
         <p>
-          000님의 자산내역을 불러오는 중입니다. <br />
+          <span :class="styles.nickname">{{ nickname }}</span
+          >님의 자산내역을 불러오는 중입니다. <br />
           잠시만 기다려주세요.
         </p>
         <img src="/images/logo-blue.png" alt="로고" />

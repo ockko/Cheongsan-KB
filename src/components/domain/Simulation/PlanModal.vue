@@ -1,6 +1,7 @@
 <script setup>
 import styles from '@/assets/styles/components/simulation/PlanModal.module.css';
 import { applyPlan } from '@/api/repayment-simulation';
+import { useUiStore } from '@/stores/ui';
 const emit = defineEmits(['close']);
 const props = defineProps({
   isOpen: Boolean,
@@ -23,11 +24,17 @@ const mapStrategyLabel = (type) => {
 };
 
 const onApplyPlan = async () => {
+  const uiStore = useUiStore();
+
   try {
     await applyPlan(props.strategy.strategyType);
     close();
   } catch (error) {
-    alert('전략 적용 중 오류가 발생했습니다.');
+    uiStore.openModal({
+      title: '오류 발생',
+      message: '전략 적용 중 오류가 발생했습니다.',
+      isError: true,
+    });
   }
 };
 
