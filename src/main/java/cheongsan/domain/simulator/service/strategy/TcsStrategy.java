@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,6 +34,9 @@ public class TcsStrategy implements RepaymentStrategy {
                 .collect(Collectors.toList());
 
         BigDecimal monthlyAvailable = request.getMonthlyAvailableAmount();
+        if (monthlyAvailable.compareTo(BigDecimal.ZERO) == 0) {
+            return simulateWithoutPrepayment(originalLoans, sortedLoanNames);
+        }
         BigDecimal totalPayment = BigDecimal.ZERO;
         BigDecimal originalTotalPayment = BigDecimal.ZERO;
         BigDecimal penaltyLoss = BigDecimal.ZERO;
@@ -161,5 +165,46 @@ public class TcsStrategy implements RepaymentStrategy {
     @Override
     public StrategyType getStrategyType() {
         return StrategyType.TCS_RECOMMEND;
+    }
+
+    private RepaymentResponseDTO simulateWithoutPrepayment(List<LoanDTO> originalLoans, List<String> sortedLoanNames) {
+        List<PaymentResultDTO> paymentResults = originalLoans.stream()
+                .map(calculatorFacade::calculateWithoutPrepayment)
+                .collect(Collectors.toList());
+
+        BigDecimal totalPayment = paymentResults.stream()
+                .map(PaymentResultDTO::getTotalPayment)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // 각 대출의 완납일 계산
+        Map<String, LocalDate> debtFreeDates = new HashMap<>();
+        Map<String, List<MonthlyPaymentDetailDTO>> repaymentHistory = new HashMap<>();
+
+        int maxMonths = 0;
+        for (int i = 0; i < originalLoans.size(); i++) {
+            LoanDTO loan = originalLoans.get(i);
+            PaymentResultDTO result = paymentResults.get(i);
+
+            // 마지막 납부일을 완납일로 설정
+            if (!result.getPayments().isEmpty()) {
+                MonthlyPaymentDetailDTO lastPayment = result.getPayments().get(result.getPayments().size() - 1);
+                debtFreeDates.put(loan.getLoanName(), lastPayment.getPaymentDate());
+                maxMonths = Math.max(maxMonths, result.getPayments().size());
+            }
+
+            repaymentHistory.put(loan.getLoanName(), result.getPayments());
+        }
+
+        return RepaymentResponseDTO.builder()
+                .strategyType(StrategyType.TCS_RECOMMEND)
+                .debtFreeDates(debtFreeDates)
+                .totalMonths(maxMonths)
+                .totalPayment(totalPayment)
+                .originalPayment(totalPayment)  // 중도상환 없으므로 동일
+                .interestSaved(BigDecimal.ZERO)  // 절약 없음
+                .totalPrepaymentFee(BigDecimal.ZERO)  // 중도상환 수수료 없음
+                .sortedLoanNames(sortedLoanNames)
+                .repaymentHistory(repaymentHistory)
+                .build();
     }
 }
