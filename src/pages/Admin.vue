@@ -1,11 +1,11 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/auth';
-import { useUiStore } from '@/stores/ui';
-import request from '@/api/index';
-import ConfirmDeleteModal from '@/components/domain/admin/DeleteModal.vue';
-import styles from '@/assets/styles/pages/Admin.module.css';
+import { ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/auth";
+import { useUiStore } from "@/stores/ui";
+import request from "@/api/index";
+import ConfirmDeleteModal from "@/components/domain/admin/DeleteModal.vue";
+import styles from "@/assets/styles/pages/Admin.module.css";
 
 const members = ref([]);
 const showModal = ref(false);
@@ -16,25 +16,25 @@ const myId = computed(() => auth.state.user?.id ?? null);
 const uiStore = useUiStore();
 onMounted(async () => {
   try {
-    const { data } = await request.get('/cheongsan/admin/users');
-    console.log('admin users raw:', data);
-    members.value = data.filter((user) => user.role !== 'ADMIN');
+    const { data } = await request.get("/cheongsan/admin/users");
+    console.log("admin users raw:", data);
+    members.value = data.filter((user) => user.role !== "ADMIN");
   } catch (e) {
-    console.error('사용자 목록 불러오기 실패', e);
+    console.error("사용자 목록 불러오기 실패", e);
     uiStore.openModal({
-      title: '오류 발생',
-      message: '사용자 목록을 불러오는 데 실패했습니다.',
+      title: "오류 발생",
+      message: "사용자 목록을 불러오는 데 실패했습니다.",
       isError: true,
     });
   }
 });
 
 const formatDate = (iso) => {
-  if (!iso) return '-';
+  if (!iso) return "-";
   const d = new Date(iso);
   const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
   return `${y}.${m}.${day}`;
 };
 
@@ -54,15 +54,15 @@ const confirmDelete = async () => {
     selectedMember.value = null;
 
     uiStore.openModal({
-      title: '삭제 완료',
-      message: '회원이 정상적으로 삭제되었습니다.',
+      title: "삭제 완료",
+      message: "회원이 정상적으로 삭제되었습니다.",
       isError: false,
     });
   } catch (e) {
-    console.error('사용자 삭제 실패:', e);
+    console.error("사용자 삭제 실패:", e);
     uiStore.openModal({
-      title: '삭제 실패',
-      message: '사용자 삭제에 실패했습니다.',
+      title: "삭제 실패",
+      message: "사용자 삭제에 실패했습니다.",
       isError: true,
     });
   }
@@ -73,20 +73,20 @@ const cancelDelete = () => {
 };
 
 const displayMemberName = computed(
-  () => selectedMember.value?.nickname || '회원'
+  () => selectedMember.value?.nickname || "회원"
 );
 
 const logout = async () => {
   try {
     if (auth.state.refreshToken) {
-      await request.post('/cheongsan/auth/logout', {
+      await request.post("/cheongsan/auth/logout", {
         refreshToken: auth.state.refreshToken,
       });
     }
   } catch (_) {
   } finally {
     auth.logout();
-    router.replace('/login');
+    router.replace("/login");
   }
 };
 </script>
@@ -106,14 +106,14 @@ const logout = async () => {
         <table :class="styles.memberTable">
           <thead>
             <tr>
-              <th :class="styles.thName">이름</th>
+              <th :class="styles.thName">ID</th>
               <th :class="styles.thDate">가입일</th>
               <th :class="styles.thAction"></th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(member, index) in members" :key="member.id">
-              <td :class="styles.tdName">{{ member.nickname }}</td>
+              <td :class="styles.tdName">{{ member.id }}</td>
               <td :class="styles.tdDate">{{ formatDate(member.createdAt) }}</td>
               <td :class="styles.tdAction">
                 <button
