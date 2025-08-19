@@ -9,7 +9,7 @@
 }
 
 /* 뒤로가기 버튼만 추가 */
-.backButton {
+.back-button {
   position: absolute;
   top: 1rem;
   left: 1rem;
@@ -23,11 +23,11 @@
   transition: opacity 0.2s ease;
 }
 
-.backButton:hover {
+.back-button:hover {
   opacity: 0.7;
 }
 
-.backButton:active {
+.back-button:active {
   opacity: 0.5;
 }
 
