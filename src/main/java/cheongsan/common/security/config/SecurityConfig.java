@@ -66,7 +66,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         // 특정 origins만 허용 (보안 강화)
         config.addAllowedOrigin("http://localhost:5173");     // Vite 개발 서버
+        config.addAllowedOrigin("http://localhost:4173");     // Vite 개발 서버 pwa
         config.addAllowedOrigin("http://127.0.0.1:5173");     // Vite 개발 서버
+        config.addAllowedOrigin("http://127.0.0.1:4173");     // Vite 개발 서버 pwa
+
 
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
