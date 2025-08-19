@@ -1,4 +1,5 @@
 <script setup>
+import { useUiStore } from '@/stores/ui';
 import styles from '@/assets/styles/pages/InitialSetup/InitialSetup1.module.css';
 import ProgressHeader from '@/components/domain/InitialSetup/ProgressHeader.vue';
 import { ref } from 'vue';
@@ -9,6 +10,7 @@ import { useAuthStore } from '@/stores/auth.js';
 const nickname = ref('');
 const router = useRouter();
 const authStore = useAuthStore();
+const uiStore = useUiStore();
 
 const nicknameRegex = /^[가-힣a-zA-Z0-9_]{2,10}$/;
 

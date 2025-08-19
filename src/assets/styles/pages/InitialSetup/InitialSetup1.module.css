@@ -1,28 +1,31 @@
+/* InitialSetup1.module.css - rem 단위 및 CSS 변수 적용 */
+
 .initial-setup1-page {
-  margin-top: 2rem;
+  margin-top: var(--spacing-xl);
 }
 
 .initial-setup1-container {
-  margin-top: 1rem;
-  padding: 0 1.5rem;
+  margin-top: var(--spacing-md);
+  padding: 0 var(--spacing-lg);
   text-align: center;
 }
 
 .initial-setup1-title-box {
-  margin: 0 2rem 6rem 2rem;
+  margin: 0 var(--spacing-xl) 6rem var(--spacing-xl);
 }
 
 .initial-setup1-title-box h2 {
-  font-size: 30px;
-  font-weight: bold;
-  color: navy;
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-main);
+  line-height: var(--line-height-tight);
 }
 
 .initial-setup1-title-box p {
-  margin-top: 2rem;
-  font-size: 16px;
-  color: #666;
-  line-height: 150%;
+  margin-top: var(--spacing-xl);
+  font-size: var(--font-size-base);
+  color: var(--color-gray0);
+  line-height: var(--line-height-normal);
 }
 
 .initial-setup1-input {
@@ -31,29 +34,59 @@
 
 .initial-setup1-nickname-input {
   width: 100%;
-  padding: 1rem;
-  border: 2px solid grey;
-  border-radius: 18px;
+  padding: var(--spacing-md);
+  border: 0.125rem solid var(--color-gray0);
+  border-radius: 1.125rem;
   text-align: center;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  background-color: var(--color-white);
+  color: var(--color-black);
+  transition: border-color 0.2s ease;
+}
+
+.initial-setup1-nickname-input:focus {
+  outline: none;
+  border-color: var(--color-main);
+}
+
+.initial-setup1-nickname-input::placeholder {
+  color: var(--color-gray0);
 }
 
 .initial-setup1-text-limit {
-  margin-top: -1rem;
+  margin-top: 1rem;
   text-align: right;
-  font-size: 14px;
-  color: gray;
-  margin-right: 8px;
+  font-size: var(--font-size-sm);
+  color: var(--color-gray0);
+  margin-right: var(--spacing-sm);
 }
 
 .initial-setup1-next-button {
   width: 100%;
-  height: 44px;
-  background-color: #00497a;
-  color: #fff;
+  height: 2.75rem;
+  background-color: var(--color-main);
+  color: white;
   border: none;
-  border-radius: 14px;
+  border-radius: 0.875rem;
   font-weight: 600;
-  font-size: 16px;
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
   cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 30rem) {
+  .initial-setup1-title-box {
+    margin: 0 var(--spacing-md) 4rem var(--spacing-md);
+  }
+
+  .initial-setup1-title-box h2 {
+    font-size: var(--font-size-xl);
+  }
+
+  .initial-setup1-input {
+    margin-bottom: 2rem;
+  }
 }
