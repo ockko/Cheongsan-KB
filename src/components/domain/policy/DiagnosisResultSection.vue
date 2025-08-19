@@ -499,8 +499,6 @@ const goToPage = (page) => {
         </div>
       </div>
 
-
-
       <!-- 페이지 인디케이터 -->
       <div :class="styles.diagnosisResultPageIndicator">
         <div

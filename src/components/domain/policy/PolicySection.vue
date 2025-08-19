@@ -354,7 +354,6 @@ onMounted(() => {
     <!-- 제목 섹션 -->
     <div :class="styles.policySectionTitleSection">
       <h2 :class="styles.policySectionSectionTitle">맞춤 지원 정책</h2>
-      <div :class="styles.policySectionTitleLine"></div>
     </div>
 
     <!-- 검색창 -->
@@ -368,21 +367,7 @@ onMounted(() => {
       />
       <div :class="styles.policySectionSearchButtonIcon" @click="handleSearch">
         <div :class="styles.policySectionSearchIconInner">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z"
-              stroke="#72787F"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+          <i class="fa-solid fa-magnifying-glass"></i>
         </div>
       </div>
     </div>

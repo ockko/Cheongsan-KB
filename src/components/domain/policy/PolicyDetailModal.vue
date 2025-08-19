@@ -181,13 +181,15 @@ watch(
     @click="closeModal"
   >
     <div :class="styles.policyDetailModalContent" @click.stop>
-      <!-- 모달 내용 -->
-      <div :class="styles.policyDetailModalBody">
-        <!-- 닫기 버튼 -->
+      <!-- 닫기 버튼 -->
+      <div :class="styles.policyDetailHeader">
         <button @click="closeModal" :class="styles.policyDetailBackButton">
           <i class="fa fa-arrow-left"></i>
         </button>
+      </div>
 
+      <!-- 본문 내용 -->
+      <div :class="styles.policyDetailModalBody">
         <!-- 부처 정보 -->
         <div :class="styles.policyDetailMinistryInfo">
           <span :class="styles.policyDetailMinistryText">
@@ -291,32 +293,34 @@ watch(
         </div>
 
         <!-- 신청하러 가기 버튼 -->
-        <button
-          v-if="displayPolicyData.detailPageUrl"
-          :class="styles.policyDetailApplyButton"
-          @click="openDetailPage"
-        >
-          <span :class="styles.policyDetailApplyText">신청하러 가기</span>
-          <div :class="styles.policyDetailExternalLinkIcon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M18 13V19A2 2 0 0 1 16 21H5A2 2 0 0 1 3 19V8A2 2 0 0 1 5 6H11M15 3H21V9M10 14L21 3"
-                stroke="white"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
-        </button>
+        <div :class="styles.policyDetailFooter">
+          <button
+            v-if="displayPolicyData.detailPageUrl"
+            :class="styles.policyDetailApplyButton"
+            @click="openDetailPage"
+          >
+            <span :class="styles.policyDetailApplyText">신청하러 가기</span>
+            <div :class="styles.policyDetailExternalLinkIcon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M18 13V19A2 2 0 0 1 16 21H5A2 2 0 0 1 3 19V8A2 2 0 0 1 5 6H11M15 3H21V9M10 14L21 3"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+          </button>
 
-        <!-- 상세 페이지 URL이 없을 때 표시할 메시지 -->
-        <div
-          v-else
-          :class="styles.policyDetailModalInfoSection"
-          style="text-align: center; color: #666"
-        >
-          상세 정보는 해당 기관에 직접 문의해주세요.
+          <!-- 상세 페이지 URL이 없을 때 표시할 메시지 -->
+          <div
+            v-else
+            :class="styles.policyDetailModalInfoSection"
+            style="text-align: center; color: #666"
+          >
+            상세 정보는 해당 기관에 직접 문의해주세요.
+          </div>
         </div>
       </div>
     </div>
