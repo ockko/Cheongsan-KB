@@ -138,93 +138,93 @@ const categories = [
 const getMinisterLogo = (logoText) => {
   const logoMapping = {
     // 고용노동부
-    고용노동부: '/minister-logos/moel.jpg',
-    MOEL: '/minister-logos/moel.jpg',
+    고용노동부: '/images/Korea-logo.png',
+    MOEL: '/images/Korea-logo.png',
 
     // 보건복지부
-    보건복지부: '/minister-logos/mohw.jpg',
-    MOHW: '/minister-logos/mohw.jpg',
+    보건복지부: '/images/Korea-logo.png',
+    MOHW: '/images/Korea-logo.png',
 
     // 산업통상자원부
-    산업통상자원부: '/minister-logos/motie.jpg',
-    MOTIE: '/minister-logos/motie.jpg',
+    산업통상자원부: '/images/Korea-logo.png',
+    MOTIE: '/images/Korea-logo.png',
 
     // 여성가족부
-    여성가족부: '/minister-logos/mogef.jpg',
-    MOGEF: '/minister-logos/mogef.jpg',
+    여성가족부: '/images/Korea-logo.png',
+    MOGEF: '/images/Korea-logo.png',
 
     // 교육부
-    교육부: '/minister-logos/moe.jpg',
-    MOE: '/minister-logos/moe.jpg',
+    교육부: '/images/Korea-logo.png',
+    MOE: '/images/Korea-logo.png',
 
     // 통일부
-    통일부: '/minister-logos/mou.jpg',
-    MOU: '/minister-logos/mou.jpg',
+    통일부: '/images/Korea-logo.png',
+    MOU: '/images/Korea-logo.png',
 
     // 문화체육관광부
-    문화체육관광부: '/minister-logos/mocst.jpg',
-    MOCST: '/minister-logos/mocst.jpg',
+    문화체육관광부: '/images/Korea-logo.png',
+    MOCST: '/images/Korea-logo.png',
 
     // 농림축산식품부
-    농림축산식품부: '/minister-logos/moafra.jpg',
-    MOAFRA: '/minister-logos/moafra.jpg',
+    농림축산식품부: '/images/Korea-logo.png',
+    MOAFRA: '/images/Korea-logo.png',
 
     // 금융위원회
-    금융위원회: '/minister-logos/fsc.jpg',
-    FSC: '/minister-logos/fsc.jpg',
+    금융위원회: '/images/Korea-logo.png',
+    FSC: '/images/Korea-logo.png',
 
     // 국가보훈부
-    국가보훈부: '/minister-logos/mopva.jpg',
-    MOPVA: '/minister-logos/mopva.jpg',
+    국가보훈부: '/images/Korea-logo.png',
+    MOPVA: '/images/Korea-logo.png',
 
     // 행정안전부
-    행정안전부: '/minister-logos/mois.jpg',
-    MOIS: '/minister-logos/mois.jpg',
+    행정안전부: '/images/Korea-logo.png',
+    MOIS: '/images/Korea-logo.png',
 
     // 과학기술정보통신부
-    과학기술정보통신부: '/minister-logos/mosi.jpg',
-    MOSI: '/minister-logos/mosi.jpg',
+    과학기술정보통신부: '/images/Korea-logo.png',
+    MOSI: '/images/Korea-logo.png',
 
     // 해양수산부
-    해양수산부: '/minister-logos/moof.jpg',
-    MOOF: '/minister-logos/moof.jpg',
+    해양수산부: '/images/Korea-logo.png',
+    MOOF: '/images/Korea-logo.png',
 
     // 기획재정부
-    기획재정부: '/minister-logos/moef.jpg',
-    MOEF: '/minister-logos/moef.jpg',
+    기획재정부: '/images/Korea-logo.png',
+    MOEF: '/images/Korea-logo.png',
 
     // 산림청
-    산림청: '/minister-logos/kfs.jpg',
-    KFS: '/minister-logos/kfs.jpg',
+    산림청: '/images/Korea-logo.png',
+    KFS: '/images/Korea-logo.png',
 
     // 중소벤처기업부
-    중소벤처기업부: '/minister-logos/moss.jpg',
-    MOSS: '/minister-logos/moss.jpg',
+    중소벤처기업부: '/images/Korea-logo.png',
+    MOSS: '/images/Korea-logo.png',
 
     // 질병관리청
-    질병관리청: '/minister-logos/kdcpa.jpg',
-    KDCPA: '/minister-logos/kdcpa.jpg',
+    질병관리청: '/images/Korea-logo.png',
+    KDCPA: '/images/Korea-logo.png',
 
     // 환경부
-    환경부: '/minister-logos/moen.jpg',
-    MOEN: '/minister-logos/moen.jpg',
+    환경부: '/images/Korea-logo.png',
+    MOEN: '/images/Korea-logo.png',
 
     // 국토교통부
-    국토교통부: '/minister-logos/molit.jpg',
-    MOLIT: '/minister-logos/molit.jpg',
+    국토교통부: '/images/Korea-logo.png',
+    MOLIT: '/images/Korea-logo.png',
 
     // 기타 기관들 (기존)
-    서민금융진흥원: '/images/smf-logo.png',
-    한국주택금융공사: '/images/hf-logo.png',
-    국민연금공단: '/images/nps-logo.png',
-    국민건강보험공단: '/images/nhis-logo.png',
-    중소기업진흥공단: '/images/sbc-logo.png',
-    한국산업기술진흥원: '/images/kiat-logo.png',
-    한국장애인고용공단: '/images/kead-logo.png',
-    한국여성가족재단: '/images/kwf-logo.png',
+    서민금융진흥원: '/images/Korea-logo.png',
+    한국주택금융공사: '/images/Korea-logo.png',
+    국민연금공단: '/images/Korea-logo.png',
+    국민건강보험공단: '/images/Korea-logo.png',
+    중소기업진흥공단: '/images/Korea-logo.png',
+    한국산업기술진흥원: '/images/Korea-logo.png',
+    한국장애인고용공단: '/images/Korea-logo.png',
+    한국여성가족재단: '/images/Korea-logo.png',
   };
 
-  return logoMapping[logoText] || '/images/default-logo.png';
+  return logoMapping[logoText] || '/images/Korea-logo.png';
 };
 
 const selectCategory = (categoryId) => {
