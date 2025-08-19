@@ -273,7 +273,7 @@
   background-color: white;
   border: 1px solid var(--color-gray1);
   box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.1);
-  width: 11rem;
+  width: 14rem;
   z-index: 1000;
   overflow: hidden;
   animation: popup-fade-in 0.2s ease-out;
