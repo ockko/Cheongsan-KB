@@ -1,6 +1,6 @@
 package cheongsan.common.util;
 
-import cheongsan.domain.simulator.dto.RepaymentType;
+import cheongsan.domain.simulation.dto.RepaymentType;
 
 public class RepaymentTypeMapper {
     public static LoanCalculator.RepaymentMethod toMethod(RepaymentType type) {

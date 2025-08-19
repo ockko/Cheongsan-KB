@@ -2,9 +2,9 @@ package cheongsan.domain.debt.controller;
 
 
 import cheongsan.common.exception.ResponseDTO;
-import cheongsan.domain.simulator.dto.RepaymentResponseDTO;
-import cheongsan.domain.simulator.dto.StrategyType;
-import cheongsan.domain.simulator.service.RepaymentSimulationService;
+import cheongsan.domain.simulation.dto.RepaymentResponseDTO;
+import cheongsan.domain.simulation.dto.StrategyType;
+import cheongsan.domain.simulation.service.RepaymentSimulationService;
 import cheongsan.domain.user.entity.CustomUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
