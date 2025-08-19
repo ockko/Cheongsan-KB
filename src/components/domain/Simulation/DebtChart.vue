@@ -209,7 +209,18 @@ const chartOptions = computed(() => {
       legend: { position: 'bottom' },
       tooltip: {
         callbacks: {
-          label: (context) => `\u20a9${context.formattedValue}`,
+          title: (contexts) => {
+            const rawDate = contexts[0].label;
+            return dayjs(rawDate).format('YYYY년 M월');
+          },
+          label: (context) => {
+            let value = context.parsed.y;
+            if (isNaN(value)) return '';
+
+            const rounded = Math.round(value / 10) * 10;
+
+            return `${rounded.toLocaleString()}원`;
+          },
         },
       },
     },
