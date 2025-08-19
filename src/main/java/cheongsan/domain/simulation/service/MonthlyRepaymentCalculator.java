@@ -110,7 +110,7 @@ public class MonthlyRepaymentCalculator {
         BigDecimal actualExtraPayment = BigDecimal.ZERO;
         BigDecimal prepaymentFee = BigDecimal.ZERO;
         if (scenario == Scenario.WITH_PREPAYMENT && extraPayment != null && extraPayment.compareTo(BigDecimal.ZERO) > 0) {
-            BigDecimal maxExtraPayment = remainingPrincipal.subtract(monthlyPrincipal.add(extraPayment)).max(BigDecimal.ZERO);
+            BigDecimal maxExtraPayment = remainingPrincipal.subtract(monthlyPrincipal).max(BigDecimal.ZERO);
             actualExtraPayment = extraPayment.min(maxExtraPayment);
             prepaymentFee = calculatePrepaymentFee(actualExtraPayment, date, loan);
         }
@@ -305,60 +305,56 @@ public class MonthlyRepaymentCalculator {
 
         BigDecimal monthlyInterestRate = loan.getMonthlyInterestRate();
         BigDecimal remainingPrincipal = loan.getPrincipal();
-
         long remainingMonths = loan.getRemainingMonths(date);
-        if (remainingMonths <= 0) {
-            // 상환 완료된 경우
+
+        if (remainingMonths <= 0 || remainingPrincipal.compareTo(BigDecimal.ZERO) <= 0) {
             return new MonthlyPaymentDetailDTO(
-                    BigDecimal.ZERO,
-                    BigDecimal.ZERO,
-                    BigDecimal.ZERO,
-                    BigDecimal.ZERO,
-                    BigDecimal.ZERO,
-                    date,
-                    BigDecimal.ZERO
+                    BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, date, BigDecimal.ZERO
             );
         }
 
+        // 이자 = 남은 원금 * 월 이자율
         BigDecimal interest = remainingPrincipal.multiply(monthlyInterestRate, MATH_CONTEXT);
-        BigDecimal principalPayment = BigDecimal.ZERO;
-        BigDecimal actualPrepayment = BigDecimal.ZERO;
-        BigDecimal prepaymentFee = BigDecimal.ZERO;
 
-        // 중도상환 적용
-        if (monthlyPrepayment.compareTo(BigDecimal.ZERO) > 0) {
-            if (monthlyPrepayment.compareTo(remainingPrincipal) >= 0) {
-                principalPayment = remainingPrincipal;
-                remainingPrincipal = BigDecimal.ZERO;
-                actualPrepayment = principalPayment;
-            } else {
-                principalPayment = monthlyPrepayment;
-                remainingPrincipal = remainingPrincipal.subtract(monthlyPrepayment, MATH_CONTEXT);
-                actualPrepayment = monthlyPrepayment;
-            }
-            // 중도상환 수수료 계산
+        // 중도상환은 prepayment로만 기록
+        BigDecimal actualPrepayment = BigDecimal.ZERO;
+        if (monthlyPrepayment != null && monthlyPrepayment.compareTo(BigDecimal.ZERO) > 0) {
+            actualPrepayment = monthlyPrepayment.min(remainingPrincipal); // 남은 원금 초과 방지
+        }
+
+        BigDecimal prepaymentFee = BigDecimal.ZERO;
+        if (actualPrepayment.compareTo(BigDecimal.ZERO) > 0) {
             prepaymentFee = calculatePrepaymentFee(actualPrepayment, date, loan);
         }
 
-        // 만기 월이면 남은 원금까지 포함
+        // prepayment로 원금 감소
+        remainingPrincipal = remainingPrincipal
+                .subtract(actualPrepayment, MATH_CONTEXT)
+                .max(BigDecimal.ZERO);
+
+        // 정상 원금 상환(principalPayment)은 오직 마지막 달에만 발생
+        BigDecimal principalPayment = BigDecimal.ZERO;
         if (remainingMonths == 1 && remainingPrincipal.compareTo(BigDecimal.ZERO) > 0) {
-            principalPayment = principalPayment.add(remainingPrincipal, MATH_CONTEXT);
+            principalPayment = remainingPrincipal;
             remainingPrincipal = BigDecimal.ZERO;
         }
 
-        BigDecimal totalMonthlyPayment = interest.add(principalPayment, MATH_CONTEXT).add(prepaymentFee, MATH_CONTEXT);
+        // 총 납입 = 이자 + prepayment + 수수료 + (마지막 달이면) 정상 원금
+        BigDecimal totalMonthlyPayment = interest
+                .add(actualPrepayment, MATH_CONTEXT)
+                .add(prepaymentFee, MATH_CONTEXT)
+                .add(principalPayment, MATH_CONTEXT);
 
         return new MonthlyPaymentDetailDTO(
-                principalPayment.setScale(0, RoundingMode.HALF_UP),
+                principalPayment.setScale(0, RoundingMode.HALF_UP),   // 마지막 달만 > 0
                 interest.setScale(0, RoundingMode.HALF_UP),
-                actualPrepayment.setScale(0, RoundingMode.HALF_UP),
+                actualPrepayment.setScale(0, RoundingMode.HALF_UP),   // 중도상환 금액
                 prepaymentFee.setScale(0, RoundingMode.HALF_UP),
                 totalMonthlyPayment.setScale(0, RoundingMode.HALF_UP),
                 date,
                 remainingPrincipal.setScale(0, RoundingMode.HALF_UP)
         );
     }
-
 
     public BigDecimal calculatePrepaymentFee(BigDecimal prepaymentPrincipal, LocalDate repaymentDate, LoanDTO loan) {
         final long THREE_YEARS_IN_DAYS = 365 * 3;
