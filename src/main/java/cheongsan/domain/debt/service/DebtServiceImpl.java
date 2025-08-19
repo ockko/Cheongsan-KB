@@ -8,8 +8,7 @@ import cheongsan.domain.debt.entity.DelinquentLoan;
 import cheongsan.domain.debt.entity.FinancialInstitution;
 import cheongsan.domain.debt.mapper.DebtMapper;
 import cheongsan.domain.debt.mapper.FinancialInstitutionMapper;
-import cheongsan.domain.simulator.dto.LoanDTO;
-import cheongsan.domain.simulator.dto.RepaymentType;
+import cheongsan.domain.simulation.dto.RepaymentType;
 import cheongsan.domain.user.dto.DebtUpdateRequestDTO;
 import cheongsan.domain.user.dto.DebtUpdateResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -129,12 +128,10 @@ public class DebtServiceImpl implements DebtService {
     }
 
     private boolean isPrivateDebt(DebtInfoResponseDTO debt) {
-        String type=debt.getInstitutionType();
-        return List.of("사금융", "카드론", "대부업", "P2P","기타").stream()
+        String type = debt.getInstitutionType();
+        return List.of("사금융", "카드론", "대부업", "P2P", "기타").stream()
                 .anyMatch(type::contains);  // 부분 문자열 검사
     }
-
-
 
 
     @Override

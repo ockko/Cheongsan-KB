@@ -3,9 +3,9 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="cheongsan.domain.simulator.mapper.LoanProductMapper">
+<mapper namespace="cheongsan.domain.simulation.mapper.LoanProductMapper">
 
-    <select id="findRecommendedLoans" resultType="cheongsan.domain.simulator.entity.Simulator">
+    <select id="findRecommendedLoans" resultType="cheongsan.domain.simulation.entity.Simulation">
         <![CDATA[
         SELECT finPrdNm As productName,
                hdlInst  As institutionName,

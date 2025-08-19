@@ -1,6 +1,6 @@
 package cheongsan.domain.debt.dto;
 
-import cheongsan.domain.simulator.dto.RepaymentType;
+import cheongsan.domain.simulation.dto.RepaymentType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
