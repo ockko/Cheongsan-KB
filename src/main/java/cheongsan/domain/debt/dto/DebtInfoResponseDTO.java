@@ -14,6 +14,7 @@ public class DebtInfoResponseDTO {
     private Long debtId;
     private String debtName;
     private String organizationName;
+    private String institutionType;
     private BigDecimal originalAmount;
     private BigDecimal currentBalance;
 

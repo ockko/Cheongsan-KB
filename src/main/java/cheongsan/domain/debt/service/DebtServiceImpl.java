@@ -66,11 +66,12 @@ public class DebtServiceImpl implements DebtService {
                         );
                     }
 
-                    String organizationName = financialInstitutionMapper.findNameByCode(debt.getOrganizationCode());
+                    String organizationName = debt.getOrganizationName();
                     return DebtInfoResponseDTO.builder()
                             .debtId(debt.getId())
                             .debtName(debt.getDebtName())
                             .organizationName(organizationName)
+                            .institutionType(debt.getInstitutionType())
                             .originalAmount(debt.getOriginalAmount())
                             .currentBalance(debt.getCurrentBalance())
                             .interestRate(debt.getInterestRate())
@@ -128,8 +129,7 @@ public class DebtServiceImpl implements DebtService {
     }
 
     private boolean isPrivateDebt(DebtInfoResponseDTO debt) {
-        String debtOrganizationName = debt.getOrganizationName();
-        String type=debtMapper.findInstitutionTypeByOrganizationName(debtOrganizationName);
+        String type=debt.getInstitutionType();
         return List.of("사금융", "카드론", "대부업", "P2P","기타").stream()
                 .anyMatch(type::contains);  // 부분 문자열 검사
     }

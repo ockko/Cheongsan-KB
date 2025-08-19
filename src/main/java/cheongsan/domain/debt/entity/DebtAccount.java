@@ -17,6 +17,8 @@ public class DebtAccount {
     private Long id;
     private Long userId;
     private Long organizationCode;
+    private String organizationName;
+    private String institutionType;
     private String resAccount;             // 계좌번호
     private String debtName;              // 대출명
     private BigDecimal currentBalance;    // 현재 잔액

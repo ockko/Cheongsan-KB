@@ -8,22 +8,24 @@
     <!-- 총 대출 항목 조회-->
     <select id="getUserDebtList" parameterType="long" resultType="cheongsan.domain.debt.entity.DebtAccount">
         SELECT da.id,
-               da.user_id,
-               da.organization_code,
-               da.res_account,
-               da.debt_name,
-               da.current_balance,
-               da.original_amount,
-               da.interest_rate,
-               da.loan_start_date,
-               da.loan_end_date,
-               da.next_payment_date,
-               da.grace_period_months,
-               da.repayment_method,
-               da.created_at,
-               da.updated_at
+        da.user_id,
+        da.organization_code,
+        fi.organization_name,  <!-- 이 줄을 추가! -->
+        fi.institution_type,
+        da.res_account,
+        da.debt_name,
+        da.current_balance,
+        da.original_amount,
+        da.interest_rate,
+        da.loan_start_date,
+        da.loan_end_date,
+        da.next_payment_date,
+        da.grace_period_months,
+        da.repayment_method,
+        da.created_at,
+        da.updated_at
         FROM debt_accounts da
-                 JOIN financial_institutions fi ON da.organization_code = fi.organization_code
+        JOIN financial_institutions fi ON da.organization_code = fi.organization_code
         WHERE da.user_id = #{userId}
     </select>
 
