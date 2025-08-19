@@ -145,7 +145,7 @@ public class TcsStrategy implements RepaymentStrategy {
 
     private boolean isPrivateLoan(LoanDTO loan) {
         String type = loan.getInstitutionType();
-        return List.of("사금융", "카드론", "대부업", "P2P").stream()
+        return List.of("사금융", "카드론", "대부업", "P2P", "기타").stream()
                 .anyMatch(type::contains);  // 부분 문자열 검사
     }
 
