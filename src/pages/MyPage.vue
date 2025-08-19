@@ -55,7 +55,7 @@ const goBack = () => {
     >
       <div :class="styles.cardRow">
         <div :class="styles.cardContent">
-          <span :class="styles.cardTitle">이름</span>
+          <span :class="styles.cardTitle">닉네임</span>
           <span :class="styles.cardValue"
             >{{ store.nickname }}
             <span :class="styles.cardArrow">

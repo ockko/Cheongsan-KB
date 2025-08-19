@@ -47,9 +47,9 @@ const onClose = () => {
 </script>
 
 <template>
-  <FullscreenModal title="이름 변경" @close="onClose">
+  <FullscreenModal title="닉네임 변경" @close="onClose">
     <template #description>
-      <p :class="styles.description">이름을 입력해 주세요.</p>
+      <p :class="styles.description">닉네임을 입력해 주세요.</p>
     </template>
 
     <template #input>
@@ -58,7 +58,7 @@ const onClose = () => {
           v-model="inputValue"
           type="text"
           maxlength="10"
-          placeholder="새 이름 입력"
+          placeholder="새 닉네임 입력"
         />
         <i
           :class="[styles.clearBtn, 'fa-solid', 'fa-circle-xmark']"
