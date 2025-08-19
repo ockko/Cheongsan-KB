@@ -80,6 +80,11 @@ const handleTermsValidation = ({ isValid }) => {
   validation.terms.isValid = isValid;
 };
 
+// 온보딩 페이지로 돌아가기
+const goToOnboarding = () => {
+  router.push('/onboarding');
+};
+
 // 회원가입 처리
 const handleSignUp = async () => {
   if (!isFormValid.value) {
@@ -160,6 +165,9 @@ const handleNaverAuthError = (error) => {
 </script>
 <template>
   <div :class="styles.signUpPage">
+    <button :class="styles.backButton" @click="goToOnboarding">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
     <div :class="styles.container">
       <h1 :class="styles.title">회원가입</h1>
 
