@@ -25,6 +25,7 @@ import Admin from '@/pages/Admin.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+
   routes: [
     {
       path: '/',
@@ -189,6 +190,35 @@ router.beforeEach((to, from, next) => {
   }
 
   next();
+});
+
+// 페이지 이동 후 위치 강제 초기화
+router.afterEach((to, from) => {
+  // nextTick을 사용하여 DOM 업데이트 후 실행
+  setTimeout(() => {
+    // 모든 스크롤 요소 초기화
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+
+    // 앱 컨테이너 위치 초기화
+    const appContainer = document.getElementById('app');
+    if (appContainer) {
+      appContainer.style.transform = 'none';
+      appContainer.style.top = '0';
+      appContainer.scrollTop = 0;
+    }
+
+    // 모든 컨테이너 초기화
+    document
+      .querySelectorAll('[class*="container"], [class*="page"]')
+      .forEach((el) => {
+        el.scrollTop = 0;
+        if (el.style.transform) {
+          el.style.transform = 'none';
+        }
+      });
+  }, 50);
 });
 
 export default router;

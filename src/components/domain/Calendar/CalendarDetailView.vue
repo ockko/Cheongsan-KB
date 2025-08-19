@@ -69,9 +69,7 @@ const loanNamesText = computed(() => {
           alt="알림"
           style="width: 24px; height: 24px"
         />
-        <div :class="styles.alertText">
-          오늘은 {{ loanNamesText }} 상환일입니다.
-        </div>
+        <div :class="styles.alertText">{{ loanNamesText }} 상환일입니다.</div>
       </div>
     </div>
 
@@ -87,7 +85,10 @@ const loanNamesText = computed(() => {
           <div :class="styles.transactionAmount" class="text-medium">
             {{ transaction.formatted }}
           </div>
-          <div v-if="transaction.resAccountDesc3" :class="styles.transactionDesc">
+          <div
+            v-if="transaction.resAccountDesc3"
+            :class="styles.transactionDesc"
+          >
             {{ transaction.resAccountDesc3 }}
           </div>
         </div>
