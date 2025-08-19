@@ -24,6 +24,7 @@
 
 /* 이메일 입력 필드 */
 .email-input {
+  border-radius: var(--spacing-sm);
   flex: 1;
   height: 3.1875rem; /* 51px ÷ 16px = 3.1875rem */
   width: 9.1875rem; /* 147px ÷ 16px = 9.1875rem */
@@ -82,6 +83,6 @@
 @media (min-width: 48rem) {
   /* 768px ÷ 16px = 48rem */
   .email-input {
-    height: 3.5rem; /* 태블릿에서 높이 증가 */
+    height: 3rem; /* 태블릿에서 높이 증가 */
   }
 }

@@ -1,22 +1,76 @@
+/* ProgressHeader.module.css - rem 단위 및 CSS 변수 적용 */
+
 .progress-header {
-    padding: 1rem 0;
-    text-align: center;
+  padding: var(--spacing-md) 0;
+  text-align: center;
+}
+
+.progress-bar-wrapper {
+  height: 0.625rem;
+  background-color: var(--color-gray1);
+  border-radius: 0.3125rem;
+  margin: 0 var(--spacing-xl);
+  overflow: hidden;
+  box-shadow: inset 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar {
+  height: 0.625rem;
+  transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background: linear-gradient(
+    90deg,
+    var(--color-main) 0%,
+    var(--color-secondary) 100%
+  );
+  border-radius: 0.3125rem;
+  box-shadow: 0 0.0625rem 0.1875rem rgba(0, 62, 101, 0.3);
+}
+
+.step-text {
+  font-size: var(--font-size-lg);
+  margin-top: var(--spacing-lg);
+  font-weight: 600;
+  font-family: var(--font-family);
+  color: var(--color-main);
+  letter-spacing: var(--letter-spacing-negative);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 30rem) {
+  .progress-header {
+    padding: var(--spacing-sm) 0;
   }
-  
+
   .progress-bar-wrapper {
-    height: 10px;
-    background-color: gray;
+    height: 0.5rem;
+    margin: 0 var(--spacing-md);
   }
-  
+
   .progress-bar {
-    height: 10px;
-    transition: width 0.3s;
-    background-color: navy;
+    height: 0.5rem;
   }
 
   .step-text {
-    font-size: 22px;
-    margin-top: 1.5rem;
-    font-weight: 500;
-    color: #00497a;
+    font-size: var(--font-size-base);
+    margin-top: var(--spacing-md);
   }
+}
+
+/* 접근성 개선 */
+@media (prefers-reduced-motion: reduce) {
+  .progress-bar {
+    transition: none;
+  }
+}
+
+/* 고대비 모드 지원 */
+@media (prefers-contrast: high) {
+  .progress-bar-wrapper {
+    background-color: var(--color-black);
+    border: 0.0625rem solid var(--color-main);
+  }
+
+  .progress-bar {
+    background: var(--color-main);
+  }
+}

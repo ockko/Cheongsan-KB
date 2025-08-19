@@ -23,6 +23,11 @@ if (route.query.error === 'session_expired') {
   errorMessage.value = '로그인이 필요한 서비스입니다.';
 }
 
+// 온보딩 페이지로 돌아가기
+const goToOnboarding = () => {
+  router.push('/onboarding');
+};
+
 // 일반 로그인 처리
 const handleLogin = async () => {
   // 유효성 검사
@@ -76,6 +81,9 @@ const handleNaverAuthError = (error) => {
 
 <template>
   <div :class="styles.loginPage">
+    <button :class="styles.backButton" @click="goToOnboarding">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
     <div :class="styles.loginContainer">
       <!-- 타이틀 -->
       <h1 :class="styles.loginTitle">로그인</h1>

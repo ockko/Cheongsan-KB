@@ -1,32 +1,56 @@
+/* InitialSetup2.module.css - rem 단위 및 CSS 변수 적용 */
+
 .page {
-  margin-top: 2rem;
+  margin-top: var(--spacing-xl);
 }
+
 .container {
-  margin-top: 1rem;
-  padding: 0 1rem;
+  margin-top: var(--spacing-md);
+  padding: 0 var(--spacing-md);
   text-align: center;
 }
+
 .title-box {
   margin-top: 3.5rem;
 }
+
 .title-box h2 {
-  margin-top: 2rem;
-  font-size: 30px;
-  font-weight: bold;
-  color: navy;
-  line-height: 2.3rem;
+  margin-top: var(--spacing-xl);
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-main);
+  line-height: var(--line-height-tight);
 }
+
 .nickname {
-  font-weight: bold;
+  font-weight: 700;
+  color: var(--color-black);
 }
+
 .title-box p {
-  margin-top: 2rem;
-  font-size: 16px;
-  color: #666;
-  line-height: 150%;
+  margin-top: var(--spacing-xl);
+  font-size: var(--font-size-base);
+  color: var(--color-gray0);
+  line-height: var(--line-height-normal);
 }
+
 .title-box img {
-  margin-top: 1.5rem;
-  width: 160px;
-  height: 160px;
+  margin-top: var(--spacing-lg);
+  width: 10rem;
+  height: 10rem;
+  border-radius: 1rem;
+  box-shadow: 0 0.25rem 1rem rgba(0, 62, 101, 0.1);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 30rem) {
+  .title-box h2 {
+    font-size: var(--font-size-xl);
+  }
+
+  .title-box img {
+    width: 8rem;
+    height: 8rem;
+    margin-top: var(--spacing-md);
+  }
 }

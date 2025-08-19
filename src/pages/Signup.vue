@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, reactive } from 'vue';
+import { useUiStore } from '@/stores/ui';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { getApiBaseUrl } from '@/config/url';
@@ -12,6 +13,7 @@ import TermsAgreement from '@/components/domain/Signup/TermsAgreement.vue';
 import NaverAuthButton from '@/components/domain/Signup/NaverAuthButton.vue';
 
 const router = useRouter();
+const uiStore = useUiStore();
 
 // 폼 데이터
 const formData = reactive({
@@ -78,6 +80,11 @@ const handleEmailValidation = ({ isValid, fullEmail }) => {
 // 이용약관 유효성 검사 결과 처리
 const handleTermsValidation = ({ isValid }) => {
   validation.terms.isValid = isValid;
+};
+
+// 온보딩 페이지로 돌아가기
+const goToOnboarding = () => {
+  router.push('/onboarding');
 };
 
 // 회원가입 처리
@@ -160,6 +167,9 @@ const handleNaverAuthError = (error) => {
 </script>
 <template>
   <div :class="styles.signUpPage">
+    <button :class="styles.backButton" @click="goToOnboarding">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
     <div :class="styles.container">
       <h1 :class="styles.title">회원가입</h1>
 

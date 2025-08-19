@@ -45,7 +45,8 @@
 .modal-header {
   display: flex;
   align-items: center;
-  padding: 1.5rem;
+  padding: 2rem;
+  margin-left: 0.55rem;
   position: relative;
   background-color: white;
   min-height: 3.5rem;
@@ -81,7 +82,7 @@
 /* Body */
 .modal-body {
   flex: 1;
-  padding: var(--spacing-lg) var(--spacing-md);
+  padding: 1.9rem;
   overflow-y: auto;
 }
 
