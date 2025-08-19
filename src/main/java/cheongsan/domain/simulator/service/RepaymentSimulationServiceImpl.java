@@ -13,7 +13,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +41,8 @@ public class RepaymentSimulationServiceImpl implements RepaymentSimulationServic
         return strategies.stream()
                 .map(strategy -> {
                     List<LoanDTO> loanCopies = loans.stream()
+                            .filter(loan -> loan.getPrincipal().compareTo(BigDecimal.ZERO) > 0) // 원금 0원 제외
+                            .filter(loan -> loan.getEndDate() == null || !loan.getEndDate().isBefore(LocalDate.now())) // 과거 종료 제외
                             .map(loan -> LoanDTO.builder()
                                     .id(loan.getId())
                                     .loanName(loan.getLoanName())
@@ -52,10 +56,10 @@ public class RepaymentSimulationServiceImpl implements RepaymentSimulationServic
                                     .paymentDate(loan.getPaymentDate())
                                     .build())
                             .collect(Collectors.toList());
+
                     return strategy.simulate(request, loanCopies);
                 })
                 .collect(Collectors.toList());
-
     }
 
 
