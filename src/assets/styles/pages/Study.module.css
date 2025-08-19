@@ -64,7 +64,7 @@
 .carousel-caption {
   text-align: center;
   font-size: 15px;
-  margin-top: -10px;
+  margin-top: 4px;
   margin-bottom: -5px;
 }
 .carousel-dots {
@@ -158,14 +158,14 @@
 .carousel-caption {
   text-align: center;
   font-size: 15px;
-  margin-top: -10px;
+  margin-top: 10px;
   margin-bottom: -5px;
 }
 .carousel-dots {
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin-bottom: 2rem;
+  margin: 1rem 0;
 }
 .dot {
   width: 8px;
