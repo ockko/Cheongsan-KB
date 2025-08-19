@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, reactive } from 'vue';
+import { useUiStore } from '@/stores/ui';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { getApiBaseUrl } from '@/config/url';
@@ -12,6 +13,7 @@ import TermsAgreement from '@/components/domain/Signup/TermsAgreement.vue';
 import NaverAuthButton from '@/components/domain/Signup/NaverAuthButton.vue';
 
 const router = useRouter();
+const uiStore = useUiStore();
 
 // 폼 데이터
 const formData = reactive({

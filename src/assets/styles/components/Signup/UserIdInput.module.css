@@ -22,6 +22,7 @@
 
 /* 사용자 아이디 입력 필드 */
 .user-id-input-field {
+  border-radius: var(--spacing-sm);
   flex: 1;
   height: 3rem; /* 48px ÷ 16px = 3rem */
   padding: var(--spacing-md); /* 0 16px → 0 1rem */
@@ -104,7 +105,7 @@
   /* 768px ÷ 16px = 48rem */
   .user-id-input-field,
   .user-id-input-check-button {
-    height: 3.5rem; /* 태블릿에서 높이 증가 */
+    height: 3rem; /* 태블릿에서 높이 증가 */
   }
 
   .user-id-input-check-button {
