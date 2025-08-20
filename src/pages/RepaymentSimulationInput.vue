@@ -79,7 +79,7 @@ const clickAnalyze = () => {
     <div :class="styles.description">
       <p :class="styles.textMediumTightLine">
         <span>추가 상환 가능액을 입력하고</span><br />
-        <span>AI 추천 상환 플랜을 비교해보세요</span>
+        <span>다양한 상환 플랜을 비교해보세요</span>
       </p>
     </div>
 

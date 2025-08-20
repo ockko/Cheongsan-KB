@@ -106,7 +106,7 @@ const simulateLoan = async () => {
 <template>
   <div :class="styles.loanFormContainer">
     <div :class="styles.formDescription">
-      <h2>대출 상품을 입력하고<br />AI 추천 대출 플랜을 확인해보세요</h2>
+      <h2>새로운 대출 상품을 입력하고<br />영향 분석 결과를 확인해보세요</h2>
     </div>
 
     <div :class="styles.loanForm">
