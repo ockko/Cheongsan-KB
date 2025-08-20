@@ -18,7 +18,9 @@ onMounted(async () => {
   try {
     const { data } = await request.get("/cheongsan/admin/users");
     console.log("admin users raw:", data);
-    members.value = data.filter((user) => user.role !== "ADMIN");
+    members.value = data
+      .filter((user) => user.role !== "ADMIN")
+      .filter((user) => user.id !== 266293);
   } catch (e) {
     console.error("사용자 목록 불러오기 실패", e);
     uiStore.openModal({
@@ -113,7 +115,7 @@ const logout = async () => {
           </thead>
           <tbody>
             <tr v-for="(member, index) in members" :key="member.id">
-              <td :class="styles.tdName">{{ member.id }}</td>
+              <td :class="styles.tdName">{{ member.userId }}</td>
               <td :class="styles.tdDate">{{ formatDate(member.createdAt) }}</td>
               <td :class="styles.tdAction">
                 <button
