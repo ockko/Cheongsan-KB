@@ -9,7 +9,9 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class AdminUser {
     private Long id;
+    private String userId;
     private String nickname;
     private LocalDate createdAt;
     private String role;
+
 }

@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class AdminUserListDTO {
     private Long id;
+    private String userId;
     private String nickname;
     private LocalDate createdAt;
     private String role;
@@ -17,6 +18,7 @@ public class AdminUserListDTO {
     public static AdminUserListDTO fromEntity(AdminUser user) {
         return new AdminUserListDTO(
                 user.getId(),
+                user.getUserId(),
                 user.getNickname(),
                 user.getCreatedAt(),
                 user.getRole()
