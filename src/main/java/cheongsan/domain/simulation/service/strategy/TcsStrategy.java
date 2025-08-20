@@ -23,8 +23,8 @@ public class TcsStrategy implements RepaymentStrategy {
     public RepaymentResponseDTO simulate(RepaymentRequestDTO request, List<LoanDTO> originalLoans) {
         List<LoanDTO> sortedLoans = originalLoans.stream()
                 .sorted(
-                        Comparator.comparing((LoanDTO loan) -> !isPrivateLoan(loan))  // 사금융 우선
-                                .thenComparing(LoanDTO::getInterestRate, Comparator.reverseOrder()) // 고금리 우선
+                        Comparator.comparing((LoanDTO loan) -> isPrivateLoan(loan) ? 0 : 1) // 사금융은 0, 일반대출은 1
+                                .thenComparing(LoanDTO::getInterestRate, Comparator.reverseOrder()) // 각 그룹 내부에서 고금리 우선
                 )
                 .collect(Collectors.toList());
 

@@ -104,7 +104,7 @@ public class RepaymentSimulationController {
                 .map(debt -> LoanDTO.builder()
                         .id(debt.getDebtId())
                         .loanName(debt.getDebtName())
-                        .institutionType(debt.getOrganizationName())
+                        .institutionType(debt.getInstitutionType())
                         .principal(debt.getCurrentBalance())
                         .interestRate(debt.getInterestRate())
                         .startDate(debt.getLoanStartDate())
