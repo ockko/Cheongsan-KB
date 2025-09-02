@@ -1,0 +1,121 @@
+/* InitialSetup4.module.css - rem 단위 및 CSS 변수 적용 */
+
+.page {
+  margin-top: var(--spacing-xl);
+}
+
+.container {
+  margin-top: var(--spacing-md);
+  padding: 0 var(--spacing-sm);
+  text-align: center;
+}
+
+.title-box {
+  margin: 0 var(--spacing-md) var(--spacing-md) var(--spacing-md);
+}
+
+.title-box-main {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-main);
+  line-height: var(--line-height-tight);
+}
+
+.title-box-sub {
+  margin-top: var(--spacing-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-gray0);
+  line-height: var(--line-height-normal);
+}
+
+.loanList {
+  margin: 0 0.8rem var(--spacing-xl) var(--spacing-md);
+  height: 18.125rem;
+  overflow-y: auto;
+  padding-top: 0.625rem;
+  padding-left: 0.25rem;
+  padding-right: 0.875rem;
+  box-sizing: content-box;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gray1) transparent;
+}
+
+/* 웹킷 기반 브라우저용 스크롤바 */
+.loanList::-webkit-scrollbar {
+  width: 0.375rem;
+}
+
+.loanList::-webkit-scrollbar-thumb {
+  background-color: var(--color-gray1);
+  border-radius: 0.625rem;
+}
+
+.loanList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.addBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.25rem 1.25rem 1.875rem;
+  margin-bottom: var(--spacing-md);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
+  color: var(--color-gray0);
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 44, 75, 0.15);
+  border: 0.1875rem solid var(--color-gray1);
+  border-radius: var(--spacing-md);
+  transition: all 0.2s ease;
+  background-color: var(--color-white);
+}
+
+.addBox img {
+  width: 1.75rem;
+  height: 1.75rem;
+  transition: transform 0.2s ease;
+}
+
+.next-button {
+  width: calc(100% - var(--spacing-xl));
+  height: 3rem;
+  padding: 0.875rem;
+  background-color: var(--color-main);
+  color: white;
+  border: none;
+  border-radius: 0.875rem;
+  font-weight: 600;
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 30rem) {
+  .title-box-main {
+    font-size: var(--font-size-xl);
+  }
+
+  .loanList {
+    height: 16rem;
+    margin: 0 var(--spacing-sm) var(--spacing-lg) var(--spacing-sm);
+  }
+
+  .addBox {
+    padding: var(--spacing-md);
+    font-size: var(--font-size-sm);
+  }
+
+  .addBox img {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .next-button {
+    width: calc(100% - var(--spacing-md));
+    height: 2.5rem;
+    font-size: var(--font-size-sm);
+  }
+}

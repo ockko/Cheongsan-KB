@@ -1,0 +1,414 @@
+/* 정책 섹션 컨테이너 */
+.policy-section-container {
+  /* 추가 스타일이 필요한 경우 여기에 */
+}
+
+/* 제목 섹션 */
+.policy-section-title-section {
+  text-align: left;
+  margin-top: 1rem;
+}
+
+.policy-section-section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  letter-spacing: 0.125rem;
+}
+
+/* 검색창 */
+.policy-section-search-box {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.policy-section-search-input {
+  width: 100%;
+  height: 4rem;
+  background-color: var(--color-gray2);
+  color: var(--color-gray0);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0 3.75rem 0 1rem;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+}
+
+.policy-section-search-input::placeholder {
+  color: var(--color-gray0);
+  letter-spacing: 0.1rem;
+}
+
+.policy-section-search-button-icon {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.policy-section-search-icon-container {
+  position: relative;
+  width: 45px;
+  height: 45px;
+}
+
+.policy-section-search-icon-inner {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 카테고리 필터 */
+.policy-section-category-filter {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  overflow-x: auto;
+  padding: 0 0.25rem;
+}
+
+.policy-section-category-btn {
+  background-color: transparent;
+  border: 1px solid var(--color-main);
+  border-radius: 30px;
+  padding: 0.5rem 1rem;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--color-main);
+  white-space: nowrap;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.policy-section-category-btn.policy-section-active {
+  background-color: var(--color-main);
+  color: var(--color-gray3);
+}
+
+/* 정책 카드들 */
+.policy-section-policy-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.policy-section-policy-card {
+  padding: 0 0.125rem;
+  border: 2px solid #72787f;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.policy-section-policy-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 정책 카드 헤더 */
+.policy-section-policy-card .policy-section-card-header {
+  padding: 1rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--color-gray1);
+  height: 2.8rem;
+  display: flex;
+  align-items: center;
+}
+
+.policy-section-card-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 60px;
+}
+
+.policy-section-logo-image {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  margin: 0;
+  overflow: hidden;
+  flex-shrink: 0;
+  order: 1;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.policy-section-logo-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+  max-width: 100%;
+  max-height: 100%;
+  padding: 0.25rem;
+  transition: transform 0.2s ease;
+}
+
+.policy-section-logo-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c3e50;
+  font-family: 'Pretendard', sans-serif;
+  line-height: 1.3;
+  flex: 1;
+  min-width: 0;
+  order: 1;
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.policy-section-card-content {
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 12px;
+}
+
+.policy-section-card-detail-header {
+  display: flex;
+  align-items: center;
+}
+
+.policy-section-support-cycle {
+  padding: 0.1rem 0.5rem;
+  width: fit-content;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-main);
+  background-color: var(--color-light2);
+  border-radius: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.policy-section-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #000000;
+  margin: 0;
+  letter-spacing: 1.2px;
+  line-height: 1.2;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  max-width: 280px;
+}
+
+/* 정책 요약 */
+.policy-section-card-summary {
+  font-size: 12px;
+  color: #000000;
+  font-weight: 500;
+  margin: 0.25rem 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  overflow: hidden;
+  padding: 0.375rem 0.75rem;
+}
+
+/* 정책 정보 (온라인/오프라인, 날짜) */
+.policy-section-policy-info {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 1rem 1rem 1rem;
+  height: fit-content;
+  gap: 0.5rem;
+}
+
+.policy-section-policy-online {
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  color: #2c3e50;
+  padding: 0.25rem 0.25rem 0 0.625rem;
+}
+
+.policy-section-policy-date {
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000;
+  display: flex;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  padding: 0.25rem 0.25rem;
+}
+
+/* 로딩 및 빈 상태 메시지 */
+.policy-section-loading-message,
+.policy-section-no-policies-message {
+  text-align: center;
+  padding: 2.5rem 1.25rem;
+  color: #72787f;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 검색 결과 헤더 */
+.policy-section-search-result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #e1e2e6;
+}
+
+.policy-section-search-result-header span {
+  font-size: 14px;
+  font-weight: 600;
+  color: #003e65;
+  letter-spacing: 1.4px;
+}
+
+.policy-section-clear-search-btn {
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 12px;
+  font-weight: 500;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 1.2px;
+}
+
+.policy-section-clear-search-btn:hover {
+  background: #edf2f7;
+  border-color: #cbd5e0;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 375px) {
+  .policy-section-title-line {
+    width: 100%;
+  }
+
+  .policy-section-category-filter {
+    padding: 0;
+  }
+}
+
+/* 페이지네이션 스타일 */
+.policy-section-pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding: 1rem 0;
+}
+
+.policy-section-pagination-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid #e1e2e6;
+  background-color: #ffffff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #72787f;
+}
+
+.policy-section-pagination-btn:hover:not(:disabled) {
+  background-color: #f8f9fa;
+  border-color: #72787f;
+  color: #000000;
+}
+
+.policy-section-pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f8f9fa;
+}
+
+.policy-section-prev-btn svg,
+.policy-section-next-btn svg {
+  color: inherit;
+}
+
+.policy-section-page-numbers {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.policy-section-page-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid #e1e2e6;
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #72787f;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.policy-section-page-number:hover {
+  background-color: #f8f9fa;
+  border-color: #72787f;
+  color: #000000;
+}
+
+.policy-section-page-number.policy-section-active-page {
+  background-color: #72787f;
+  border-color: #72787f;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* 모바일 반응형 페이지네이션 */
+@media (max-width: 480px) {
+  .policy-section-pagination-container {
+    gap: 4px;
+    margin-top: 1.25rem;
+    padding: 0.75rem 0;
+  }
+
+  .policy-section-pagination-btn,
+  .policy-section-page-number {
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 13px;
+  }
+
+  .policy-section-page-numbers {
+    gap: 0.125rem;
+  }
+}

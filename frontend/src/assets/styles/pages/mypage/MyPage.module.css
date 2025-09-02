@@ -1,0 +1,122 @@
+.container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-lg) var(--spacing-md);
+  position: relative;
+  background-color: white;
+}
+
+.arrow-back {
+  position: absolute;
+  left: var(--spacing-md);
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: var(--font-size-lg);
+  color: var(--color-main);
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  border-radius: var(--spacing-xs);
+  transition: background-color 0.2s ease;
+}
+
+.arrow-back:hover {
+  background-color: var(--color-gray2);
+}
+
+.title {
+  width: 100%;
+  text-align: center;
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  margin: 0;
+}
+
+.section-title {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: var(--color-gray0);
+  margin: var(--spacing-lg) var(--spacing-md) 2.18rem var(--spacing-md);
+}
+
+.card-list {
+  background-color: white;
+  margin: 0 var(--spacing-md) var(--spacing-xs) var(--spacing-md);
+  border-bottom: 0.0625rem solid #72787f;
+  transition: all 0.2s ease;
+  margin-bottom: 1.56rem;
+}
+
+.card-list.clickable {
+  cursor: pointer;
+}
+
+.card-row {
+  display: flex;
+  align-items: center;
+  min-height: 3.75rem;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  flex: 1;
+}
+
+.card-title {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-black);
+}
+
+.card-value {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-base);
+  font-weight: 400;
+  color: #72787f;
+  word-break: break-all;
+}
+
+.card-arrow {
+  color: var(--color-gray0);
+  font-size: var(--font-size-xs);
+  margin-left: var(--spacing-sm);
+}
+
+.logoutButton {
+  width: 11.5rem;
+  height: 2.5rem;
+  margin: var(--spacing-xl) auto var(--spacing-lg) auto; /* 중앙 정렬 */
+  padding: 0;
+  background-color: white;
+  color: var(--color-main);
+  border: 2px solid var(--color-main);
+  border-radius: 0.5rem;
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: block;
+}
+
+.logoutButton:hover {
+  background-color: var(--color-main);
+  color: white;
+  transform: translateY(-0.0625rem);
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 62, 101, 0.2);
+}
+
+.logoutButton:active {
+  transform: translateY(0);
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 62, 101, 0.1);
+}

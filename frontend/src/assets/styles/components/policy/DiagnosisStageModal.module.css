@@ -1,0 +1,228 @@
+/* 모달 오버레이 */
+.diagnosis-stage-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* 모달 컨텐츠 */
+.diagnosis-stage-modal-content {
+  background-color: white;
+  border-radius: 1rem;
+  width: 90%;
+  max-width: 375px;
+  max-height: 85vh;
+  overflow-y: auto;
+  overflow-y: auto;
+  overflow-x: hidden; /* 🔹 가로 스크롤 방지 */
+  box-sizing: border-box; /* 🔹 padding 포함한 크기 계산 */
+  padding: 1.5rem;
+}
+
+/* 닫기 버튼 */
+.diagnosis-stage-close-button {
+  position: absolute;
+  top: 2rem;
+  right: 1.875rem;
+  width: 2rem;
+  height: 2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+/* 모달 본문 */
+.diagnosis-stage-modal-body {
+  padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+  position: relative;
+}
+
+.diagnosis-stage-back-button {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  margin: -1rem 0 1rem -1rem;
+  color: #003e65;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* 제목 섹션 */
+.diagnosis-stage-title-section {
+  margin-bottom: 0;
+}
+
+.diagnosis-stage-institution-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.diagnosis-stage-institution-icon {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.diagnosis-stage-institution-icon img {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.diagnosis-stage-institution-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #003e65;
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+.diagnosis-stage-stage-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #003e65;
+  margin: 0.5rem 0 0.75rem 0;
+  letter-spacing: 1.8px;
+  line-height: 1;
+}
+
+.diagnosis-stage-stage-description {
+  font-size: 16px;
+  font-weight: 300;
+  color: #003e65;
+  line-height: 1.5;
+  margin: 0 0 1.875rem 0;
+  letter-spacing: 1.6px;
+}
+
+/* 구분선 */
+.diagnosis-stage-divider {
+  width: calc(100% + 94px);
+  height: 1px;
+  background-color: #e1e2e6;
+  margin: 1.875rem -3rem;
+}
+
+/* 섹션 */
+.diagnosis-stage-section {
+  margin-bottom: 0;
+}
+
+.diagnosis-stage-section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #003e65;
+  margin: 1.875rem 0 1rem 0;
+  letter-spacing: 1.8px;
+  line-height: 1;
+}
+
+.diagnosis-stage-section-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* 아이콘 스타일 */
+.diagnosis-stage-check-icon,
+.diagnosis-stage-info-icon,
+.diagnosis-stage-warning-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 리스트 컨텐츠 스타일 */
+.diagnosis-stage-for-list-content,
+.diagnosis-stage-advantages-list-content,
+.diagnosis-stage-warn-list-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+/* 리스트 아이템 간격 조정 */
+.diagnosis-stage-list-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.125rem;
+  padding: 0;
+}
+
+.diagnosis-stage-list-item:last-child {
+  margin-bottom: 0;
+}
+
+.diagnosis-stage-list-text {
+  font-size: 16px;
+  font-weight: 300;
+  color: #003e65;
+  line-height: 1.2;
+  letter-spacing: 1.6px;
+  flex: 1;
+  margin: 0;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+  .diagnosis-stage-modal-content {
+    padding: 16px;
+  }
+
+  .diagnosis-stage-modal-body {
+    padding-top: 25px;
+  }
+
+  .diagnosis-stage-institution-name {
+    font-size: 18px;
+  }
+
+  .diagnosis-stage-stage-title {
+    font-size: 16px;
+  }
+
+  .diagnosis-stage-stage-description {
+    font-size: 14px;
+  }
+
+  .diagnosis-stage-section-title {
+    font-size: 16px;
+  }
+
+  .diagnosis-stage-list-text {
+    font-size: 14px;
+  }
+}

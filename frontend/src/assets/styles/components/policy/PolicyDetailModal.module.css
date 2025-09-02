@@ -1,0 +1,233 @@
+/* 모달 오버레이 */
+.policy-detail-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* 모달 컨텐츠 */
+.policy-detail-modal-content {
+  background-color: white;
+  border-radius: 2rem;
+  width: 90%;
+  max-width: 375px;
+  max-height: 85vh;
+  overflow-y: auto;
+  overflow-x: hidden; /* 🔹 가로 스크롤 방지 */
+  box-sizing: border-box; /* 🔹 padding 포함한 크기 계산 */
+  padding: 1.5rem;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+}
+.policy-detail-header {
+  flex: 0 0 auto;
+  padding: 1.5rem 0 0 0.7rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+.policy-detail-back-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #003e65;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* 닫기 버튼 */
+.policy-detail-close-button {
+  position: absolute;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* 모달 본문 */
+.policy-detail-modal-body {
+  padding: 1rem 1rem;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3125rem;
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+/* 부처 정보 */
+.policy-detail-ministry-info {
+  text-align: left;
+  height: 30px;
+  margin-bottom: 0.625rem;
+}
+
+.policy-detail-ministry-text {
+  font-size: 18px;
+  font-weight: 400;
+  color: #003e65;
+  letter-spacing: 1.8px;
+}
+
+/* 정책 제목 */
+.policy-detail-policy-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #000000;
+  margin: 0;
+  letter-spacing: 2.4px;
+  line-height: 1.2;
+  text-align: left;
+}
+
+/* 태그 컨테이너 */
+.policy-detail-tag-container {
+  display: flex;
+  gap: 0.375rem;
+  justify-content: left;
+  height: 1rem;
+  margin-bottom: 0.375rem;
+  flex-wrap: wrap;
+}
+
+.policy-detail-tag {
+  background-color: transparent;
+  border: 1px solid #003e65;
+  border-radius: 4px;
+  padding: 0.125rem 0.375rem;
+  font-size: 12px;
+  font-weight: 600;
+  color: #003e65;
+  letter-spacing: 0.8px;
+  white-space: nowrap;
+  height: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 정책 요약 */
+.policy-detail-policy-summary {
+  font-size: 1rem;
+  font-weight: 300;
+  color: #202020;
+  margin: 0;
+  letter-spacing: 1.6px;
+  line-height: 1.18;
+  text-align: left;
+}
+
+/* 정보 섹션 */
+.policy-detail-info-section {
+  margin: 0.75rem 0;
+}
+
+.policy-detail-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #202020;
+  margin: 0 0 0.37rem 0;
+  letter-spacing: 1.6px;
+  line-height: 1.3;
+  text-align: left;
+  padding-left: 0;
+}
+
+.policy-detail-section-content {
+  font-size: 16px;
+  font-weight: 400;
+  color: #000000;
+  margin: 0;
+  letter-spacing: 1.6px;
+  line-height: 1.18;
+}
+
+/* 문의 정보 */
+.policy-detail-contact-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  line-height: 1.18;
+}
+
+.policy-detail-phone-icon {
+  width: 1rem;
+  height: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.policy-detail-contact-text {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #41474f;
+  letter-spacing: 1.6px;
+}
+
+.policy-detail-footer {
+  flex: 0 0 auto;
+  padding: 1rem;
+  border-top: 1px solid #eee;
+  background-color: white;
+}
+/* 신청하러 가기 버튼 */
+.policy-detail-apply-button {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3.5rem;
+  background-color: #003e65;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.policy-detail-apply-button:hover {
+  background-color: #002d4a;
+}
+
+.policy-detail-apply-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 1.6px;
+}
+
+.policy-detail-external-link-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+  .policy-detail-modal-content {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+
+  .policy-detail-modal-body {
+    padding: 1rem 1rem 2rem 1rem;
+  }
+}

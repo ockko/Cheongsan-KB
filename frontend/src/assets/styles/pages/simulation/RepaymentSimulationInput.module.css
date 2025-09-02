@@ -1,0 +1,55 @@
+.underline-input {
+  border: none;
+  border-bottom: 1px solid var(--color-main);
+  padding: 6px 0 4px;
+  font-size: 16px;
+  width: 280px;
+  outline: none;
+}
+
+.underline-input::placeholder {
+  color: var(--color-main);
+  user-select: none;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px;
+}
+
+.description {
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.icon {
+  width: 128px;
+  height: 128px;
+  margin-bottom: 32px;
+}
+
+.analyze-button {
+  background-color: var(--color-main);
+  color: white;
+  font-size: 16px;
+  width: 280px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 16px;
+}
+.tight-line {
+  line-height: 1.4;
+}
+
+.pre-label {
+  align-self: flex-start;
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 4px;
+}

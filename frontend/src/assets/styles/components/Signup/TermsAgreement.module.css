@@ -1,0 +1,113 @@
+/* 이용약관 입력 그룹 */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm); /* 8px → 0.5rem */
+}
+
+/* 이용약관 라벨 */
+.label {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: var(--font-size-base); /* 16px → 1rem */
+  color: var(--color-main);
+}
+
+/* 이용약관 리스트 */
+.agreements-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md); /* 16px → 1rem */
+}
+
+/* 개별 이용약관 아이템 */
+.agreement-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs); /* 4px → 0.25rem */
+  cursor: pointer;
+  border-radius: var(--spacing-xs); /* 4px → 0.25rem */
+  transition: background-color 0.2s ease;
+}
+
+.agreement-item:active {
+  background-color: var(--color-gray2);
+}
+
+/* 체크박스 아이콘 */
+.checkbox-icon {
+  width: 1.25rem; /* 20px ÷ 16px = 1.25rem */
+  height: 1.25rem; /* 20px ÷ 16px = 1.25rem */
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.agreement-item:active .checkbox-icon {
+  transform: scale(0.95);
+}
+
+/* 이용약관 텍스트 */
+.agreement-text {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: var(--font-size-sm); /* 14px → 0.875rem */
+  color: var(--color-main);
+  user-select: none;
+  line-height: var(--line-height-normal); /* 1.4 */
+}
+
+/* 필수/선택 표시를 위한 추가 스타일 */
+.agreement-text.required {
+  font-weight: 500;
+}
+
+.agreement-text.optional {
+  color: var(--color-gray0);
+}
+
+/* 반응형 처리 - 작은 화면 */
+@media (max-width: 23.375rem) {
+  /* 374px ÷ 16px = 23.375rem */
+  .agreements-list {
+    gap: var(--spacing-sm); /* 작은 화면에서 간격 줄임 */
+  }
+
+  .checkbox-icon {
+    width: 1rem; /* 작은 화면에서 아이콘 크기 줄임 */
+    height: 1rem;
+  }
+
+  .agreement-text {
+    font-size: var(--font-size-xs); /* 작은 화면에서 텍스트 크기 줄임 */
+  }
+}
+
+/* 반응형 처리 - 태블릿 이상 */
+@media (min-width: 48rem) {
+  /* 768px ÷ 16px = 48rem */
+  .checkbox-icon {
+    width: 1.5rem; /* 태블릿에서 아이콘 크기 증가 */
+    height: 1.5rem;
+  }
+
+  .agreement-text {
+    font-size: var(--font-size-base); /* 태블릿에서 텍스트 크기 증가 */
+  }
+}
+
+/* 포커스 및 접근성 개선 */
+.agreement-item:focus {
+  outline: 2px solid var(--color-main);
+  outline-offset: 2px;
+}
+
+/* 애니메이션 개선 */
+@media (prefers-reduced-motion: no-preference) {
+  .checkbox-icon {
+    transition: transform 0.15s ease-out;
+  }
+
+  .agreement-item {
+    transition: background-color 0.15s ease-out;
+  }
+}

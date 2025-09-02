@@ -1,0 +1,106 @@
+.content {
+  padding: var(--spacing-xl);
+  background-color: white;
+  border-radius: var(--spacing-sm);
+  text-align: center;
+}
+
+.notice-title {
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  color: var(--color-red);
+  margin-bottom: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+}
+
+.notice-title::before {
+  content: '⚠️';
+  font-size: var(--font-size-lg);
+}
+
+.notice-sub {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray0);
+  line-height: var(--line-height-normal);
+  margin-top: 3.56rem;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-top: 0.625rem;
+}
+
+.custom-footer {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 23.4375rem;
+  background: var(--color-red2);
+  padding: 0 var(--spacing-md);
+  box-sizing: border-box;
+  transition: background-color 0.3s ease;
+  z-index: 1100;
+  border-top: 0.0625rem solid var(--color-gray1);
+}
+
+.custom-footer:hover {
+  background: var(--color-red);
+}
+
+.custom-footer button {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: none;
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
+  font-weight: 600;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.custom-footer button:hover {
+  opacity: 0.9;
+}
+
+.custom-footer button:active {
+  transform: translateY(0.0625rem);
+}
+
+/* 경고 섹션 추가 스타일 */
+.warning-section {
+  background-color: #fff3cd;
+  border: 0.0625rem solid #ffeaa7;
+  border-radius: var(--spacing-sm);
+  padding: var(--spacing-md);
+  margin: var(--spacing-md) 0;
+}
+
+.warning-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--spacing-sm) 0 0 0;
+}
+
+.warning-item {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray5);
+  margin-bottom: var(--spacing-xs);
+  position: relative;
+  padding-left: var(--spacing-md);
+}
+
+.warning-item::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--color-red);
+  font-weight: bold;
+}

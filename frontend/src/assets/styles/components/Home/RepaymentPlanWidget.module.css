@@ -1,0 +1,147 @@
+.widget-card {
+  border-radius: 0.625rem;
+  box-shadow: 0.063rem 0.063rem 0.25rem rgba(0, 0, 0, 0.25);
+  line-height: 1.5;
+}
+
+.widget-header {
+  background-color: var(--color-main);
+  border-radius: 0.625rem 0.625rem 0 0;
+  padding: 0.4rem 1.3rem;
+}
+
+.widget-header h3 {
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--color-gray3);
+}
+
+.widget-content {
+  padding: 1.8rem 1.3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 12.5rem;
+  text-align: center;
+}
+
+.plan-item {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.label {
+  font-size: 0.8rem;
+  color: var(--color-gray-unnamed);
+  display: block;
+}
+
+.value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+}
+
+.value.highlight {
+  color: var(--color-red);
+}
+
+/* 로딩 상태 스타일 */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1.3rem;
+  color: var(--color-gray0);
+  font-size: 0.9rem;
+  text-align: center;
+  min-height: 7.5rem;
+}
+
+/* 에러 상태 스타일 */
+.error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1.3rem;
+  color: var(--color-red);
+  font-size: 0.9rem;
+  text-align: center;
+  min-height: 7.5rem;
+  gap: 1rem;
+}
+
+.error-message {
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.error-actions {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* 재시도 버튼 스타일 */
+.retryButton {
+  background-color: var(--color-main);
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.retryButton:hover {
+  background-color: var(--color-secondary);
+}
+
+.retryButton:active {
+  transform: translateY(0.063rem);
+}
+
+/* 시뮬레이션 버튼 스타일 */
+.simulationButton {
+  background-color: var(--color-secondary);
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  padding: 0.8rem 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  min-width: 6.25rem;
+  line-height: 1.5;
+}
+
+.simulationButton:hover {
+  background-color: var(--color-main);
+}
+
+.simulationButton:active {
+  transform: translateY(0.063rem);
+}
+
+/* 데이터가 없는 경우 스타일 */
+.noDataMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+.noDataTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-main);
+  margin-bottom: 0.3rem;
+}
