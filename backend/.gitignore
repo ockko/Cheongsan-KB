@@ -1,0 +1,58 @@
+# 빌드 결과물
+/build/
+/target/
+
+# 톰캣 관련
+/logs/
+/work/
+/temp/
+/bin/
+
+# IntelliJ IDEA
+.idea
+.idea/*
+.xml*
+.iml
+.gradle
+out
+gen
+build
+rebel.xml
+application.properties
+
+
+# Maven Wrapper
+/.mvn/wrapper/maven-wrapper.jar
+
+# 로그 및 임시 파일
+*.log
+*.tmp
+*.bak
+
+# OS별 불필요 파일
+.DS_Store
+Thumbs.db
+
+# 환경 변수 및 개인 설정 파일
+*.env
+*.properties.local
+*.properties.dev
+*.properties.test
+
+# 클래스 파일
+*.class
+
+# 기타 임시 파일
+*.swp
+*.swo
+
+# 자바 패키지 내 불필요 파일
+*.jar
+*.war
+*.ear
+
+# 라이브러리 저장소 (만약 있다면)
+/lib/
+
+# JSP 임시파일 (톰캣 컴파일 시 생성됨)
+*.jspf

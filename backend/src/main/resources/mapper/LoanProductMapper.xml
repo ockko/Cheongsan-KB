@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cheongsan.domain.simulation.mapper.LoanProductMapper">
+
+    <select id="findRecommendedLoans" resultType="cheongsan.domain.simulation.entity.Simulation">
+        <![CDATA[
+        SELECT finPrdNm As productName,
+               hdlInst  As institutionName,
+               irt      As interestRate,
+               lnLmt    As loanLimit,
+               rltSite  As siteUrl,
+               dsrCheck As dsrCheck
+        FROM low_income_financial_products
+        WHERE finPrdNm IS NOT NULL
+          AND irt IS NOT NULL
+          AND finPrdNm NOT LIKE '%학자금%'
+        ORDER BY CASE
+                     WHEN irt REGEXP '^[0-9]+\.?[0-9]*$' THEN CAST(irt AS DECIMAL(10, 4))
+                     WHEN irt LIKE '%,%' THEN
+                         CAST(SUBSTRING_INDEX(irt, ',', -1) AS DECIMAL(10, 4))
+                     ELSE 999.9999
+                     END ASC,
+                 lnLmt DESC
+        ]]>
+    </select>
+</mapper>

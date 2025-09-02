@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cheongsan.domain.user.mapper.UserMapper">
+    <select id="findById" parameterType="java.lang.Long" resultType="cheongsan.domain.user.entity.User">
+        SELECT *
+        FROM user
+        WHERE id = #{id}
+    </select>
+
+    <update id="saveDiagnosis" parameterType="java.lang.Long">
+        UPDATE user
+        SET recommended_program_id = #{programId}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateDailyLimitAndTimestamp">
+        UPDATE user
+        SET daily_limit      = #{dailyLimit},
+            daily_limit_date = #{dailyLimitDate}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateDailyLimitOnly">
+        UPDATE user
+        SET daily_limit = #{dailyLimit}
+        WHERE id = #{id}
+    </update>
+
+    <select id="findByUserId" parameterType="String" resultType="cheongsan.domain.user.entity.User">
+        SELECT *
+        FROM user
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 이메일로 유저 조회 -->
+    <select id="findByEmail" parameterType="String" resultType="cheongsan.domain.user.entity.User">
+        SELECT *
+        FROM user
+        WHERE email = #{email}
+    </select>
+
+    <!-- 유저 저장 -->
+    <insert id="save" parameterType="cheongsan.domain.user.entity.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user
+        (connected_id, user_id, password, email,
+         daily_limit_date, status,
+         account_type)
+        VALUES (#{connectedId}, #{userId}, #{password}, #{email},
+                #{dailyLimitDate}, #{status},
+                #{accountType})
+    </insert>
+
+    <select id="findByUserIdAndEmail" parameterType="String" resultType="cheongsan.domain.user.entity.User">
+        SELECT *
+        FROM user
+        WHERE user_id = #{userId}
+          AND email = #{email}
+    </select>
+
+    <update id="updatePassword" parameterType="map">
+        UPDATE user
+        SET password = #{newPassword}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getAllUserIds" resultType="long">
+        SELECT id
+        FROM user
+    </select>
+    <update id="submitNickname" parameterType="map">
+        UPDATE user
+        SET nickname = #{nickname}
+        WHERE user_id = #{userId}
+    </update>
+
+    <update id="updateProfile" parameterType="map">
+        UPDATE user
+        <set>
+            <if test="nickname != null">
+                nickname = #{nickname},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <delete id="deleteById" parameterType="Long">
+        DELETE
+        FROM user
+        WHERE id = #{id}
+    </delete>
+
+    <update id="updateConnectedId">
+        UPDATE user
+        SET connected_id = #{connectedId}
+        WHERE id = #{id}
+    </update>
+    <select id="findUsersWithConnectedId" resultType="cheongsan.domain.user.entity.User">
+        SELECT *
+        FROM user
+        WHERE connected_id IS NOT NULL
+          AND connected_id != ''
+    </select>
+
+    <select id="findByConnectedId" resultType="cheongsan.domain.user.entity.User">
+        SELECT *
+        FROM user
+        WHERE connected_id = #{connectedId}
+    </select>
+
+    <update id="updateStrategy">
+        UPDATE user
+        SET strategy = #{strategyName}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateNaverId">
+        UPDATE user
+        SET naver_id = #{naverId}
+        WHERE id = #{id}
+    </update>
+
+    <select id="findByNaverId" resultType="cheongsan.domain.user.entity.User">
+        SELECT *
+        FROM user
+        WHERE naver_id = #{naverId}
+    </select>
+
+    <update id="updateNickname">
+        UPDATE user
+        SET nickname = #{nickname}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateEmail">
+        UPDATE user
+        SET email = #{email}
+        WHERE id = #{id}
+    </update>
+
+    <select id="findStrategyByUserId" parameterType="long" resultType="string">
+        SELECT strategy
+        FROM user
+        WHERE id = #{id}
+    </select>
+</mapper>

@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cheongsan.domain.debt.mapper.DebtMapper">
+
+    <!-- 총 대출 항목 조회-->
+    <select id="getUserDebtList" parameterType="long" resultType="cheongsan.domain.debt.entity.DebtAccount">
+        SELECT da.id,
+        da.user_id,
+        da.organization_code,
+        fi.organization_name,  <!-- 이 줄을 추가! -->
+        fi.institution_type,
+        da.res_account,
+        da.debt_name,
+        da.current_balance,
+        da.original_amount,
+        da.interest_rate,
+        da.loan_start_date,
+        da.loan_end_date,
+        da.next_payment_date,
+        da.grace_period_months,
+        da.repayment_method,
+        da.created_at,
+        da.updated_at
+        FROM debt_accounts da
+        JOIN financial_institutions fi ON da.organization_code = fi.organization_code
+        WHERE da.user_id = #{userId}
+    </select>
+
+    <select id="getDebtAccountById" parameterType="long" resultType="cheongsan.domain.debt.entity.DebtAccount">
+        SELECT id AS debtAccountId,
+               debt_name,
+               original_amount,
+               current_balance,
+               interest_rate,
+               loan_start_date,
+               grace_period_months,
+               repayment_method,
+               organization_code
+        FROM debt_accounts
+        WHERE id = #{loanId}
+    </select>
+
+    <select id="findDebtAccountById" parameterType="long" resultType="cheongsan.domain.debt.entity.DebtAccount">
+        SELECT id,
+               debt_name,
+               original_amount,
+               current_balance,
+               interest_rate,
+               loan_start_date,
+               grace_period_months,
+               repayment_method,
+               organization_code
+        FROM debt_accounts
+        WHERE id = #{loanId}
+          AND user_id = #{userId}
+    </select>
+
+    <select id="getFinancialInstitutionByCode" parameterType="Long"
+            resultType="cheongsan.domain.debt.entity.FinancialInstitution">
+        SELECT organization_code AS organizationCode,
+               organization_name AS organizationName
+        FROM financial_institutions
+        WHERE organization_code = #{organizationCode}
+    </select>
+
+    <select id="findByUserIdAndAccount" resultType="cheongsan.domain.debt.entity.DebtAccount">
+        SELECT id,
+               user_id,
+               organization_code,
+               res_account,
+               debt_name,
+               current_balance,
+               original_amount,
+               interest_rate,
+               loan_start_date,
+               loan_end_date,
+               next_payment_date,
+               grace_period_months,
+               repayment_method,
+               created_at,
+               updated_at
+        FROM debt_accounts
+        WHERE user_id = #{userId}
+          AND res_account = #{resAccount}
+    </select>
+
+    <select id="findByUserId" resultType="cheongsan.domain.debt.entity.DebtAccount">
+        SELECT id,
+               user_id,
+               organization_code,
+               res_account,
+               debt_name,
+               current_balance,
+               original_amount,
+               interest_rate,
+               loan_start_date,
+               loan_end_date,
+               next_payment_date,
+               grace_period_months,
+               repayment_method
+        FROM debt_accounts
+        WHERE user_id = #{userId}
+    </select>
+
+    <insert id="insertDebt" parameterType="cheongsan.domain.debt.entity.DebtAccount">
+        INSERT INTO debt_accounts (user_id, organization_code, res_account, debt_name, current_balance,
+                                   original_amount, interest_rate, loan_start_date, loan_end_date, next_payment_date,
+                                   grace_period_months, repayment_method, created_at, updated_at)
+        VALUES (#{userId}, #{organizationCode}, #{resAccount}, #{debtName}, #{currentBalance},
+                #{originalAmount}, #{interestRate}, #{loanStartDate}, #{loanEndDate}, #{nextPaymentDate},
+                #{gracePeriodMonths}, #{repaymentMethod}, #{createdAt}, #{updatedAt})
+    </insert>
+
+
+    <!-- 추가할 대출 계좌 중복 확인 -->
+    <select id="isDebtAccountExists" resultType="boolean" parameterType="map">
+        SELECT COUNT(*) > 0
+        FROM debt_accounts
+        WHERE user_id = #{userId}
+          AND res_account = #{resAccount}
+    </select>
+
+    <select id="getMonthlyRepayments" resultType="cheongsan.domain.debt.dto.RepaymentCalendarDTO">
+        SELECT da.id                AS debtId,
+               da.debt_name         AS debtName,
+               da.next_payment_date AS repaymentDate
+        FROM debt_accounts da
+        WHERE da.user_id = #{userId}
+          AND YEAR(da.next_payment_date) = #{year}
+          AND MONTH(da.next_payment_date) = #{month}
+          AND da.next_payment_date IS NOT NULL
+        ORDER BY da.next_payment_date ASC
+    </select>
+
+    <select id="getDailyRepayments" resultType="cheongsan.domain.debt.dto.DailyRepaymentDTO">
+        SELECT da.id                AS debtId,
+               da.debt_name         AS debtName,
+               fi.organization_name AS organizationName,
+               da.next_payment_date AS repaymentDate,
+               da.current_balance   AS currentBalance,
+               da.interest_rate     AS interestRate,
+               da.repayment_method  AS repaymentMethod
+        FROM debt_accounts da
+                 JOIN financial_institutions fi ON da.organization_code = fi.organization_code
+        WHERE da.user_id = #{userId}
+          AND DATE(da.next_payment_date) = #{date}
+          AND da.next_payment_date IS NOT NULL
+        ORDER BY da.debt_name ASC
+    </select>
+
+    <select id="getDebtRepaymentInfoByUserId" parameterType="long"
+            resultType="cheongsan.domain.debt.entity.DebtRepaymentRatio">
+        SELECT user_id,
+               original_amount,
+               current_balance
+        FROM debt_accounts
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="getDelinquentLoanByUserId" parameterType="long"
+            resultType="cheongsan.domain.debt.entity.DelinquentLoan">
+        SELECT da.debt_name         AS debtName,
+               fi.organization_name AS organizationName,
+               da.next_payment_date AS nextPaymentDate
+        FROM debt_accounts da
+                 JOIN financial_institutions fi ON da.organization_code = fi.organization_code
+        WHERE da.user_id = #{userId}
+          AND da.next_payment_date &lt; CURRENT_DATE
+          AND NOT EXISTS (SELECT 1
+                          FROM debt_transactions dt
+                          WHERE dt.debt_account_id = da.id
+                            AND dt.transaction_date &gt;= da.next_payment_date)
+    </select>
+
+    <update id="updateDebt" parameterType="map">
+        UPDATE debt_accounts
+        <set>
+            <if test="gracePeriodMonths != null">
+                grace_period_months = #{gracePeriodMonths},
+            </if>
+            <if test="repaymentMethod != null">
+                repayment_method = #{repaymentMethod},
+            </if>
+            <if test="nextPaymentDate != null">
+                next_payment_date = #{nextPaymentDate},
+            </if>
+            <!-- 기존 필드(account_name, amount, interest_rate 등도 비슷하게 추가 가능) -->
+        </set>
+        WHERE id = #{debtAccountId}
+    </update>
+
+    <!-- 대출계좌 잔액 업데이트 -->
+    <update id="updateDebtBalance">
+        UPDATE debt_accounts
+        SET current_balance = #{currentBalance},
+            updated_at      = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="findLoanIdByNameAndUser" parameterType="map" resultType="long">
+        SELECT id
+        FROM debt_accounts
+        WHERE user_id = #{userId}
+          AND debt_name = #{loanName}
+        LIMIT 1
+    </select>
+
+
+    <update id="updateNextPaymentDate" parameterType="map">
+        UPDATE debt_accounts
+        SET next_payment_date = #{nextPaymentDate},
+            updated_at        = CURRENT_TIMESTAMP
+        WHERE id = #{loanId}
+    </update>
+
+    <select id="findInstitutionTypeByOrganizationName" resultType="String">
+        SELECT institution_type
+        FROM financial_institutions
+        WHERE organization_name = #{organizationName}
+        LIMIT 1
+    </select>
+</mapper>

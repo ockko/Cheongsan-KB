@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>알림 테스트</title>
+</head>
+<body>
+<h2>알림 영역</h2>
+<div id="alert"></div>
+
+<script>
+    const userId = 1; // 로그인된 사용자 ID
+    const socket = new WebSocket("ws://localhost:8080/ws/notifications?userId=" + userId);
+
+    socket.onmessage = function (event) {
+        document.getElementById("alert").innerText = "🔔 알림: " + event.data;
+    };
+</script>
+</body>
+</html>

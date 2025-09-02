@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--어느 인터페이스의 추상메서드에 이걸 할당할 건지-->
+<mapper namespace="cheongsan.domain.policy.mapper.PolicyMapper">
+
+    <select id="getDiagnosisResult" parameterType="java.lang.Long"
+            resultType="cheongsan.domain.policy.entity.Diagnosis">
+        SELECT *
+        FROM debt_relief_programs
+        WHERE id = #{id}
+    </select>
+
+    <select id="getSimpleDiagnosisResult" parameterType="java.lang.Long"
+            resultType="cheongsan.domain.policy.entity.SimpleDiagnosis">
+        SELECT id, program_name, operating_entity, simple_description
+        FROM debt_relief_programs
+        WHERE id = #{id}
+    </select>
+
+</mapper>
